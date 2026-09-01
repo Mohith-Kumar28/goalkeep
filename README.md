@@ -134,3 +134,23 @@ pnpm typecheck
 pnpm build
 pnpm check:design
 ```
+
+## Deploying
+
+Hosted on Cloudflare Workers.
+
+```bash
+pnpm run deploy       # build + wrangler deploy
+pnpm run deploy:dry   # build + validate, upload nothing
+pnpm run cf:tail      # stream live logs
+```
+
+**Use `pnpm run deploy`, not `pnpm deploy`** — the latter is a pnpm builtin for
+workspace packages and shadows the script.
+
+The Workers build needs `@cloudflare/vite-plugin` ahead of `tanstackStart()` in
+`vite.config.ts`, and `wrangler.jsonc` points `main` at
+`@tanstack/react-start/server-entry` — not at `dist/server/server.js`, which is
+the Node build and will not run on Workers.
+
+Live: https://goalkeep.mohithkumar808.workers.dev
