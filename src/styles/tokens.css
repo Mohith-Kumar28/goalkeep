@@ -1,0 +1,149 @@
+/* ============================================================
+   Goalkeep — colors_and_type.css
+   Source of truth: Goalkeep · Brand Guidelines · v0 · May 2026
+   Reference the token, never the hex.
+   The semantic --fg-*, --bg-*, --accent-* tokens are the public
+   API; brand-name tokens (--gk-blue, etc.) are escape hatches
+   for when semantics aren't enough.
+   ============================================================ */
+
+:root {
+  /* --- Brand hues. Five, sampled from the mark. -------------
+     Each stands for a community Goalkeep serves. Not decorative. */
+  --gk-charcoal: #3f3d3e;
+  --gk-blue: #4765b3;
+  --gk-teal: #6ebfac;
+  --gk-coral: #e6968b;
+  --gk-yellow: #e7dd50;
+
+  /* Deeps — hover states and dense data */
+  --gk-blue-deep: #2f4a92;
+  --gk-teal-deep: #4a9c88;
+  --gk-coral-deep: #c97268;
+  --gk-yellow-deep: #b8ab1f;
+
+  /* Inks — for small text only. The deeps above are fill/hover values and
+     fall short of 4.5:1 at 12–14px; these clear it on white and on tint. */
+  --gk-blue-ink: #2f4a92;
+  --gk-teal-ink: #26604f;
+  --gk-coral-ink: #8f3f35;
+
+  /* Tints — ~15% on white, for backgrounds */
+  --gk-blue-tint: #dbe0f0;
+  --gk-teal-tint: #def1ec;
+  --gk-coral-tint: #f8e0dd;
+  --gk-yellow-tint: #fbf8dc;
+
+  /* --- Neutral scale — warm-cool charcoal, anchored 700 ----- */
+  --n-900: #1f1e1f;
+  --n-800: #2f2e2f;   /* interpolated — not published in v0 */
+  --n-700: #3f3d3e;   /* the wordmark colour */
+  --n-600: #605e60;   /* interpolated */
+  --n-500: #807e80;
+  --n-400: #aba9ab;
+  --n-300: #c9c8c9;   /* interpolated */
+  --n-200: #e8e7e8;
+  --n-100: #f4f3f4;
+  --n-050: #fafafa;
+  --n-white: #ffffff;
+
+  /* --- Semantic layer — the public API ---------------------- */
+  --accent-primary: var(--gk-blue);    /* links, primary CTAs, "data" */
+  --accent-data: var(--gk-teal);       /* charts, outcome / growth */
+  --accent-warm: var(--gk-coral);      /* human / people, quote pulls */
+  --accent-spark: var(--gk-yellow);    /* keyword highlight only */
+
+  --fg-1: var(--n-700);   /* primary text */
+  /* The book's rule of thumb is "500 for secondary", but #807E80 only
+     reaches 3.64:1 on our #F4F3F4 bands — short of 4.5:1 — and the book
+     also says "for body copy below 18px, stay AAA". The neutral ramp is
+     unchanged; only this semantic mapping steps to 600 so secondary text
+     passes at 14–20px. Use --n-500 directly for large text on white. */
+  --fg-2: var(--n-600);   /* secondary */
+  --fg-3: var(--n-400);   /* muted — non-text UI only, fails as body copy */
+  --fg-inverse: var(--n-white);
+
+  --bg-1: var(--n-white); /* cards — sheets laid on paper */
+  --bg-2: var(--n-050);   /* page background */
+  --bg-3: var(--n-100);   /* sunken surfaces / alternating bands */
+  --bg-inverse: var(--gk-charcoal);
+
+  --hairline: var(--n-200);
+
+  /* --- Type: three families, one voice ---------------------- */
+  --font-sans: 'Nunito Sans Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif; /* italic only */
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+
+  /* Modular scale, ratio ~1.22 from a 16px base */
+  --fs-xs: 0.75rem;    /* 12 — eyebrow */
+  --fs-sm: 0.875rem;   /* 14 — small / mono caption */
+  --fs-base: 1rem;     /* 16 — body */
+  --fs-lg: 1.25rem;    /* 20 — lead paragraph */
+  --fs-xl: 1.5rem;     /* 24 — H3 card title */
+  --fs-2xl: 1.875rem;  /* 30 — pull-quote (Fraunces) */
+  --fs-3xl: 2.375rem;  /* 38 — H2 */
+  --fs-4xl: 3rem;      /* 48 — H1 section opener */
+  --fs-6xl: 4.75rem;   /* 76 — display headline */
+
+  --w-regular: 400;
+  --w-semibold: 600;
+  --w-bold: 700;
+  --w-extrabold: 800;
+  --w-black: 900;
+
+  /* Headline metrics — lh 1.05–1.15, tracking −0.02 to −0.03em */
+  --lh-display: 1.05;
+  --lh-heading: 1.12;
+  --lh-body: 1.6;      /* body 1.55–1.7 */
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.02em;
+  --tracking-eyebrow: 0.12em;
+
+  /* --- Spacing — 4-pt scale --------------------------------- */
+  --sp-1: 0.25rem;  /*   4 */
+  --sp-2: 0.5rem;   /*   8 */
+  --sp-3: 0.75rem;  /*  12 */
+  --sp-4: 1rem;     /*  16 */
+  --sp-5: 1.5rem;   /*  24 */
+  --sp-6: 2rem;     /*  32 */
+  --sp-7: 3rem;     /*  48 */
+  --sp-8: 4rem;     /*  64 */
+  --sp-9: 6rem;     /*  96 */
+  --sp-10: 8rem;    /* 128 */
+
+  /* --- Radii ------------------------------------------------
+     Inputs sm. Cards/buttons md. Stat cards lg. Pills for tags
+     only. Don't mix radii in one composition. */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* --- Shadows — soft, single direction ---------------------
+     Never coloured, never glowing. Hover lifts xs → sm. */
+  --shadow-xs: 0 1px 2px rgb(31 30 31 / 0.04);
+  --shadow-sm: 0 2px 8px rgb(31 30 31 / 0.06);
+  --shadow-md: 0 6px 20px rgb(31 30 31 / 0.08);
+  --shadow-lg: 0 16px 40px rgb(31 30 31 / 0.1);
+  --shadow-ring: 0 0 0 3px rgb(71 101 179 / 0.18); /* focus */
+
+  /* --- Motion ----------------------------------------------
+     Gentle ease-out. No bounces, no spring physics. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;   /* micro */
+  --dur-base: 220ms;   /* state */
+  --dur-slow: 400ms;   /* layout */
+
+  /* --- Page-level composition token -------------------------
+     Set once per <section> so the Single-Accent Viewport Rule is
+     mechanical rather than a matter of discipline. Consumed by
+     that band's eyebrow, tag pills and progress marker. */
+  --band-accent: var(--fg-2);
+  --band-accent-tint: var(--n-100);
+  --link-color: var(--gk-blue-deep);
+  --link-color-hover: #263d7d;
+  --link-underline: none;
+}

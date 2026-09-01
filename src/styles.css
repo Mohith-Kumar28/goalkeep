@@ -1,130 +1,431 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "./styles/tokens.css";
 
-@custom-variant dark (&:is(.dark *));
+@import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/fraunces/wght-italic.css";
+@import "@fontsource-variable/jetbrains-mono";
 
+/* ============================================================
+   Tailwind v4 theme bridge. Goalkeep tokens are the source of
+   truth; everything below points back at them.
+   ============================================================ */
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+
+  /* Brand escape hatches */
+  --color-charcoal: var(--gk-charcoal);
+  --color-blue: var(--gk-blue);
+  --color-blue-deep: var(--gk-blue-deep);
+  --color-blue-tint: var(--gk-blue-tint);
+  --color-teal: var(--gk-teal);
+  --color-teal-deep: var(--gk-teal-deep);
+  --color-teal-tint: var(--gk-teal-tint);
+  --color-coral: var(--gk-coral);
+  --color-coral-deep: var(--gk-coral-deep);
+  --color-coral-tint: var(--gk-coral-tint);
+  --color-yellow: var(--gk-yellow);
+  --color-yellow-deep: var(--gk-yellow-deep);
+
+  /* Neutral ramp */
+  --color-n-900: var(--n-900);
+  --color-n-700: var(--n-700);
+  --color-n-500: var(--n-500);
+  --color-n-400: var(--n-400);
+  --color-n-200: var(--n-200);
+  --color-n-100: var(--n-100);
+  --color-n-050: var(--n-050);
+
+  /* Semantic */
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-hairline: var(--hairline);
+
+  /* shadcn utility surface — border-border, ring-ring, bg-background etc. */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-band-accent: var(--band-accent);
+  --color-band-accent-tint: var(--band-accent-tint);
+
+  /* Type scale */
+  --text-xs: var(--fs-xs);
+  --text-sm: var(--fs-sm);
+  --text-base: var(--fs-base);
+  --text-lg: var(--fs-lg);
+  --text-xl: var(--fs-xl);
+  --text-2xl: var(--fs-2xl);
+  --text-3xl: var(--fs-3xl);
+  --text-4xl: var(--fs-4xl);
+  --text-6xl: var(--fs-6xl);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-pill: var(--r-pill);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --ease-out: var(--ease-out);
 }
 
+/* ============================================================
+   shadcn's expected API, remapped onto Goalkeep rather than
+   fought. shadcn ships oklch neutrals; these override them.
+   ============================================================ */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-}
+  --radius: var(--r-md);
 
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--bg-2);          /* paper, not white */
+  --foreground: var(--fg-1);
+  --card: var(--bg-1);
+  --card-foreground: var(--fg-1);
+  --popover: var(--bg-1);
+  --popover-foreground: var(--fg-1);
+
+  --primary: var(--gk-blue-deep);     /* white-on-blue-deep is AA+ */
+  --primary-foreground: var(--n-white);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg-1);
+  --muted: var(--bg-3);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--bg-3);
+  --accent-foreground: var(--fg-1);
+  --destructive: var(--gk-coral-deep);
+
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--gk-blue);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
+    border-color: var(--border);
+  }
+
   html {
-    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--bg-2);
+    color: var(--fg-1);
+    font-family: var(--font-sans);
+    font-size: var(--fs-base);
+    font-weight: var(--w-regular);
+    line-height: var(--lh-body);
+    letter-spacing: 0;
+  }
+
+  /* Focus: 3px blue 18%-alpha halo. Visible, on-brand. */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-ring);
+    border-radius: var(--r-sm);
+  }
+
+  ::selection {
+    background: var(--gk-yellow);
+    color: var(--gk-charcoal);
+  }
+}
+
+@layer components {
+  /* --- Structural enforcement of the brand book ------------- */
+
+  /* Tabular numerals on by default for mono, per the book. */
+  .font-mono,
+  [data-mono] {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* Fraunces is italic-only, pull-quotes only. Never body. */
+  .pull-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-optical-sizing: auto;
+    font-size: var(--fs-2xl);
+    line-height: 1.35;
+    font-weight: 400;
+  }
+
+  /* Eyebrow — 12px, 800, ALL CAPS, +0.12em, band accent. */
+  .eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: var(--w-extrabold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    /* Neutral by design: see the Single-Accent Viewport Rule. The accent
+       belongs to the band's content, not its label. */
+    color: var(--fg-2);
+    line-height: 1.2;
+  }
+
+  /* Headlines — 800–900, lh 1.05–1.15, tracking −0.02/−0.03em */
+  .display {
+    font-size: var(--fs-6xl);
+    font-weight: var(--w-black);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .h2 {
+    font-size: var(--fs-3xl);
+    font-weight: var(--w-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--tracking-heading);
+    text-wrap: balance;
+  }
+
+  .h3 {
+    font-size: var(--fs-xl);
+    font-weight: var(--w-bold);
+    line-height: 1.25;
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .lead {
+    font-size: var(--fs-lg);
+    font-weight: var(--w-regular);
+    line-height: 1.6;
+  }
+
+  /* Yellow is a highlight, not a fill: behind a keyword only,
+     always charcoal text on top (AAA). */
+  .keyword-mark {
+    background-color: var(--gk-yellow);
+    color: var(--gk-charcoal);
+    border-radius: var(--r-sm);
+    padding-inline: 0.14em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* The editorial grid: margin rail + main track. */
+  .band {
+    padding-block: var(--sp-7);
+  }
+  @media (min-width: 768px) {
+    .band {
+      /* 80px. The published range is 64–96; two adjacent 96s read as a gap
+         rather than as rhythm. */
+      padding-block: 5rem;
     }
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: var(--sp-4);
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: var(--sp-7);
+    }
+  }
+  @media (min-width: 1280px) {
+    .shell {
+      padding-inline: var(--sp-8);
+    }
+  }
+
+  /* 12-column editorial grid. Rail is columns 1–2. */
+  .grid-editorial {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--sp-5);
+  }
+}
+
+/* ============================================================
+   Motion. One easing curve, three durations, no exceptions.
+   Everything degrades under prefers-reduced-motion.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Marquee. Transform-only, so it never triggers layout.
+   ============================================================ */
+@keyframes gk-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    /* The track is the logo list duplicated once, so -50% is one
+       full pass and the wrap is seamless. */
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@layer components {
+  /* Alpha-only edge fade. A colour gradient here would break the
+     brand book's "no gradients" rule; masking alpha does not
+     introduce a second colour. */
+  .ticker-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 64px,
+      black calc(100% - 64px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 64px,
+      black calc(100% - 64px),
+      transparent
+    );
+  }
+
+  /* Horizontal card scrollers. The cut-off card communicates
+     scrollability — no decorative chevrons or "scroll" cues. */
+  .card-rail {
+    display: flex;
+    gap: var(--sp-5);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding-bottom: var(--sp-2);
+  }
+  .card-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .card-rail > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+}
+
+/* ============================================================
+   Shape motion. Transform-only, slow, and silent — decoration
+   that moves without asking to be watched.
+   ============================================================ */
+@keyframes gk-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes gk-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(0, -18px, 0) rotate(6deg); }
+}
+
+@keyframes gk-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@layer components {
+  /* Colour-blocked bands. Each carries its own hue, its own tint
+     surface and its own link treatment, so a section is a place
+     rather than a stretch of scroll. */
+  .band-blue {
+    --band: var(--gk-blue);
+    --band-deep: var(--gk-blue-deep);
+    --band-ink: var(--gk-blue-ink);
+    --band-tint: var(--gk-blue-tint);
+    --band-wash: #eef1fa;
+  }
+  .band-teal {
+    --band: var(--gk-teal);
+    --band-deep: var(--gk-teal-deep);
+    --band-ink: var(--gk-teal-ink);
+    --band-tint: var(--gk-teal-tint);
+    --band-wash: #f1faf7;
+  }
+  .band-coral {
+    --band: var(--gk-coral);
+    --band-deep: var(--gk-coral-deep);
+    --band-ink: var(--gk-coral-ink);
+    --band-tint: var(--gk-coral-tint);
+    --band-wash: #fbedea;
+  }
+  .band-yellow {
+    --band: var(--gk-yellow);
+    --band-deep: var(--gk-yellow-deep);
+    --band-ink: var(--gk-yellow-deep);
+    --band-tint: var(--gk-yellow-tint);
+    --band-wash: #fdfbe9;
+  }
+
+  /* Eyebrows take the band's hue at its readable depth. */
+  .eyebrow-band {
+    font-size: var(--fs-xs);
+    font-weight: var(--w-extrabold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    line-height: 1.2;
+    color: var(--band-ink, var(--fg-2));
+  }
+
+  /* A keyword highlight that can take any brand hue, not just yellow.
+     Charcoal sits on yellow and teal; white on blue-deep and coral-deep. */
+  .mark {
+    border-radius: var(--r-sm);
+    padding-inline: 0.14em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* Display-scale mono figures. Tabular numerals give every glyph the
+     same advance, which reads as a gap before the unit at 48px+. */
+  .stat-figure {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+  }
+
+  /* Cards that carry colour rather than sitting on it. */
+  .card-tinted {
+    background-color: var(--band-tint);
+    border-radius: var(--r-md);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+  .card-tinted:hover {
+    box-shadow: var(--shadow-sm);
+  }
 }

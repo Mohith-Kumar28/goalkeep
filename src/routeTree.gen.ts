@@ -8,44 +8,248 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root"
-import { Route as IndexRouteImport } from "./routes/index"
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
+import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies/index'
+import { Route as ProgramsDataLiteracyRouteImport } from './routes/programs/data-literacy'
+import { Route as ProgramsKickstarterRouteImport } from './routes/programs/kickstarter'
+import { Route as ResourcesDataQuizRouteImport } from './routes/resources/data-quiz'
+import { Route as ResourcesNewsletterRouteImport } from './routes/resources/newsletter'
+import { Route as ResourcesBlogIndexRouteImport } from './routes/resources/blog/index'
 
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WhatWeDoRoute = WhatWeDoRouteImport.update({
+  id: '/what-we-do',
+  path: '/what-we-do',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaseStudiesIndexRoute = CaseStudiesIndexRouteImport.update({
+  id: '/case-studies/',
+  path: '/case-studies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsDataLiteracyRoute = ProgramsDataLiteracyRouteImport.update({
+  id: '/programs/data-literacy',
+  path: '/programs/data-literacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsKickstarterRoute = ProgramsKickstarterRouteImport.update({
+  id: '/programs/kickstarter',
+  path: '/programs/kickstarter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesDataQuizRoute = ResourcesDataQuizRouteImport.update({
+  id: '/resources/data-quiz',
+  path: '/resources/data-quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesNewsletterRoute = ResourcesNewsletterRouteImport.update({
+  id: '/resources/newsletter',
+  path: '/resources/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesBlogIndexRoute = ResourcesBlogIndexRouteImport.update({
+  id: '/resources/blog/',
+  path: '/resources/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
+  '/contact': typeof ContactRoute
+  '/what-we-do': typeof WhatWeDoRoute
+  '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
+  '/programs/kickstarter': typeof ProgramsKickstarterRoute
+  '/resources/data-quiz': typeof ResourcesDataQuizRoute
+  '/resources/newsletter': typeof ResourcesNewsletterRoute
+  '/case-studies/': typeof CaseStudiesIndexRoute
+  '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
+  '/contact': typeof ContactRoute
+  '/what-we-do': typeof WhatWeDoRoute
+  '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
+  '/programs/kickstarter': typeof ProgramsKickstarterRoute
+  '/resources/data-quiz': typeof ResourcesDataQuizRoute
+  '/resources/newsletter': typeof ResourcesNewsletterRoute
+  '/case-studies': typeof CaseStudiesIndexRoute
+  '/resources/blog': typeof ResourcesBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  "/": typeof IndexRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/careers': typeof CareersRoute
+  '/contact': typeof ContactRoute
+  '/what-we-do': typeof WhatWeDoRoute
+  '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
+  '/programs/kickstarter': typeof ProgramsKickstarterRoute
+  '/resources/data-quiz': typeof ResourcesDataQuizRoute
+  '/resources/newsletter': typeof ResourcesNewsletterRoute
+  '/case-studies/': typeof CaseStudiesIndexRoute
+  '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/careers'
+    | '/contact'
+    | '/what-we-do'
+    | '/programs/data-literacy'
+    | '/programs/kickstarter'
+    | '/resources/data-quiz'
+    | '/resources/newsletter'
+    | '/case-studies/'
+    | '/resources/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/"
+  to:
+    | '/'
+    | '/about'
+    | '/careers'
+    | '/contact'
+    | '/what-we-do'
+    | '/programs/data-literacy'
+    | '/programs/kickstarter'
+    | '/resources/data-quiz'
+    | '/resources/newsletter'
+    | '/case-studies'
+    | '/resources/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/careers'
+    | '/contact'
+    | '/what-we-do'
+    | '/programs/data-literacy'
+    | '/programs/kickstarter'
+    | '/resources/data-quiz'
+    | '/resources/newsletter'
+    | '/case-studies/'
+    | '/resources/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  CareersRoute: typeof CareersRoute
+  ContactRoute: typeof ContactRoute
+  WhatWeDoRoute: typeof WhatWeDoRoute
+  ProgramsDataLiteracyRoute: typeof ProgramsDataLiteracyRoute
+  ProgramsKickstarterRoute: typeof ProgramsKickstarterRoute
+  ResourcesDataQuizRoute: typeof ResourcesDataQuizRoute
+  ResourcesNewsletterRoute: typeof ResourcesNewsletterRoute
+  CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
+  ResourcesBlogIndexRoute: typeof ResourcesBlogIndexRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/what-we-do': {
+      id: '/what-we-do'
+      path: '/what-we-do'
+      fullPath: '/what-we-do'
+      preLoaderRoute: typeof WhatWeDoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/case-studies/': {
+      id: '/case-studies/'
+      path: '/case-studies'
+      fullPath: '/case-studies/'
+      preLoaderRoute: typeof CaseStudiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/data-literacy': {
+      id: '/programs/data-literacy'
+      path: '/programs/data-literacy'
+      fullPath: '/programs/data-literacy'
+      preLoaderRoute: typeof ProgramsDataLiteracyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/kickstarter': {
+      id: '/programs/kickstarter'
+      path: '/programs/kickstarter'
+      fullPath: '/programs/kickstarter'
+      preLoaderRoute: typeof ProgramsKickstarterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/data-quiz': {
+      id: '/resources/data-quiz'
+      path: '/resources/data-quiz'
+      fullPath: '/resources/data-quiz'
+      preLoaderRoute: typeof ResourcesDataQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/newsletter': {
+      id: '/resources/newsletter'
+      path: '/resources/newsletter'
+      fullPath: '/resources/newsletter'
+      preLoaderRoute: typeof ResourcesNewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/blog/': {
+      id: '/resources/blog/'
+      path: '/resources/blog'
+      fullPath: '/resources/blog/'
+      preLoaderRoute: typeof ResourcesBlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -53,14 +257,24 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  CareersRoute: CareersRoute,
+  ContactRoute: ContactRoute,
+  WhatWeDoRoute: WhatWeDoRoute,
+  ProgramsDataLiteracyRoute: ProgramsDataLiteracyRoute,
+  ProgramsKickstarterRoute: ProgramsKickstarterRoute,
+  ResourcesDataQuizRoute: ResourcesDataQuizRoute,
+  ResourcesNewsletterRoute: ResourcesNewsletterRoute,
+  CaseStudiesIndexRoute: CaseStudiesIndexRoute,
+  ResourcesBlogIndexRoute: ResourcesBlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx"
-import type { createStart } from "@tanstack/react-start"
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
