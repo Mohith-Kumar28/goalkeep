@@ -46,7 +46,7 @@ export function Hero() {
               <GkButton to={hero.primaryCta.to} variant="primary">
                 {hero.primaryCta.label}
               </GkButton>
-              <GkButton to={hero.secondaryCta.to} variant="secondary">
+              <GkButton to={hero.secondaryCta.to} variant="secondaryAccent">
                 {hero.secondaryCta.label}
               </GkButton>
             </div>

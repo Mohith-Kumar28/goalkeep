@@ -75,6 +75,8 @@ export const pillars: Array<Pillar> = [
     title: 'Design',
     body:
       'Most orgs collect data that never makes it back into the programme. Paper logs, Excel, an inherited dashboard — we start by getting the foundations right.',
+    bodyFull:
+      'Most organizations have a systems design that is not adept at capturing data that actually feeds back into their program. So whether you’re working with manual data logs, excel sheets or an existing data dashboard, we help set your data foundations right.',
   },
   {
     index: '02',
@@ -82,6 +84,8 @@ export const pillars: Array<Pillar> = [
     title: 'Build',
     body:
       'Data was never meant to be this daunting. We build dashboards anyone in the org can read without being walked through them.',
+    bodyFull:
+      'Data was never meant to be this daunting, complex being. We invest time in building intuitive dashboards that are easy to read and even easier to use, so that people across the org can navigate them comfortably.',
     marginalia: '(Boring traffic-light rubric. Works.)',
   },
   {
@@ -90,6 +94,8 @@ export const pillars: Array<Pillar> = [
     title: 'Adopt',
     body:
       'What’s the point of a dashboard nobody opens? We train your team until using it is just how Monday works.',
+    bodyFull:
+      'What’s the point of a shiny dashboard when no one in the organization is using it? A big focus of our work is to conduct trainings and workshops on enabling data adoption, so that people of every level of the org can use the data being collected to make better decisions.',
   },
 ]
 
@@ -148,7 +154,7 @@ export const audiences: Array<Audience> = [
       },
       verify: 'Real quote and attribution, or permission to run it anonymized.',
     },
-    primaryCta: { label: 'See custom projects', to: '/what-we-do' },
+    primaryCta: { label: 'See custom projects', to: '/custom-projects' },
     secondaryCta: { label: 'Read the full case study', to: '/case-studies' },
   },
   {
@@ -167,7 +173,7 @@ export const audiences: Array<Audience> = [
       },
       verify: 'Real quote and attribution, or permission to run it anonymized.',
     },
-    primaryCta: { label: 'Partner with us', to: '/contact' },
+    primaryCta: { label: 'Partner with us', to: '/partner-with-us' },
     secondaryCta: { label: 'Read the full case study', to: '/case-studies' },
   },
 ]

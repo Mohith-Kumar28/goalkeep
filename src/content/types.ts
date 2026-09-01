@@ -27,7 +27,11 @@ export type Pillar = {
   /** The stage's hue, carried from the hero pills into this section. */
   hue: 'blue' | 'teal' | 'coral'
   title: string
+  /** Short form, shown on the card. */
   body: string
+  /** The client's exact wording from the brief. Shown in full on the
+   *  What we do page; kept here so the source of truth never drifts. */
+  bodyFull: string
   /** Mono marginalia in the left rail. A note, not a label. */
   marginalia?: string
 }

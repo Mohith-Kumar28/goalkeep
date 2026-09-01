@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CustomProjectsRouteImport } from './routes/custom-projects'
+import { Route as PartnerWithUsRouteImport } from './routes/partner-with-us'
 import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
 import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies/index'
 import { Route as ProgramsDataLiteracyRouteImport } from './routes/programs/data-literacy'
@@ -39,6 +41,16 @@ const CareersRoute = CareersRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomProjectsRoute = CustomProjectsRouteImport.update({
+  id: '/custom-projects',
+  path: '/custom-projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerWithUsRoute = PartnerWithUsRouteImport.update({
+  id: '/partner-with-us',
+  path: '/partner-with-us',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WhatWeDoRoute = WhatWeDoRouteImport.update({
@@ -82,6 +94,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/custom-projects': typeof CustomProjectsRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
@@ -95,6 +109,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/custom-projects': typeof CustomProjectsRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
@@ -109,6 +125,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/custom-projects': typeof CustomProjectsRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
@@ -124,6 +142,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/careers'
     | '/contact'
+    | '/custom-projects'
+    | '/partner-with-us'
     | '/what-we-do'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
@@ -137,6 +157,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/careers'
     | '/contact'
+    | '/custom-projects'
+    | '/partner-with-us'
     | '/what-we-do'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
@@ -150,6 +172,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/careers'
     | '/contact'
+    | '/custom-projects'
+    | '/partner-with-us'
     | '/what-we-do'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
@@ -164,6 +188,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
+  CustomProjectsRoute: typeof CustomProjectsRoute
+  PartnerWithUsRoute: typeof PartnerWithUsRoute
   WhatWeDoRoute: typeof WhatWeDoRoute
   ProgramsDataLiteracyRoute: typeof ProgramsDataLiteracyRoute
   ProgramsKickstarterRoute: typeof ProgramsKickstarterRoute
@@ -201,6 +227,20 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/custom-projects': {
+      id: '/custom-projects'
+      path: '/custom-projects'
+      fullPath: '/custom-projects'
+      preLoaderRoute: typeof CustomProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner-with-us': {
+      id: '/partner-with-us'
+      path: '/partner-with-us'
+      fullPath: '/partner-with-us'
+      preLoaderRoute: typeof PartnerWithUsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/what-we-do': {
@@ -260,6 +300,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
+  CustomProjectsRoute: CustomProjectsRoute,
+  PartnerWithUsRoute: PartnerWithUsRoute,
   WhatWeDoRoute: WhatWeDoRoute,
   ProgramsDataLiteracyRoute: ProgramsDataLiteracyRoute,
   ProgramsKickstarterRoute: ProgramsKickstarterRoute,

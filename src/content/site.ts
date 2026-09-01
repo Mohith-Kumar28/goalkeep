@@ -40,6 +40,7 @@ export const footerGroups = [
     heading: 'What we do',
     links: [
       { label: 'Design, build, adopt', to: '/what-we-do' },
+      { label: 'Custom projects', to: '/custom-projects' },
       { label: 'Case studies', to: '/case-studies' },
       { label: 'Kickstarter program', to: '/programs/kickstarter' },
       { label: 'Data literacy program', to: '/programs/data-literacy' },
@@ -57,6 +58,7 @@ export const footerGroups = [
     heading: 'Goalkeep',
     links: [
       { label: 'About us', to: '/about' },
+      { label: 'Partner with us', to: '/partner-with-us' },
       { label: 'Careers', to: '/careers' },
       { label: 'Contact', to: '/contact' },
     ],

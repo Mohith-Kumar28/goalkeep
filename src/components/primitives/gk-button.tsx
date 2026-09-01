@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
  * AAA on charcoal and on photography, and lets the page open and close with
  * the identical button.
  */
-type Variant = 'primary' | 'secondary' | 'tertiary'
+type Variant = 'primary' | 'secondary' | 'secondaryAccent' | 'tertiary'
 
 const base =
   'inline-flex items-center justify-center gap-2 rounded-[var(--r-md)] ' +
@@ -30,6 +30,10 @@ const variants: Record<Variant, string> = {
   secondary:
     'border-[1.5px] border-[var(--gk-charcoal)] text-[var(--gk-charcoal)] ' +
     'bg-transparent hover:bg-[var(--n-200)]',
+  // The inverse of `primary`: same hue, outlined instead of filled.
+  secondaryAccent:
+    'border-[1.5px] border-[var(--gk-blue-deep)] text-[var(--gk-blue-deep)] ' +
+    'bg-transparent hover:bg-[var(--gk-blue-tint)]',
   tertiary:
     'text-[var(--link-color)] hover:text-[var(--link-color-hover)] px-0 py-1 group',
 }
@@ -38,6 +42,8 @@ const onDarkVariants: Record<Variant, string> = {
   primary:
     'bg-white text-[var(--gk-charcoal)] hover:bg-[var(--n-200)] active:bg-[var(--n-300)]',
   secondary:
+    'border-[1.5px] border-white/70 text-white bg-transparent hover:bg-white/10 hover:border-white',
+  secondaryAccent:
     'border-[1.5px] border-white/70 text-white bg-transparent hover:bg-white/10 hover:border-white',
   tertiary: 'text-white hover:text-[var(--n-200)] px-0 py-1 group',
 }
