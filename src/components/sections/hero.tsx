@@ -1,64 +1,95 @@
-import { GkButton } from '@/components/primitives/gk-button'
-import { RotatingPhrase } from '@/components/primitives/rotating-phrase'
+import { useEffect, useState } from 'react'
 import { hero } from '@/content/homepage'
+import { GkButton } from '@/components/primitives/gk-button'
+import { KenBurns } from '@/components/primitives/ken-burns'
+import { Spotlight } from '@/components/primitives/spotlight'
+import { TiltCard } from '@/components/primitives/tilt-card'
+import { RotatingHighlight } from '@/components/primitives/rotating-highlight'
+import { Annotate, Scribble } from '@/components/primitives/doodles'
+import { FloatingField, PatternField } from '@/components/primitives/shapes'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
-const STAGE_HUE: Record<string, { bg: string; fg: string }> = {
-  blue: { bg: 'var(--gk-blue)', fg: '#fff' },
-  teal: { bg: 'var(--gk-teal)', fg: 'var(--gk-charcoal)' },
-  coral: { bg: 'var(--gk-coral)', fg: 'var(--gk-charcoal)' },
-}
-
+/**
+ * The hero.
+ *
+ * Four layers, back to front: photography that slowly drifts, a navy wash that
+ * holds it down to a readable ground, the arc lattice and floating marks off
+ * the logo, then the copy. The photographs are the point — the feedback asked
+ * for footage behind the headline the way 10x Impact Labs does it, and for the
+ * community the work is for to actually be visible.
+ *
+ * The navy wash is 0.88 alpha, not a fill. At 0.95 the photograph stops
+ * reading; below about 0.82 the white headline starts to fight the highlights
+ * in the workshop frames.
+ */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pb-10 pt-10 md:pb-20 md:pt-16" style={{ backgroundColor: 'var(--bg-2)' }}>
-      <div className="shell relative">
-        <div className="grid items-center gap-12 md:grid-cols-12 md:gap-8">
-          <div className="flex flex-col gap-6 pb-4 md:col-span-7 md:pb-6">
-            <p className="eyebrow-band band-blue">{hero.eyebrow}</p>
+    <section
+      data-ground="navy"
+      /* Pulled up under the sticky header so the photography runs to the top
+         of the viewport and the header floats on it. 82px is the header's
+         h-20 plus its 2px progress rule. */
+      className="ground-navy accent-yellow relative isolate -mt-[82px] overflow-hidden"
+    >
+      <KenBurns images={hero.backdrop} interval={7000} />
 
-            <h1 className="display max-w-[20ch] text-[clamp(2.25rem,5.2vw,3.5rem)] text-[var(--fg-1)]">
-              {hero.headlineLead} {hero.headlineTail}{' '}
-              <span className="whitespace-nowrap">
-                <RotatingPhrase phrases={hero.rotatingPhrases} /> {hero.headlineEnd}
+      {/* The wash. Alpha, not an opaque fill, so the photograph survives. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ backgroundColor: 'rgb(47 74 146 / 0.84)' }}
+      />
+
+      <PatternField pattern="arcs" color="#ffffff" opacity={0.07} scale={88} />
+      <Spotlight />
+      <FloatingField variant="a" />
+
+      <div className="shell relative z-10 grid items-center gap-12 pb-20 pt-[calc(82px+3rem)] md:pb-28 md:pt-[calc(82px+5rem)] lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-7">
+          <p className="mb-5 flex items-center gap-3">
+            <span className="eyebrow text-[var(--gk-yellow)]">{hero.eyebrow}</span>
+            <Scribble
+              name="arrow-hook"
+              color="var(--gk-yellow)"
+              className="h-6 w-10 opacity-80"
+            />
+          </p>
+
+          <h1 className="display max-w-[16ch] text-white">
+            {hero.headlineLead}{' '}
+            <Annotate mark="squiggle" color="var(--gk-yellow)" delay={0.5} nowrap>
+              {hero.headlineHighlight}
+            </Annotate>
+          </h1>
+
+          <p className="lead mt-8 max-w-[46ch] text-[length:clamp(1.125rem,1.7vw,1.5rem)] leading-snug text-white">
+            <RotatingHighlight segments={hero.leadSegments} />
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <GkButton to={hero.primaryCta.to} variant="primary" onDark magnetic withArrow>
+              {hero.primaryCta.label}
+            </GkButton>
+            <GkButton to={hero.secondaryCta.to} variant="ghost" onDark>
+              {hero.secondaryCta.label}
+            </GkButton>
+
+            {/* The margin note points back at the primary. Desktop only —
+                on a phone there is no margin for it to sit in. */}
+            <span
+              aria-hidden="true"
+              className="hidden items-start gap-1 pl-2 text-[var(--gk-yellow)] xl:flex"
+            >
+              <Scribble name="arrow-curve" color="var(--gk-yellow)" className="h-14 w-10 -scale-x-100" />
+              <span className="hand mt-4 -rotate-6 whitespace-pre-line leading-tight">
+                {hero.marginalia}
               </span>
-            </h1>
-
-            <p className="lead max-w-[52ch] text-[var(--fg-1)]">{hero.lead}</p>
-
-            {/* Design → build → adopt, stated as a set before the page
-                explains them one at a time. */}
-            <ul className="flex flex-wrap items-center gap-2">
-              {hero.stages.map((stage) => {
-                const hue = STAGE_HUE[stage.hue]
-                return (
-                  <li
-                    key={stage.label}
-                    className="rounded-[var(--r-pill)] px-4 py-1.5 text-[length:var(--fs-sm)] font-extrabold"
-                    style={{ backgroundColor: hue.bg, color: hue.fg }}
-                  >
-                    {stage.label}
-                  </li>
-                )
-              })}
-            </ul>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <GkButton to={hero.primaryCta.to} variant="primary">
-                {hero.primaryCta.label}
-              </GkButton>
-              <GkButton to={hero.secondaryCta.to} variant="secondaryAccent">
-                {hero.secondaryCta.label}
-              </GkButton>
-            </div>
-
-            <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]" data-mono>
-              {hero.marginalia}
-            </p>
+            </span>
           </div>
+        </div>
 
-          <div className="md:col-span-5">
-            <HeroPanel />
-          </div>
+        <div className="lg:col-span-5">
+          <ProofCard />
         </div>
       </div>
     </section>
@@ -66,37 +97,72 @@ export function Hero() {
 }
 
 /**
- * A real photograph, with the stat sitting on it as a caption rather than
- * replacing it. The image carries the sector; the figure carries the argument.
+ * The rotating proof card. The feedback offered a choice between video and
+ * "case study card rotations on the right, so that they can immediately get
+ * tangible results of our work" — this is both: real footage behind, real
+ * numbers in front.
  */
-function HeroPanel() {
-  return (
-    <div className="relative">
-      <figure className="relative overflow-hidden rounded-[var(--r-lg)]">
-        <img
-          src="/photos/field-meeting.jpg"
-          alt="A women's group meeting outdoors, seated in a circle"
-          width={800}
-          height={600}
-          fetchPriority="high"
-          decoding="async"
-          className="aspect-[4/3] w-full object-cover"
-        />
-      </figure>
+function ProofCard() {
+  const reduced = useReducedMotion()
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
 
-      {/* The honest stat, tucked under the image where it reads as a note on
-          the work rather than as the headline. */}
-      <div
-        className="relative -mt-10 ml-6 mr-10 rounded-[var(--r-md)] p-6 md:-mt-14 md:p-7"
-        style={{ backgroundColor: 'var(--gk-charcoal)' }}
-      >
-        <p className="stat-figure text-[clamp(2.25rem,5vw,3rem)] font-black text-[var(--gk-yellow)]">
-          {hero.panel.stat}
-        </p>
-        <p className="mt-2 max-w-[26ch] text-[length:var(--fs-base)] font-bold leading-snug text-white">
-          {hero.panel.line}
-        </p>
-      </div>
+  useEffect(() => {
+    if (reduced || paused) return
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % hero.proofCards.length),
+      4200,
+    )
+    return () => window.clearInterval(id)
+  }, [reduced, paused])
+
+  const card = hero.proofCards[index]
+
+  return (
+    <div
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <TiltCard className="mx-auto max-w-[26rem]">
+        <article className="relative rotate-[-1.5deg] overflow-hidden rounded-[var(--r-lg)] border-2 border-[var(--gk-ink)] bg-[var(--gk-cream)] shadow-[10px_10px_0_var(--gk-ink)]">
+          <div className="relative aspect-[3/2] overflow-hidden">
+            {hero.proofCards.map((item, i) => (
+              <img
+                key={item.image}
+                src={item.image}
+                alt={i === index ? item.imageAlt : ''}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-[var(--ease-out)]"
+                style={{ opacity: i === index ? 1 : 0 }}
+              />
+            ))}
+          </div>
+
+          <div className="p-6 text-[var(--gk-ink)]">
+            <p className="hand text-[var(--gk-coral-ink)]">{card.org}</p>
+            <p className="stat-figure mt-2 text-[length:clamp(1.75rem,3.2vw,2.5rem)]">
+              {card.stat}
+            </p>
+            <p className="mt-2 text-[length:var(--fs-sm)] font-semibold">{card.line}</p>
+
+            <ol className="mt-5 flex gap-2" aria-hidden="true">
+              {hero.proofCards.map((item, i) => (
+                <li
+                  key={item.org}
+                  className="h-[5px] rounded-full transition-all duration-[var(--dur-base)] ease-[var(--ease-out)]"
+                  style={{
+                    width: i === index ? 26 : 10,
+                    background: i === index ? 'var(--gk-blue)' : 'var(--hairline)',
+                  }}
+                />
+              ))}
+            </ol>
+          </div>
+        </article>
+      </TiltCard>
     </div>
   )
 }

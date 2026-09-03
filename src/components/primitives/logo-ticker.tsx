@@ -29,7 +29,7 @@ function Rail({
     <div className="group/rail relative overflow-hidden">
       <ul
         className={cn(
-          'flex w-max items-center gap-8 md:gap-12',
+          'flex w-max items-center gap-10 md:gap-16',
           'motion-safe:animate-[gk-marquee_linear_infinite]',
           'group-hover/rail:[animation-play-state:paused]',
           'group-focus-within/rail:[animation-play-state:paused]',
@@ -63,15 +63,18 @@ function LogoTile({
       loading="lazy"
       decoding="async"
       tabIndex={tabbable ? 0 : -1}
-      width={160}
-      height={64}
+      width={220}
+      height={112}
       className={cn(
         // A fixed box with object-contain normalises marks that each sit at
-        // their own scale inside a square source file.
-        'h-14 w-[120px] object-contain md:h-20 md:w-[160px]',
-        'opacity-[0.72] grayscale',
-        'transition-[filter,opacity] duration-[var(--dur-base)] ease-[var(--ease-out)]',
-        'hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:grayscale-0',
+        // their own scale inside a square source file. Sized up per the
+        // feedback ("make slightly bigger") — h-14/h-20 was reading timid.
+        'h-20 w-[168px] object-contain md:h-28 md:w-[220px]',
+        // Full colour by default. Greyscaling other organisations' marks to
+        // protect our own palette was the wrong trade: these logos are the
+        // credibility, and a wall of grey reads as a stock placeholder.
+        'transition-transform duration-[var(--dur-base)] ease-[var(--ease-pop)]',
+        'hover:scale-[1.06] focus-visible:scale-[1.06]',
       )}
     />
   )

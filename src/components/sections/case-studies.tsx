@@ -1,160 +1,133 @@
-import { Link } from '@tanstack/react-router'
-import { ArrowRight } from 'lucide-react'
-import { CardRail } from '@/components/primitives/card-rail'
-import { GkButton } from '@/components/primitives/gk-button'
-import { Reveal } from '@/components/primitives/reveal'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
+import { GkButton } from '@/components/primitives/gk-button'
+import { CardRail } from '@/components/primitives/card-rail'
+import { TiltCard } from '@/components/primitives/tilt-card'
+import { Scribble } from '@/components/primitives/doodles'
+import { PatternField } from '@/components/primitives/shapes'
+import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
 
 /**
- * Band 5 — TEAL (outcome).
+ * A rail of sticker cards on navy.
  *
- * Accessibility catch worth stating: #6EBFAC fails contrast at small sizes on
- * cream, so the eyebrow and the position rail use teal-DEEP (#4A9C88). Pure
- * teal only ever appears as a tint fill. Teal never carries text under 24px.
+ * Cards carry one photograph and one number. Everything else that used to sit
+ * on them — the second sentence, the third tag — went, because the number is
+ * the only thing anyone reads on a card in a horizontal scroller.
+ *
+ * The last card is the honest one: no photograph, inverted, the project where
+ * the answer was wrong. It is the reason the other four are believable.
  */
+const CARD_HUES = [
+  'var(--gk-yellow)',
+  'var(--gk-teal)',
+  'var(--gk-coral)',
+  'var(--gk-yellow)',
+]
+
 export function CaseStudies() {
   return (
     <section
-      className="band"
-      style={{
-        backgroundColor: 'var(--bg-1)',
-        '--band-accent': 'var(--gk-teal-deep)',
-        '--band-accent-tint': 'var(--gk-teal-tint)',
-        '--link-color': 'var(--gk-teal-ink)',
-        '--link-color-hover': 'var(--gk-charcoal)',
-      } as React.CSSProperties}
+      data-ground="navy"
+      className="ground-navy band accent-teal relative overflow-hidden"
       aria-labelledby="case-studies-heading"
     >
-      <div className="shell">
-        <Reveal className="flex flex-col gap-5 pb-8 md:flex-row md:items-end md:gap-12 md:pb-6">
-          <div className="flex max-w-[52ch] flex-col gap-4">
-            <p className="eyebrow-band band-teal">{caseStudySection.eyebrow}</p>
-            <h2 id="case-studies-heading" className="h2 text-[var(--fg-1)]">
-              {caseStudySection.headline}
-            </h2>
-            <p className="lead text-[var(--fg-2)]">{caseStudySection.lead}</p>
-          </div>
-          <div className="shrink-0 md:ml-auto md:pb-1">
-            <GkButton to={caseStudySection.cta.to} variant="tertiary" withArrow>
+      <PatternField pattern="grid" color="#ffffff" opacity={0.05} scale={56} />
+
+      <div className="shell relative">
+        <Reveal>
+          <div className="mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="eyebrow mb-3">{caseStudySection.eyebrow}</p>
+              <h2 id="case-studies-heading" className="h2 max-w-[20ch]">
+                {caseStudySection.headline}{' '}
+                <span className="text-[var(--gk-yellow)]">
+                  {caseStudySection.headlineTail}
+                </span>
+              </h2>
+            </div>
+            <GkButton to={caseStudySection.cta.to} variant="ghost" onDark withArrow>
               {caseStudySection.cta.label}
             </GkButton>
           </div>
         </Reveal>
       </div>
 
-      {/* Rail starts at the shell's left edge and runs off the right, so the
-          cut-off card communicates scrollability without a decorative cue. */}
-      <div className="shell !pr-0">
+      {/* Bleeds off the right edge so the rail reads as continuing. */}
+      <div className="shell relative !pr-0">
         <CardRail label="Case studies" controlsClassName="pr-4 md:pr-12 xl:pr-16">
-          {caseStudies.map((study, i) => (
-            <CaseStudyCard key={study.slug} study={study} index={i} />
+          {caseStudies.map((study, index) => (
+            <Card key={study.slug} study={study} hue={CARD_HUES[index % 4]} />
           ))}
-          <div className="w-4 shrink-0 md:w-8" aria-hidden="true" />
         </CardRail>
       </div>
     </section>
   )
 }
 
-const CARD_HUES = [
-  { fill: 'var(--gk-teal-tint)', solid: 'var(--gk-teal)' },
-  { fill: 'var(--gk-blue-tint)', solid: 'var(--gk-blue)' },
-  { fill: 'var(--gk-coral-tint)', solid: 'var(--gk-coral)' },
-  { fill: 'var(--gk-yellow-tint)', solid: 'var(--gk-yellow)' },
-]
-
-function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
-  const inverse = study.inverse === true
-  const hue = CARD_HUES[index % CARD_HUES.length]
+function Card({ study, hue }: { study: CaseStudy; hue: string }) {
+  const tilt = study.inverse ? 1.2 : -1.2
 
   return (
-    <Link
-      to="/case-studies"
-      className={cn(
-        'group flex w-[85vw] flex-col overflow-hidden rounded-[var(--r-md)] sm:w-[360px]',
-        'transition-shadow duration-[var(--dur-base)] ease-[var(--ease-out)]',
-        'shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-sm)]',
-        inverse
-          ? 'bg-[var(--gk-charcoal)]'
-          : 'border border-[var(--hairline)] bg-[var(--bg-1)]',
-      )}
-    >
-      {!inverse && (
-        <>
-          {study.image && (
-            <img
-              src={study.image}
-              alt={study.imageAlt ?? ''}
-              loading="lazy"
-              decoding="async"
-              width={720}
-              height={480}
-              className="aspect-[3/2] w-full object-cover"
-            />
-          )}
-          <div
-            className="px-6 py-4"
-            style={{ backgroundColor: hue.fill }}
-          >
-            <p className="stat-figure text-[length:var(--fs-base)] font-black text-[var(--gk-charcoal)]">
-              {study.stat.value}
-            </p>
+    <TiltCard className="w-[19rem] shrink-0 md:w-[23rem]" max={7}>
+      <article
+        className={cn(
+          'flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border-2 border-[var(--gk-ink)]',
+          'shadow-[8px_8px_0_var(--gk-ink)]',
+          study.inverse
+            ? 'bg-[var(--gk-navy-deep)] text-white'
+            : 'bg-[var(--gk-cream)] text-[var(--gk-ink)]',
+        )}
+        style={{ transform: `rotate(${tilt}deg)` }}
+      >
+        {study.image ? (
+          <img
+            src={study.image}
+            alt={study.imageAlt ?? ''}
+            loading="lazy"
+            decoding="async"
+            className="aspect-[3/2] w-full border-b-2 border-[var(--gk-ink)] object-cover"
+          />
+        ) : (
+          <div className="grid aspect-[3/2] w-full place-items-center border-b-2 border-[var(--gk-ink)] bg-[var(--gk-navy)]">
+            <Scribble name="cross" color="var(--gk-coral)" className="h-16 w-16" />
           </div>
-        </>
-      )}
-
-      <div className="flex flex-1 flex-col gap-4 p-6">
-        <ul className="flex flex-wrap gap-2">
-          {study.tags.map((tag) => (
-            <li
-              key={tag}
-              className={cn(
-                'rounded-[var(--r-pill)] px-3 py-1 text-[length:var(--fs-sm)] font-bold',
-                inverse
-                  ? 'border border-white/40 text-white'
-                  : 'text-[var(--gk-charcoal)]',
-              )}
-              style={inverse ? undefined : { backgroundColor: hue.fill }}
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-
-        <h3
-          className={cn('h3', inverse ? 'text-white' : 'text-[var(--fg-1)]')}
-        >
-          {study.title}
-        </h3>
-
-        {study.body && (
-          <p className="text-[length:var(--fs-base)] text-[var(--n-200)]">
-            {study.body}
-          </p>
         )}
 
-        {inverse && (
-          <p className="mt-auto text-[length:var(--fs-sm)] text-[var(--n-400)]" data-mono>
+        <div
+          className="border-b-2 border-[var(--gk-ink)] px-6 py-4"
+          style={{
+            background: study.inverse ? 'var(--gk-coral)' : hue,
+            color: 'var(--gk-ink)',
+          }}
+        >
+          <p className="stat-figure text-[length:clamp(1.5rem,2.6vw,2rem)]">
             {study.stat.value}
           </p>
-        )}
+        </div>
 
-        <span
-          className={cn(
-            'inline-flex items-center gap-2 text-[length:var(--fs-base)] font-bold',
-            inverse ? 'text-white' : 'text-[var(--link-color)]',
+        <div className="flex flex-1 flex-col gap-3 p-6">
+          <ul className="flex flex-wrap gap-2">
+            {study.tags.map((tag) => (
+              <li
+                key={tag}
+                className={cn(
+                  'chip border-2 text-[length:var(--fs-xs)]',
+                  study.inverse
+                    ? 'border-white/50 text-white'
+                    : 'border-[var(--gk-ink)] text-[var(--gk-ink)]',
+                )}
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <h3 className="h3 text-[length:var(--fs-lg)]">{study.title}</h3>
+          {study.body && (
+            <p className="text-[length:var(--fs-sm)] text-white/80">{study.body}</p>
           )}
-        >
-          Read the case study
-          <ArrowRight
-            aria-hidden="true"
-            strokeWidth={1.75}
-            className="size-4 transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:translate-x-[3px]"
-          />
-        </span>
-      </div>
-    </Link>
+        </div>
+      </article>
+    </TiltCard>
   )
 }

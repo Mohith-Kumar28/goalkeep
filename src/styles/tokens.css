@@ -1,149 +1,160 @@
-/* ============================================================
-   Goalkeep — colors_and_type.css
-   Source of truth: Goalkeep · Brand Guidelines · v0 · May 2026
+/* ============================================================================
+   Goalkeep design tokens — v1, September 2026
+   ----------------------------------------------------------------------------
+   Sampled directly from the logo PNG and the approved Canva creatives, not from
+   the v0 brand PDF. The v0 tokens were desaturated by roughly 25% chroma and sat
+   on a cool grey paper (#FAFAFA); that is the "dull backgrounds" and "pastel"
+   note in the homepage feedback. Everything below is the real mark's own hue,
+   pushed back to full chroma, on the warm cream the Canva creatives actually use.
+
+   Two hard rules from the feedback, encoded here rather than left to discipline:
+     1. There is no grey text token. Text is ink or white; anything softer is an
+        alpha of one of those two, so it can never drift into mud.
+     2. Navy is a ground, not an accent. It carries roughly half the page.
+
    Reference the token, never the hex.
-   The semantic --fg-*, --bg-*, --accent-* tokens are the public
-   API; brand-name tokens (--gk-blue, etc.) are escape hatches
-   for when semantics aren't enough.
-   ============================================================ */
+   ========================================================================== */
 
 :root {
-  /* --- Brand hues. Five, sampled from the mark. -------------
-     Each stands for a community Goalkeep serves. Not decorative. */
-  --gk-charcoal: #3f3d3e;
-  --gk-blue: #4765b3;
-  --gk-teal: #6ebfac;
-  --gk-coral: #e6968b;
-  --gk-yellow: #e7dd50;
+  /* --- Grounds ----------------------------------------------------------- */
+  --gk-navy: #2f4a92;        /* dominant surface. The Canva creatives' ground. */
+  --gk-navy-deep: #1f3268;   /* pressed / darkest well */
+  --gk-navy-lift: #3a5aae;   /* a card raised off navy */
+  --gk-cream: #faf7f0;       /* warm paper. Replaces the cool #FAFAFA. */
+  --gk-cream-deep: #f2ede0;  /* sunken band */
+  --gk-white: #ffffff;
+  --gk-ink: #14131a;         /* near-black. The only dark text colour. */
 
-  /* Deeps — hover states and dense data */
-  --gk-blue-deep: #2f4a92;
-  --gk-teal-deep: #4a9c88;
-  --gk-coral-deep: #c97268;
-  --gk-yellow-deep: #b8ab1f;
+  /* --- Pop hues ----------------------------------------------------------
+     Each is the logo's own hue at full chroma. -deep is the hover/darken step
+     and keeps its foreground legible; -ink is the version that survives as
+     small text on cream, where the pop hue itself does not. */
+  --gk-blue: #2f5fe8;
+  --gk-blue-deep: #1e43b8;
+  --gk-teal: #17bfac;
+  --gk-teal-deep: #12a895;
+  --gk-teal-ink: #0b6a5f;
+  --gk-coral: #ff6a52;
+  --gk-coral-deep: #e8503a;
+  --gk-coral-ink: #b33520;
+  --gk-yellow: #e9df22;
+  --gk-yellow-deep: #c4ba0e;
 
-  /* Inks — for small text only. The deeps above are fill/hover values and
-     fall short of 4.5:1 at 12–14px; these clear it on white and on tint. */
-  --gk-blue-ink: #2f4a92;
-  --gk-teal-ink: #26604f;
-  --gk-coral-ink: #8f3f35;
+  /* --- Tints — light bands, chips, wash panels --------------------------- */
+  --gk-blue-tint: #e4eafd;
+  --gk-teal-tint: #ddf6f2;
+  --gk-coral-tint: #ffe6e1;
+  --gk-yellow-tint: #fbf8d3;
 
-  /* Tints — ~15% on white, for backgrounds */
-  --gk-blue-tint: #dbe0f0;
-  --gk-teal-tint: #def1ec;
-  --gk-coral-tint: #f8e0dd;
-  --gk-yellow-tint: #fbf8dc;
+  /* --- Semantic foreground ----------------------------------------------
+     No greys. Softer text is an alpha of ink or white so it stays in family
+     with whatever ground it lands on. */
+  --fg-1: var(--gk-ink);
+  --fg-2: rgb(20 19 26 / 0.86);
+  --fg-inverse: var(--gk-white);
+  --fg-inverse-2: rgb(255 255 255 / 0.78);
 
-  /* --- Neutral scale — warm-cool charcoal, anchored 700 ----- */
-  --n-900: #1f1e1f;
-  --n-800: #2f2e2f;   /* interpolated — not published in v0 */
-  --n-700: #3f3d3e;   /* the wordmark colour */
-  --n-600: #605e60;   /* interpolated */
-  --n-500: #807e80;
-  --n-400: #aba9ab;
-  --n-300: #c9c8c9;   /* interpolated */
-  --n-200: #e8e7e8;
-  --n-100: #f4f3f4;
-  --n-050: #fafafa;
-  --n-white: #ffffff;
+  /* --- Semantic ground --------------------------------------------------- */
+  --bg-page: var(--gk-cream);
+  --bg-card: var(--gk-white);
+  --bg-sunken: var(--gk-cream-deep);
+  --bg-inverse: var(--gk-navy);
 
-  /* --- Semantic layer — the public API ---------------------- */
-  --accent-primary: var(--gk-blue);    /* links, primary CTAs, "data" */
-  --accent-data: var(--gk-teal);       /* charts, outcome / growth */
-  --accent-warm: var(--gk-coral);      /* human / people, quote pulls */
-  --accent-spark: var(--gk-yellow);    /* keyword highlight only */
+  --hairline: #e6dfd1;                        /* on cream */
+  --hairline-inverse: rgb(255 255 255 / 0.2); /* on navy */
 
-  --fg-1: var(--n-700);   /* primary text */
-  /* The book's rule of thumb is "500 for secondary", but #807E80 only
-     reaches 3.64:1 on our #F4F3F4 bands — short of 4.5:1 — and the book
-     also says "for body copy below 18px, stay AAA". The neutral ramp is
-     unchanged; only this semantic mapping steps to 600 so secondary text
-     passes at 14–20px. Use --n-500 directly for large text on white. */
-  --fg-2: var(--n-600);   /* secondary */
-  --fg-3: var(--n-400);   /* muted — non-text UI only, fails as body copy */
-  --fg-inverse: var(--n-white);
+  /* --- Type --------------------------------------------------------------
+     Outfit carries the geometry of the wordmark; Plus Jakarta reads long-form
+     without the Inter default look; Caveat is a real hand, used for section
+     labels and marginalia. The mono is gone — it read as machine-generated. */
+  --font-display: "Outfit Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-hand: "Caveat Variable", "Bradley Hand", cursive;
 
-  --bg-1: var(--n-white); /* cards — sheets laid on paper */
-  --bg-2: var(--n-050);   /* page background */
-  --bg-3: var(--n-100);   /* sunken surfaces / alternating bands */
-  --bg-inverse: var(--gk-charcoal);
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 2.75rem;
+  --fs-4xl: 3.5rem;
+  --fs-5xl: 4.5rem;
+  --fs-6xl: 6rem;
 
-  --hairline: var(--n-200);
-
-  /* --- Type: three families, one voice ---------------------- */
-  --font-sans: 'Nunito Sans Variable', ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', sans-serif;
-  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif; /* italic only */
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
-    Menlo, monospace;
-
-  /* Modular scale, ratio ~1.22 from a 16px base */
-  --fs-xs: 0.75rem;    /* 12 — eyebrow */
-  --fs-sm: 0.875rem;   /* 14 — small / mono caption */
-  --fs-base: 1rem;     /* 16 — body */
-  --fs-lg: 1.25rem;    /* 20 — lead paragraph */
-  --fs-xl: 1.5rem;     /* 24 — H3 card title */
-  --fs-2xl: 1.875rem;  /* 30 — pull-quote (Fraunces) */
-  --fs-3xl: 2.375rem;  /* 38 — H2 */
-  --fs-4xl: 3rem;      /* 48 — H1 section opener */
-  --fs-6xl: 4.75rem;   /* 76 — display headline */
+  /* Caveat runs small for its point size; it needs its own scale. */
+  --fs-hand-sm: 1.375rem;
+  --fs-hand: 1.75rem;
+  --fs-hand-lg: 2.5rem;
 
   --w-regular: 400;
+  --w-medium: 500;
   --w-semibold: 600;
   --w-bold: 700;
   --w-extrabold: 800;
   --w-black: 900;
 
-  /* Headline metrics — lh 1.05–1.15, tracking −0.02 to −0.03em */
-  --lh-display: 1.05;
-  --lh-heading: 1.12;
-  --lh-body: 1.6;      /* body 1.55–1.7 */
-  --tracking-display: -0.03em;
-  --tracking-heading: -0.02em;
-  --tracking-eyebrow: 0.12em;
+  --lh-display: 0.98;
+  --lh-heading: 1.08;
+  --lh-body: 1.62;
+  --tracking-display: -0.04em;
+  --tracking-heading: -0.025em;
 
-  /* --- Spacing — 4-pt scale --------------------------------- */
-  --sp-1: 0.25rem;  /*   4 */
-  --sp-2: 0.5rem;   /*   8 */
-  --sp-3: 0.75rem;  /*  12 */
-  --sp-4: 1rem;     /*  16 */
-  --sp-5: 1.5rem;   /*  24 */
-  --sp-6: 2rem;     /*  32 */
-  --sp-7: 3rem;     /*  48 */
-  --sp-8: 4rem;     /*  64 */
-  --sp-9: 6rem;     /*  96 */
-  --sp-10: 8rem;    /* 128 */
+  /* --- Space — 4pt ------------------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
 
-  /* --- Radii ------------------------------------------------
-     Inputs sm. Cards/buttons md. Stat cards lg. Pills for tags
-     only. Don't mix radii in one composition. */
-  --r-sm: 6px;
-  --r-md: 12px;
-  --r-lg: 20px;
+  /* --- Radius ------------------------------------------------------------ */
+  --r-sm: 8px;
+  --r-md: 16px;
+  --r-lg: 28px;
+  --r-xl: 40px;
   --r-pill: 999px;
 
-  /* --- Shadows — soft, single direction ---------------------
-     Never coloured, never glowing. Hover lifts xs → sm. */
-  --shadow-xs: 0 1px 2px rgb(31 30 31 / 0.04);
-  --shadow-sm: 0 2px 8px rgb(31 30 31 / 0.06);
-  --shadow-md: 0 6px 20px rgb(31 30 31 / 0.08);
-  --shadow-lg: 0 16px 40px rgb(31 30 31 / 0.1);
-  --shadow-ring: 0 0 0 3px rgb(71 101 179 / 0.18); /* focus */
+  /* --- Depth -------------------------------------------------------------
+     The v0 book banned hover-lift and called for near-flat surfaces. The
+     homepage feedback reverses that explicitly ("cards that move slightly when
+     the cursor is hovering - more shadows - some looking a little too flat"),
+     so cards now lift and the shadow ramp has real range. --shadow-pop is the
+     hard offset that makes a card read as a sticker. */
+  --shadow-sm: 0 2px 8px rgb(20 19 26 / 0.08);
+  --shadow-md: 0 10px 30px rgb(20 19 26 / 0.12);
+  --shadow-lg: 0 24px 60px rgb(20 19 26 / 0.16);
+  --shadow-pop: 6px 6px 0 var(--gk-ink);
+  --shadow-pop-sm: 4px 4px 0 var(--gk-ink);
+  --shadow-navy: 0 20px 50px rgb(31 50 104 / 0.35);
+  --shadow-ring: 0 0 0 3px rgb(47 95 232 / 0.4);
+  --shadow-ring-inverse: 0 0 0 3px rgb(233 223 34 / 0.55);
 
-  /* --- Motion ----------------------------------------------
-     Gentle ease-out. No bounces, no spring physics. */
+  /* --- Motion ------------------------------------------------------------
+     --ease-pop overshoots. The v0 book banned that; the feedback asked for
+     playfulness, and a 1.56 overshoot on a 260ms hover is the cheapest way to
+     make a surface feel physical rather than drawn. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 140ms;   /* micro */
-  --dur-base: 220ms;   /* state */
-  --dur-slow: 400ms;   /* layout */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-base: 260ms;
+  --dur-slow: 520ms;
+  --dur-lazy: 900ms;
 
-  /* --- Page-level composition token -------------------------
-     Set once per <section> so the Single-Accent Viewport Rule is
-     mechanical rather than a matter of discipline. Consumed by
-     that band's eyebrow, tag pills and progress marker. */
-  --band-accent: var(--fg-2);
-  --band-accent-tint: var(--n-100);
-  --link-color: var(--gk-blue-deep);
-  --link-color-hover: #263d7d;
-  --link-underline: none;
+  /* --- Band composition --------------------------------------------------
+     Each band sets these; components read them instead of naming a hue, so a
+     section changes character by changing one class. */
+  --band-accent: var(--gk-blue);
+  --band-accent-deep: var(--gk-blue-deep);
+  --band-accent-ink: var(--gk-blue);
+  --band-tint: var(--gk-blue-tint);
+  --band-ink: var(--fg-1);
+  --band-ink-2: var(--fg-2);
+  --band-hairline: var(--hairline);
+  --link-color: var(--gk-blue);
+  --link-color-hover: var(--gk-blue-deep);
 }

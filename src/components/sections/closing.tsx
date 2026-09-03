@@ -1,70 +1,75 @@
-import { GkButton } from '@/components/primitives/gk-button'
-import { Reveal } from '@/components/primitives/reveal'
-import { Ring } from '@/components/primitives/shapes'
 import { closing } from '@/content/homepage'
+import { GkButton } from '@/components/primitives/gk-button'
+import { Scribble } from '@/components/primitives/doodles'
+import { FloatingField, PatternField, Ring } from '@/components/primitives/shapes'
+import { Reveal } from '@/components/primitives/reveal'
 
 /**
- * Band 8 — charcoal full-bleed, no accent (one yellow keyword).
+ * The bookend.
  *
- * The page's only dark surface, which is what makes it land as an ending —
- * the footer below deliberately does NOT reuse white-on-charcoal.
- *
- * Left-aligned, not centered. The empty right track is the point.
- *
- * The yellow keyword does not animate here. It animated once in the hero;
- * repeating the trick would cheapen the bookend.
+ * Left-aligned, not centred — the empty right track is where the ring and the
+ * margin note live, and a centred block here would close the page with the
+ * same symmetry every landing page ends on.
  */
 export function Closing() {
   return (
     <section
-      className="relative overflow-hidden py-16 md:py-24"
-      style={{ backgroundColor: 'var(--gk-charcoal)' }}
+      data-ground="navy"
+      className="ground-navy accent-yellow relative overflow-hidden py-20 md:py-32"
       aria-labelledby="closing-heading"
     >
+      <PatternField pattern="arcs" color="#ffffff" opacity={0.06} scale={96} />
+      <FloatingField variant="c" />
+
       <Ring
-        width={12}
-        gap={10}
-        spin={160}
-        className="absolute right-[8%] top-1/2 hidden size-44 -translate-y-1/2 lg:block"
+        size={260}
+        thickness={20}
+        spin={190}
+        className="pointer-events-none absolute -right-20 top-1/2 hidden -translate-y-1/2 opacity-40 xl:block"
       />
 
-      <div className="shell relative grid gap-10 md:grid-cols-12 md:gap-6">
-        <Reveal className="md:col-span-8 lg:col-span-6">
-          <div className="flex flex-col gap-6">
-            <h2
-              id="closing-heading"
-              className="text-[2rem] font-extrabold leading-[1.08] tracking-[var(--tracking-display)] text-white md:text-[length:var(--fs-4xl)]"
-            >
+      <div className="shell relative grid gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <Reveal>
+            <p className="eyebrow mb-4">{closing.eyebrow}</p>
+            <h2 id="closing-heading" className="display max-w-[15ch]">
               {closing.headlineLead}{' '}
               <span className="keyword-mark">{closing.headlineKeyword}</span>{' '}
               {closing.headlineTail}
-              <br />
-              {closing.headlineSecondLine}
+              <span className="mt-4 block text-[var(--gk-yellow)]">
+                {closing.headlineSecondLine}
+              </span>
             </h2>
+          </Reveal>
 
-            <p className="pull-quote text-[var(--n-200)]">{closing.pullQuote}</p>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <GkButton to={closing.primaryCta.to} variant="primary" onDark>
-                {closing.primaryCta.label}
-              </GkButton>
+          <Reveal delay={0.1}>
+            <div className="mt-12 flex flex-wrap items-center gap-4">
               <GkButton
-                to={closing.secondaryCta.to}
-                variant="tertiary"
+                to={closing.primaryCta.to}
+                variant="primary"
                 onDark
+                magnetic
                 withArrow
               >
+                {closing.primaryCta.label}
+              </GkButton>
+              <GkButton to={closing.secondaryCta.to} variant="ghost" onDark>
                 {closing.secondaryCta.label}
               </GkButton>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
-        {/* The far rail carries one line and nothing else. */}
-        <div className="md:col-span-4 md:col-start-9 lg:col-start-10 lg:col-span-3">
-          <p className="text-[length:var(--fs-sm)] text-[var(--n-400)]" data-mono>
-            {closing.marginalia.value}
-          </p>
+        <div className="hidden lg:col-span-4 lg:block">
+          <span
+            aria-hidden="true"
+            className="mt-6 flex items-start gap-2 text-[var(--gk-yellow)]"
+          >
+            <Scribble name="arrow-curve" color="var(--gk-yellow)" className="h-16 w-12 -scale-x-100" />
+            <span className="hand mt-6 -rotate-3 whitespace-pre-line leading-tight">
+              {closing.marginalia.value}
+            </span>
+          </span>
         </div>
       </div>
     </section>

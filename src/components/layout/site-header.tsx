@@ -7,12 +7,14 @@ import { cn } from '@/lib/utils'
 import { Wordmark } from './wordmark'
 
 /**
- * The header carries NO accent colour, ever.
+ * The header sits over a navy hero and then over cream for the rest of the
+ * page, so it swaps its whole palette at the scroll threshold rather than
+ * staying neutral. Before the threshold it is transparent with the white
+ * wordmark; after it, cream with a hard ink rule and the ink wordmark.
  *
- * That's deliberate: sticky chrome sits over every band in turn, so a blue
- * CTA up here would inject a second hue into the coral and teal bands and
- * break the Single-Accent Viewport Rule. The CTA is a charcoal outline
- * instead — which is honest anyway, since it's "talk to us", not "buy".
+ * The threshold is 64px rather than "past the hero" on purpose: a header that
+ * only changes at the very bottom of a full-height hero feels broken while
+ * you're scrolling through it.
  */
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
@@ -39,16 +41,20 @@ export function SiteHeader() {
 
   return (
     <header
+      /* While transparent, this chrome sits on the navy hero. Declaring that
+         is what lets the contrast audit resolve the real backdrop instead of
+         walking past it to the cream body. */
+      data-ground={scrolled ? 'cream' : 'navy'}
       className={cn(
         'sticky top-0 z-40 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
         scrolled
-          ? 'bg-[var(--bg-2)] border-b border-[var(--hairline)]'
-          : 'bg-transparent border-b border-transparent',
+          ? 'border-b-2 border-[var(--gk-ink)] bg-[var(--gk-cream)]'
+          : 'border-b-2 border-transparent bg-transparent',
       )}
     >
       <div className="shell flex h-20 items-center justify-between gap-6">
         <Link to="/" aria-label="Goalkeep, home" className="shrink-0">
-          <Wordmark />
+          <Wordmark inverse={!scrolled} />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
@@ -57,10 +63,15 @@ export function SiteHeader() {
               key={item.to}
               to={item.to}
               className={cn(
-                'text-[var(--fg-1)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
-                'hover:text-[var(--n-900)]',
+                'relative py-1 font-display font-bold transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
+                // The underline grows from the left on hover. It is the one
+                // piece of chrome motion on the page.
+                'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-[3px] after:origin-left after:scale-x-0',
+                'after:bg-[var(--gk-yellow)] after:transition-transform after:duration-[var(--dur-base)] after:ease-[var(--ease-out)]',
+                'hover:after:scale-x-100 focus-visible:after:scale-x-100',
+                scrolled ? 'text-[var(--gk-ink)]' : 'text-white',
               )}
-              activeProps={{ className: 'font-bold' }}
+              activeProps={{ className: 'after:scale-x-100' }}
             >
               {item.label}
             </Link>
@@ -68,7 +79,11 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden lg:block">
-          <GkButton to="/contact" variant="secondary">
+          <GkButton
+            to="/contact"
+            variant={scrolled ? 'primary' : 'secondary'}
+            className="!px-5 !py-3 !text-[length:var(--fs-sm)]"
+          >
             Partner with us
           </GkButton>
         </div>
@@ -79,7 +94,10 @@ export function SiteHeader() {
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          className="grid size-11 place-items-center text-[var(--fg-1)] lg:hidden"
+          className={cn(
+            'grid size-11 place-items-center lg:hidden',
+            scrolled || menuOpen ? 'text-[var(--gk-ink)]' : 'text-white',
+          )}
         >
           {menuOpen ? (
             <X aria-hidden="true" strokeWidth={1.75} className="size-6" />
@@ -95,7 +113,7 @@ export function SiteHeader() {
         <div
           className="h-full origin-left transition-transform duration-[var(--dur-fast)] ease-out"
           style={{
-            backgroundColor: 'var(--gk-blue)',
+            backgroundColor: 'var(--gk-yellow)',
             transform: `scaleX(${progress})`,
           }}
         />
@@ -104,7 +122,7 @@ export function SiteHeader() {
       {menuOpen && (
         <div
           id="mobile-nav"
-          className="fixed inset-x-0 bottom-0 top-20 z-50 overflow-y-auto bg-[var(--bg-2)] lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-20 z-50 overflow-y-auto bg-[var(--gk-cream)] lg:hidden"
         >
           <nav aria-label="Main" className="shell flex flex-col py-6">
             {nav.map((item) => (
@@ -112,7 +130,7 @@ export function SiteHeader() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMenuOpen(false)}
-                className="border-b border-[var(--hairline)] py-5 text-[length:var(--fs-xl)] font-bold text-[var(--fg-1)]"
+                className="border-b-2 border-[var(--hairline)] py-5 font-display text-[length:var(--fs-xl)] font-extrabold text-[var(--gk-ink)]"
               >
                 {item.label}
               </Link>

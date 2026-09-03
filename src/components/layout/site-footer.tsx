@@ -7,12 +7,13 @@ import { Wordmark } from './wordmark'
 const FOOTER_HUES = ['var(--gk-blue)', 'var(--gk-teal)', 'var(--gk-coral)']
 
 /**
- * The closing band above is the page's only dark surface, which is what makes
- * it land as an ending — so the footer stays light.
+ * The closing band above is navy, so the footer is cream: the page ends on the
+ * dark note and the footer is the receipt underneath it, not part of the
+ * ending. A second dark band here would blunt the close entirely.
  */
 export function SiteFooter() {
   return (
-    <footer className="bg-[var(--bg-3)]">
+    <footer className="ground-cream-deep border-t-2 border-[var(--gk-ink)]">
       <div className="shell band">
         <div className="grid gap-10 md:grid-cols-12 md:gap-6">
           <div className="flex flex-col gap-4 md:col-span-4">
@@ -30,10 +31,10 @@ export function SiteFooter() {
               aria-label={group.heading}
               className="flex flex-col gap-3 md:col-span-2"
             >
-              <h2 className="flex items-center gap-2 text-[length:var(--fs-sm)] font-extrabold text-[var(--fg-1)]">
+              <h2 className="flex items-center gap-2 font-display text-[length:var(--fs-base)] font-extrabold text-[var(--fg-1)]">
                 <span
                   aria-hidden="true"
-                  className="size-2 shrink-0 rounded-full"
+                  className="size-2.5 shrink-0 rounded-full"
                   style={{ backgroundColor: FOOTER_HUES[i % FOOTER_HUES.length] }}
                 />
                 {group.heading}

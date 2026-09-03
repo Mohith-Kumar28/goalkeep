@@ -1,236 +1,398 @@
+import { motion, useScroll, useTransform } from 'motion/react'
+import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
- * The shape language, derived from the wordmark's five-segment donut.
+ * Shapes taken straight off the mark.
  *
- * The donut inside the "g" is the brand's one visual motif, so the page's
- * decoration is built from its geometry — arcs, rings and segments in the five
- * brand hues. These are abstractions of the mark, never reproductions of it:
- * the lockup itself still only ever appears in the header and footer.
+ * The `goalkeep` g is a ring broken into four coloured arcs with a gap at the
+ * top, sitting above a smile. Everything in this file is that geometry taken
+ * apart: an arc on its own, the full four-segment ring, a dot, a half disc.
+ * Nothing here is a generic blob — if a shape can't be traced back to the
+ * wordmark it doesn't belong on the page.
  */
 
-/** The wordmark's five segments, for the mark itself. */
-const HUES = [
+/** The four arc colours, in the order they appear on the mark, clockwise from top. */
+export const RING_HUES = [
+  'var(--gk-yellow)',
   'var(--gk-blue)',
   'var(--gk-teal)',
   'var(--gk-coral)',
-  'var(--gk-yellow)',
-  'var(--gk-charcoal)',
 ] as const
 
-/** Decoration uses the four bright hues only — charcoal at low opacity on
- *  cream reads as dirty grey rather than as brand colour. */
-const BRIGHT = [
-  'var(--gk-blue)',
-  'var(--gk-teal)',
-  'var(--gk-coral)',
-  'var(--gk-yellow)',
-] as const
-
-/** One arc of a ring — a single donut segment, blown up. */
-export function Arc({
-  color = 'var(--gk-teal)',
-  from = -90,
-  to = 90,
-  width = 22,
-  cap = 'butt',
+export function Ring({
+  size = 120,
+  thickness = 14,
+  spin,
+  gap = 18,
   className,
   style,
 }: {
-  color?: string
-  from?: number
-  to?: number
-  width?: number
-  cap?: 'butt' | 'round'
+  size?: number
+  thickness?: number
+  /** Seconds per rotation. Omit for a static ring. */
+  spin?: number
+  /** Degrees of open gap at the top, the way the mark is drawn. */
+  gap?: number
   className?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
 }) {
-  const r = 50 - width / 2
-  const rad = (d: number) => (d * Math.PI) / 180
-  const x1 = 50 + r * Math.cos(rad(from))
-  const y1 = 50 + r * Math.sin(rad(from))
-  const x2 = 50 + r * Math.cos(rad(to))
-  const y2 = 50 + r * Math.sin(rad(to))
-  const large = Math.abs(to - from) > 180 ? 1 : 0
+  const r = 50 - thickness / 2
+  const circumference = 2 * Math.PI * r
+  const per = (360 - gap) / 4
+  const segment = (per / 360) * circumference
 
   return (
     <svg
-      viewBox="0 0 100 100"
       aria-hidden="true"
-      className={cn('pointer-events-none', className)}
+      viewBox="0 0 100 100"
+      width={size}
+      height={size}
+      className={cn('shrink-0', className)}
+      style={{
+        ...style,
+        animation: spin ? `gk-spin ${spin}s linear infinite` : undefined,
+      }}
+    >
+      {RING_HUES.map((hue, index) => (
+        <circle
+          key={hue}
+          cx="50"
+          cy="50"
+          r={r}
+          fill="none"
+          stroke={hue}
+          strokeWidth={thickness}
+          strokeLinecap="round"
+          strokeDasharray={`${segment - thickness} ${circumference}`}
+          strokeDashoffset={-(index * (per / 360) * circumference) - gap / 720 * circumference}
+          transform="rotate(-90 50 50)"
+        />
+      ))}
+    </svg>
+  )
+}
+
+export function Arc({
+  size = 90,
+  thickness = 14,
+  color = 'var(--gk-teal)',
+  sweep = 120,
+  className,
+  style,
+}: {
+  size?: number
+  thickness?: number
+  color?: string
+  sweep?: number
+  className?: string
+  style?: CSSProperties
+}) {
+  const r = 50 - thickness / 2
+  const circumference = 2 * Math.PI * r
+
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 100 100"
+      width={size}
+      height={size}
+      className={cn('shrink-0', className)}
       style={style}
     >
-      <path
-        d={`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`}
+      <circle
+        cx="50"
+        cy="50"
+        r={r}
         fill="none"
         stroke={color}
-        strokeWidth={width}
-        strokeLinecap={cap}
+        strokeWidth={thickness}
+        strokeLinecap="round"
+        strokeDasharray={`${(sweep / 360) * circumference} ${circumference}`}
+        transform="rotate(-90 50 50)"
       />
     </svg>
   )
 }
 
-/**
- * The full five-segment ring. Used large and cropped as a backdrop, or small
- * as a section marker — the motif's geometry doing decorative work.
- */
-export function Ring({
-  className,
-  width = 16,
-  gap = 8,
-  spin,
-  style,
-  segments = 4,
-}: {
-  className?: string
-  width?: number
-  gap?: number
-  /** Seconds per rotation. Omit for a static ring. */
-  spin?: number
-  style?: React.CSSProperties
-  /** 4 for decoration (bright hues), 5 to echo the mark exactly. */
-  segments?: 4 | 5
-}) {
-  const palette = segments === 5 ? HUES : BRIGHT
-  const r = 50 - width / 2
-  const step = 360 / palette.length
-  const rad = (d: number) => (d * Math.PI) / 180
-
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      aria-hidden="true"
-      className={cn('pointer-events-none', spin && 'motion-safe:animate-[gk-spin_linear_infinite]', className)}
-      style={{ ...style, animationDuration: spin ? `${spin}s` : undefined }}
-    >
-      {palette.map((hue, i) => {
-        const from = -90 + i * step + gap / 2
-        const to = -90 + (i + 1) * step - gap / 2
-        const x1 = 50 + r * Math.cos(rad(from))
-        const y1 = 50 + r * Math.sin(rad(from))
-        const x2 = 50 + r * Math.cos(rad(to))
-        const y2 = 50 + r * Math.sin(rad(to))
-        return (
-          <path
-            key={i}
-            d={`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`}
-            fill="none"
-            stroke={hue}
-            strokeWidth={width}
-          />
-        )
-      })}
-    </svg>
-  )
-}
-
-/** A solid disc. The donut's counter, used as a colour block. */
 export function Dot({
+  size = 24,
   color = 'var(--gk-coral)',
   className,
   style,
 }: {
+  size?: number
   color?: string
   className?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
 }) {
   return (
     <span
       aria-hidden="true"
-      className={cn('pointer-events-none block rounded-full', className)}
-      style={{ backgroundColor: color, ...style }}
+      className={cn('block shrink-0 rounded-full', className)}
+      style={{ width: size, height: size, background: color, ...style }}
     />
   )
 }
 
-/** A half-ring: the segment shape at architectural scale. */
+/** The smile under the g. */
 export function Half({
+  size = 80,
   color = 'var(--gk-yellow)',
+  thickness = 14,
   className,
-  rotate = 0,
   style,
 }: {
+  size?: number
   color?: string
+  thickness?: number
   className?: string
-  rotate?: number
-  style?: React.CSSProperties
+  style?: CSSProperties
 }) {
   return (
     <svg
-      viewBox="0 0 100 50"
       aria-hidden="true"
-      className={cn('pointer-events-none', className)}
-      style={{ transform: `rotate(${rotate}deg)`, ...style }}
+      viewBox="0 0 100 60"
+      width={size}
+      height={size * 0.6}
+      className={cn('shrink-0', className)}
+      style={style}
     >
-      <path d="M 0 50 A 50 50 0 0 1 100 50 Z" fill={color} />
+      <path
+        d="M8 8c0 24 19 44 42 44s42-20 42-44"
+        fill="none"
+        stroke={color}
+        strokeWidth={thickness}
+        strokeLinecap="round"
+      />
     </svg>
   )
 }
 
-/** Floating backdrop shapes. Slow, silent, and off under reduced motion. */
-export function FloatingShapes({
+type FloatItem = {
+  kind: 'ring' | 'arc' | 'dot' | 'half'
+  top: string
+  left: string
+  size: number
+  color?: string
+  /** Parallax factor: how far it drifts against the scroll, in px over the band. */
+  depth: number
+  drift: number
+  rotate?: number
+}
+
+/*
+ * Positions are constrained to three safe zones: the strip below the sticky
+ * header, the band's bottom padding, and just off the left and right edges.
+ *
+ * The shell is 1440px wide and the viewport often isn't much wider, so there
+ * is frequently no side gutter at all — which is why several of these sit at a
+ * negative offset and bleed off-canvas. A shape half out of frame reads as
+ * deliberate; the same shape landing on a CTA reads as a bug. An earlier pass
+ * scattered them across the full band and they did exactly that.
+ */
+const FIELDS: Record<'a' | 'b' | 'c', Array<FloatItem>> = {
+  // Hero. Nothing above 15%: that band belongs to the header.
+  a: [
+    { kind: 'ring', top: '16%', left: '-2%', size: 96, depth: -70, drift: 16 },
+    { kind: 'dot', top: '15%', left: '97%', size: 18, color: 'var(--gk-yellow)', depth: -40, drift: 10 },
+    { kind: 'half', top: '86%', left: '94%', size: 104, color: 'var(--gk-teal)', depth: 62, drift: 15 },
+    { kind: 'arc', top: '87%', left: '-1%', size: 96, color: 'var(--gk-coral)', depth: 50, drift: 13, rotate: 140 },
+  ],
+  // Mid-page — quieter, so it never competes with a photograph.
+  b: [
+    { kind: 'arc', top: '4%', left: '96%', size: 88, color: 'var(--gk-blue)', depth: -46, drift: 14, rotate: 200 },
+    { kind: 'dot', top: '3%', left: '-0.5%', size: 16, color: 'var(--gk-coral)', depth: -32, drift: 11 },
+    { kind: 'ring', top: '95%', left: '96%', size: 66, depth: 54, drift: 12 },
+  ],
+  // Closing. The big ring is placed by the section itself; these are edges.
+  c: [
+    { kind: 'half', top: '9%', left: '-1.5%', size: 88, color: 'var(--gk-coral)', depth: -44, drift: 13 },
+    { kind: 'dot', top: '88%', left: '96.5%', size: 16, color: 'var(--gk-yellow)', depth: 34, drift: 9 },
+    { kind: 'arc', top: '90%', left: '-1%', size: 72, color: 'var(--gk-teal)', depth: 40, drift: 11, rotate: 300 },
+  ],
+}
+
+/**
+ * The parallax background layer. Shapes drift on scroll and lean very slightly
+ * toward the pointer, which is what stops a flat-colour band from reading as a
+ * flat colour band.
+ *
+ * Hidden below `lg` — on a phone these would land on top of the copy, and the
+ * band is short enough there that the parallax has no room to read anyway.
+ */
+export function FloatingField({
   variant = 'a',
+  className,
 }: {
   variant?: 'a' | 'b' | 'c'
+  className?: string
 }) {
-  if (variant === 'a') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <Arc
-          color="var(--gk-teal)"
-          from={-140}
-          to={40}
-          width={20}
-          className="absolute -left-24 top-10 size-64 opacity-90 motion-safe:animate-[gk-drift_18s_ease-in-out_infinite]"
-        />
-        <Dot
-          color="var(--gk-yellow)"
-          className="absolute right-[12%] top-8 size-10 motion-safe:animate-[gk-drift_14s_ease-in-out_infinite_reverse]"
-        />
-        <Arc
-          color="var(--gk-coral)"
-          from={60}
-          to={220}
-          width={18}
-          className="absolute -bottom-16 right-[6%] size-48 motion-safe:animate-[gk-drift_22s_ease-in-out_infinite]"
-        />
-      </div>
-    )
-  }
+  /* The project hook, not motion's. motion's returns null during SSR and a
+     boolean after mount, so the drift animation was present in the server HTML
+     and absent on the first client render — a hydration mismatch. Ours starts
+     `true` on both sides, so nothing animates until we've actually asked. */
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
-  if (variant === 'b') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <Ring
-          width={14}
-          spin={90}
-          className="absolute -right-20 -top-24 size-72 opacity-70"
-        />
-        <Dot
-          color="var(--gk-blue)"
-          className="absolute bottom-16 left-[8%] size-6 motion-safe:animate-[gk-drift_16s_ease-in-out_infinite]"
-        />
-      </div>
-    )
-  }
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+
+  useEffect(() => {
+    if (reduced) return
+    const onMove = (event: PointerEvent) => {
+      const w = window.innerWidth
+      const h = window.innerHeight
+      setPointer({
+        x: (event.clientX / w - 0.5) * 2,
+        y: (event.clientY / h - 0.5) * 2,
+      })
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [reduced])
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      <Half
-        color="var(--gk-yellow)"
-        rotate={180}
-        className="absolute -left-10 bottom-0 h-24 w-48 opacity-80"
-      />
-      <Arc
-        color="var(--gk-blue)"
-        from={-90}
-        to={90}
-        width={16}
-        className="absolute -right-12 top-1/3 size-40 motion-safe:animate-[gk-drift_20s_ease-in-out_infinite]"
-      />
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className={cn(
+        'pointer-events-none absolute inset-0 hidden select-none overflow-hidden xl:block',
+        className,
+      )}
+    >
+      {FIELDS[variant].map((item, index) => (
+        <FloatShape
+          key={index}
+          item={item}
+          progress={scrollYProgress}
+          pointer={pointer}
+          reduced={reduced}
+        />
+      ))}
     </div>
   )
 }
 
-export { HUES, BRIGHT }
+function FloatShape({
+  item,
+  progress,
+  pointer,
+  reduced,
+}: {
+  item: FloatItem
+  progress: ReturnType<typeof useScroll>['scrollYProgress']
+  pointer: { x: number; y: number }
+  reduced: boolean
+}) {
+  const y = useTransform(progress, [0, 1], [item.depth, -item.depth])
+
+  const node =
+    item.kind === 'ring' ? (
+      <Ring size={item.size} thickness={item.size * 0.13} />
+    ) : item.kind === 'arc' ? (
+      <Arc size={item.size} thickness={item.size * 0.15} color={item.color} sweep={150} />
+    ) : item.kind === 'dot' ? (
+      <Dot size={item.size} color={item.color} />
+    ) : (
+      <Half size={item.size} color={item.color} thickness={item.size * 0.16} />
+    )
+
+  return (
+    <motion.div
+      className="absolute"
+      style={{
+        top: item.top,
+        left: item.left,
+        y: reduced ? 0 : y,
+        x: reduced ? 0 : pointer.x * item.drift,
+        rotate: item.rotate ?? 0,
+        opacity: 0.85,
+        transition: 'transform 400ms cubic-bezier(0.22,1,0.36,1)',
+      }}
+    >
+      <div
+        style={{
+          // The delay is folded into the shorthand rather than set alongside
+          // it: React warns when a shorthand and one of its longhands are both
+          // written on a re-render, and the two can land in either order.
+          animation: reduced
+            ? undefined
+            : `gk-drift ${9 + item.drift}s ease-in-out ${item.drift * -0.4}s infinite`,
+        }}
+      >
+        {node}
+      </div>
+    </motion.div>
+  )
+}
+
+/**
+ * Background texture tiled from the mark's geometry. `arcs` is a lattice of
+ * quarter-arcs, `dots` a plain dot grid, `rings` the four-segment donut at
+ * small scale. All three sit under content at low opacity.
+ */
+export function PatternField({
+  pattern = 'arcs',
+  color = 'currentColor',
+  opacity = 0.09,
+  scale = 64,
+  className,
+}: {
+  pattern?: 'arcs' | 'dots' | 'rings' | 'grid'
+  color?: string
+  opacity?: number
+  scale?: number
+  className?: string
+}) {
+  const id = `gk-pattern-${pattern}-${scale}`
+
+  return (
+    <svg
+      aria-hidden="true"
+      className={cn('pointer-events-none absolute inset-0 h-full w-full', className)}
+      style={{ opacity }}
+    >
+      <defs>
+        <pattern id={id} width={scale} height={scale} patternUnits="userSpaceOnUse">
+          {pattern === 'arcs' && (
+            <path
+              d={`M0 ${scale} A ${scale} ${scale} 0 0 1 ${scale} 0`}
+              fill="none"
+              stroke={color}
+              strokeWidth="1.5"
+            />
+          )}
+          {pattern === 'dots' && (
+            <circle cx={scale / 2} cy={scale / 2} r="2" fill={color} />
+          )}
+          {pattern === 'rings' && (
+            <circle
+              cx={scale / 2}
+              cy={scale / 2}
+              r={scale / 3}
+              fill="none"
+              stroke={color}
+              strokeWidth="1.5"
+              strokeDasharray="6 5"
+            />
+          )}
+          {pattern === 'grid' && (
+            <path
+              d={`M${scale} 0 L0 0 0 ${scale}`}
+              fill="none"
+              stroke={color}
+              strokeWidth="1"
+            />
+          )}
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  )
+}

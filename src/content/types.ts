@@ -12,10 +12,15 @@ export type Verify<T> = {
   verify?: string
 }
 
-/** The three accents a band may claim, plus the neutral default.
- *  Enforced by the Single-Accent Viewport Rule: one per band, earned
- *  by meaning — blue = data, teal = outcome, coral = people. */
-export type BandAccent = 'neutral' | 'blue' | 'teal' | 'coral'
+/** A band's accent hue. Meaning is still carried by colour — blue = data,
+ *  teal = outcome, coral = people, yellow = emphasis — but the v0
+ *  Single-Accent Viewport Rule is retired: it was what made the page read
+ *  flat. A band now takes one dominant hue and up to two supporting pops in
+ *  shapes and doodles. */
+export type BandAccent = 'neutral' | 'blue' | 'teal' | 'coral' | 'yellow'
+
+/** Which surface a band sits on. Navy now carries about half the page. */
+export type Ground = 'navy' | 'cream' | 'cream-deep'
 
 export type Cta = {
   label: string
@@ -32,8 +37,13 @@ export type Pillar = {
   /** The client's exact wording from the brief. Shown in full on the
    *  What we do page; kept here so the source of truth never drifts. */
   bodyFull: string
-  /** Mono marginalia in the left rail. A note, not a label. */
+  /** Handwritten marginalia. A note, not a label. */
   marginalia?: string
+  /** The handwritten line that lands inside the open panel — the
+   *  Whole Truth Foods device the feedback asked for. */
+  handwritten: string
+  /** The two photographs the panel reveals once its animation resolves. */
+  images: Array<{ src: string; alt: string }>
 }
 
 export type StatCard = Verify<{
@@ -46,17 +56,29 @@ export type PullQuote = Verify<{
   attribution: string
 }>
 
-export type AudienceId = 'early-stage' | 'mid-sized' | 'funders'
+/* Renamed per the homepage feedback: 'mid-sized' → 'data-mature',
+   'funders' → 'intermediary'. The ids move with the labels so a stale deep
+   link can never resolve to a category we no longer use. */
+export type AudienceId = 'early-stage' | 'data-mature' | 'intermediary'
 
 export type Audience = {
   id: AudienceId
   label: string
-  image: string
-  imageAlt: string
-  /** The relatability statement — they should recognise themselves. */
-  relatability: string
-  problem: string
-  quote: PullQuote
+  /** Opens the block. Reads as a sentence with gaps, and the gaps type
+   *  themselves in — they should recognise themselves before we say anything
+   *  about ourselves. */
+  challengeLead: string
+  challengeBlanks: Array<string>
+  challengeTail: string
+  /** The phrase the hand-drawn circle lands on inside `challengeTail`. */
+  circled?: string
+  photos: Array<{ src: string; alt: string; org: string; location: string }>
+  testimonial: {
+    quote: PullQuote
+    name: string
+    credentials: string
+    photo: string
+  }
   primaryCta: Cta
   secondaryCta: Cta
 }
@@ -65,9 +87,9 @@ export type CaseStudy = {
   slug: string
   tags: Array<string>
   title: string
-  /** Mono stat line under the title. */
+  /** The one hard number the card is built around. */
   stat: Verify<string>
-  /** The charcoal inverse card — every fifth card, for tonal break. */
+  /** The navy inverse card — the honest one, for tonal break. */
   inverse?: boolean
   /** Inverse cards carry prose instead of a photograph. */
   body?: string
@@ -84,6 +106,10 @@ export type FieldNote = {
   tag: string
   inverse?: boolean
   badge?: string
+  /** Field notes were text-only by design in v0. "Too text-centric" was the
+   *  single most repeated note in the feedback, so they carry an image now. */
+  image: string
+  imageAlt: string
 }
 
 export type Faq = Verify<{

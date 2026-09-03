@@ -108,7 +108,7 @@ export function CardRail({
             className="h-[3px] w-12 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]"
             style={{
               backgroundColor:
-                i <= filled ? 'var(--band-accent)' : 'var(--n-200)',
+                i <= filled ? 'var(--band-accent)' : 'var(--hairline)',
             }}
           />
         ))}
@@ -136,10 +136,10 @@ function RailButton({
       aria-label={label}
       className={cn(
         'grid size-11 place-items-center rounded-[var(--r-md)]',
-        'border-[1.5px] border-[var(--gk-charcoal)] text-[var(--gk-charcoal)]',
+        'border-[1.5px] border-[var(--gk-ink)] text-[var(--gk-ink)]',
         'transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
-        'hover:bg-[var(--n-200)]',
-        'disabled:border-[var(--n-300)] disabled:text-[var(--n-400)] disabled:hover:bg-transparent',
+        'hover:bg-[var(--hairline)]',
+        'disabled:border-[var(--hairline)] disabled:text-[var(--gk-ink)] disabled:hover:bg-transparent',
       )}
     >
       {children}

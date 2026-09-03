@@ -1,13 +1,20 @@
 /**
  * Brand-palette fidelity.
  *
- * The page is deliberately colourful, so the thing worth guarding is no
- * longer restraint — it is that every colour on screen actually comes from
- * the brand. This fails on any off-palette hue, which is how a stray
- * `text-blue-500` or a default shadcn token gets caught.
+ * The page is deliberately colourful, so the thing worth guarding is not
+ * restraint — it is that every colour on screen actually comes from the mark.
+ * This fails on any off-palette hue, which is how a stray `text-blue-500` or a
+ * default shadcn token gets caught.
  *
- * Greys along the published neutral ramp are allowed, as are fully
- * transparent values and third-party logo artwork.
+ * The list below was resampled in September 2026 from the logo PNG and the
+ * approved Canva creatives. The previous list came from the v0 brand PDF and
+ * was roughly 25% low on chroma across the board, with a cool grey paper the
+ * brand does not actually use — which is what the homepage feedback was
+ * reacting to when it called the backgrounds dull.
+ *
+ * There is deliberately no neutral ramp any more. Text is ink or white; softer
+ * text is an alpha of one of those, and alpha values are skipped below.
+ * Third-party logo artwork inside <img> is skipped too.
  *
  *   node scripts/check-palette.mjs [url]
  */
@@ -15,23 +22,26 @@ import { chromium } from 'playwright'
 
 const BRAND = new Set(
   [
-    // Five hues, their deeps and tints
-    '#3f3d3e', '#4765b3', '#6ebfac', '#e6968b', '#e7dd50',
-    '#2f4a92', '#4a9c88', '#c97268', '#b8ab1f',
-    // Inks — darker variants reserved for small text (see tokens.css)
-    '#26604f', '#8f3f35',
-    '#dbe0f0', '#def1ec', '#f8e0dd', '#fbf8dc',
-    '#eef1fa', '#f1faf7', '#fbedea', '#fdfbe9',
-    // Neutral ramp
-    '#1f1e1f', '#2f2e2f', '#605e60', '#807e80',
-    '#aba9ab', '#c9c8c9', '#e8e7e8', '#f4f3f4', '#fafafa', '#ffffff',
+    // Grounds
+    '#2f4a92', '#1f3268', '#3a5aae',
+    '#faf7f0', '#f2ede0', '#ffffff', '#14131a',
+    // Pop hues, their hover-deeps, and the -ink variants that survive as
+    // small text on cream where the pop hue itself does not
+    '#2f5fe8', '#1e43b8',
+    '#17bfac', '#12a895', '#0b6a5f',
+    '#ff6a52', '#e8503a', '#b33520',
+    '#e9df22', '#c4ba0e',
+    // Tints
+    '#e4eafd', '#ddf6f2', '#ffe6e1', '#fbf8d3',
+    // Hairline
+    '#e6dfd1',
   ].map((h) => h.toLowerCase()),
 )
 
 const toHex = ([r, g, b]) =>
   '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')
 
-const URL = process.argv[2] || process.env.SITE_URL || 'http://localhost:3005/'
+const URL = process.argv[2] || process.env.SITE_URL || 'http://localhost:3000/'
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
 await page.goto(URL, { waitUntil: 'networkidle' })

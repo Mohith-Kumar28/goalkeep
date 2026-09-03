@@ -2,53 +2,50 @@
 @import "shadcn/tailwind.css";
 @import "./styles/tokens.css";
 
-@import "@fontsource-variable/nunito-sans";
-@import "@fontsource-variable/fraunces/wght-italic.css";
-@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/caveat";
 
-/* ============================================================
-   Tailwind v4 theme bridge. Goalkeep tokens are the source of
-   truth; everything below points back at them.
-   ============================================================ */
+/* ============================================================================
+   Tailwind v4 theme bridge. tokens.css is the source of truth; everything here
+   just points back at it so the utilities and the CSS variables can never drift.
+   ========================================================================== */
 @theme inline {
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-mono);
-  --font-heading: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-hand: var(--font-hand);
+  --font-heading: var(--font-display);
 
-  /* Brand escape hatches */
-  --color-charcoal: var(--gk-charcoal);
+  --color-navy: var(--gk-navy);
+  --color-navy-deep: var(--gk-navy-deep);
+  --color-navy-lift: var(--gk-navy-lift);
+  --color-cream: var(--gk-cream);
+  --color-cream-deep: var(--gk-cream-deep);
+  --color-ink: var(--gk-ink);
+
   --color-blue: var(--gk-blue);
   --color-blue-deep: var(--gk-blue-deep);
   --color-blue-tint: var(--gk-blue-tint);
   --color-teal: var(--gk-teal);
   --color-teal-deep: var(--gk-teal-deep);
+  --color-teal-ink: var(--gk-teal-ink);
   --color-teal-tint: var(--gk-teal-tint);
   --color-coral: var(--gk-coral);
   --color-coral-deep: var(--gk-coral-deep);
+  --color-coral-ink: var(--gk-coral-ink);
   --color-coral-tint: var(--gk-coral-tint);
   --color-yellow: var(--gk-yellow);
   --color-yellow-deep: var(--gk-yellow-deep);
+  --color-yellow-tint: var(--gk-yellow-tint);
 
-  /* Neutral ramp */
-  --color-n-900: var(--n-900);
-  --color-n-700: var(--n-700);
-  --color-n-500: var(--n-500);
-  --color-n-400: var(--n-400);
-  --color-n-200: var(--n-200);
-  --color-n-100: var(--n-100);
-  --color-n-050: var(--n-050);
-
-  /* Semantic */
   --color-fg-1: var(--fg-1);
   --color-fg-2: var(--fg-2);
-  --color-fg-3: var(--fg-3);
-  --color-bg-1: var(--bg-1);
-  --color-bg-2: var(--bg-2);
-  --color-bg-3: var(--bg-3);
   --color-hairline: var(--hairline);
+  --color-band-accent: var(--band-accent);
+  --color-band-tint: var(--band-tint);
+  --color-band-ink: var(--band-ink);
 
-  /* shadcn utility surface — border-border, ring-ring, bg-background etc. */
+  /* shadcn surface, remapped onto the brand */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -67,10 +64,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-band-accent: var(--band-accent);
-  --color-band-accent-tint: var(--band-accent-tint);
 
-  /* Type scale */
   --text-xs: var(--fs-xs);
   --text-sm: var(--fs-sm);
   --text-base: var(--fs-base);
@@ -79,48 +73,49 @@
   --text-2xl: var(--fs-2xl);
   --text-3xl: var(--fs-3xl);
   --text-4xl: var(--fs-4xl);
+  --text-5xl: var(--fs-5xl);
   --text-6xl: var(--fs-6xl);
+  --text-hand-sm: var(--fs-hand-sm);
+  --text-hand: var(--fs-hand);
+  --text-hand-lg: var(--fs-hand-lg);
 
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
   --radius-pill: var(--r-pill);
 
-  --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+  --shadow-pop: var(--shadow-pop);
+  --shadow-pop-sm: var(--shadow-pop-sm);
+  --shadow-navy: var(--shadow-navy);
 
   --ease-out: var(--ease-out);
+  --ease-pop: var(--ease-pop);
 }
 
-/* ============================================================
-   shadcn's expected API, remapped onto Goalkeep rather than
-   fought. shadcn ships oklch neutrals; these override them.
-   ============================================================ */
 :root {
-  --radius: var(--r-md);
-
-  --background: var(--bg-2);          /* paper, not white */
-  --foreground: var(--fg-1);
-  --card: var(--bg-1);
-  --card-foreground: var(--fg-1);
-  --popover: var(--bg-1);
-  --popover-foreground: var(--fg-1);
-
-  --primary: var(--gk-blue-deep);     /* white-on-blue-deep is AA+ */
-  --primary-foreground: var(--n-white);
-  --secondary: var(--bg-3);
-  --secondary-foreground: var(--fg-1);
-  --muted: var(--bg-3);
+  --background: var(--gk-cream);
+  --foreground: var(--gk-ink);
+  --card: var(--gk-white);
+  --card-foreground: var(--gk-ink);
+  --popover: var(--gk-white);
+  --popover-foreground: var(--gk-ink);
+  --primary: var(--gk-blue);
+  --primary-foreground: var(--gk-white);
+  --secondary: var(--gk-cream-deep);
+  --secondary-foreground: var(--gk-ink);
+  --muted: var(--gk-cream-deep);
   --muted-foreground: var(--fg-2);
-  --accent: var(--bg-3);
-  --accent-foreground: var(--fg-1);
-  --destructive: var(--gk-coral-deep);
-
+  --accent: var(--gk-yellow);
+  --accent-foreground: var(--gk-ink);
+  --destructive: var(--gk-coral-ink);
   --border: var(--hairline);
   --input: var(--hairline);
   --ring: var(--gk-blue);
+  --radius: var(--r-md);
 }
 
 @layer base {
@@ -130,118 +125,57 @@
 
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    background: var(--bg-page);
   }
 
   body {
-    background-color: var(--bg-2);
+    background: var(--bg-page);
     color: var(--fg-1);
     font-family: var(--font-sans);
     font-size: var(--fs-base);
     font-weight: var(--w-regular);
     line-height: var(--lh-body);
-    letter-spacing: 0;
+    overflow-x: clip;
   }
 
-  /* Focus: 3px blue 18%-alpha halo. Visible, on-brand. */
-  :focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-ring);
-    border-radius: var(--r-sm);
-  }
-
-  ::selection {
-    background: var(--gk-yellow);
-    color: var(--gk-charcoal);
-  }
-}
-
-@layer components {
-  /* --- Structural enforcement of the brand book ------------- */
-
-  /* Tabular numerals on by default for mono, per the book. */
-  .font-mono,
-  [data-mono] {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
-  }
-
-  /* Fraunces is italic-only, pull-quotes only. Never body. */
-  .pull-quote {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-optical-sizing: auto;
-    font-size: var(--fs-2xl);
-    line-height: 1.35;
-    font-weight: 400;
-  }
-
-  /* Eyebrow — 12px, 800, ALL CAPS, +0.12em, band accent. */
-  .eyebrow {
-    font-size: var(--fs-xs);
-    font-weight: var(--w-extrabold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    /* Neutral by design: see the Single-Accent Viewport Rule. The accent
-       belongs to the band's content, not its label. */
-    color: var(--fg-2);
-    line-height: 1.2;
-  }
-
-  /* Headlines — 800–900, lh 1.05–1.15, tracking −0.02/−0.03em */
-  .display {
-    font-size: var(--fs-6xl);
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
     font-weight: var(--w-black);
-    line-height: var(--lh-display);
-    letter-spacing: var(--tracking-display);
-    text-wrap: balance;
-  }
-
-  .h2 {
-    font-size: var(--fs-3xl);
-    font-weight: var(--w-bold);
     line-height: var(--lh-heading);
     letter-spacing: var(--tracking-heading);
     text-wrap: balance;
   }
 
-  .h3 {
-    font-size: var(--fs-xl);
-    font-weight: var(--w-bold);
-    line-height: 1.25;
-    letter-spacing: var(--tracking-heading);
-  }
-
-  .lead {
-    font-size: var(--fs-lg);
-    font-weight: var(--w-regular);
-    line-height: 1.6;
-  }
-
-  /* Yellow is a highlight, not a fill: behind a keyword only,
-     always charcoal text on top (AAA). */
-  .keyword-mark {
-    background-color: var(--gk-yellow);
-    color: var(--gk-charcoal);
+  /* Focus lands on both grounds: blue halo on cream, yellow halo on navy. */
+  :focus-visible {
+    outline: none;
     border-radius: var(--r-sm);
-    padding-inline: 0.14em;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
+    box-shadow: var(--shadow-ring);
   }
 
-  /* The editorial grid: margin rail + main track. */
-  .band {
-    padding-block: var(--sp-7);
-  }
-  @media (min-width: 768px) {
-    .band {
-      /* 80px. The published range is 64–96; two adjacent 96s read as a gap
-         rather than as rhythm. */
-      padding-block: 5rem;
-    }
+  [data-ground="navy"] :focus-visible {
+    box-shadow: var(--shadow-ring-inverse);
   }
 
+  ::selection {
+    background: var(--gk-yellow);
+    color: var(--gk-ink);
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  /* --- Layout ------------------------------------------------------------ */
   .shell {
     width: 100%;
     max-width: 1440px;
@@ -259,173 +193,311 @@
     }
   }
 
-  /* 12-column editorial grid. Rail is columns 1–2. */
-  .grid-editorial {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--sp-5);
+  .band {
+    position: relative;
+    padding-block: var(--sp-8);
   }
-}
+  @media (min-width: 768px) {
+    .band {
+      padding-block: var(--sp-9);
+    }
+  }
 
-/* ============================================================
-   Motion. One easing curve, three durations, no exceptions.
-   Everything degrades under prefers-reduced-motion.
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  /* --- Grounds -----------------------------------------------------------
+     A ground sets both its surface and the whole foreground family, so no
+     component ever has to ask which background it is sitting on. */
+  .ground-navy {
+    background: var(--gk-navy);
+    --band-ink: var(--fg-inverse);
+    --band-ink-2: var(--fg-inverse-2);
+    --band-hairline: var(--hairline-inverse);
+    --link-color: var(--gk-yellow);
+    --link-color-hover: var(--gk-white);
+    color: var(--fg-inverse);
   }
-}
 
-/* ============================================================
-   Marquee. Transform-only, so it never triggers layout.
-   ============================================================ */
-@keyframes gk-marquee {
-  from {
-    transform: translate3d(0, 0, 0);
+  .ground-cream {
+    background: var(--gk-cream);
+    --band-ink: var(--fg-1);
+    --band-ink-2: var(--fg-2);
+    --band-hairline: var(--hairline);
+    color: var(--fg-1);
   }
-  to {
-    /* The track is the logo list duplicated once, so -50% is one
-       full pass and the wrap is seamless. */
-    transform: translate3d(-50%, 0, 0);
-  }
-}
 
-@layer components {
-  /* Alpha-only edge fade. A colour gradient here would break the
-     brand book's "no gradients" rule; masking alpha does not
-     introduce a second colour. */
+  .ground-cream-deep {
+    background: var(--gk-cream-deep);
+    --band-ink: var(--fg-1);
+    --band-ink-2: var(--fg-2);
+    --band-hairline: var(--hairline);
+    color: var(--fg-1);
+  }
+
+  /* --- Band accents ------------------------------------------------------ */
+  .accent-blue {
+    --band-accent: var(--gk-blue);
+    --band-accent-deep: var(--gk-blue-deep);
+    --band-accent-ink: var(--gk-blue);
+    --band-tint: var(--gk-blue-tint);
+  }
+  .accent-teal {
+    --band-accent: var(--gk-teal);
+    --band-accent-deep: var(--gk-teal-deep);
+    --band-accent-ink: var(--gk-teal-ink);
+    --band-tint: var(--gk-teal-tint);
+  }
+  .accent-coral {
+    --band-accent: var(--gk-coral);
+    --band-accent-deep: var(--gk-coral-deep);
+    --band-accent-ink: var(--gk-coral-ink);
+    --band-tint: var(--gk-coral-tint);
+  }
+  .accent-yellow {
+    --band-accent: var(--gk-yellow);
+    --band-accent-deep: var(--gk-yellow-deep);
+    --band-accent-ink: var(--gk-ink);
+    --band-tint: var(--gk-yellow-tint);
+  }
+  /* On navy the accent ink has to be a light value, never the tint. */
+  .ground-navy.accent-teal {
+    --band-accent-ink: var(--gk-teal);
+  }
+  .ground-navy.accent-coral {
+    --band-accent-ink: var(--gk-coral);
+  }
+  .ground-navy.accent-yellow {
+    --band-accent-ink: var(--gk-yellow);
+  }
+  .ground-navy.accent-blue {
+    --band-accent-ink: var(--gk-yellow);
+  }
+
+  /* --- Type roles -------------------------------------------------------- */
+  .display {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 7vw, 5.25rem);
+    font-weight: var(--w-black);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    font-weight: var(--w-black);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .h3 {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: var(--w-extrabold);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .lead {
+    font-size: var(--fs-lg);
+    line-height: 1.55;
+    color: var(--band-ink-2, var(--fg-2));
+  }
+
+  /* Section labels. These were 12px uppercase mono; the feedback asked for
+     another option, and a real hand set slightly off-axis reads as a person
+     annotating the page rather than a CMS field. */
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-hand);
+    font-size: var(--fs-hand);
+    font-weight: var(--w-bold);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--band-accent-ink, var(--band-accent));
+    transform: rotate(-2.5deg);
+  }
+
+  .hand {
+    font-family: var(--font-hand);
+    font-size: var(--fs-hand);
+    font-weight: var(--w-semibold);
+    line-height: 1.25;
+  }
+
+  .hand-lg {
+    font-family: var(--font-hand);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: var(--w-bold);
+    line-height: 1.2;
+  }
+
+  .stat-figure {
+    font-family: var(--font-display);
+    font-weight: var(--w-black);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+  }
+
+  /* Yellow highlighter behind a word. Never yellow *text*. */
+  .keyword-mark {
+    background: var(--gk-yellow);
+    color: var(--gk-ink);
+    border-radius: var(--r-sm);
+    padding-inline: 0.16em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* --- Surfaces ---------------------------------------------------------- */
+  .card-lift {
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--dur-base) var(--ease-pop),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+  .card-lift:hover,
+  .card-lift:focus-within {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* The sticker: hard offset, ink outline, a degree or two off square. */
+  .card-pop {
+    border: 2px solid var(--gk-ink);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-pop);
+    transition:
+      transform var(--dur-base) var(--ease-pop),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+  .card-pop:hover,
+  .card-pop:focus-within {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--gk-ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    border-radius: var(--r-pill);
+    padding: 0.35em 0.85em;
+    font-size: var(--fs-sm);
+    font-weight: var(--w-bold);
+    line-height: 1.2;
+  }
+
+  /* The Canva signature: a photo panel cut on an angle along the bottom. */
+  .diagonal-cut {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3.5rem), 0 100%);
+  }
+  .diagonal-cut-r {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.5rem));
+  }
+
+  /* --- Rails ------------------------------------------------------------- */
   .ticker-mask {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 64px,
-      black calc(100% - 64px),
-      transparent
-    );
     mask-image: linear-gradient(
       to right,
       transparent,
-      black 64px,
-      black calc(100% - 64px),
+      #000 72px,
+      #000 calc(100% - 72px),
       transparent
     );
   }
 
-  /* Horizontal card scrollers. The cut-off card communicates
-     scrollability — no decorative chevrons or "scroll" cues. */
   .card-rail {
     display: flex;
     gap: var(--sp-5);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
     scrollbar-width: none;
-    padding-bottom: var(--sp-2);
   }
   .card-rail::-webkit-scrollbar {
     display: none;
   }
   .card-rail > * {
     scroll-snap-align: start;
-    flex: 0 0 auto;
   }
 }
 
-/* ============================================================
-   Shape motion. Transform-only, slow, and silent — decoration
-   that moves without asking to be watched.
-   ============================================================ */
+/* ============================================================================
+   Keyframes
+   ========================================================================== */
+@keyframes gk-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @keyframes gk-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes gk-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-  50%      { transform: translate3d(0, -18px, 0) rotate(6deg); }
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -22px, 0) rotate(7deg);
+  }
 }
 
-@keyframes gk-pop {
-  from { transform: scale(0.92); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
+@keyframes gk-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-@layer components {
-  /* Colour-blocked bands. Each carries its own hue, its own tint
-     surface and its own link treatment, so a section is a place
-     rather than a stretch of scroll. */
-  .band-blue {
-    --band: var(--gk-blue);
-    --band-deep: var(--gk-blue-deep);
-    --band-ink: var(--gk-blue-ink);
-    --band-tint: var(--gk-blue-tint);
-    --band-wash: #eef1fa;
+@keyframes gk-caret {
+  0%,
+  45% {
+    opacity: 1;
   }
-  .band-teal {
-    --band: var(--gk-teal);
-    --band-deep: var(--gk-teal-deep);
-    --band-ink: var(--gk-teal-ink);
-    --band-tint: var(--gk-teal-tint);
-    --band-wash: #f1faf7;
+  50%,
+  95% {
+    opacity: 0;
   }
-  .band-coral {
-    --band: var(--gk-coral);
-    --band-deep: var(--gk-coral-deep);
-    --band-ink: var(--gk-coral-ink);
-    --band-tint: var(--gk-coral-tint);
-    --band-wash: #fbedea;
+}
+
+@keyframes gk-kenburns {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
   }
-  .band-yellow {
-    --band: var(--gk-yellow);
-    --band-deep: var(--gk-yellow-deep);
-    --band-ink: var(--gk-yellow-deep);
-    --band-tint: var(--gk-yellow-tint);
-    --band-wash: #fdfbe9;
+  to {
+    transform: scale(1.16) translate3d(-1.5%, -1.5%, 0);
+  }
+}
+
+/* ============================================================================
+   Reduced motion. Everything resolves to its final state; nothing is hidden.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  /* Eyebrows take the band's hue at its readable depth. */
-  .eyebrow-band {
-    font-size: var(--fs-xs);
-    font-weight: var(--w-extrabold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    line-height: 1.2;
-    color: var(--band-ink, var(--fg-2));
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 
-  /* A keyword highlight that can take any brand hue, not just yellow.
-     Charcoal sits on yellow and teal; white on blue-deep and coral-deep. */
-  .mark {
-    border-radius: var(--r-sm);
-    padding-inline: 0.14em;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-  }
-
-  /* Display-scale mono figures. Tabular numerals give every glyph the
-     same advance, which reads as a gap before the unit at 48px+. */
-  .stat-figure {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.06em;
-    line-height: 0.95;
-  }
-
-  /* Cards that carry colour rather than sitting on it. */
-  .card-tinted {
-    background-color: var(--band-tint);
-    border-radius: var(--r-md);
-    transition:
-      transform var(--dur-base) var(--ease-out),
-      box-shadow var(--dur-base) var(--ease-out);
-  }
-  .card-tinted:hover {
-    box-shadow: var(--shadow-sm);
+  .card-lift:hover,
+  .card-pop:hover {
+    transform: none;
   }
 }

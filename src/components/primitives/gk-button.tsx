@@ -1,52 +1,62 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
  * Goalkeep buttons. Sentence case always.
  *
- * Hover darkens to the -deep token. Never scale, never glow — both are
- * explicitly banned by the brand book, which is why this deliberately does
- * not use the shadcn Button's default hover treatment.
+ * The v0 rule was "hover darkens to a -deep token, nothing ever scales". The
+ * homepage feedback asked for the opposite — more depth, more response to the
+ * cursor — so the primary is now a sticker: 2px ink outline, hard offset
+ * shadow, and it presses *into* the page on click instead of just changing hue.
  *
- * `onDark` is the hero/closing pair: white fill + charcoal label, which is
- * AAA on charcoal and on photography, and lets the page open and close with
- * the identical button.
+ * `magnetic` makes the button lean toward the pointer within its own bounds.
+ * It's used once per band at most; on everything it would be noise.
  */
-type Variant = 'primary' | 'secondary' | 'secondaryAccent' | 'tertiary'
+type Variant = 'primary' | 'secondary' | 'ghost' | 'tertiary'
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-[var(--r-md)] ' +
-  'font-sans font-bold text-[length:var(--fs-base)] leading-none ' +
-  'transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] ' +
-  'focus-visible:outline-none'
+  'relative inline-flex items-center justify-center gap-2 ' +
+  'font-display font-extrabold leading-none tracking-[-0.01em] ' +
+  'text-[length:var(--fs-base)] focus-visible:outline-none group'
 
-const sizing = 'px-5 py-3.5'
+const sizing = 'rounded-[var(--r-pill)] px-6 py-4'
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-[var(--gk-blue-deep)] text-white hover:bg-[#263d7d] active:bg-[#1f3369]',
+    'bg-[var(--gk-blue)] text-white border-2 border-[var(--gk-ink)] ' +
+    'shadow-[var(--shadow-pop-sm)] hover:bg-[var(--gk-blue-deep)]',
   secondary:
-    'border-[1.5px] border-[var(--gk-charcoal)] text-[var(--gk-charcoal)] ' +
-    'bg-transparent hover:bg-[var(--n-200)]',
-  // The inverse of `primary`: same hue, outlined instead of filled.
-  secondaryAccent:
-    'border-[1.5px] border-[var(--gk-blue-deep)] text-[var(--gk-blue-deep)] ' +
-    'bg-transparent hover:bg-[var(--gk-blue-tint)]',
+    'bg-[var(--gk-white)] text-[var(--gk-ink)] border-2 border-[var(--gk-ink)] ' +
+    'shadow-[var(--shadow-pop-sm)] hover:bg-[var(--gk-yellow)]',
+  ghost:
+    'border-2 border-[var(--gk-ink)] text-[var(--gk-ink)] bg-transparent ' +
+    'hover:bg-[var(--gk-ink)] hover:text-[var(--gk-cream)]',
   tertiary:
-    'text-[var(--link-color)] hover:text-[var(--link-color-hover)] px-0 py-1 group',
+    'text-[var(--link-color)] hover:text-[var(--link-color-hover)] px-0 py-1 underline-offset-4 hover:underline',
 }
 
 const onDarkVariants: Record<Variant, string> = {
   primary:
-    'bg-white text-[var(--gk-charcoal)] hover:bg-[var(--n-200)] active:bg-[var(--n-300)]',
+    'bg-[var(--gk-yellow)] text-[var(--gk-ink)] border-2 border-[var(--gk-ink)] ' +
+    'shadow-[var(--shadow-pop-sm)] hover:bg-[var(--gk-yellow-deep)]',
   secondary:
-    'border-[1.5px] border-white/70 text-white bg-transparent hover:bg-white/10 hover:border-white',
-  secondaryAccent:
-    'border-[1.5px] border-white/70 text-white bg-transparent hover:bg-white/10 hover:border-white',
-  tertiary: 'text-white hover:text-[var(--n-200)] px-0 py-1 group',
+    'bg-[var(--gk-white)] text-[var(--gk-ink)] border-2 border-[var(--gk-ink)] ' +
+    'shadow-[var(--shadow-pop-sm)] hover:bg-[var(--gk-cream-deep)]',
+  ghost:
+    'border-2 border-white/70 text-white bg-transparent hover:border-white hover:bg-white/12',
+  tertiary: 'text-[var(--gk-yellow)] hover:text-white px-0 py-1 underline-offset-4 hover:underline',
 }
+
+/** The sticker press: slide into the shadow rather than shrink. */
+const pressMotion =
+  'transition-[transform,background-color,box-shadow,border-color,color] ' +
+  'duration-[var(--dur-base)] ease-[var(--ease-pop)] ' +
+  'hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[var(--shadow-pop)] ' +
+  'active:translate-x-[2px] active:translate-y-[2px] active:shadow-none'
 
 export function GkButton({
   to,
@@ -54,6 +64,7 @@ export function GkButton({
   variant = 'primary',
   onDark = false,
   withArrow = false,
+  magnetic = false,
   className,
   children,
   ...rest
@@ -63,50 +74,79 @@ export function GkButton({
   variant?: Variant
   onDark?: boolean
   withArrow?: boolean
+  magnetic?: boolean
   className?: string
   children: ReactNode
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLSpanElement>(null)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+
   const palette = onDark ? onDarkVariants : variants
+  const isSticker = variant === 'primary' || variant === 'secondary'
+
   const classes = cn(
     base,
     variant !== 'tertiary' && sizing,
+    variant !== 'tertiary' && isSticker && pressMotion,
+    variant === 'ghost' &&
+      'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
     palette[variant],
     className,
   )
+
+  // The magnet only ever pulls a third of the way to the pointer, and releases
+  // on leave — a full-strength follow reads as a bug, not a flourish.
+  const onMove = (event: React.PointerEvent) => {
+    if (!magnetic || reduced || !ref.current) return
+    const box = ref.current.getBoundingClientRect()
+    setOffset({
+      x: (event.clientX - (box.left + box.width / 2)) * 0.3,
+      y: (event.clientY - (box.top + box.height / 2)) * 0.3,
+    })
+  }
 
   const content = (
     <>
       {children}
       {withArrow && (
-        /* 3px, not 8 — the only directional micro-motion on the page. */
         <ArrowRight
           aria-hidden="true"
-          strokeWidth={1.75}
-          className="size-4 transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:translate-x-[3px]"
+          strokeWidth={2.5}
+          className="size-[1.1em] transition-transform duration-[var(--dur-base)] ease-[var(--ease-pop)] group-hover:translate-x-1"
         />
       )}
     </>
   )
 
-  if (to) {
-    return (
-      <Link to={to} className={cn(classes, 'group')}>
-        {content}
-      </Link>
-    )
-  }
-
-  if (href) {
-    return (
-      <a href={href} className={cn(classes, 'group')}>
-        {content}
-      </a>
-    )
-  }
-
-  return (
-    <button type="button" className={cn(classes, 'group')} {...rest}>
+  const inner = to ? (
+    <Link to={to} className={classes} {...(rest as object)}>
+      {content}
+    </Link>
+  ) : href ? (
+    <a href={href} className={classes}>
+      {content}
+    </a>
+  ) : (
+    <button type="button" className={classes} {...rest}>
       {content}
     </button>
+  )
+
+  if (!magnetic) return inner
+
+  return (
+    <span
+      ref={ref}
+      className="inline-block"
+      onPointerMove={onMove}
+      onPointerLeave={() => setOffset({ x: 0, y: 0 })}
+      style={{
+        transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
+        transition: 'transform 350ms cubic-bezier(0.34,1.56,0.64,1)',
+      }}
+    >
+      {inner}
+    </span>
   )
 }
