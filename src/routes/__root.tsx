@@ -16,9 +16,25 @@ export const Route = createRootRoute({
       { name: 'description', content: site.description },
       { property: 'og:site_name', content: site.name },
       { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: site.url },
       { property: 'og:title', content: `${site.name} — ${site.tagline}` },
       { property: 'og:description', content: site.description },
+      /*
+       * Absolute, because every scraper requires it — which means this is only
+       * correct while `site.url` matches the domain the link is actually being
+       * shared from. Regenerate the card itself with `pnpm og`.
+       */
+      { property: 'og:image', content: `${site.url}/og.jpg` },
+      { property: 'og:image:type', content: 'image/jpeg' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      {
+        property: 'og:image:alt',
+        content:
+          'Goalkeep — MEL systems aren’t just meant to measure impact, but also strengthen it. Alongside a photograph of a Goalkeep design workshop.',
+      },
       { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: `${site.url}/og.jpg` },
       { name: 'theme-color', content: '#2F4A92' },
     ],
     links: [

@@ -15,6 +15,7 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:design": "pnpm check:palette && pnpm check:contrast",
     "check:palette": "node scripts/check-palette.mjs",
+    "og": "node scripts/build-og.mjs",
     "deploy": "pnpm build && wrangler deploy",
     "deploy:dry": "pnpm build && wrangler deploy --dry-run",
     "cf:tail": "wrangler tail"
