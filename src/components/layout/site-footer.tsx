@@ -13,7 +13,7 @@ const FOOTER_HUES = ['var(--gk-blue)', 'var(--gk-teal)', 'var(--gk-coral)']
  */
 export function SiteFooter() {
   return (
-    <footer className="ground-cream-deep border-t-2 border-[var(--gk-ink)]">
+    <footer className="ground-cream-deep border-t border-[var(--hairline)]">
       <div className="shell band">
         <div className="grid gap-10 md:grid-cols-12 md:gap-6">
           <div className="flex flex-col gap-4 md:col-span-4">

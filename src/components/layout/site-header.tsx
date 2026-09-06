@@ -48,8 +48,11 @@ export function SiteHeader() {
       className={cn(
         'sticky top-0 z-40 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
         scrolled
-          ? 'border-b-2 border-[var(--gk-ink)] bg-[var(--gk-cream)]'
-          : 'border-b-2 border-transparent bg-transparent',
+          /* A hairline and a soft drop, not the 2px near-black rule this
+             carried. "I don't like the black, man" applied to the chrome as
+             much as to the cards. */
+          ? 'border-b border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)]'
+          : 'border-b border-transparent bg-transparent',
       )}
     >
       <div className="shell flex h-20 items-center justify-between gap-6">
@@ -130,7 +133,7 @@ export function SiteHeader() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMenuOpen(false)}
-                className="border-b-2 border-[var(--hairline)] py-5 font-display text-[length:var(--fs-xl)] font-extrabold text-[var(--gk-ink)]"
+                className="border-b border-[var(--hairline)] py-5 text-[length:var(--fs-xl)] font-bold text-[var(--gk-ink)]"
               >
                 {item.label}
               </Link>
