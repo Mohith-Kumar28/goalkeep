@@ -5,6 +5,7 @@ import type { Audience } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhotoCarousel } from '@/components/primitives/photo-carousel'
 import { Annotate } from '@/components/primitives/doodles'
+import { ShapeField } from '@/components/primitives/logo-shapes'
 import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
@@ -46,6 +47,10 @@ export function Audiences() {
       className="ground-cream-deep band accent-blue relative"
       aria-labelledby="audiences-heading"
     >
+      {/* The Kickstarter deck's own composition: a coral arc off the top right
+          and a teal one off the bottom left, at deck scale. */}
+      <ShapeField variant="audiences" />
+
       <div className="shell relative">
         <Reveal>
           <p className="eyebrow mb-4">{audienceSection.eyebrow}</p>

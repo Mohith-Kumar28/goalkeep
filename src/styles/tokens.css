@@ -61,7 +61,12 @@
   /* Lifted values, for use ON navy only. The muted teal and coral above are
      correct on white and drop to roughly 2.5:1 on the navy ground, which is
      under the bar for anything that has to be read. These clear 4:1 and keep
-     each stage of "what we do" visually its own on the inverted row. */
+     each stage of "what we do" visually its own on the inverted row.
+
+     --gk-blue-lift exists for one reason: the mark that assembles in the
+     closing band needs four fragments that are all legible, and --gk-blue on
+     navy is close enough in value to vanish into it. */
+  --gk-blue-lift: #8fa8e8;
   --gk-teal-lift: #5fc9ba;
   --gk-coral-lift: #f0a58c;
 

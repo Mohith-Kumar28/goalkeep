@@ -1,5 +1,6 @@
 import { closing } from '@/content/homepage'
 import { GkButton } from '@/components/primitives/gk-button'
+import { MarkAssembly } from '@/components/primitives/logo-shapes'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -7,13 +8,19 @@ import { Reveal } from '@/components/primitives/reveal'
  *
  * "I think right now what's happening is that it's just seeming like a clunky
  * random thing going on with the circle" — so the 260px spinning four-segment
- * ring and the floating half-discs are gone.
+ * ring is gone.
  *
- * What replaces them is the effect the review asked for in their place:
- * "these things appearing over here, one by one — you come to the last section
- * and first this appears, then this, then this." Each element in this band is
- * its own Reveal on an increasing delay, so the close assembles itself as you
- * arrive at it rather than being decorated.
+ * Two things replace it, and both are the same instruction: "these things
+ * appearing over here, one by one — you come to the last section and first
+ * this appears, then this, then this," and "pieces from the logo, instead of
+ * using the whole logo, getting assembled and forming a shape on scroll."
+ *
+ *   · Every element of the copy is its own Reveal on an increasing delay, so
+ *     the close writes itself as you arrive at it.
+ *   · The mark itself is scattered into its four arcs and pulled back together
+ *     by the scroll — the fragments arrive one at a time and land as the
+ *     wordmark's ring. It is the page's last frame, and the only place the
+ *     whole mark is ever drawn from its parts.
  */
 export function Closing() {
   return (
@@ -53,13 +60,21 @@ export function Closing() {
               </GkButton>
             </div>
           </Reveal>
+
+          {/* The mark assembles on phones too, under the buttons — it is the
+              page's last frame and worth having on every screen. */}
+          <div className="mt-14 flex justify-center lg:hidden">
+            <MarkAssembly size={180} />
+          </div>
         </div>
 
-        <div className="hidden lg:col-span-4 lg:block">
+        <div className="hidden lg:col-span-4 lg:flex lg:flex-col lg:items-center lg:justify-center lg:gap-12">
+          <MarkAssembly size={260} />
+
           <Reveal delay={0.54}>
             <p
               aria-hidden="true"
-              className="hand mt-8 whitespace-pre-line leading-tight text-white/70"
+              className="hand whitespace-pre-line text-center leading-tight text-white/70"
             >
               {closing.marginalia.value}
             </p>

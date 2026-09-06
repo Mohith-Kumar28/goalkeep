@@ -31,7 +31,7 @@ const BRAND = new Set(
     '#e07a5f', '#c8613f', '#9c452a',
     '#eac452', '#cfa72f',
     // Lifted values, legible on the navy ground only
-    '#5fc9ba', '#f0a58c',
+    '#8fa8e8', '#5fc9ba', '#f0a58c',
     // Tints
     '#eaeff9', '#e7f2f0', '#fbeee9', '#fbf3df',
     // Hairlines

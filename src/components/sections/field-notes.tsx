@@ -2,6 +2,7 @@ import { fieldNotes, fieldNoteSection } from '@/content/homepage'
 import type { FieldNote } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { Reveal } from '@/components/primitives/reveal'
+import { ShapeField } from '@/components/primitives/logo-shapes'
 import { cn } from '@/lib/utils'
 
 /**
@@ -19,7 +20,9 @@ export function FieldNotes() {
       className="ground-cream band accent-teal"
       aria-labelledby="field-notes-heading"
     >
-      <div className="shell">
+      <ShapeField variant="notes" />
+
+      <div className="shell relative">
         <Reveal>
           <div className="mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between">
             <div>

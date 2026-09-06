@@ -5,6 +5,7 @@ import { GkButton } from '@/components/primitives/gk-button'
 import { Spotlight } from '@/components/primitives/spotlight'
 import { TypedPhrase } from '@/components/primitives/typed-phrase'
 import { Annotate } from '@/components/primitives/doodles'
+import { ShapeField } from '@/components/primitives/logo-shapes'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
@@ -19,8 +20,11 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
  *     "keep this video in some other component's background below" note sends
  *     it.
  *   · The arc lattice and the floating rings, arcs and half-discs are gone:
- *     "this random circle, this half a circle, this little semicircle — it's
- *     not working here, remove it for now."
+ *     "this random circle, this half a circle, this little
+ *     semicircle — it's not working here, remove it for now." What replaced
+ *     them is the deck's own use of the same geometry: two large fragments
+ *     anchored to corners and bleeding off frame, tonal rather than coloured.
+ *     See logo-shapes.tsx.
  *   · The spotlight stays. It is the one effect the review singled out as
  *     working: "I like the little hover and style effect you've given."
  *   · The subheader types and backspaces instead of being swept by a marker.
@@ -38,6 +42,9 @@ export function Hero() {
       className="ground-navy accent-yellow relative isolate -mt-[82px] overflow-hidden"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
+      {/* Fragments of the mark, tonal rather than coloured - the hero is the
+          one ground the review asked to keep completely quiet. */}
+      <ShapeField variant="hero" />
       <Spotlight />
 
       <div className="shell relative z-10 grid items-center gap-14 pb-20 pt-[calc(82px+3rem)] md:pb-24 md:pt-[calc(82px+4.5rem)] lg:grid-cols-12 lg:gap-12">

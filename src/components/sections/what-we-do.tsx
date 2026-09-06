@@ -43,8 +43,19 @@ const HUE: Record<
   coral: { closed: 'var(--gk-coral)', onNavy: 'var(--gk-coral-lift)', kind: 'adopt' },
 }
 
+/*
+ * The dissolve. Both ramps are deliberately long and multi-stop.
+ *
+ * A two-stop ramp over a quarter of the panel reads as a strip of gradient
+ * sitting on top of a photograph — you can see where it starts and stops. Four
+ * stops spread across most of the panel reads as the photograph itself fading
+ * out, which is the effect the whole treatment is for.
+ */
+const DESKTOP_MASK =
+  'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.06) 20%, rgb(0 0 0 / 0.28) 42%, rgb(0 0 0 / 0.66) 68%, rgb(0 0 0 / 0.92) 87%, #000 100%)'
+
 const MOBILE_MASK =
-  'linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.55) 12%, #000 34%, #000 68%, rgb(0 0 0 / 0.55) 88%, transparent 100%)'
+  'linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.18) 14%, rgb(0 0 0 / 0.72) 42%, #000 62%, #000 78%, rgb(0 0 0 / 0.5) 93%, transparent 100%)'
 
 export function WhatWeDo() {
   // The first row opens by default. An all-closed section reads as three
@@ -157,7 +168,6 @@ function PhaseRow({
     <li
       className={cn(
         'group relative overflow-hidden transition-colors duration-[var(--dur-slow)] ease-[var(--ease-out)]',
-        !first && 'border-t border-[var(--hairline)]',
       )}
       style={{
         background: active ? 'var(--gk-navy)' : 'var(--gk-white)',
@@ -168,7 +178,30 @@ function PhaseRow({
       onPointerEnter={onOpen}
       onFocusCapture={onOpen}
     >
-      <div className="relative grid gap-6 p-6 md:min-h-[22rem] md:grid-cols-12 md:gap-10 md:p-9">
+      {/* The divider between rows. A plain border ran straight across the
+          photograph bleeding in from the right; this fades out exactly where
+          the image stops being transparent. */}
+      {!first && (
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 z-10 h-px"
+          style={{
+            background:
+              'linear-gradient(to right, var(--hairline) 0%, var(--hairline) 46%, transparent 72%)',
+          }}
+        />
+      )}
+
+      <div
+        className={cn(
+          'relative grid gap-6 p-6 md:grid-cols-12 md:gap-10 md:p-9',
+          /* Open and closed heights are fixed so that one open row plus two
+             closed ones always sums to the same total. Content-height rows
+             made the whole section grow and shrink as the pointer moved down
+             it, which drags everything below out from under the cursor. */
+          active ? 'md:min-h-[23rem]' : 'md:min-h-[15rem]',
+        )}
+      >
         <div className="relative z-10 md:col-span-7">
           <button
             type="button"
@@ -237,72 +270,75 @@ function PhaseRow({
           </div>
         </div>
 
-        {/* The right-hand track. Two blocks when closed; one panel when open.
+        {/* The media track.
 
-            "The images blending into the website is seeming more of a forced
-            fit… rather than seamlessly integrating into the UI." So when the
-            row opens, its media is not a card sitting inside the padding — it
-            fills the right of the row edge to edge and dissolves leftward into
-            the navy, which is the treatment agreed in the call: "keep that
-            image as a background for the right side of the main card itself,
-            so there won't be another box, and it slowly fades away to the
-            blue." */}
+            Open and closed now get the *same* treatment, which is what makes
+            the section read as one component: a single photograph running the
+            full height of the row, bleeding off its right edge, dissolving
+            leftward into the ground. Closed rows are greyscale and dimmed;
+            the open row is in colour and plays its sequence.
+
+            It used to be two small thumbnails side by side when closed, which
+            put the boxed look the review objected to straight back on two of
+            the three rows. */}
         <div className="md:col-span-5">
-          {active ? (
-            <>
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 hidden w-[50%] md:block"
-                /* The mask, not an overlay: it dissolves the sketch's own
-                   board and grid as well as the photographs, so the panel has
-                   no hard left edge in either stage. */
-                style={{
-                  maskImage:
-                    'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.62) 15%, #000 42%)',
-                  WebkitMaskImage:
-                    'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.62) 15%, #000 42%)',
-                }}
-              >
-                <PhaseAnimation
-                  kind={hue.kind}
-                  images={pillar.images}
-                  active={playing}
-                  ink="var(--fg-inverse)"
-                  accent={hue.onNavy}
-                  className="h-full w-full rounded-none"
-                />
-              </div>
-              {/* Below md the row is a single column, so the panel is inline
-                  and bleeds to the bottom edge instead of the right. */}
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] md:block"
+            /* A mask rather than an overlay: it dissolves the sketch's own
+               board and grid as well as the photographs, so the panel has no
+               hard left edge in any stage.
+
+               The ramp runs across nearly the whole panel. A short one — the
+               first version crossed from clear to solid in 27% — reads as a
+               visible band of gradient laid over a picture rather than as the
+               picture emerging out of the ground. */
+            style={{ maskImage: DESKTOP_MASK, WebkitMaskImage: DESKTOP_MASK }}
+          >
+            {active ? (
               <PhaseAnimation
                 kind={hue.kind}
                 images={pillar.images}
                 active={playing}
                 ink="var(--fg-inverse)"
                 accent={hue.onNavy}
-                /* Full-bleed to the row's edges on a phone, and dissolving at
-                   top and bottom, so it reads as part of the row rather than a
-                   photograph dropped into the padding. */
-                className="-mx-6 -mb-6 aspect-[4/3] w-[calc(100%+3rem)] rounded-none md:hidden"
-                style={{
-                  maskImage: MOBILE_MASK,
-                  WebkitMaskImage: MOBILE_MASK,
-                }}
+                className="h-full w-full rounded-none"
               />
-            </>
-          ) : (
-            <div className="grid grid-cols-2 gap-2">
-              {pillar.images.map((image) => (
-                <img
-                  key={image.src}
-                  src={image.src}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="aspect-[4/3] w-full rounded-[var(--r-sm)] object-cover opacity-60 grayscale transition-[opacity,filter] duration-[var(--dur-base)] group-hover:opacity-100 group-hover:grayscale-0"
-                />
-              ))}
-            </div>
-          )}
+            ) : (
+              <img
+                src={pillar.images[0].src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover opacity-55 grayscale transition-[opacity,filter] duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:opacity-80"
+              />
+            )}
+          </div>
+
+          {/* Below md the row is a single column, so the media is inline and
+              bleeds to the row's own edges instead of to the right. */}
+          <div
+            className="pointer-events-none relative -mx-6 -mb-6 mt-2 aspect-[16/10] w-[calc(100%+3rem)] md:hidden"
+            style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
+          >
+            {active ? (
+              <PhaseAnimation
+                kind={hue.kind}
+                images={pillar.images}
+                active={playing}
+                ink="var(--fg-inverse)"
+                accent={hue.onNavy}
+                className="h-full w-full rounded-none"
+              />
+            ) : (
+              <img
+                src={pillar.images[0].src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover opacity-55 grayscale"
+              />
+            )}
+          </div>
         </div>
       </div>
     </li>

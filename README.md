@@ -57,9 +57,17 @@ formal structure back around them.
 4. **Buttons are rectangles.** 4px radius, flat fill, hover is a colour step.
    No pill, no press-into-shadow, no magnetic pull.
 5. **Images integrate rather than sit in frames.** No photograph on the page
-   is in a box any more. The hero card's photo dissolves into its panel; an
-   open "what we do" row bleeds its media to the row edge behind a mask; the
-   case-study and field-note images run flush to their card edges.
+   is in a box any more. The hero card's photo dissolves into its panel; every
+   "what we do" row — open *and* closed — bleeds a single full-height image to
+   the row edge behind a mask; the case-study and field-note images run flush
+   to their card edges.
+
+   Two things were wrong on the first pass and are worth remembering. The
+   dissolve was a two-stop ramp crossing from clear to solid in 27% of the
+   panel, which reads as a strip of gradient laid *over* a photograph rather
+   than the photograph fading out; it is now five stops across the full width.
+   And closed rows still showed two small thumbnails side by side, which put
+   the boxed look straight back on two of the three rows.
 
 ### Section by section
 
@@ -145,24 +153,67 @@ working and worth keeping.
   for any non-enclosing mark: an underline drawn under a phrase that has
   wrapped spans the whole two-line box and lands nowhere near the words.
 
-`shapes.tsx` (`FloatingField`, `Ring`, `Arc`, `Half`, `PatternField`) is
-**deleted** — that whole layer is the "random semicircle" the review asked to
-remove. So are `tilt-card.tsx`, `rotating-highlight.tsx`, `rotating-phrase.tsx`
-and `card-rail.tsx`.
+`tilt-card.tsx`, `rotating-highlight.tsx`, `rotating-phrase.tsx` and
+`card-rail.tsx` are deleted.
+
+### The shape layer — `logo-shapes.tsx`
+
+v2's `shapes.tsx` was cut outright ("this random circle, this half a circle,
+this little semicircle — it's not working here, remove it for now. **Maybe at
+the last stage we can figure out how to integrate it.**"). This is that later
+stage, briefed against the Kickstarter deck and against one follow-up ask:
+*"pieces from the logo instead of the whole logo, and on scroll one part comes
+in and they get assembled into a shape."*
+
+Everything in the file is one primitive — a thick round-capped arc on a 100×100
+box. Sweep 360 gives the ring, 180 the half, ~80 the deck's gold comma. The
+`goalkeep` g *is* a broken ring of four coloured arcs, so nothing here is
+invented geometry.
+
+Four rules separate this from the version that got cut, and all four were
+learned by getting them wrong first:
+
+1. **`thickness` is a percentage of the shape's own box.** A 460px shape at the
+   same percentage as a 200px one gets a 100px stroke and stops being an arc.
+   Every piece is tuned to land near a 48px stroke whatever its size.
+2. **The visible part must contain curvature and at least one round cap.**
+   Anchor a shape so only the fat middle of the stroke is in frame and you have
+   rebuilt the blob the review objected to.
+3. **`start` is degrees clockwise from twelve.** A shape anchored to the
+   top-right corner needs its arc drawn in the *bottom-left* of its own box —
+   that is the part still on screen.
+4. **One coloured piece per light band**, two tonal ones on the hero. The deck
+   runs four shapes on a title slide carrying no content; a band with a
+   heading, a tab row, two columns and a carousel gets one. The second piece
+   tried in the audiences band landed behind the carousel's own controls.
+
+`<MarkAssembly>` is the payoff: the four arcs start scattered — pushed out
+along their own radii, spun and faded — and the scroll pulls them into the
+mark. Each fragment owns an overlapping slice of the scroll so they arrive one
+at a time rather than snapping together, and scatter distance scales with the
+mark's size so the 180px mobile instance doesn't throw its pieces a full
+mark-width out. It runs in the closing band, and it is the only place on the
+site the whole mark is ever drawn from its parts.
+
+Fragments are laid out in their *final* positions inside one square box and
+scattered with a CSS transform on each wrapper — not by animating SVG
+`transform` attributes. That gets the ring's centre as the transform origin for
+free and lets motion drive it off a scroll MotionValue without a React render
+per frame.
 
 ### Band map
 
 | Band | Ground | Notes |
 |---|---|---|
-| Hero | navy | flat; no photography behind it |
+| Hero | navy | flat; no photography behind it; two tonal logo fragments |
 | Partners | white | greyscale marks, colour on hover |
 | What we do | white | one surface, three rows, the open one inverts to navy |
-| Whom we do it for | pale blue | the one light-highlight band |
+| Whom we do it for | pale blue | the one light-highlight band; the deck's coral arc |
 | Proof | navy | four counters over the photography moved down from the hero |
 | Case studies | white | lead + three-up + full-width post-mortem |
 | FAQs | pale blue | the only band with no surfaces at all |
-| Field notes | white | |
-| Closing | navy | assembles one element at a time |
+| Field notes | white | the deck's gold comma |
+| Closing | navy | copy assembles one element at a time; the mark assembles from its own arcs on scroll |
 
 ### Motion
 
