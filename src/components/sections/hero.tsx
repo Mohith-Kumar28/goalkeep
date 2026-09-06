@@ -116,9 +116,15 @@ export function Hero() {
  * The rotating case-study card.
  *
  * "Case study boxing needs some work" — so the box went. The photograph is not
- * in a frame; it dissolves down into the panel colour, and the panel itself is
- * a translucent white on navy, which is the treatment the review liked
- * ("I like the translucent background").
+ * in a frame; it dissolves down into the panel colour.
+ *
+ * The panel used to be white at 7% over navy, which composites to about
+ * #3d5599 against a #2f4a92 ground — under a value step of separation, so the
+ * card's edges disappeared into the section. It is now the deep navy well
+ * instead. Darker rather than lighter, because a white card here would
+ * out-shout the headline, duplicate the one solid-white element on the page
+ * (the primary CTA) and drop the yellow accents to ~1.8:1. Going down instead
+ * of up buys the same separation and keeps the hierarchy and the accent.
  */
 function ProofCard() {
   const reduced = useReducedMotion()
@@ -146,15 +152,15 @@ function ProofCard() {
     >
       <SpotlightCard>
         <article
-          className="overflow-hidden rounded-[var(--r-lg)] border border-white/15 shadow-[var(--shadow-navy)] backdrop-blur-[2px]"
-          style={{ background: "rgb(255 255 255 / 0.07)" }}
+          className="overflow-hidden rounded-[var(--r-lg)] border border-white/10 shadow-[0_14px_40px_rgb(12_20_44_/_0.38)]"
+          style={{ background: "var(--gk-navy-deep)" }}
         >
           <div
             className="photo-bleed photo-bleed-b relative aspect-[16/9]"
             /* The photograph fades into the panel rather than stopping at an
-               edge. --fade-to has to be the *composited* colour of the panel
-               over navy, not the panel's own translucent value. */
-            style={{ ["--fade-to" as string]: "#39538f" }}
+               edge, so --fade-to is the panel's own colour. Opaque now, so this
+               is the token itself rather than a hand-composited value. */
+            style={{ ["--fade-to" as string]: "var(--gk-navy-deep)" }}
           >
             {hero.proofCards.map((item, i) => (
               <img
