@@ -204,10 +204,12 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
             >
               {blank}
             </Marker>
-            {/* Pulled back against the fill: the marker carries 0.16em of
-                inline padding, which otherwise reads as a space before the
-                comma. */}
-            <span className="-ml-[0.14em]">
+            {/* No pull-back. That existed to close the gap left by the old
+                flat fill's 0.16em of inline padding; against a highlighter it
+                dragged the comma under the end of the swipe and hid it. The
+                punctuation belongs outside the stroke anyway — a highlighter
+                marks the phrase, not the comma after it. */}
+            <span>
               {index < audience.challengeBlanks.length - 2
                 ? ', '
                 : index === audience.challengeBlanks.length - 2

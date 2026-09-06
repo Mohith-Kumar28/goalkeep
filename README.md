@@ -266,6 +266,21 @@ stacking context so `z-index: -1` reliably lands the ink behind the text and in
 front of the band, whatever the ancestors are doing. Two stroke shapes exist so
 two markers near each other aren't the same stroke twice.
 
+**The chisel is a CSS `skewX`, not a diagonal in the SVG.** The mask is a
+stretched SVG (`preserveAspectRatio: none`), so anything authored as horizontal
+distance inside it scales with the element's width. Drawing the chisel into the
+path cost a couple of pixels on `decision` and became a wedge wide enough to
+clip the first and last letters of `enable the adoption of`. A skew displaces x
+by a factor of *height*, so the lean holds the same angle at any phrase length
+— which is also how a real chisel tip behaves. The path now runs the full width
+of its viewBox with vertical ends, and only the top and bottom wobble is left
+in the SVG, where stretching does no harm.
+
+**The stroke needs margin to overshoot into**, particularly on the left. The
+marker paints after whatever precedes it, so an overshoot with no margin covers
+it — the comma between two highlighted phrases disappeared underneath the
+second one.
+
 It runs in three places: the typed phrase in the hero (a white swipe on navy),
 the three challenge phrases in the audiences band, and `decision` in the
 closing headline.

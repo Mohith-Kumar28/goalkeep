@@ -390,30 +390,62 @@
      what the ancestors are doing.
 
      Two shapes exist so that two markers near each other are not identical
-     strokes; `.marker-b` is the second. */
+     strokes; `.marker-b` is the second.
+
+     One trap, and it only shows on long phrases. The mask is a stretched SVG
+     (`preserveAspectRatio: none`), so anything authored as horizontal distance
+     inside it scales with the element's width. The first version drew the
+     chisel ends as a diagonal in the path and left the path inset from the
+     viewBox edges; on "decision" that was a couple of pixels, and on "enable
+     the adoption of" it became a wedge wide enough to clip the first and last
+     letters.
+
+     So the path now runs the full width of its viewBox and its ends are
+     vertical, and the chisel comes from a CSS `skewX` instead. A skew shifts x
+     by a factor of *height*, which means the lean stays the same angle no
+     matter how long the phrase is — which is also how a real chisel tip
+     behaves. Only the top and bottom wobble is left in the SVG, and that runs
+     in y, where stretching does no harm. */
   .marker {
     position: relative;
     isolation: isolate;
     display: inline-block;
     padding-inline: 0.1em;
+    /* Room for the stroke to overshoot into.
+       Left matters most: without it the swipe runs back over whatever precedes
+       the phrase, and because the marker paints after that content it covers
+       it — a comma between two highlighted phrases vanished under the second
+       one. The smaller right margin just keeps trailing punctuation clear of
+       the densest part of the stroke's tail. */
+    margin-inline: 0.16em 0.1em;
     color: var(--gk-ink);
     --marker-hue: var(--gk-yellow);
     --marker-tilt: -0.9deg;
+    --marker-skew: -8deg;
     --marker-on: 1;
-    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M11 46L21 9C58 4 94 10 131 6C167 2 197 9 230 5L221 51C185 56 149 49 111 54C73 59 45 50 11 46Z' fill='%23fff'/%3E%3C/svg%3E");
+    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0 50C2 36 1 21 1 6C40 2 78 9 118 5C158 1 200 8 239 4C240 19 239 37 238 52C200 57 160 49 120 54C80 59 40 51 0 50Z' fill='%23fff'/%3E%3C/svg%3E");
   }
 
   .marker-b {
     --marker-tilt: 0.7deg;
-    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M9 50L17 6C52 10 88 3 126 8C161 12 196 4 232 8L224 54C190 49 156 57 118 52C80 47 44 55 9 50Z' fill='%23fff'/%3E%3C/svg%3E");
+    --marker-skew: 7deg;
+    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M1 52C0 38 2 20 0 7C38 11 76 3 116 8C155 13 199 4 239 9C240 24 238 40 239 54C200 49 162 57 122 52C82 47 41 56 1 52Z' fill='%23fff'/%3E%3C/svg%3E");
   }
 
   .marker::before {
     content: "";
     position: absolute;
     z-index: -1;
-    /* Overshoots the word, the way a real stroke runs past what it marks. */
-    inset: -0.16em -0.34em -0.12em -0.28em;
+    /* Overshoots the word, the way a real stroke runs past what it marks,
+       and by slightly more at the end than at the start.
+
+       The side inset has to cover two things: the skew, which displaces each
+       end by half the box height times tan(8deg) — about 0.09em — and the
+       overshoot itself. Both are in em, so the proportion holds at every type
+       size; the 0.44em first tried here was covering a clipping problem that
+       actually lived in the mask, and at display sizes it ran a quarter of an
+       em into the previous word. */
+    inset: -0.18em -0.3em -0.14em -0.24em;
     background-color: var(--marker-hue);
     background-image:
       /* the pool where the pen landed, along the chisel angle */
@@ -425,7 +457,7 @@
       linear-gradient(to bottom, rgb(0 0 0 / 0.06) 0, rgb(0 0 0 / 0) 26%),
       /* the streak where the tip lifted */
       linear-gradient(97deg, rgb(255 255 255 / 0) 26%, rgb(255 255 255 / 0.16) 34%, rgb(255 255 255 / 0) 44%);
-    transform: rotate(var(--marker-tilt));
+    transform: rotate(var(--marker-tilt)) skewX(var(--marker-skew));
     opacity: var(--marker-on);
     mask-image: var(--marker-shape);
     -webkit-mask-image: var(--marker-shape);
