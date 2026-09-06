@@ -7,6 +7,11 @@
  * the photo panel and the proof card are all the page's own, inlined here as
  * data URIs and shot with Playwright.
  *
+ * Kept in step with the site by hand: the highlighter swipe, the type, the
+ * palette and the card treatment here are the same ones in styles.css. If you
+ * change a marker or a surface there, change it here too — this card is the
+ * only place the design exists twice.
+ *
  * Redrawn after the 4 September review, and for the reason the review gave:
  * "since I'm managing the social media, I want to make sure the newsletter,
  * social media and website come together — a 90% match in visual language."
@@ -41,6 +46,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Nunito;src:url(${nunito}) format('woff2');font-weight:200 1000;font-display:block}
 @font-face{font-family:Caveat;src:url(${caveat}) format('woff2');font-weight:400 700;font-display:block}
 *{margin:0;padding:0;box-sizing:border-box}
+:root{--swipe:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0 50C2 36 1 21 1 6C40 2 78 9 118 5C158 1 200 8 239 4C240 19 239 37 238 52C200 57 160 49 120 54C80 59 40 51 0 50Z' fill='%23fff'/%3E%3C/svg%3E")}
 body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Nunito,sans-serif;color:#fff;position:relative}
 
 /* The photo panel, cut on an angle. The edge behind it was the acid yellow;
@@ -54,7 +60,10 @@ body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Nu
 .panel::after{content:"";position:absolute;inset:0;
   background:linear-gradient(to right,#2f4a92 0%,rgb(47 74 146 / .55) 26%,rgb(47 74 146 / .22) 60%)}
 
-.content{position:relative;padding:52px 56px;height:100%;width:64%;display:flex;flex-direction:column}
+.content{position:relative;padding:48px 56px 52px;height:100%;width:64%;display:flex;flex-direction:column}
+/* The wordmark anchors the top; everything else centres in what is left, so
+   the block does not sit high with a pool of empty navy under it. */
+.body{margin:auto 0}
 .mark{align-self:flex-start;display:block;height:42px;width:auto}
 .eyebrow{align-self:flex-start;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:700;
   letter-spacing:.09em;text-transform:uppercase;color:#eac452;margin:30px 0 14px}
@@ -67,14 +76,33 @@ h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wr
 .sub{margin-top:30px;font-size:21px;font-weight:400;line-height:1.5;max-width:33ch;color:rgb(255 255 255 / .9)}
 /* One mark, not three. On the page the typewriter only ever highlights one
    phrase at a time; a card lighting all three at once is the old louder
-   version of the same line. */
-.sub .m{font-weight:700;color:#2f4a92;background:#fff;border-radius:2px;padding:0 .2em}
+   version of the same line.
+
+   The same highlighter as the site: chisel ends from a skew, wobbling edges
+   from a mask, uneven ink. See the .marker block in styles.css. */
+.sub .m{position:relative;isolation:isolate;display:inline-block;
+  padding:0 .1em;margin:0 .1em 0 .16em;font-weight:700;color:#2f4a92}
+.sub .m::before{content:"";position:absolute;z-index:-1;
+  inset:-.18em -.3em -.14em -.24em;background:#fff;
+  background-image:
+    linear-gradient(103deg,rgb(47 74 146 / .16) 0 3%,rgb(47 74 146 / 0) 13%),
+    linear-gradient(283deg,rgb(47 74 146 / .12) 0 3%,rgb(47 74 146 / 0) 11%),
+    linear-gradient(to top,rgb(47 74 146 / .14) 0,rgb(47 74 146 / 0) 42%),
+    linear-gradient(97deg,rgb(255 255 255 / 0) 28%,rgb(255 255 255 / .22) 36%,rgb(255 255 255 / 0) 46%);
+  transform:rotate(-.9deg) skewX(-8deg);
+  -webkit-mask-image:var(--swipe);mask-image:var(--swipe);
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 
 /* Sits over the photo's cut edge, the way the proof card does on the site —
-   now a translucent panel with a hairline, not a rotated sticker. */
-.card{position:absolute;right:44px;bottom:44px;background:rgb(255 255 255 / .1);color:#fff;
-  border:1px solid rgb(255 255 255 / .28);border-radius:12px;padding:18px 26px 20px;
-  backdrop-filter:blur(2px);box-shadow:0 10px 30px rgb(20 30 60 / .28)}
+   a translucent panel with a hairline, not a rotated sticker.
+
+   Tinted navy rather than white: at 10% white it took its legibility from
+   whatever happened to be behind it, and the photography here is bright and
+   busy. A dark tint means the white type reads over any frame. */
+.card{position:absolute;right:48px;bottom:52px;background:rgb(24 40 84 / .62);color:#fff;
+  border:1px solid rgb(255 255 255 / .22);border-radius:12px;padding:18px 26px 20px;
+  backdrop-filter:blur(3px);box-shadow:0 12px 34px rgb(12 20 46 / .4)}
 .card .org{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
   color:#eac452;line-height:1}
 .card .stat{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;
@@ -87,6 +115,7 @@ h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wr
 
 <div class="content">
   <img class="mark" src="${wordmark}" alt="Goalkeep">
+  <div class="body">
   <span class="eyebrow">Data work for the social sector</span>
 
   <h1>MEL systems aren&rsquo;t just meant to measure impact, but also
@@ -96,6 +125,7 @@ h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wr
   </h1>
 
   <p class="sub">We <span class="m">design</span> data systems that deepen the impact of your programs.</p>
+  </div>
 </div>
 
 <div class="card">

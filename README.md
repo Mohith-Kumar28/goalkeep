@@ -364,6 +364,33 @@ Both default to `http://localhost:3000`.
 
 ---
 
+## Sharing / Open Graph
+
+The card is built by `pnpm og` and written to `public/og.jpg`. **It is the only
+place the design exists twice** — the highlighter, the type, the palette and
+the card treatment in `scripts/build-og.mjs` are hand-kept in step with
+`styles.css`. Change a marker or a surface there and change it here too.
+
+**`og:image` must be absolute and must resolve on the host the link is actually
+shared from.** It used to be built from `site.url`, hard-coded to
+`https://goalkeep.net` — which is still the old WordPress site, so the URL
+404'd and every platform fell back to whatever logo it could scrape. The card
+was never being fetched at all. The origin is now resolved per request in
+`__root.tsx` via `getRequestUrl()`, wrapped in `createIsomorphicFn` so the
+server-only import stays out of the client bundle. That is correct on the
+workers.dev preview today and stays correct after the domain cut-over.
+
+Two things still hard-code the production domain, correctly, because they
+describe the intended production site rather than the host serving it:
+`public/robots.txt` and `public/sitemap.xml`. There is deliberately **no
+`rel=canonical`** — which host should be canonical depends on when goalkeep.net
+cuts over, and guessing it wrong either de-indexes the real site or points
+Google at the old one.
+
+Sharing platforms cache aggressively. After changing the card, re-run the
+scraper: Facebook's Sharing Debugger, LinkedIn's Post Inspector. Twitter/X,
+Slack and WhatsApp pick it up within a day.
+
 ## Deploy gotchas
 
 - `pnpm run deploy`, not `pnpm deploy` — pnpm reserves the word.
