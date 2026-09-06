@@ -1,91 +1,88 @@
+import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { hero } from '@/content/homepage'
 import { GkButton } from '@/components/primitives/gk-button'
-import { KenBurns } from '@/components/primitives/ken-burns'
 import { Spotlight } from '@/components/primitives/spotlight'
-import { TiltCard } from '@/components/primitives/tilt-card'
-import { RotatingHighlight } from '@/components/primitives/rotating-highlight'
-import { Annotate, Scribble } from '@/components/primitives/doodles'
-import { FloatingField, PatternField } from '@/components/primitives/shapes'
+import { TypedPhrase } from '@/components/primitives/typed-phrase'
+import { Annotate } from '@/components/primitives/doodles'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
  * The hero.
  *
- * Four layers, back to front: photography that slowly drifts, a navy wash that
- * holds it down to a readable ground, the arc lattice and floating marks off
- * the logo, then the copy. The photographs are the point — the feedback asked
- * for footage behind the headline the way 10x Impact Labs does it, and for the
- * community the work is for to actually be visible.
+ * Rebuilt after the review. What changed and why:
  *
- * The navy wash is 0.88 alpha, not a fill. At 0.95 the photograph stops
- * reading; below about 0.82 the white headline starts to fight the highlights
- * in the workshop frames.
+ *   · The Ken Burns photography and its 0.84 navy wash are gone. "I'm just
+ *     wondering if we should remove this — too much is happening over here."
+ *     The ground is now flat navy, the colour the marketing creatives use.
+ *     The photography moved down to the numbers band, which is where the
+ *     "keep this video in some other component's background below" note sends
+ *     it.
+ *   · The arc lattice and the floating rings, arcs and half-discs are gone:
+ *     "this random circle, this half a circle, this little semicircle — it's
+ *     not working here, remove it for now."
+ *   · The spotlight stays. It is the one effect the review singled out as
+ *     working: "I like the little hover and style effect you've given."
+ *   · The subheader types and backspaces instead of being swept by a marker.
+ *   · The case-study card lost its 2px ink outline, its hard offset shadow and
+ *     its tilt. The photograph now dissolves into the panel rather than
+ *     sitting in a frame.
  */
 export function Hero() {
   return (
     <section
       data-ground="navy"
-      /* Pulled up under the sticky header so the photography runs to the top
-         of the viewport and the header floats on it. 82px is the header's
-         h-20 plus its 2px progress rule. */
+      /* Pulled up under the sticky header so the navy runs to the top of the
+         viewport and the header floats on it. 82px is the header's h-20 plus
+         its 2px progress rule. */
       className="ground-navy accent-yellow relative isolate -mt-[82px] overflow-hidden"
+      style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <KenBurns images={hero.backdrop} interval={7000} />
-
-      {/* The wash. Alpha, not an opaque fill, so the photograph survives. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{ backgroundColor: 'rgb(47 74 146 / 0.84)' }}
-      />
-
-      <PatternField pattern="arcs" color="#ffffff" opacity={0.07} scale={88} />
       <Spotlight />
-      <FloatingField variant="a" />
 
-      <div className="shell relative z-10 grid items-center gap-12 pb-20 pt-[calc(82px+3rem)] md:pb-28 md:pt-[calc(82px+5rem)] lg:grid-cols-12 lg:gap-10">
+      <div className="shell relative z-10 grid items-center gap-14 pb-20 pt-[calc(82px+3rem)] md:pb-24 md:pt-[calc(82px+4.5rem)] lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
-          <p className="mb-5 flex items-center gap-3">
+          <p className="mb-6">
             <span className="eyebrow text-[var(--gk-yellow)]">{hero.eyebrow}</span>
-            <Scribble
-              name="arrow-hook"
-              color="var(--gk-yellow)"
-              className="h-6 w-10 opacity-80"
-            />
           </p>
 
-          <h1 className="display max-w-[16ch] text-white">
+          <h1 className="display max-w-[23ch] text-white">
             {hero.headlineLead}{' '}
-            <Annotate mark="squiggle" color="var(--gk-yellow)" delay={0.5} nowrap>
+            <Annotate mark="underline" color="var(--gk-yellow)" delay={0.5} nowrap>
               {hero.headlineHighlight}
             </Annotate>
           </h1>
 
-          <p className="lead mt-8 max-w-[46ch] text-[length:clamp(1.125rem,1.7vw,1.5rem)] leading-snug text-white">
-            <RotatingHighlight segments={hero.leadSegments} />
+          {/* min-height reserves the tallest rendering of the typed sentence so
+              the buttons below never move while it types. */}
+          <p className="mt-8 max-w-[44ch] text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] font-normal leading-[1.55] text-white/90 min-h-[4.7em] sm:min-h-[3.2em]">
+            <TypedPhrase
+              lead={hero.typed.lead}
+              phrases={hero.typed.phrases}
+              tail={hero.typed.tail}
+              markBackground="var(--gk-white)"
+              markColor="var(--gk-navy)"
+            />
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <GkButton to={hero.primaryCta.to} variant="primary" onDark magnetic withArrow>
+            <GkButton to={hero.primaryCta.to} variant="primary" onDark withArrow>
               {hero.primaryCta.label}
             </GkButton>
-            <GkButton to={hero.secondaryCta.to} variant="ghost" onDark>
+            <GkButton to={hero.secondaryCta.to} variant="secondary" onDark>
               {hero.secondaryCta.label}
             </GkButton>
-
-            {/* The margin note points back at the primary. Desktop only —
-                on a phone there is no margin for it to sit in. */}
-            <span
-              aria-hidden="true"
-              className="hidden items-start gap-1 pl-2 text-[var(--gk-yellow)] xl:flex"
-            >
-              <Scribble name="arrow-curve" color="var(--gk-yellow)" className="h-14 w-10 -scale-x-100" />
-              <span className="hand mt-4 -rotate-6 whitespace-pre-line leading-tight">
-                {hero.marginalia}
-              </span>
-            </span>
           </div>
+
+          {/* The margin note. Handwriting is the one informal device the review
+              asked us to keep, so it survives — quieter, and no longer paired
+              with a drawn arrow. */}
+          <p
+            aria-hidden="true"
+            className="hand mt-8 hidden whitespace-pre-line leading-tight text-[var(--gk-yellow)]/90 xl:block"
+          >
+            {hero.marginalia}
+          </p>
         </div>
 
         <div className="lg:col-span-5">
@@ -97,10 +94,12 @@ export function Hero() {
 }
 
 /**
- * The rotating proof card. The feedback offered a choice between video and
- * "case study card rotations on the right, so that they can immediately get
- * tangible results of our work" — this is both: real footage behind, real
- * numbers in front.
+ * The rotating case-study card.
+ *
+ * "Case study boxing needs some work" — so the box went. The photograph is not
+ * in a frame; it dissolves down into the panel colour, and the panel itself is
+ * a translucent white on navy, which is the treatment the review liked
+ * ("I like the translucent background").
  */
 function ProofCard() {
   const reduced = useReducedMotion()
@@ -111,7 +110,7 @@ function ProofCard() {
     if (reduced || paused) return
     const id = window.setInterval(
       () => setIndex((i) => (i + 1) % hero.proofCards.length),
-      4200,
+      4600,
     )
     return () => window.clearInterval(id)
   }, [reduced, paused])
@@ -124,45 +123,64 @@ function ProofCard() {
       onPointerLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
+      className="mx-auto max-w-[27rem]"
     >
-      <TiltCard className="mx-auto max-w-[26rem]">
-        <article className="relative rotate-[-1.5deg] overflow-hidden rounded-[var(--r-lg)] border-2 border-[var(--gk-ink)] bg-[var(--gk-cream)] shadow-[10px_10px_0_var(--gk-ink)]">
-          <div className="relative aspect-[3/2] overflow-hidden">
-            {hero.proofCards.map((item, i) => (
-              <img
-                key={item.image}
-                src={item.image}
-                alt={i === index ? item.imageAlt : ''}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-[var(--ease-out)]"
-                style={{ opacity: i === index ? 1 : 0 }}
-              />
-            ))}
-          </div>
+      <article
+        className="overflow-hidden rounded-[var(--r-lg)] border border-white/15 shadow-[var(--shadow-navy)] backdrop-blur-[2px]"
+        style={{ background: 'rgb(255 255 255 / 0.07)' }}
+      >
+        <div
+          className="photo-bleed photo-bleed-b relative aspect-[16/9]"
+          /* The photograph fades into the panel rather than stopping at an
+             edge. --fade-to has to be the *composited* colour of the panel
+             over navy, not the panel's own translucent value. */
+          style={{ ['--fade-to' as string]: '#39538f' }}
+        >
+          {hero.proofCards.map((item, i) => (
+            <img
+              key={item.image}
+              src={item.image}
+              alt={i === index ? item.imageAlt : ''}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[700ms] ease-[var(--ease-out)]"
+              style={{ opacity: i === index ? 1 : 0 }}
+            />
+          ))}
+        </div>
 
-          <div className="p-6 text-[var(--gk-ink)]">
-            <p className="hand text-[var(--gk-coral-ink)]">{card.org}</p>
-            <p className="stat-figure mt-2 text-[length:clamp(1.75rem,3.2vw,2.5rem)]">
-              {card.stat}
-            </p>
-            <p className="mt-2 text-[length:var(--fs-sm)] font-semibold">{card.line}</p>
+        <div className="-mt-8 px-7 pb-7">
+          <p className="relative text-[length:var(--fs-sm)] font-bold uppercase tracking-[var(--tracking-label)] text-[var(--gk-yellow)]">
+            {card.org}
+          </p>
+          <p className="stat-figure relative mt-3 text-[length:clamp(1.75rem,2.8vw,2.25rem)] text-white">
+            {card.stat}
+          </p>
+          <p className="relative mt-2 text-[length:var(--fs-sm)] text-white/80">
+            {card.line}
+          </p>
 
-            <ol className="mt-5 flex gap-2" aria-hidden="true">
+          <div className="relative mt-6 flex items-center justify-between gap-4">
+            <Link to={card.to} className="link-cta text-[length:var(--fs-sm)]">
+              Read case study
+            </Link>
+
+            <ol className="flex gap-1.5" aria-hidden="true">
               {hero.proofCards.map((item, i) => (
                 <li
                   key={item.org}
-                  className="h-[5px] rounded-full transition-all duration-[var(--dur-base)] ease-[var(--ease-out)]"
+                  className="h-[3px] transition-all duration-[var(--dur-base)] ease-[var(--ease-out)]"
                   style={{
-                    width: i === index ? 26 : 10,
-                    background: i === index ? 'var(--gk-blue)' : 'var(--hairline)',
+                    width: i === index ? 22 : 10,
+                    background:
+                      i === index ? 'var(--gk-yellow)' : 'rgb(255 255 255 / 0.3)',
                   }}
                 />
               ))}
             </ol>
           </div>
-        </article>
-      </TiltCard>
+        </div>
+      </article>
     </div>
   )
 }

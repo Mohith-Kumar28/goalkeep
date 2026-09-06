@@ -2,8 +2,9 @@
 @import "shadcn/tailwind.css";
 @import "./styles/tokens.css";
 
-@import "@fontsource-variable/outfit";
-@import "@fontsource-variable/plus-jakarta-sans";
+/* Two families, per the brief: Nunito Sans and the hand. Outfit and Plus
+   Jakarta are no longer imported — see tokens.css. */
+@import "@fontsource-variable/nunito-sans";
 @import "@fontsource-variable/caveat";
 
 /* ============================================================================
@@ -30,10 +31,12 @@
   --color-teal-deep: var(--gk-teal-deep);
   --color-teal-ink: var(--gk-teal-ink);
   --color-teal-tint: var(--gk-teal-tint);
+  --color-teal-lift: var(--gk-teal-lift);
   --color-coral: var(--gk-coral);
   --color-coral-deep: var(--gk-coral-deep);
   --color-coral-ink: var(--gk-coral-ink);
   --color-coral-tint: var(--gk-coral-tint);
+  --color-coral-lift: var(--gk-coral-lift);
   --color-yellow: var(--gk-yellow);
   --color-yellow-deep: var(--gk-yellow-deep);
   --color-yellow-tint: var(--gk-yellow-tint);
@@ -41,6 +44,7 @@
   --color-fg-1: var(--fg-1);
   --color-fg-2: var(--fg-2);
   --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
   --color-band-accent: var(--band-accent);
   --color-band-tint: var(--band-tint);
   --color-band-ink: var(--band-ink);
@@ -74,22 +78,21 @@
   --text-3xl: var(--fs-3xl);
   --text-4xl: var(--fs-4xl);
   --text-5xl: var(--fs-5xl);
-  --text-6xl: var(--fs-6xl);
   --text-hand-sm: var(--fs-hand-sm);
   --text-hand: var(--fs-hand);
   --text-hand-lg: var(--fs-hand-lg);
 
+  --radius-btn: var(--r-btn);
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-lg: var(--r-lg);
   --radius-xl: var(--r-xl);
   --radius-pill: var(--r-pill);
 
+  --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
-  --shadow-pop: var(--shadow-pop);
-  --shadow-pop-sm: var(--shadow-pop-sm);
   --shadow-navy: var(--shadow-navy);
 
   --ease-out: var(--ease-out);
@@ -103,7 +106,7 @@
   --card-foreground: var(--gk-ink);
   --popover: var(--gk-white);
   --popover-foreground: var(--gk-ink);
-  --primary: var(--gk-blue);
+  --primary: var(--gk-navy);
   --primary-foreground: var(--gk-white);
   --secondary: var(--gk-cream-deep);
   --secondary-foreground: var(--gk-ink);
@@ -146,13 +149,13 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: var(--w-black);
+    font-weight: var(--w-extrabold);
     line-height: var(--lh-heading);
     letter-spacing: var(--tracking-heading);
     text-wrap: balance;
   }
 
-  /* Focus lands on both grounds: blue halo on cream, yellow halo on navy. */
+  /* Focus lands on both grounds: blue halo on white, gold halo on navy. */
   :focus-visible {
     outline: none;
     border-radius: var(--r-sm);
@@ -178,7 +181,7 @@
   /* --- Layout ------------------------------------------------------------ */
   .shell {
     width: 100%;
-    max-width: 1440px;
+    max-width: 1320px;
     margin-inline: auto;
     padding-inline: var(--sp-4);
   }
@@ -236,7 +239,7 @@
   .accent-blue {
     --band-accent: var(--gk-blue);
     --band-accent-deep: var(--gk-blue-deep);
-    --band-accent-ink: var(--gk-blue);
+    --band-accent-ink: var(--gk-blue-deep);
     --band-tint: var(--gk-blue-tint);
   }
   .accent-teal {
@@ -271,11 +274,13 @@
     --band-accent-ink: var(--gk-yellow);
   }
 
-  /* --- Type roles -------------------------------------------------------- */
+  /* --- Type roles --------------------------------------------------------
+     Every size here came down between 20% and 33% from v2, and the weight
+     ceiling from 900 to 800. "It's screaming a little too much." */
   .display {
     font-family: var(--font-display);
-    font-size: clamp(2.75rem, 7vw, 5.25rem);
-    font-weight: var(--w-black);
+    font-size: clamp(2.125rem, 4.6vw, 3.5rem);
+    font-weight: var(--w-extrabold);
     line-height: var(--lh-display);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
@@ -283,8 +288,8 @@
 
   .h2 {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4.4vw, 3.25rem);
-    font-weight: var(--w-black);
+    font-size: clamp(1.625rem, 3vw, 2.375rem);
+    font-weight: var(--w-extrabold);
     line-height: var(--lh-heading);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
@@ -293,120 +298,184 @@
   .h3 {
     font-family: var(--font-display);
     font-size: var(--fs-xl);
-    font-weight: var(--w-extrabold);
-    line-height: 1.2;
+    font-weight: var(--w-bold);
+    line-height: 1.28;
     letter-spacing: var(--tracking-heading);
   }
 
   .lead {
     font-size: var(--fs-lg);
-    line-height: 1.55;
+    font-weight: var(--w-regular);
+    line-height: 1.6;
     color: var(--band-ink-2, var(--fg-2));
   }
 
-  /* Section labels. These were 12px uppercase mono; the feedback asked for
-     another option, and a real hand set slightly off-axis reads as a person
-     annotating the page rather than a CMS field. */
+  /* Section labels.
+     v1 set these in uppercase mono ("looking very AI manufactured"); v2 swapped
+     to a rotated hand, which pushed the page further into the informal register
+     the review pulled back from. This is the third answer: small, letterspaced
+     Nunito Sans in the band accent, with a short rule in front of it. Formal,
+     quiet, and it leaves the handwriting for the places the client actually
+     wants it — marginalia and highlights. */
   .eyebrow {
-    display: inline-block;
-    font-family: var(--font-hand);
-    font-size: var(--fs-hand);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
     font-weight: var(--w-bold);
     line-height: 1;
-    letter-spacing: 0;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
     color: var(--band-accent-ink, var(--band-accent));
-    transform: rotate(-2.5deg);
+  }
+  .eyebrow::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 2px;
+    flex: none;
+    background: currentColor;
+    opacity: 0.85;
   }
 
   .hand {
     font-family: var(--font-hand);
     font-size: var(--fs-hand);
     font-weight: var(--w-semibold);
-    line-height: 1.25;
+    line-height: 1.3;
   }
 
   .hand-lg {
     font-family: var(--font-hand);
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
     font-weight: var(--w-bold);
-    line-height: 1.2;
+    line-height: 1.25;
   }
 
   .stat-figure {
     font-family: var(--font-display);
-    font-weight: var(--w-black);
+    font-weight: var(--w-extrabold);
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
-    letter-spacing: -0.05em;
-    line-height: 0.9;
+    letter-spacing: -0.03em;
+    line-height: 1;
   }
 
-  /* Yellow highlighter behind a word. Never yellow *text*. */
+  /* The highlighter behind a word. Gold now, not the acid yellow, and never
+     yellow *text*. */
   .keyword-mark {
     background: var(--gk-yellow);
     color: var(--gk-ink);
-    border-radius: var(--r-sm);
+    border-radius: 2px;
     padding-inline: 0.16em;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
 
-  /* --- Surfaces ---------------------------------------------------------- */
+  /* --- Surfaces ----------------------------------------------------------
+     One surface treatment for the whole site: white, 1px hairline, soft drop.
+     `.card-pop` — 2px ink border and a hard offset shadow — is gone. It was
+     the single most-criticised element in the review. */
+  .surface {
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .surface-inverse {
+    background: rgb(255 255 255 / 0.06);
+    border: 1px solid var(--hairline-inverse);
+    border-radius: var(--r-lg);
+  }
+
   .card-lift {
     border-radius: var(--r-lg);
     box-shadow: var(--shadow-sm);
     transition:
-      transform var(--dur-base) var(--ease-pop),
-      box-shadow var(--dur-base) var(--ease-out);
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
   }
   .card-lift:hover,
   .card-lift:focus-within {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
-  }
-
-  /* The sticker: hard offset, ink outline, a degree or two off square. */
-  .card-pop {
-    border: 2px solid var(--gk-ink);
-    border-radius: var(--r-md);
-    box-shadow: var(--shadow-pop);
-    transition:
-      transform var(--dur-base) var(--ease-pop),
-      box-shadow var(--dur-base) var(--ease-out);
-  }
-  .card-pop:hover,
-  .card-pop:focus-within {
-    transform: translate(-3px, -3px);
-    box-shadow: 9px 9px 0 var(--gk-ink);
+    border-color: var(--hairline-strong);
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
     gap: var(--sp-2);
-    border-radius: var(--r-pill);
-    padding: 0.35em 0.85em;
+    border-radius: var(--r-sm);
+    padding: 0.3em 0.7em;
     font-size: var(--fs-sm);
     font-weight: var(--w-bold);
     line-height: 1.2;
   }
 
-  /* The Canva signature: a photo panel cut on an angle along the bottom. */
-  .diagonal-cut {
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3.5rem), 0 100%);
+  /* The simple call to action the review asked for in place of a button:
+     "It doesn't have to be a button. It can just be this kind of effect." */
+  .link-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-weight: var(--w-bold);
+    line-height: 1.3;
+    color: var(--link-color);
+    padding-bottom: 2px;
+    border-bottom: 1.5px solid currentColor;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      gap var(--dur-base) var(--ease-out);
   }
-  .diagonal-cut-r {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.5rem));
+  .link-cta:hover,
+  .link-cta:focus-visible {
+    color: var(--link-color-hover);
+    gap: var(--sp-3);
+  }
+
+  /* Seamless image integration.
+     "The images blending into the website is seeming more of a forced fit…
+     rather than seamlessly integrating into the UI." A photograph inside this
+     wrapper has no frame at all; it dissolves into whatever colour the panel
+     sets in --fade-to. */
+  .photo-bleed {
+    position: relative;
+    overflow: hidden;
+    --fade-to: var(--gk-navy);
+  }
+  .photo-bleed::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to right,
+      var(--fade-to) 0%,
+      color-mix(in srgb, var(--fade-to) 55%, transparent) 26%,
+      transparent 62%
+    );
+  }
+  .photo-bleed-b::after {
+    background: linear-gradient(
+      to top,
+      var(--fade-to) 0%,
+      color-mix(in srgb, var(--fade-to) 45%, transparent) 30%,
+      transparent 70%
+    );
   }
 
   /* --- Rails ------------------------------------------------------------- */
   .ticker-mask {
     mask-image: linear-gradient(
       to right,
-      transparent,
-      #000 72px,
-      #000 calc(100% - 72px),
-      transparent
+      transparent 0,
+      #000 210px,
+      #000 calc(100% - 210px),
+      transparent 100%
     );
   }
 
@@ -416,6 +485,10 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    /* Keeps a horizontal rail from swallowing the page's vertical scroll —
+       the "there's a little scrolling problem" note from the review. */
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
   }
   .card-rail::-webkit-scrollbar {
     display: none;
@@ -437,26 +510,6 @@
 @keyframes gk-spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes gk-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(0, -22px, 0) rotate(7deg);
-  }
-}
-
-@keyframes gk-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
   }
 }
 
@@ -496,8 +549,7 @@
     transition-duration: 0.001ms !important;
   }
 
-  .card-lift:hover,
-  .card-pop:hover {
+  .card-lift:hover {
     transform: none;
   }
 }

@@ -11,12 +11,12 @@ import { cn } from '@/lib/utils'
  * stock blog imagery is the fastest route to slop. That argument held while the
  * only images available were stock. They aren't any more.
  */
-const TAG_HUES = ['var(--gk-blue-tint)', 'var(--gk-teal-tint)', 'var(--gk-yellow-tint)']
+const TAG_HUES = ['var(--gk-blue-tint)', 'var(--gk-teal-tint)', 'var(--gk-coral-tint)']
 
 export function FieldNotes() {
   return (
     <section
-      className="ground-cream-deep band accent-teal"
+      className="ground-cream band accent-teal"
       aria-labelledby="field-notes-heading"
     >
       <div className="shell">
@@ -50,11 +50,12 @@ export function FieldNotes() {
 function NoteCard({ note, hue }: { note: FieldNote; hue: string }) {
   return (
     <article
+      data-ground={note.inverse ? 'navy' : undefined}
       className={cn(
-        'card-lift flex h-full flex-col overflow-hidden border-2 border-[var(--gk-ink)]',
+        'card-lift flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border',
         note.inverse
-          ? 'bg-[var(--gk-navy)] text-white'
-          : 'bg-[var(--gk-white)] text-[var(--gk-ink)]',
+          ? 'border-transparent bg-[var(--gk-navy)] text-white'
+          : 'border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]',
       )}
     >
       <div className="relative">
@@ -63,10 +64,10 @@ function NoteCard({ note, hue }: { note: FieldNote; hue: string }) {
           alt={note.imageAlt}
           loading="lazy"
           decoding="async"
-          className="aspect-[16/10] w-full border-b-2 border-[var(--gk-ink)] object-cover"
+          className="aspect-[16/10] w-full object-cover"
         />
         {note.badge && (
-          <span className="chip absolute right-4 top-4 border-2 border-[var(--gk-ink)] bg-[var(--gk-yellow)] text-[var(--gk-ink)]">
+          <span className="chip absolute right-4 top-4 bg-[var(--gk-yellow)] text-[var(--gk-ink)] shadow-[var(--shadow-sm)]">
             {note.badge}
           </span>
         )}
@@ -92,12 +93,10 @@ function NoteCard({ note, hue }: { note: FieldNote; hue: string }) {
         </p>
         <span
           className={cn(
-            'chip mt-auto self-start border-2 text-[length:var(--fs-xs)]',
-            note.inverse
-              ? 'border-white/50 text-white'
-              : 'border-[var(--gk-ink)] text-[var(--gk-ink)]',
+            'chip mt-auto self-start text-[length:var(--fs-xs)]',
+            note.inverse ? 'text-white' : 'text-[var(--gk-navy)]',
           )}
-          style={{ background: note.inverse ? 'transparent' : hue }}
+          style={{ background: note.inverse ? 'rgb(255 255 255 / 0.12)' : hue }}
         >
           {note.tag}
         </span>

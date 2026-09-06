@@ -6,11 +6,10 @@
  * This fails on any off-palette hue, which is how a stray `text-blue-500` or a
  * default shadcn token gets caught.
  *
- * The list below was resampled in September 2026 from the logo PNG and the
- * approved Canva creatives. The previous list came from the v0 brand PDF and
- * was roughly 25% low on chroma across the board, with a cool grey paper the
- * brand does not actually use — which is what the homepage feedback was
- * reacting to when it called the backgrounds dull.
+ * The list below was reset after the 4 September review, which called the v2
+ * values "too vibrant and popping" and "a little amateurish" and named the
+ * reference creatives as the base. Every hue here is the muted value from
+ * those creatives; navy and white carry the page.
  *
  * There is deliberately no neutral ramp any more. Text is ink or white; softer
  * text is an alpha of one of those, and alpha values are skipped below.
@@ -22,21 +21,25 @@ import { chromium } from 'playwright'
 
 const BRAND = new Set(
   [
-    // Grounds
-    '#2f4a92', '#1f3268', '#3a5aae',
-    '#faf7f0', '#f2ede0', '#ffffff', '#14131a',
-    // Pop hues, their hover-deeps, and the -ink variants that survive as
-    // small text on cream where the pop hue itself does not
-    '#2f5fe8', '#1e43b8',
-    '#17bfac', '#12a895', '#0b6a5f',
-    '#ff6a52', '#e8503a', '#b33520',
-    '#e9df22', '#c4ba0e',
+    // Grounds — navy and white carry the page
+    '#2f4a92', '#1e3266', '#3d5aa8',
+    '#fcfcfd', '#f1f4fa', '#ffffff', '#14131a',
+    // Pop hues, pulled back off full chroma after the 4 Sep review, plus their
+    // hover-deeps and the -ink variants that survive as small text on white
+    '#3f63c8', '#2f4d9f',
+    '#2f9c8f', '#237a70', '#176059',
+    '#e07a5f', '#c8613f', '#9c452a',
+    '#eac452', '#cfa72f',
+    // Lifted values, legible on the navy ground only
+    '#5fc9ba', '#f0a58c',
     // Tints
-    '#e4eafd', '#ddf6f2', '#ffe6e1', '#fbf8d3',
-    // Hairline
-    '#e6dfd1',
-  ].map((h) => h.toLowerCase()),
-)
+    '#eaeff9', '#e7f2f0', '#fbeee9', '#fbf3df',
+    // Hairlines
+    '#e5e7ee', '#d3d7e2',
+    // The composited value of the hero card's translucent panel over navy,
+    // used as the gradient stop the photograph dissolves into
+    '#39538f',
+  ].map((h) => h.toLowerCase()),)
 
 const toHex = ([r, g, b]) =>
   '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')

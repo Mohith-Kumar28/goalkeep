@@ -1,26 +1,34 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { audienceSection, audiences } from '@/content/homepage'
 import type { Audience } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhotoCarousel } from '@/components/primitives/photo-carousel'
-import { Annotate, Scribble } from '@/components/primitives/doodles'
-import { FloatingField } from '@/components/primitives/shapes'
+import { Annotate } from '@/components/primitives/doodles'
 import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
- * "Layout is looking clunky - we need a refresh for this one."
+ * Whom we do it for.
  *
- * Rebuilt to the shape the feedback lays out, in that order:
+ * The structure the first feedback doc asked for is intact and was confirmed
+ * in the review: "what I liked here was the ease of the top select of what is
+ * happening with whom — that's good." What the review changed:
  *
- *   1. the challenge, in their words, before anything about us
- *   2. a looping carousel of five real photographs, captioned org · location
- *   3. a testimonial with a face and credentials
- *   4. two buttons — Kickstarter, and the case studies
- *
- * The old vertical tablist is gone. It asked the visitor to choose a category
- * before they'd been given a reason to care about any of them.
+ *   · "Again there's just too much bold and big stuff happening here" and
+ *     "colours loud and popping too much". The band moved off coral tint onto
+ *     the pale blue, the headline came down a step, and the three highlighter
+ *     fills are now the muted values.
+ *   · "How can we improve the spacing of this area? … Over here can we have an
+ *     image and a testimonial block here only? So for each there'll be a
+ *     different testimonial relevant to that particular audience." The
+ *     testimonial moved out of its own full-width row into the empty right
+ *     column beside the challenge statement — which is both the fix for the
+ *     dead space and what was asked for.
+ *   · "The read case study can be almost this type of effect — it doesn't have
+ *     to be a button." It is a text link under the testimonial now.
+ *   · Tabs are rectangles, not pills, and the sticker press is gone.
  */
 export function Audiences() {
   const [active, setActive] = useState(0)
@@ -35,18 +43,15 @@ export function Audiences() {
 
   return (
     <section
-      className="ground-cream band accent-coral relative"
-      style={{ backgroundColor: 'var(--gk-coral-tint)' }}
+      className="ground-cream-deep band accent-blue relative"
       aria-labelledby="audiences-heading"
     >
-      <FloatingField variant="b" />
-
       <div className="shell relative">
         <Reveal>
-          <p className="eyebrow mb-3">{audienceSection.eyebrow}</p>
-          <h2 id="audiences-heading" className="h2 max-w-[20ch]">
+          <p className="eyebrow mb-4">{audienceSection.eyebrow}</p>
+          <h2 id="audiences-heading" className="h2 max-w-[24ch]">
             {audienceSection.headline}{' '}
-            <span className="text-[var(--gk-coral-ink)]">
+            <span className="font-medium text-[var(--fg-2)]">
               {audienceSection.headlineTail}
             </span>
           </h2>
@@ -55,7 +60,7 @@ export function Audiences() {
         <div
           role="tablist"
           aria-label="Kinds of organisation we work with"
-          className="mt-8 flex flex-wrap gap-3"
+          className="mt-8 flex flex-wrap gap-2"
         >
           {audiences.map((item, index) => (
             <button
@@ -74,12 +79,12 @@ export function Audiences() {
                   setActive((active - 1 + audiences.length) % audiences.length)
               }}
               className={cn(
-                'rounded-[var(--r-pill)] border-2 border-[var(--gk-ink)] px-5 py-3',
-                'font-display text-[length:var(--fs-sm)] font-extrabold',
-                'transition-[transform,background-color,box-shadow] duration-[var(--dur-base)] ease-[var(--ease-pop)]',
+                'rounded-[var(--r-btn)] border px-5 py-3',
+                'text-[length:var(--fs-sm)] font-bold',
+                'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
                 index === active
-                  ? 'bg-[var(--gk-ink)] text-[var(--gk-cream)] shadow-none'
-                  : 'bg-[var(--gk-white)] text-[var(--gk-ink)] shadow-[var(--shadow-pop-sm)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-[var(--gk-yellow)] hover:shadow-[var(--shadow-pop)]',
+                  ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
+                  : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-navy)] hover:border-[var(--gk-navy)]',
               )}
             >
               {item.label}
@@ -94,21 +99,28 @@ export function Audiences() {
           key={audience.id}
           className="mt-12"
         >
-          <ChallengeStatement audience={audience} />
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-7">
+              <ChallengeStatement audience={audience} />
 
-          <div className="mt-14">
-            <PhotoCarousel photos={audience.photos} />
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+                <GkButton to={audience.primaryCta.to} variant="primary" withArrow>
+                  {audience.primaryCta.label}
+                </GkButton>
+                <GkButton to={audience.secondaryCta.to} variant="tertiary" withArrow>
+                  {audience.secondaryCta.label}
+                </GkButton>
+              </div>
+            </div>
+
+            {/* The space the review asked us to put to use. */}
+            <div className="lg:col-span-5">
+              <Testimonial audience={audience} />
+            </div>
           </div>
 
-          <Testimonial audience={audience} />
-
-          <div className="mt-10 flex flex-wrap gap-4">
-            <GkButton to={audience.primaryCta.to} variant="primary" withArrow>
-              {audience.primaryCta.label}
-            </GkButton>
-            <GkButton to={audience.secondaryCta.to} variant="secondary">
-              {audience.secondaryCta.label}
-            </GkButton>
+          <div className="mt-16">
+            <PhotoCarousel photos={audience.photos} />
           </div>
         </div>
       </div>
@@ -122,17 +134,13 @@ export function Audiences() {
  * The underscores in the brief are the client leaving gaps for us to fill in
  * the copy, not a request for animated blanks — so the three phrases are
  * always present and always readable, and what arrives one at a time is the
- * marker under them.
+ * marker under them. "That's the way to bring in the informality — the
+ * handwriting, the highlighter effect."
  *
- * The first build did animate the words in from nothing, using transparent
- * text. That looked fine and was wrong twice over: a screen reader announced
- * three phrases a sighted visitor could not see, and the audit correctly
- * reported 1:1 contrast on all three.
- *
- * Ink on the yellow, teal and coral fills clears 7:1, which is why the marker
- * carries the hue and the text never does.
+ * Ink on all three fills clears 5:1, which is why the marker carries the hue
+ * and the text never does.
  */
-const BLANK_FILL = ['var(--gk-yellow)', 'var(--gk-teal)', 'var(--gk-coral)']
+const BLANK_FILL = ['var(--gk-yellow)', 'var(--gk-teal-lift)', 'var(--gk-coral-lift)']
 
 function ChallengeStatement({ audience }: { audience: Audience }) {
   const reduced = useReducedMotion()
@@ -169,21 +177,20 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
     : [audience.challengeTail]
 
   return (
-    <div ref={ref} className="grid gap-8 lg:grid-cols-12">
-      <p className="h2 lg:col-span-7">
+    <div ref={ref}>
+      <p className="h2 text-[length:clamp(1.375rem,2.2vw,1.875rem)] font-bold">
         {audience.challengeLead}{' '}
         {audience.challengeBlanks.map((blank, index) => (
           <span key={blank}>
             <span
-              className="inline-block rounded-[var(--r-sm)] px-[0.16em] transition-[background-color,box-shadow,transform] duration-[var(--dur-slow)] ease-[var(--ease-pop)]"
+              className="inline-block rounded-[2px] px-[0.16em] transition-[background-color,box-shadow] duration-[var(--dur-slow)] ease-[var(--ease-out)]"
               style={{
                 backgroundColor:
                   index < filled ? BLANK_FILL[index % 3] : 'transparent',
                 // Before the marker lands, the phrase is underscored — the
                 // blank from the brief, with the answer already written in.
                 boxShadow:
-                  index < filled ? 'none' : 'inset 0 -0.1em 0 0 var(--gk-ink)',
-                transform: index < filled ? 'rotate(-1deg)' : 'none',
+                  index < filled ? 'none' : 'inset 0 -0.09em 0 0 var(--gk-ink)',
               }}
             >
               {blank}
@@ -202,7 +209,7 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
         ))}
       </p>
 
-      <p className="lead self-end lg:col-span-5">
+      <p className="lead mt-6 max-w-[58ch]">
         {tailParts[0]}
         {audience.circled && (
           <Annotate mark="circle" color="var(--gk-coral)" delay={0.4} inset="-16%">
@@ -215,37 +222,47 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
   )
 }
 
+/**
+ * One testimonial per audience, in the right column.
+ *
+ * No ink outline, no hard shadow, and the portrait is not in a ring — the
+ * three things the review named on this card specifically.
+ */
 function Testimonial({ audience }: { audience: Audience }) {
   const { testimonial } = audience
 
   return (
-    <figure className="card-pop mt-14 flex flex-col gap-8 rounded-[var(--r-lg)] bg-[var(--gk-white)] p-8 md:flex-row md:items-center md:p-10">
-      <div className="relative shrink-0">
+    <figure className="flex h-full flex-col rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-8 shadow-[var(--shadow-sm)]">
+      <blockquote className="text-[length:clamp(1.125rem,1.6vw,1.3125rem)] font-semibold leading-[1.45] text-[var(--fg-1)]">
+        &ldquo;{testimonial.quote.value.text}&rdquo;
+      </blockquote>
+
+      <figcaption className="mt-7 flex items-center gap-4">
         <img
           src={testimonial.photo}
-          alt={`${testimonial.name}, ${testimonial.credentials}`}
+          alt=""
           loading="lazy"
           decoding="async"
-          className="size-32 rounded-full border-2 border-[var(--gk-ink)] object-cover md:size-40"
+          className="size-14 rounded-full object-cover"
         />
-        <Scribble
-          name="star"
-          color="var(--gk-yellow)"
-          className="absolute -right-3 -top-2 h-8 w-8"
-        />
-      </div>
-
-      <div>
-        <blockquote className="h3 max-w-[36ch] text-[length:clamp(1.35rem,2.4vw,1.9rem)] leading-snug">
-          “{testimonial.quote.value.text}”
-        </blockquote>
-        <figcaption className="mt-5">
-          <span className="hand text-[var(--gk-coral-ink)]">{testimonial.name}</span>
-          <span className="block text-[length:var(--fs-sm)] font-semibold text-[var(--fg-2)]">
+        <span>
+          <span className="block text-[length:var(--fs-base)] font-bold text-[var(--fg-1)]">
+            {testimonial.name}
+          </span>
+          <span className="block text-[length:var(--fs-sm)] text-[var(--fg-2)]">
             {testimonial.credentials}
           </span>
-        </figcaption>
-      </div>
+        </span>
+      </figcaption>
+
+      {/* "Below the testimonial only it can be a read case study call to
+          action." */}
+      <Link
+        to={audience.secondaryCta.to}
+        className="link-cta mt-8 self-start text-[length:var(--fs-sm)]"
+      >
+        Read the case study
+      </Link>
     </figure>
   )
 }

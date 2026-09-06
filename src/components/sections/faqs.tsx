@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Reveal } from '@/components/primitives/reveal'
-import { Scribble } from '@/components/primitives/doodles'
 import { faqSection, faqs } from '@/content/homepage'
 import { cn } from '@/lib/utils'
 
@@ -27,8 +26,7 @@ export function Faqs() {
 
   return (
     <section
-      className="ground-cream band accent-yellow relative"
-      style={{ backgroundColor: 'var(--gk-yellow-tint)' }}
+      className="ground-cream-deep band accent-blue relative"
       aria-labelledby="faqs-heading"
     >
       <div className="shell grid gap-10 md:grid-cols-12 md:gap-8">
@@ -39,14 +37,9 @@ export function Faqs() {
               {faqSection.headline}
             </h2>
             <p className="lead mt-4 max-w-[32ch]">{faqSection.lead}</p>
-            <p className="hand mt-8 max-w-[22ch] -rotate-2 text-[var(--gk-coral-ink)]">
+            <p className="hand mt-8 max-w-[24ch] text-[var(--gk-coral-ink)]">
               {faqSection.aside}
             </p>
-            <Scribble
-              name="underline-double"
-              color="var(--gk-coral)"
-              className="mt-2 h-4 w-40"
-            />
           </Reveal>
         </div>
 
@@ -56,7 +49,7 @@ export function Faqs() {
             return (
               <div
                 key={faq.value.question}
-                className="border-b-2 border-[var(--gk-ink)]/15 first:border-t-2"
+                className="border-b border-[var(--hairline-strong)] first:border-t"
               >
                 <dt>
                   <button
@@ -66,26 +59,25 @@ export function Faqs() {
                     aria-controls={`faq-answer-${index}`}
                     className="group flex w-full items-center justify-between gap-6 py-6 text-left"
                   >
-                    <span className="h3 text-[length:clamp(1.15rem,2vw,1.5rem)]">
+                    <span className="h3 text-[length:clamp(1.0625rem,1.6vw,1.25rem)]">
                       {faq.value.question}
                     </span>
                     <span
                       aria-hidden="true"
                       className={cn(
-                        'grid size-9 shrink-0 place-items-center rounded-full border-2 border-[var(--gk-ink)]',
-                        'transition-[background-color,transform] duration-[var(--dur-base)] ease-[var(--ease-pop)]',
-                        // The scribble is an X. Rotated 45 degrees it reads as
-                        // a plus, which is what a *closed* row should show.
+                        'relative grid size-8 shrink-0 place-items-center rounded-[var(--r-sm)] border',
+                        'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
                         isOpen
-                          ? 'bg-[var(--gk-ink)]'
-                          : 'rotate-45 bg-transparent group-hover:bg-[var(--gk-yellow)]',
+                          ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
+                          : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-navy)] group-hover:border-[var(--gk-navy)]',
                       )}
                     >
-                      <Scribble
-                        name="cross"
-                        color={isOpen ? 'var(--gk-cream)' : 'var(--gk-ink)'}
-                        className="h-4 w-4"
-                        duration={0.3}
+                      <span className="absolute h-[1.5px] w-3.5 bg-current" />
+                      <span
+                        className={cn(
+                          'absolute h-3.5 w-[1.5px] bg-current transition-transform duration-[var(--dur-base)] ease-[var(--ease-out)]',
+                          isOpen && 'scale-y-0',
+                        )}
                       />
                     </span>
                   </button>

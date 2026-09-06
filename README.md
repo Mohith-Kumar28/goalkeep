@@ -14,29 +14,90 @@ pnpm run deploy     # NOT `pnpm deploy` — pnpm reserves that word
 
 ---
 
-## The v1 redesign, September 2026
+## v3 — after the 4 September review
 
-v0 was quiet, cool-grey and text-heavy. The client feedback was direct: grey
-text isn't working, backgrounds look dull, the fonts are clunky and the mono
-looks machine-generated, everything is too flat, and a social-sector site has
-to actually show the community it works for.
+There are three versions of this homepage in the repo, on purpose. The client
+asked for that directly ("don't overwrite 1.0 and 2.0 — so we have all the
+versions we've been through and can quickly reference them"):
 
-The most useful thing that came out of acting on it: **the v0 tokens were not
-the brand.** They were transcribed from a v0 brand PDF and sat roughly 25%
-low on chroma, on a cool `#FAFAFA` paper. Sampling the logo PNG and the
-approved Canva creatives directly gave a different, much louder system — and
-one the organisation was already using everywhere except its website.
-
-| | v0 token | Sampled from the mark |
+| Version | Where | What it was |
 |---|---|---|
-| Blue | `#4765b3` | `#3666CC` bright · `#2F4A92` navy |
-| Teal | `#6ebfac` | `#54BAAE` |
-| Coral | `#e6968b` | `#F08A78` |
-| Yellow | `#e7dd50` ✓ | `#E4DE0C` |
-| Paper | `#FAFAFA` cool grey | `#FAF7F0` warm cream |
+| 2.0 | tag `v2.0`, branch `v2.0-draft` | the draft reviewed on 4 September |
+| 3.0 | `master` | this one |
 
-The shipped palette is those hues at full chroma. `src/styles/tokens.css` is
-the source of truth. Reference the token, never the hex.
+### What the review said
+
+v2 acted on the *first* feedback doc — more human, more playful, more depth —
+and overshot. The review was unambiguous about it: a young media agency vibe,
+formality diluted, fonts clunky, colours too vibrant and popping, the boxed
+images amateurish, the buttons too casual, the text screaming. Goalkeep's work
+decides whether a nonprofit gets funded, and the page has to read like that.
+
+The instruction was a middle ground, not a reversion: keep the handwriting,
+the highlighter and the circling — those were explicitly liked — and put the
+formal structure back around them.
+
+### The five changes everything else follows from
+
+1. **Two type families, not four.** "Stick to Nunito Sans for the most part…
+   combine Nunito Sans and the handwritten stuff, let's keep it to those two."
+   Outfit, Plus Jakarta and the mono are gone and uninstalled. Weight, italics
+   and Caveat carry every distinction the extra faces used to. The heading
+   weight ceiling dropped 900 → 800 and every display size came down 20–33%.
+2. **The palette came off full chroma.** "Use what I've given as the reference
+   base… let's not get too funky." Navy and white are the grounds; the pop
+   hues are the muted values from the reference creatives; tinted bands are
+   occasional highlights. `--gk-teal-lift` and `--gk-coral-lift` exist only
+   for use *on* navy, where the muted values drop to ~2.5:1.
+3. **No black borders anywhere.** "I don't like the black, man… add a slight
+   drop shadow and a lighter version of grey." `.card-pop` — the 2px ink
+   outline with a hard offset shadow that was on nearly every surface — is
+   deleted. One treatment replaces it: white, 1px hairline, soft neutral drop,
+   4px lift on hover.
+4. **Buttons are rectangles.** 4px radius, flat fill, hover is a colour step.
+   No pill, no press-into-shadow, no magnetic pull.
+5. **Images integrate rather than sit in frames.** No photograph on the page
+   is in a box any more. The hero card's photo dissolves into its panel; an
+   open "what we do" row bleeds its media to the row edge behind a mask; the
+   case-study and field-note images run flush to their card edges.
+
+### Section by section
+
+| Section | What changed |
+|---|---|
+| Hero | Ken Burns and its navy wash removed — flat navy, "like in the marketing materials". The subheader **types and backspaces** through design → build → enable the adoption of, each on a white highlight. Semicircles, rings and the arc lattice deleted. Case-study card is a translucent panel with the photo dissolving into it. |
+| Partners | Marks are greyscale, colour on hover. Heading reduced to a small centred label, hand-drawn underline removed, band rules removed, fade mask widened to 210px so neither rail has a visible start or finish. |
+| What we do | Three separate cards became **one surface divided by hairlines** ("it's seeming very blocks right now"). The open row inverts to navy rather than to a saturated fill. Both process animations rebuilt to spec — see below. |
+| Whom we do it for | Testimonial moved into the empty right column beside the challenge statement, which is both the dead-space fix and what was asked for. "Read the case study" is a text link under it. Tabs are rectangles. Band moved off coral tint onto pale blue. |
+| Proof | This is where the hero photography went: "keep this video in some other component's background below." Nothing but four figures sits over it. |
+| Case studies | The horizontal rail is **deleted** — it was the scrolling problem reported live in the call. A `overflow-x:auto` region under the pointer eats any trackpad gesture that is slightly off-axis. Replaced with the 10x Impact Labs shape: a full-width lead, a three-up row, and the post-mortem full width again. Every CTA is a text link, not a button. |
+| Team | Removed entirely, with its component and content file. |
+| Closing | The spinning ring and floating shapes are gone; the band now assembles one element at a time on arrival, which is what was asked for in their place. |
+| Share card | `scripts/build-og.mjs` rebuilt on the same system — the review's consistency requirement covers social and newsletter, and the card was the loudest surviving instance of the old look. |
+
+### The two process animations
+
+Both were specced in detail in the call and are built in
+`src/components/primitives/phase-animation.tsx`.
+
+- **Design** — a whiteboard: post-its land and are written on, one is peeled
+  off and replaced, a data sheet is pinned with a question mark, an arrow is
+  drawn, a light bulb lands last.
+- **Build** — twelve blocks; nine drop away; the three that remain are ticked;
+  each then **morphs into one part of a dashboard** — a pie chart, a bar graph
+  and a spreadsheet table. The keepers travel between the two layouts rather
+  than being swapped out, so it reads as the same blocks becoming the
+  dashboard.
+- **Adopt** — parked by the client ("keep it how it is, we'll come back to
+  it"), restyled only.
+
+Two bugs found while building these: the photo loop's `setInterval` ran in
+parallel with the sketch timeout rather than after it, so the first photograph
+faded up over a sequence that was still playing; and the sequence started on
+mount, meaning the row that is open by default played its whole animation
+several screens above the visitor and had resolved to photographs by the time
+anyone scrolled to it. Both fixed — the interval is chained off the timeout,
+and the section gates on an IntersectionObserver.
 
 ### Rules that are load-bearing
 
@@ -44,97 +105,75 @@ the source of truth. Reference the token, never the hex.
   (`#14131A`) or white. Anything softer is an *alpha* of one of those two, so
   it can never drift into mud. `check-palette.mjs` skips alpha values, which
   is exactly why this works.
-- **Navy is a ground, not an accent.** It carries roughly half the page. No
-  two navy bands touch except Proof and Case studies, which are one argument.
-- **The Single-Accent Viewport Rule is retired.** One accent hue on screen at
-  a time, enforced by a neutral band between every coloured one, is what made
-  v0 read flat. A band now takes one dominant hue plus up to two supporting
-  pops in shapes and doodles.
-- **Yellow is a marker, never an ink on light.** It clears 5.9:1 on navy and
-  carries the stat figures, the closing line and every hand-drawn stroke. On
-  cream it is unreadable and `check-contrast.mjs` hard-bans it there.
-- **The pop teal and pop coral are display colours.** Both clear 3:1 on cream
-  and neither clears 4.5:1, so `--gk-teal-ink` and `--gk-coral-ink` exist for
-  running text and the audit bans the pop versions under 24px.
-- **Cards lift and buttons press.** v0 banned hover-scale, springs and
-  glows outright. The feedback reversed that in as many words, so
-  `--ease-pop` overshoots, `.card-lift` rises 6px, and `.card-pop` is a
-  sticker that slides into its own hard shadow.
+- **Navy and white are the grounds.** Tinted bands are highlights between
+  them, not a third ground.
+- **The gold is a marker, never an ink on light.** `check-contrast.mjs` hard
+  bans it as text on a light ground.
+- **The pop teal and coral are display colours on white and unreadable on
+  navy.** `--gk-teal-lift` / `--gk-coral-lift` are the on-navy values; the
+  audit bans the pop versions under 24px.
+- **Nothing overshoots on hover.** `--ease-pop` is still defined but is now
+  used only inside the two process animations.
 
 ### Type
 
-Three families. All three replaced.
+Two families.
 
-| Role | Face | Replaced |
-|---|---|---|
-| Display | **Outfit** | Nunito Sans — "the main header looks clunky" |
-| Body | **Plus Jakarta Sans** | Nunito Sans |
-| Hand | **Caveat** | JetBrains Mono — "looking very AI manufactured" |
+| Role | Face |
+|---|---|
+| Display, body, subheaders, CTAs | **Nunito Sans** |
+| Marginalia, highlights, asides | **Caveat** |
 
-Fraunces went too: with Caveat carrying the personality, a fourth family had
-nothing left to do.
-
-**Section labels are handwritten.** The feedback asked for another option for
-the `12px uppercase mono +0.12em` eyebrows. They are now Caveat at 28px in the
-band's accent hue, rotated 2.5°, often with a doodle arrow pointing into the
-heading. A person annotating the page, not a CMS field.
-
-**Stat figures** are Outfit 900 with `tabular-nums` — same alignment as the
-mono, none of the terminal.
+**Section labels** are on their third answer. v1 set them in uppercase mono
+("looking very AI manufactured"); v2 in a rotated hand, which pushed the page
+further into the register the review pulled back from. They are now small
+letterspaced Nunito Sans in the band accent with a short rule in front —
+formal and quiet, which leaves the handwriting for the places it was actually
+asked for.
 
 ### The doodle layer
 
-`src/components/primitives/doodles.tsx` is the personality of the redesign.
+`src/components/primitives/doodles.tsx` survives the review, reduced. The
+handwriting, the circling and the highlighter were the three things named as
+working and worth keeping.
 
-- `<Scribble>` — fourteen named hand-drawn paths (circle, squiggle, arrows,
-  bracket, star, spiral, cross…), each drawn in with `stroke-dashoffset` on
-  scroll. Every path is deliberately imperfect: the circles don't close, the
-  underlines wobble, the arrows overshoot. A geometrically perfect hand-drawn
-  mark reads as a vector asset, which is the exact quality being designed away
-  from here.
+- `<Scribble>` — named hand-drawn paths, each drawn in with `stroke-dashoffset`
+  on scroll. Every path is deliberately imperfect: the circles don't close, the
+  underlines wobble. A geometrically perfect hand-drawn mark reads as a vector
+  asset.
 - `<Annotate>` — wraps a run of text and draws a mark round it. Pass `nowrap`
   for any non-enclosing mark: an underline drawn under a phrase that has
   wrapped spans the whole two-line box and lands nowhere near the words.
-- `<FloatingField>` — parallax shapes off the mark: arcs, broken rings, dots,
-  the smile. **Positions are constrained to three safe zones**: the strip
-  below the sticky header, the band's bottom padding, and just off the left
-  and right edges. The shell is 1440px and the viewport often isn't much
-  wider, so several sit at a negative offset and bleed off-canvas. A shape
-  half out of frame reads as deliberate; the same shape on a CTA reads as a
-  bug, which is what the first pass did.
-- `<PatternField>` — tiling textures built from the logo's geometry: a
-  quarter-arc lattice, a segmented-ring tile, a dot grid.
 
-Everything in that file is `aria-hidden`, `xl:` and up only, and renders fully
-drawn under reduced motion rather than disappearing.
+`shapes.tsx` (`FloatingField`, `Ring`, `Arc`, `Half`, `PatternField`) is
+**deleted** — that whole layer is the "random semicircle" the review asked to
+remove. So are `tilt-card.tsx`, `rotating-highlight.tsx`, `rotating-phrase.tsx`
+and `card-rail.tsx`.
 
 ### Band map
 
 | Band | Ground | Notes |
 |---|---|---|
-| Hero | navy | Ken Burns through four real photos under an 0.84 navy wash |
-| Partners | cream-deep | full-colour marks, a third larger, heading centred |
-| What we do | cream | the interactive one |
-| Whom we do it for | coral tint | the longest band; needs its own ground |
-| Proof | navy | four counters |
-| Case studies | navy | continuous with Proof by design |
-| Team | cream | faces |
-| FAQs | yellow tint | the only band with no surfaces at all |
-| Field notes | cream-deep | |
-| Closing | navy | the ending |
+| Hero | navy | flat; no photography behind it |
+| Partners | white | greyscale marks, colour on hover |
+| What we do | white | one surface, three rows, the open one inverts to navy |
+| Whom we do it for | pale blue | the one light-highlight band |
+| Proof | navy | four counters over the photography moved down from the hero |
+| Case studies | white | lead + three-up + full-width post-mortem |
+| FAQs | pale blue | the only band with no surfaces at all |
+| Field notes | white | |
+| Closing | navy | assembles one element at a time |
 
 ### Motion
 
-`--ease-out` for anything travelling, `--ease-pop` (1.56 overshoot) for
-anything that responds to a pointer. 140 / 260 / 520 / 900ms.
+`--ease-out` for everything on the page chrome. 140 / 240 / 520 / 900ms.
 
-Under `prefers-reduced-motion`: the Ken Burns holds one frame, the ticker
-renders as a static grid, the marker highlights all three phrases at once
-instead of rotating, the phase sequences skip to their photographs, carousel
-autoplay is never constructed, and scribbles render drawn. `useReducedMotion`
-starts `true`, so nothing animates before we have actually asked the browser —
-use it rather than motion's own hook, which returns `null` during SSR and
-caused a hydration mismatch in `FloatingField`.
+Under `prefers-reduced-motion`: the typewriter renders the sentence whole with
+all three phrases marked, the Ken Burns holds one frame, the ticker renders as
+a static grid, the phase sequences skip to their photographs, carousel autoplay
+is never constructed, and scribbles render drawn. `useReducedMotion` starts
+`true`, so nothing animates before we have actually asked the browser — use it
+rather than motion's own hook, which returns `null` during SSR.
 
 ---
 

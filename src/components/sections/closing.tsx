@@ -1,59 +1,54 @@
 import { closing } from '@/content/homepage'
 import { GkButton } from '@/components/primitives/gk-button'
-import { Scribble } from '@/components/primitives/doodles'
-import { FloatingField, PatternField, Ring } from '@/components/primitives/shapes'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
  * The bookend.
  *
- * Left-aligned, not centred — the empty right track is where the ring and the
- * margin note live, and a centred block here would close the page with the
- * same symmetry every landing page ends on.
+ * "I think right now what's happening is that it's just seeming like a clunky
+ * random thing going on with the circle" — so the 260px spinning four-segment
+ * ring and the floating half-discs are gone.
+ *
+ * What replaces them is the effect the review asked for in their place:
+ * "these things appearing over here, one by one — you come to the last section
+ * and first this appears, then this, then this." Each element in this band is
+ * its own Reveal on an increasing delay, so the close assembles itself as you
+ * arrive at it rather than being decorated.
  */
 export function Closing() {
   return (
     <section
       data-ground="navy"
-      className="ground-navy accent-yellow relative overflow-hidden py-20 md:py-32"
+      className="ground-navy accent-yellow relative overflow-hidden py-20 md:py-28"
       aria-labelledby="closing-heading"
+      style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <PatternField pattern="arcs" color="#ffffff" opacity={0.06} scale={96} />
-      <FloatingField variant="c" />
-
-      <Ring
-        size={260}
-        thickness={20}
-        spin={190}
-        className="pointer-events-none absolute -right-20 top-1/2 hidden -translate-y-1/2 opacity-40 xl:block"
-      />
-
-      <div className="shell relative grid gap-8 lg:grid-cols-12">
+      <div className="shell relative grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-8">
           <Reveal>
-            <p className="eyebrow mb-4">{closing.eyebrow}</p>
-            <h2 id="closing-heading" className="display max-w-[15ch]">
+            <p className="eyebrow mb-5 text-[var(--gk-yellow)]">{closing.eyebrow}</p>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <h2 id="closing-heading" className="display max-w-[17ch]">
               {closing.headlineLead}{' '}
               <span className="keyword-mark">{closing.headlineKeyword}</span>{' '}
               {closing.headlineTail}
-              <span className="mt-4 block text-[var(--gk-yellow)]">
-                {closing.headlineSecondLine}
-              </span>
             </h2>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <div className="mt-12 flex flex-wrap items-center gap-4">
-              <GkButton
-                to={closing.primaryCta.to}
-                variant="primary"
-                onDark
-                magnetic
-                withArrow
-              >
+          <Reveal delay={0.26}>
+            <p className="mt-5 max-w-[30ch] text-[length:clamp(1.25rem,2.4vw,1.875rem)] font-bold leading-tight text-[var(--gk-yellow)]">
+              {closing.headlineSecondLine}
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.4}>
+            <div className="mt-11 flex flex-wrap items-center gap-4">
+              <GkButton to={closing.primaryCta.to} variant="primary" onDark withArrow>
                 {closing.primaryCta.label}
               </GkButton>
-              <GkButton to={closing.secondaryCta.to} variant="ghost" onDark>
+              <GkButton to={closing.secondaryCta.to} variant="secondary" onDark>
                 {closing.secondaryCta.label}
               </GkButton>
             </div>
@@ -61,15 +56,14 @@ export function Closing() {
         </div>
 
         <div className="hidden lg:col-span-4 lg:block">
-          <span
-            aria-hidden="true"
-            className="mt-6 flex items-start gap-2 text-[var(--gk-yellow)]"
-          >
-            <Scribble name="arrow-curve" color="var(--gk-yellow)" className="h-16 w-12 -scale-x-100" />
-            <span className="hand mt-6 -rotate-3 whitespace-pre-line leading-tight">
+          <Reveal delay={0.54}>
+            <p
+              aria-hidden="true"
+              className="hand mt-8 whitespace-pre-line leading-tight text-white/70"
+            >
               {closing.marginalia.value}
-            </span>
-          </span>
+            </p>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -63,18 +63,21 @@ function LogoTile({
       loading="lazy"
       decoding="async"
       tabIndex={tabbable ? 0 : -1}
-      width={220}
+      width={228}
       height={112}
       className={cn(
         // A fixed box with object-contain normalises marks that each sit at
         // their own scale inside a square source file. Sized up per the
-        // feedback ("make slightly bigger") — h-14/h-20 was reading timid.
-        'h-20 w-[168px] object-contain md:h-28 md:w-[220px]',
-        // Full colour by default. Greyscaling other organisations' marks to
-        // protect our own palette was the wrong trade: these logos are the
-        // credibility, and a wall of grey reads as a stock placeholder.
-        'transition-transform duration-[var(--dur-base)] ease-[var(--ease-pop)]',
-        'hover:scale-[1.06] focus-visible:scale-[1.06]',
+        // feedback ("make slightly bigger").
+        'h-20 w-[172px] object-contain md:h-28 md:w-[228px]',
+        // "I kind of like the black and white thing and then it pops into
+        // colour when you're hovering." v2 ran these at full colour; greyscale
+        // is also what stops 27 other organisations' palettes from fighting
+        // ours across the width of the band.
+        'opacity-75 grayscale',
+        'transition-[filter,opacity] duration-[var(--dur-base)] ease-[var(--ease-out)]',
+        'hover:opacity-100 hover:grayscale-0',
+        'focus-visible:opacity-100 focus-visible:grayscale-0',
       )}
     />
   )
@@ -92,7 +95,7 @@ export function LogoTicker({
   // Under reduced motion the rails can't scroll, and stacking every mark
   // turns the band into the exhausting logo wall this design set out to
   // avoid. One representative grid says the same thing in a fraction of the
-  // height — the count beside it already gives the real number.
+  // height.
   if (reduced) {
     return (
       <div className="shell">
@@ -108,7 +111,7 @@ export function LogoTicker({
   }
 
   return (
-    <div className="flex flex-col gap-3 md:gap-4">
+    <div className="flex flex-col gap-4 md:gap-6">
       {/* 68s and 82s: near-coprime, so the two rows never lock into sync. */}
       <Rail logos={rowOne} direction="left" durationSeconds={68} />
       <Rail logos={rowTwo} direction="right" durationSeconds={82} />

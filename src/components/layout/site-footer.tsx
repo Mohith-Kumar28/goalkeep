@@ -56,10 +56,10 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-[var(--hairline)] pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]" data-mono>
+          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
             Goalkeep — data consultancy for the social sector. Mumbai, India.
           </p>
-          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]" data-mono>
+          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
             © {new Date().getFullYear()} Goalkeep
           </p>
         </div>

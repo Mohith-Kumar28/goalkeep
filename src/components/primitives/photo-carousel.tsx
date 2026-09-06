@@ -60,7 +60,7 @@ export function PhotoCarousel({
               key={photo.src}
               className="relative min-w-0 shrink-0 basis-[86%] sm:basis-[52%] lg:basis-[34%]"
             >
-              <div className="card-lift relative overflow-hidden rounded-[var(--r-lg)] border-2 border-[var(--gk-ink)]">
+              <div className="card-lift relative overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)]">
                 <img
                   src={photo.src}
                   alt={photo.alt}
@@ -69,7 +69,7 @@ export function PhotoCarousel({
                   className="aspect-[4/3] w-full object-cover"
                 />
               </div>
-              <figcaption className="chip absolute bottom-4 left-4 border-2 border-[var(--gk-ink)] bg-[var(--gk-cream)] text-[var(--gk-ink)]">
+              <figcaption className="chip absolute bottom-4 left-4 bg-[var(--gk-white)] text-[var(--gk-ink)] shadow-[var(--shadow-sm)]">
                 <span className="font-extrabold">{photo.org}</span>
                 <span aria-hidden="true" className="opacity-40">
                   ·
@@ -83,10 +83,10 @@ export function PhotoCarousel({
 
       <div className="mt-6 flex items-center gap-3">
         <CarouselButton label="Previous" onClick={() => embla?.scrollPrev()}>
-          <ArrowLeft aria-hidden="true" strokeWidth={2.5} className="size-5" />
+          <ArrowLeft aria-hidden="true" strokeWidth={2} className="size-5" />
         </CarouselButton>
         <CarouselButton label="Next" onClick={() => embla?.scrollNext()}>
-          <ArrowRight aria-hidden="true" strokeWidth={2.5} className="size-5" />
+          <ArrowRight aria-hidden="true" strokeWidth={2} className="size-5" />
         </CarouselButton>
 
         <ol className="ml-2 flex gap-2" aria-hidden="true">
@@ -121,7 +121,7 @@ function CarouselButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="inline-flex size-11 items-center justify-center rounded-full border-2 border-[var(--gk-ink)] bg-[var(--gk-cream)] text-[var(--gk-ink)] shadow-[var(--shadow-pop-sm)] transition-[transform,box-shadow] duration-[var(--dur-base)] ease-[var(--ease-pop)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[var(--shadow-pop)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+      className="inline-flex size-10 items-center justify-center rounded-[var(--r-btn)] border border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-navy)] transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)] hover:border-[var(--gk-navy)] hover:bg-[var(--gk-cream-deep)]"
     >
       {children}
     </button>

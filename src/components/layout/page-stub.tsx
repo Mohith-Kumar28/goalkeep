@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
-import { Scribble } from '@/components/primitives/doodles'
-import { PatternField } from '@/components/primitives/shapes'
 
 /**
  * Route stub for pages beyond this build's scope.
@@ -19,16 +17,9 @@ export function PageStub({
 }) {
   return (
     <section className="ground-cream band accent-coral relative">
-      <PatternField pattern="dots" color="var(--gk-ink)" opacity={0.05} scale={30} />
-
       <div className="shell relative flex max-w-[52ch] flex-col gap-6">
-        <p className="mb-1 flex items-center gap-3">
+        <p className="mb-1">
           <span className="eyebrow">{eyebrow}</span>
-          <Scribble
-            name="arrow-hook"
-            color="var(--gk-coral)"
-            className="h-6 w-10 opacity-80"
-          />
         </p>
         <h1 className="h2">{heading}</h1>
         <p className="lead">

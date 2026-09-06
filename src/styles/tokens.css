@@ -1,58 +1,83 @@
 /* ============================================================================
-   Goalkeep design tokens — v1, September 2026
+   Goalkeep design tokens — v3, September 2026
    ----------------------------------------------------------------------------
-   Sampled directly from the logo PNG and the approved Canva creatives, not from
-   the v0 brand PDF. The v0 tokens were desaturated by roughly 25% chroma and sat
-   on a cool grey paper (#FAFAFA); that is the "dull backgrounds" and "pastel"
-   note in the homepage feedback. Everything below is the real mark's own hue,
-   pushed back to full chroma, on the warm cream the Canva creatives actually use.
+   Rewritten after the 4 September review. The v2 tokens were built for the
+   "more human, more playful" note in the first feedback doc and overshot:
+   "a young media agency", "formality diluted", "colours too vibrant and
+   popping", "amateurish". Goalkeep's work decides whether a nonprofit gets
+   funded. The page has to read like that.
 
-   Two hard rules from the feedback, encoded here rather than left to discipline:
-     1. There is no grey text token. Text is ink or white; anything softer is an
-        alpha of one of those two, so it can never drift into mud.
-     2. Navy is a ground, not an accent. It carries roughly half the page.
+   The brief, in the client's own words, encoded here rather than left to
+   discipline:
+
+     1. "Stick to Nunito Sans for the most part… combine Nunito Sans and the
+        handwritten stuff, let's keep it to those two." Two families. No mono,
+        no display face, no serif. Weight, italics and the hand carry every
+        distinction the three faces used to.
+     2. "Use what I've given as the reference base… let's not get too funky."
+        Every pop hue is pulled back off full chroma to the muted values in the
+        reference creatives. Navy and white are the grounds; tinted bands are
+        highlights, used sparingly.
+     3. "I don't like the black… add a slight drop shadow and a lighter version
+        of grey." No 2px ink outlines and no hard offset shadows anywhere. A
+        1px hairline plus a soft grey drop is the only way a surface separates.
+     4. "Go back to normality… these rounded ones are a little too casual."
+        Buttons are rectangles. Radii across the board came down by roughly 60%.
+     5. There is still no grey *text* token. Text is ink or white; anything
+        softer is an alpha of one of those two.
 
    Reference the token, never the hex.
    ========================================================================== */
 
 :root {
-  /* --- Grounds ----------------------------------------------------------- */
-  --gk-navy: #2f4a92;        /* dominant surface. The Canva creatives' ground. */
-  --gk-navy-deep: #1f3268;   /* pressed / darkest well */
-  --gk-navy-lift: #3a5aae;   /* a card raised off navy */
-  --gk-cream: #faf7f0;       /* warm paper. Replaces the cool #FAFAFA. */
-  --gk-cream-deep: #f2ede0;  /* sunken band */
+  /* --- Grounds -----------------------------------------------------------
+     Two grounds carry the page: navy and white. "Let's stick mostly to dark
+     blue and white for background with maybe some sections having the light
+     coloured highlights." --paper is white to the eye; the hair of warmth in
+     it stops a full page of #ffffff from glaring. */
+  --gk-navy: #2f4a92;        /* dominant dark surface, straight off the creatives */
+  --gk-navy-deep: #1e3266;   /* pressed / darkest well */
+  --gk-navy-lift: #3d5aa8;   /* a card raised off navy */
   --gk-white: #ffffff;
+  --gk-cream: #fcfcfd;       /* the light ground. Effectively white. */
+  --gk-cream-deep: #f1f4fa;  /* the light-blue band — the "highlight" section */
   --gk-ink: #14131a;         /* near-black. The only dark text colour. */
 
   /* --- Pop hues ----------------------------------------------------------
-     Each is the logo's own hue at full chroma. -deep is the hover/darken step
-     and keeps its foreground legible; -ink is the version that survives as
-     small text on cream, where the pop hue itself does not. */
-  --gk-blue: #2f5fe8;
-  --gk-blue-deep: #1e43b8;
-  --gk-teal: #17bfac;
-  --gk-teal-deep: #12a895;
-  --gk-teal-ink: #0b6a5f;
-  --gk-coral: #ff6a52;
-  --gk-coral-deep: #e8503a;
-  --gk-coral-ink: #b33520;
-  --gk-yellow: #e9df22;
-  --gk-yellow-deep: #c4ba0e;
+     Each is the logo hue pulled back to the chroma of the reference creatives.
+     v2 ran these at full saturation and it read loud. -deep is the hover step;
+     -ink is the value that still passes as small text on white. */
+  --gk-blue: #3f63c8;
+  --gk-blue-deep: #2f4d9f;
+  --gk-teal: #2f9c8f;
+  --gk-teal-deep: #237a70;
+  --gk-teal-ink: #176059;
+  --gk-coral: #e07a5f;
+  --gk-coral-deep: #c8613f;
+  --gk-coral-ink: #9c452a;
+  --gk-yellow: #eac452;      /* a gold, not the acid yellow. Still the marker. */
+  --gk-yellow-deep: #cfa72f;
 
-  /* --- Tints — light bands, chips, wash panels --------------------------- */
-  --gk-blue-tint: #e4eafd;
-  --gk-teal-tint: #ddf6f2;
-  --gk-coral-tint: #ffe6e1;
-  --gk-yellow-tint: #fbf8d3;
+  /* Lifted values, for use ON navy only. The muted teal and coral above are
+     correct on white and drop to roughly 2.5:1 on the navy ground, which is
+     under the bar for anything that has to be read. These clear 4:1 and keep
+     each stage of "what we do" visually its own on the inverted row. */
+  --gk-teal-lift: #5fc9ba;
+  --gk-coral-lift: #f0a58c;
 
-  /* --- Semantic foreground ----------------------------------------------
-     No greys. Softer text is an alpha of ink or white so it stays in family
-     with whatever ground it lands on. */
+  /* --- Tints — light bands, chips, wash panels ---------------------------
+     Low-chroma washes. These are the "light coloured highlights" the brief
+     allows between navy and white; they are never a text colour. */
+  --gk-blue-tint: #eaeff9;
+  --gk-teal-tint: #e7f2f0;
+  --gk-coral-tint: #fbeee9;
+  --gk-yellow-tint: #fbf3df;
+
+  /* --- Semantic foreground ----------------------------------------------- */
   --fg-1: var(--gk-ink);
-  --fg-2: rgb(20 19 26 / 0.86);
+  --fg-2: rgb(20 19 26 / 0.72);
   --fg-inverse: var(--gk-white);
-  --fg-inverse-2: rgb(255 255 255 / 0.78);
+  --fg-inverse-2: rgb(255 255 255 / 0.76);
 
   /* --- Semantic ground --------------------------------------------------- */
   --bg-page: var(--gk-cream);
@@ -60,45 +85,56 @@
   --bg-sunken: var(--gk-cream-deep);
   --bg-inverse: var(--gk-navy);
 
-  --hairline: #e6dfd1;                        /* on cream */
-  --hairline-inverse: rgb(255 255 255 / 0.2); /* on navy */
+  /* --- Hairlines ---------------------------------------------------------
+     "I don't like the black, man." These replace every 2px ink outline on the
+     page. 1px, low contrast, and always paired with a drop shadow so the
+     surface still lifts off its ground. */
+  --hairline: #e5e7ee;                        /* on white */
+  --hairline-strong: #d3d7e2;                 /* where a divider must be read */
+  --hairline-inverse: rgb(255 255 255 / 0.16);/* on navy */
 
   /* --- Type --------------------------------------------------------------
-     Outfit carries the geometry of the wordmark; Plus Jakarta reads long-form
-     without the Inter default look; Caveat is a real hand, used for section
-     labels and marginalia. The mono is gone — it read as machine-generated. */
-  --font-display: "Outfit Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+     Nunito Sans for everything that isn't handwriting — body, subheaders,
+     headers and calls to action. Caveat is the hand, kept for the marginalia
+     and highlight moments the client explicitly likes. Outfit, Plus Jakarta
+     and the mono are all gone: three sans faces on one page was most of the
+     "clunky" and "AI manufactured" note. */
+  --font-sans:
+    "Nunito Sans Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-sans);
   --font-hand: "Caveat Variable", "Bradley Hand", cursive;
 
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
   --fs-base: 1.0625rem;
-  --fs-lg: 1.25rem;
-  --fs-xl: 1.5rem;
-  --fs-2xl: 2rem;
-  --fs-3xl: 2.75rem;
-  --fs-4xl: 3.5rem;
-  --fs-5xl: 4.5rem;
-  --fs-6xl: 6rem;
+  --fs-lg: 1.1875rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.25rem;
+  --fs-4xl: 2.875rem;
+  --fs-5xl: 3.5rem;
 
   /* Caveat runs small for its point size; it needs its own scale. */
-  --fs-hand-sm: 1.375rem;
-  --fs-hand: 1.75rem;
-  --fs-hand-lg: 2.5rem;
+  --fs-hand-sm: 1.25rem;
+  --fs-hand: 1.5rem;
+  --fs-hand-lg: 2rem;
 
   --w-regular: 400;
   --w-medium: 500;
   --w-semibold: 600;
   --w-bold: 700;
   --w-extrabold: 800;
-  --w-black: 900;
 
-  --lh-display: 0.98;
-  --lh-heading: 1.08;
-  --lh-body: 1.62;
-  --tracking-display: -0.04em;
-  --tracking-heading: -0.025em;
+  /* v2 set headings at 900 with -0.04em tracking. "Too big and bold",
+     "screaming a little too much". 800 is the ceiling now, and Nunito Sans is
+     a humanist face — it does not want to be tracked as tightly as a geometric
+     one, so the negative tracking halved too. */
+  --lh-display: 1.06;
+  --lh-heading: 1.16;
+  --lh-body: 1.65;
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.012em;
+  --tracking-label: 0.09em;
 
   /* --- Space — 4pt ------------------------------------------------------- */
   --sp-1: 0.25rem;
@@ -112,36 +148,37 @@
   --sp-9: 6rem;
   --sp-10: 8rem;
 
-  /* --- Radius ------------------------------------------------------------ */
-  --r-sm: 8px;
-  --r-md: 16px;
-  --r-lg: 28px;
-  --r-xl: 40px;
+  /* --- Radius ------------------------------------------------------------
+     "Go back to normality in his website… these rounded ones are a little too
+     casual." --r-btn is the rectangle: square enough to read formal, with just
+     enough relief that it isn't a raw box. */
+  --r-btn: 4px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
   --r-pill: 999px;
 
   /* --- Depth -------------------------------------------------------------
-     The v0 book banned hover-lift and called for near-flat surfaces. The
-     homepage feedback reverses that explicitly ("cards that move slightly when
-     the cursor is hovering - more shadows - some looking a little too flat"),
-     so cards now lift and the shadow ramp has real range. --shadow-pop is the
-     hard offset that makes a card read as a sticker. */
-  --shadow-sm: 0 2px 8px rgb(20 19 26 / 0.08);
-  --shadow-md: 0 10px 30px rgb(20 19 26 / 0.12);
-  --shadow-lg: 0 24px 60px rgb(20 19 26 / 0.16);
-  --shadow-pop: 6px 6px 0 var(--gk-ink);
-  --shadow-pop-sm: 4px 4px 0 var(--gk-ink);
-  --shadow-navy: 0 20px 50px rgb(31 50 104 / 0.35);
-  --shadow-ring: 0 0 0 3px rgb(47 95 232 / 0.4);
-  --shadow-ring-inverse: 0 0 0 3px rgb(233 223 34 / 0.55);
+     "You can do something else so it does not make it too flat" — the lift and
+     the shadow ramp survive from v2; the hard ink offset that made everything
+     read as a sticker does not. Every value here is a soft neutral drop. */
+  --shadow-xs: 0 1px 2px rgb(20 19 26 / 0.04);
+  --shadow-sm: 0 1px 2px rgb(20 19 26 / 0.04), 0 2px 8px rgb(20 19 26 / 0.05);
+  --shadow-md: 0 2px 6px rgb(20 19 26 / 0.05), 0 10px 24px rgb(20 19 26 / 0.07);
+  --shadow-lg: 0 4px 12px rgb(20 19 26 / 0.06), 0 22px 48px rgb(20 19 26 / 0.10);
+  --shadow-navy: 0 10px 30px rgb(20 30 60 / 0.28);
+  --shadow-ring: 0 0 0 3px rgb(63 99 200 / 0.45);
+  --shadow-ring-inverse: 0 0 0 3px rgb(234 196 82 / 0.6);
 
   /* --- Motion ------------------------------------------------------------
-     --ease-pop overshoots. The v0 book banned that; the feedback asked for
-     playfulness, and a 1.56 overshoot on a 260ms hover is the cheapest way to
-     make a surface feel physical rather than drawn. */
+     --ease-pop overshot at 1.56 and was on every hover. It is still here for
+     the two process animations, where a physical bounce is the point, and off
+     everything else. Chrome moves on --ease-out. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-pop: cubic-bezier(0.34, 1.4, 0.64, 1);
   --dur-fast: 140ms;
-  --dur-base: 260ms;
+  --dur-base: 240ms;
   --dur-slow: 520ms;
   --dur-lazy: 900ms;
 
@@ -150,11 +187,11 @@
      section changes character by changing one class. */
   --band-accent: var(--gk-blue);
   --band-accent-deep: var(--gk-blue-deep);
-  --band-accent-ink: var(--gk-blue);
+  --band-accent-ink: var(--gk-blue-deep);
   --band-tint: var(--gk-blue-tint);
   --band-ink: var(--fg-1);
   --band-ink-2: var(--fg-2);
   --band-hairline: var(--hairline);
-  --link-color: var(--gk-blue);
-  --link-color-hover: var(--gk-blue-deep);
+  --link-color: var(--gk-blue-deep);
+  --link-color-hover: var(--gk-navy-deep);
 }

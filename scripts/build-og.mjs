@@ -4,10 +4,18 @@
  *   pnpm og
  *
  * Rendered rather than drawn by hand so it stays honest: the fonts, the hues,
- * the arc lattice, the diagonal photo cut and the sticker card are all the
- * page's own, inlined here as data URIs and shot with Playwright.
+ * the photo panel and the proof card are all the page's own, inlined here as
+ * data URIs and shot with Playwright.
  *
- * Rendered at 2x and downsampled, because Outfit at 900 aliases badly at 1x.
+ * Redrawn after the 4 September review, and for the reason the review gave:
+ * "since I'm managing the social media, I want to make sure the newsletter,
+ * social media and website come together — a 90% match in visual language."
+ * A share card still built on Outfit, the acid yellow and a hard-offset
+ * sticker would be the loudest surviving instance of exactly what was cut.
+ * It now carries Nunito Sans, the muted palette, hairline surfaces and the
+ * angled photo edge in navy rather than yellow.
+ *
+ * Rendered at 2x and downsampled, because the heading aliases badly at 1x.
  *
  * JPEG, not PNG. The card is mostly photograph, so PNG lands around 430 KB
  * where JPEG at q90 is 170 KB and visually identical — and WhatsApp silently
@@ -24,86 +32,70 @@ import { chromium } from 'playwright'
 
 const b64 = (p, mime) => `data:${mime};base64,${readFileSync(p).toString('base64')}`
 
-const outfit = b64('node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2', 'font/woff2')
-const jakarta = b64('node_modules/@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2', 'font/woff2')
+const nunito = b64('node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2', 'font/woff2')
 const caveat = b64('node_modules/@fontsource-variable/caveat/files/caveat-latin-wght-normal.woff2', 'font/woff2')
 const wordmark = b64('public/wordmark-white.webp', 'image/webp')
 const photo = b64(process.env.PHOTO || 'public/photos/hero-01-workshop.webp', 'image/webp')
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
-@font-face{font-family:Outfit;src:url(${outfit}) format('woff2');font-weight:100 900;font-display:block}
-@font-face{font-family:Jakarta;src:url(${jakarta}) format('woff2');font-weight:200 800;font-display:block}
+@font-face{font-family:Nunito;src:url(${nunito}) format('woff2');font-weight:200 1000;font-display:block}
 @font-face{font-family:Caveat;src:url(${caveat}) format('woff2');font-weight:400 700;font-display:block}
 *{margin:0;padding:0;box-sizing:border-box}
-body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Jakarta,sans-serif;color:#fff;position:relative}
+body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Nunito,sans-serif;color:#fff;position:relative}
 
-/* Arc lattice, straight off the mark's broken ring. */
-.pattern{position:absolute;inset:0;opacity:.09}
-
-/* The Canva device: a photo panel cut on an angle, with a hard yellow edge
-   sitting a few degrees off it. clip-path can't take a border, so the edge is
-   a second polygon behind the first. */
-.edge{position:absolute;right:0;top:0;width:47%;height:100%;background:#e9df22;
+/* The photo panel, cut on an angle. The edge behind it was the acid yellow;
+   it is now a quiet gold hairline, which is all it needs to separate the
+   photograph from the navy. */
+.edge{position:absolute;right:0;top:0;width:47%;height:100%;background:#eac452;
   clip-path:polygon(20% 0,100% 0,100% 100%,7% 100%)}
-.panel{position:absolute;right:0;top:0;width:46%;height:100%;overflow:hidden;
+.panel{position:absolute;right:0;top:0;width:46.6%;height:100%;overflow:hidden;
   clip-path:polygon(20% 0,100% 0,100% 100%,7% 100%)}
 .panel img{width:100%;height:100%;object-fit:cover}
-.panel::after{content:"";position:absolute;inset:0;background:rgb(31 50 104 / .3)}
+.panel::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to right,#2f4a92 0%,rgb(47 74 146 / .55) 26%,rgb(47 74 146 / .22) 60%)}
 
 .content{position:relative;padding:52px 56px;height:100%;width:64%;display:flex;flex-direction:column}
 .mark{align-self:flex-start;display:block;height:42px;width:auto}
-.eyebrow{align-self:flex-start;font-family:Caveat;font-size:31px;font-weight:700;color:#e9df22;
-  transform:rotate(-2.5deg);margin:26px 0 8px}
+.eyebrow{align-self:flex-start;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:#eac452;margin:30px 0 14px}
+.eyebrow::before{content:"";display:block;width:26px;height:2px;background:currentColor}
 
-h1{font-family:Outfit;font-weight:900;font-size:60px;line-height:1;letter-spacing:-.04em;text-wrap:balance}
+h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wrap:balance}
 .mark-yellow{position:relative;display:inline-block;white-space:nowrap}
 .squiggle{position:absolute;left:-2px;top:100%;width:calc(100% + 4px);height:16px;margin-top:-5px}
 
-.sub{margin-top:36px;font-size:21px;font-weight:600;line-height:1.45;max-width:31ch;color:rgb(255 255 255 / .92)}
-.sub .y{font-weight:800;color:#14131a;background:#e9df22;border-radius:7px;padding:0 .16em}
-.sub .t{font-weight:800;color:#14131a;background:#17bfac;border-radius:7px;padding:0 .16em}
-.sub .c{font-weight:800;color:#14131a;background:#ff6a52;border-radius:7px;padding:0 .16em}
+.sub{margin-top:30px;font-size:21px;font-weight:400;line-height:1.5;max-width:33ch;color:rgb(255 255 255 / .9)}
+/* One mark, not three. On the page the typewriter only ever highlights one
+   phrase at a time; a card lighting all three at once is the old louder
+   version of the same line. */
+.sub .m{font-weight:700;color:#2f4a92;background:#fff;border-radius:2px;padding:0 .2em}
 
-/* Sits over the photo's cut edge, the way the proof card does on the site. */
-.card{position:absolute;right:44px;bottom:44px;background:#faf7f0;color:#14131a;
-  border:3px solid #14131a;border-radius:20px;padding:16px 24px 18px;
-  box-shadow:9px 9px 0 #14131a;transform:rotate(-2deg)}
-.card .org{font-family:Caveat;font-size:27px;font-weight:700;color:#b33520;line-height:1}
-.card .stat{font-family:Outfit;font-size:42px;font-weight:900;letter-spacing:-.05em;line-height:1.08;
-  font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap}
-.card .line{font-size:14px;font-weight:700;margin-top:1px}
-
-.shape{position:absolute}
+/* Sits over the photo's cut edge, the way the proof card does on the site —
+   now a translucent panel with a hairline, not a rotated sticker. */
+.card{position:absolute;right:44px;bottom:44px;background:rgb(255 255 255 / .1);color:#fff;
+  border:1px solid rgb(255 255 255 / .28);border-radius:12px;padding:18px 26px 20px;
+  backdrop-filter:blur(2px);box-shadow:0 10px 30px rgb(20 30 60 / .28)}
+.card .org{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:#eac452;line-height:1}
+.card .stat{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;
+  font-variant-numeric:tabular-nums;margin-top:8px;white-space:nowrap}
+.card .line{font-size:14px;font-weight:400;margin-top:4px;color:rgb(255 255 255 / .8)}
 </style></head><body>
 
 <div class="edge"></div>
 <div class="panel"><img src="${photo}" alt=""></div>
 
-<svg class="pattern" xmlns="http://www.w3.org/2000/svg"><defs>
-<pattern id="a" width="96" height="96" patternUnits="userSpaceOnUse">
-<path d="M0 96A96 96 0 0 1 96 0" fill="none" stroke="#fff" stroke-width="2"/>
-</pattern></defs><rect width="100%" height="100%" fill="url(#a)"/></svg>
-
-<!-- the four-segment ring, bleeding off the left edge -->
-<svg class="shape" style="left:-48px;top:516px" width="152" height="152" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="43" fill="none" stroke="#e9df22" stroke-width="14" stroke-linecap="round" stroke-dasharray="58 212" transform="rotate(-84 50 50)"/>
-  <circle cx="50" cy="50" r="43" fill="none" stroke="#2f5fe8" stroke-width="14" stroke-linecap="round" stroke-dasharray="58 212" transform="rotate(6 50 50)"/>
-  <circle cx="50" cy="50" r="43" fill="none" stroke="#17bfac" stroke-width="14" stroke-linecap="round" stroke-dasharray="58 212" transform="rotate(96 50 50)"/>
-  <circle cx="50" cy="50" r="43" fill="none" stroke="#ff6a52" stroke-width="14" stroke-linecap="round" stroke-dasharray="58 212" transform="rotate(186 50 50)"/>
-</svg>
-<div class="shape" style="left:664px;top:30px;width:16px;height:16px;border-radius:50%;background:#ff6a52"></div>
-
 <div class="content">
   <img class="mark" src="${wordmark}" alt="Goalkeep">
-  <span class="eyebrow">data work for the social sector</span>
+  <span class="eyebrow">Data work for the social sector</span>
 
   <h1>MEL systems aren&rsquo;t just meant to measure impact, but also
     <span class="mark-yellow">strengthen it.<svg class="squiggle" viewBox="0 0 220 26" preserveAspectRatio="none" fill="none">
-      <path d="M5 16c18-13 34 8 52-1s30-14 48-4s34 12 52 2s38-10 58 1" stroke="#e9df22" stroke-width="7" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <path d="M6 15c38-7 74-9 108-8c30 1 61 5 100 11" stroke="#eac452" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
     </svg></span>
   </h1>
 
-  <p class="sub">We <span class="y">design</span>, <span class="t">build</span> and <span class="c">enable the adoption</span> of data systems for the social sector.</p>
+  <p class="sub">We <span class="m">design</span> data systems that deepen the impact of your programs.</p>
 </div>
 
 <div class="card">

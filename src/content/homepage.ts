@@ -23,28 +23,37 @@ import type {
    ============================================================ */
 
 export const hero = {
-  eyebrow: 'data work for the social sector',
+  eyebrow: 'Data work for the social sector',
   /* Client's line, used exactly as written in the feedback doc. */
   headlineLead: "MEL systems aren't just meant to measure impact, but also",
   /* Kept short and unbreakable so the hand-drawn squiggle underneath it can
      line up with a single run of text rather than a two-line block. */
   headlineHighlight: 'strengthen it.',
-  /* The client's subheader, whole. The marker moves across the three phrases
-     one at a time; the sentence itself never changes, so it stays readable at
-     every point in the cycle. */
-  leadSegments: [
-    { text: 'We ' },
-    { text: 'design', hue: 'var(--gk-yellow)' },
-    { text: ', ' },
-    { text: 'build', hue: 'var(--gk-teal)' },
-    { text: ', and ' },
-    { text: 'enable the adoption', hue: 'var(--gk-coral)' },
-    { text: ' of data systems that deepen the impact of your programs.' },
-  ],
+  /*
+   * The subheader, typed.
+   *
+   * "Design, build and enable the adoption of getting typed out… and this one
+   * will be 'enable the adoption of', then it'll make sense in the sentence."
+   *
+   * So the frame is `${typed.lead} ___ ${typed.tail}` and each phrase has to
+   * complete it on its own. That is why the third phrase carries its own "of":
+   * "We enable the adoption of data systems that…" only parses if the "of"
+   * belongs to the phrase being typed.
+   */
+  typed: {
+    lead: 'We',
+    phrases: ['design', 'build', 'enable the adoption of'],
+    tail: 'data systems that deepen the impact of your programs.',
+  },
   primaryCta: { label: 'Talk to us', to: '/contact' },
   secondaryCta: { label: 'See our work', to: '/case-studies' },
   marginalia: 'we start with\nthe decision,\nnot the tool',
-  /** The Ken Burns plate behind the hero. Real Goalkeep photography. */
+  /**
+   * Goalkeep photography. No longer behind the hero — "let's remove the
+   * background from here and keep a simple solid blue colour like in the
+   * marketing materials, and keep this video in some other component's
+   * background below". It runs behind the numbers band instead.
+   */
   backdrop: [
     { src: '/photos/hero-01-workshop.webp', alt: '' },
     { src: '/photos/hero-02-classroom.webp', alt: '' },
@@ -57,8 +66,9 @@ export const hero = {
       org: 'Baithak Foundation',
       image: '/photos/case-baithak.webp',
       imageAlt: 'A Baithak Foundation music session in progress',
-      stat: '11 hrs → 40 min',
+      stat: '11 hrs \u2192 40 min',
       line: 'monthly reporting cycle',
+      to: '/case-studies',
     },
     {
       org: 'Vanavil Trust',
@@ -66,13 +76,15 @@ export const hero = {
       imageAlt: 'Children studying in a Vanavil Trust classroom',
       stat: '9 weeks',
       line: 'from paper register to first baseline',
+      to: '/case-studies',
     },
     {
       org: 'Apni Shala Foundation',
       image: '/photos/case-apni-shala.webp',
       imageAlt: 'A student working on a craft activity at Apni Shala',
-      stat: '4 formats → 1',
+      stat: '4 formats \u2192 1',
       line: 'shared indicator set across teams',
+      to: '/case-studies',
     },
   ],
 }
