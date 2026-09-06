@@ -280,20 +280,12 @@ function PhaseRow({
 
             It used to be two small thumbnails side by side when closed, which
             put the boxed look the review objected to straight back on two of
-            the three rows. */}
-        <div className="md:col-span-5">
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] md:block"
-            /* A mask rather than an overlay: it dissolves the sketch's own
-               board and grid as well as the photographs, so the panel has no
-               hard left edge in any stage.
+            the three rows.
 
-               The ramp runs across nearly the whole panel. A short one — the
-               first version crossed from clear to solid in 27% — reads as a
-               visible band of gradient laid over a picture rather than as the
-               picture emerging out of the ground. */
-            style={{ maskImage: DESKTOP_MASK, WebkitMaskImage: DESKTOP_MASK }}
-          >
+            The dissolve is applied to the photographs only - see the note on
+            DESKTOP_MASK above. */}
+        <div className="md:col-span-5">
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] md:block">
             {active ? (
               <PhaseAnimation
                 kind={hue.kind}
@@ -301,6 +293,7 @@ function PhaseRow({
                 active={playing}
                 ink="var(--fg-inverse)"
                 accent={hue.onNavy}
+                photoMask={DESKTOP_MASK}
                 className="h-full w-full rounded-none"
               />
             ) : (
@@ -310,16 +303,14 @@ function PhaseRow({
                 loading="lazy"
                 decoding="async"
                 className="h-full w-full object-cover opacity-55 grayscale transition-[opacity,filter] duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:opacity-80"
+                style={{ maskImage: DESKTOP_MASK, WebkitMaskImage: DESKTOP_MASK }}
               />
             )}
           </div>
 
           {/* Below md the row is a single column, so the media is inline and
               bleeds to the row's own edges instead of to the right. */}
-          <div
-            className="pointer-events-none relative -mx-6 -mb-6 mt-2 aspect-[16/10] w-[calc(100%+3rem)] md:hidden"
-            style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
-          >
+          <div className="pointer-events-none relative -mx-6 -mb-6 mt-2 aspect-[16/10] w-[calc(100%+3rem)] md:hidden">
             {active ? (
               <PhaseAnimation
                 kind={hue.kind}
@@ -327,6 +318,7 @@ function PhaseRow({
                 active={playing}
                 ink="var(--fg-inverse)"
                 accent={hue.onNavy}
+                photoMask={MOBILE_MASK}
                 className="h-full w-full rounded-none"
               />
             ) : (
@@ -336,6 +328,7 @@ function PhaseRow({
                 loading="lazy"
                 decoding="async"
                 className="h-full w-full object-cover opacity-55 grayscale"
+                style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
               />
             )}
           </div>

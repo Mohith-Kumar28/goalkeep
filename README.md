@@ -62,12 +62,19 @@ formal structure back around them.
    the row edge behind a mask; the case-study and field-note images run flush
    to their card edges.
 
-   Two things were wrong on the first pass and are worth remembering. The
+   Three things were wrong on the first pass and are worth remembering. The
    dissolve was a two-stop ramp crossing from clear to solid in 27% of the
    panel, which reads as a strip of gradient laid *over* a photograph rather
    than the photograph fading out; it is now five stops across the full width.
-   And closed rows still showed two small thumbnails side by side, which put
-   the boxed look straight back on two of the three rows.
+   Closed rows still showed two small thumbnails side by side, which put the
+   boxed look straight back on two of the three rows. And the dissolve was
+   applied to the whole panel rather than to the photographs — **it belongs on
+   the photographs only.** A photograph is a rectangle of unrelated content and
+   needs to stop being one; the sketch is drawn art in the panel's own colours
+   that has no edges to begin with, so masking it only dimmed the half of each
+   sequence nearest the copy — the design board's first sticky note, the build
+   sequence's pie chart. The one piece of the sketch that *is* a full-panel
+   rectangle, the design board's own ground, carries a soft edge of its own.
 
 ### Section by section
 

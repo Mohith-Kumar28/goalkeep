@@ -47,6 +47,7 @@ export function PhaseAnimation({
   active,
   ink,
   accent,
+  photoMask,
   className,
   style,
 }: {
@@ -57,6 +58,12 @@ export function PhaseAnimation({
   ink: string
   /** The stage's own hue. Carries the ticks, the charts and the sticky notes. */
   accent: string
+  /**
+   * The dissolve into the panel's ground. Applied to the photographs only —
+   * the sketch is drawn art, and fading half of it away costs the thing the
+   * sequence exists to show. See the note on the render below.
+   */
+  photoMask?: string
   className?: string
   style?: CSSProperties
 }) {
@@ -110,23 +117,40 @@ export function PhaseAnimation({
       style={style}
     >
       {/* Stages 1 and 2 — the photographs. No frame: they fade up out of the
-          panel rather than arriving in a box. */}
-      {images.map((image, index) => (
-        <img
-          key={image.src}
-          src={image.src}
-          alt={image.alt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out)]"
-          style={{
-            opacity: stage === index + 1 ? 1 : 0,
-            transform: stage === index + 1 ? 'scale(1)' : 'scale(1.04)',
-          }}
-        />
-      ))}
+          panel rather than arriving in a box, and the dissolve is applied
+          here rather than to the whole panel. */}
+      <div
+        className="absolute inset-0"
+        style={
+          photoMask
+            ? { maskImage: photoMask, WebkitMaskImage: photoMask }
+            : undefined
+        }
+      >
+        {images.map((image, index) => (
+          <img
+            key={image.src}
+            src={image.src}
+            alt={image.alt}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out)]"
+            style={{
+              opacity: stage === index + 1 ? 1 : 0,
+              transform: stage === index + 1 ? 'scale(1)' : 'scale(1.04)',
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Stage 0 — the sketch, on top of both. */}
+      {/* Stage 0 — the sketch, on top, and deliberately NOT masked.
+
+          The dissolve is right for a photograph: it is a rectangle of
+          unrelated content and it needs to stop being one. The sketch is the
+          opposite — it is drawn art in the panel's own colours that already
+          has no edges, so masking it only dims the half of the sequence
+          nearest the copy. That is where the design board's first sticky note
+          and the build sequence's pie chart both sit. */}
       <div
         className="absolute inset-0 transition-opacity duration-500 ease-[var(--ease-out)]"
         style={{ opacity: stage === 0 ? 1 : 0 }}
@@ -154,6 +178,10 @@ function Sketch({
 /* ============================================================================
    Design — the brainstorm board
    ==========================================================================*/
+
+/** Softens only the board's own ground, which is the sketch's one rectangle. */
+const BOARD_FADE =
+  'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.35) 26%, #000 62%)'
 
 /** Two ruled lines standing in for handwriting on a note. */
 function NoteScrawl({ color, delay }: { color: string; delay: number }) {
@@ -241,16 +269,29 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
   ]
 
   return (
-    <div className="absolute inset-0" style={{ background: 'rgb(255 255 255 / 0.04)' }}>
-      {/* The board itself — a faint grid, the way a whiteboard photographs. */}
-      <svg aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ opacity: 0.1 }}>
-        <defs>
-          <pattern id="gk-board-grid" width="26" height="26" patternUnits="userSpaceOnUse">
-            <path d="M26 0 L0 0 0 26" fill="none" stroke={ink} strokeWidth="1" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#gk-board-grid)" />
-      </svg>
+    <div className="absolute inset-0">
+      {/* The board itself — a faint grid, the way a whiteboard photographs.
+          This is the one piece of the sketch that is a full-panel rectangle
+          and so the one piece that needs a soft edge of its own now that the
+          sequence is no longer masked as a whole. The notes, the arrow and the
+          bulb are shapes; they have no edges to hide. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'rgb(255 255 255 / 0.04)',
+          maskImage: BOARD_FADE,
+          WebkitMaskImage: BOARD_FADE,
+        }}
+      >
+        <svg aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ opacity: 0.1 }}>
+          <defs>
+            <pattern id="gk-board-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+              <path d="M26 0 L0 0 0 26" fill="none" stroke={ink} strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#gk-board-grid)" />
+        </svg>
+      </div>
 
       {notes.map((note) => (
         <StickyNote key={note.x} {...note} />
