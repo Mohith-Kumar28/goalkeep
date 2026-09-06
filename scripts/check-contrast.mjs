@@ -43,13 +43,26 @@ const findings = await page.evaluate(() => {
    * real. Where an element has no ground of its own, its declared one wins. */
   const GROUNDS = {
     navy: [47, 74, 146],
-    cream: [250, 247, 240],
-    'cream-deep': [242, 237, 224],
+    cream: [252, 252, 253],
+    'cream-deep': [241, 244, 250],
   }
   const bgOf = (el) => {
     let n = el
     while (n) {
-      const [r, g, b, a] = px(getComputedStyle(n).backgroundColor)
+      const cs = getComputedStyle(n)
+      /* A highlighter swipe is painted by a pseudo-element, which this sweep
+       * cannot see. Walking past it lands on the band behind and reports ink
+       * on navy for a word that is sitting on gold. The element declares the
+       * paint instead, and we read the resolved custom property rather than a
+       * hard-coded value so there is no second place for the hue to drift. */
+      if (n.dataset && n.dataset.marker === 'on') {
+        const hue = cs.getPropertyValue('--marker-hue').trim()
+        if (hue) {
+          const [r, g, b, a] = px(hue)
+          if (a >= 0.99) return [r, g, b]
+        }
+      }
+      const [r, g, b, a] = px(cs.backgroundColor)
       if (a >= 0.99) return [r, g, b]
       const declared = n.dataset && n.dataset.ground && GROUNDS[n.dataset.ground]
       if (declared) return declared

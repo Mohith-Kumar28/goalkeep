@@ -363,15 +363,87 @@
     line-height: 1;
   }
 
-  /* The highlighter behind a word. Gold now, not the acid yellow, and never
-     yellow *text*. */
-  .keyword-mark {
-    background: var(--gk-yellow);
+  /* --- The highlighter ---------------------------------------------------
+     "When we are highlighting things, let's give a real highlighter effect -
+     like normally on paper when you highlight with a highlighter. A little bit
+     diagonal, and not very clear, and there are some dark and light spots."
+
+     What this replaces is a flat rectangle of brand colour sitting behind a
+     word, which is what every highlighted phrase on the page used to be. Four
+     things separate a marker swipe from a rectangle, and it needs all four:
+
+       1. **Chisel ends.** A highlighter tip is a wedge, so both ends of a
+          stroke lean at the same angle. Square ends are the single biggest
+          tell.
+       2. **Wobbling edges.** The top and bottom are never parallel rules. They
+          are cut here by a mask rather than drawn, so the text sitting on top
+          is untouched and stays perfectly crisp.
+       3. **Uneven ink.** It pools darker where the pen landed, where it
+          stopped, and along the bottom edge where it pressed; and there is one
+          lighter streak across the middle where the tip lifted.
+       4. **A degree off horizontal.** Nobody draws a level line by hand.
+
+     The mask lives on a pseudo-element, never on the element itself - masking
+     the element would mask its own text with it. `isolation: isolate` makes
+     the span its own stacking context so `z-index: -1` reliably lands the ink
+     behind the text and in front of whatever band it is sitting on, no matter
+     what the ancestors are doing.
+
+     Two shapes exist so that two markers near each other are not identical
+     strokes; `.marker-b` is the second. */
+  .marker {
+    position: relative;
+    isolation: isolate;
+    display: inline-block;
+    padding-inline: 0.1em;
     color: var(--gk-ink);
-    border-radius: 2px;
-    padding-inline: 0.16em;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
+    --marker-hue: var(--gk-yellow);
+    --marker-tilt: -0.9deg;
+    --marker-on: 1;
+    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M11 46L21 9C58 4 94 10 131 6C167 2 197 9 230 5L221 51C185 56 149 49 111 54C73 59 45 50 11 46Z' fill='%23fff'/%3E%3C/svg%3E");
+  }
+
+  .marker-b {
+    --marker-tilt: 0.7deg;
+    --marker-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M9 50L17 6C52 10 88 3 126 8C161 12 196 4 232 8L224 54C190 49 156 57 118 52C80 47 44 55 9 50Z' fill='%23fff'/%3E%3C/svg%3E");
+  }
+
+  .marker::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    /* Overshoots the word, the way a real stroke runs past what it marks. */
+    inset: -0.16em -0.34em -0.12em -0.28em;
+    background-color: var(--marker-hue);
+    background-image:
+      /* the pool where the pen landed, along the chisel angle */
+      linear-gradient(103deg, rgb(0 0 0 / 0.14) 0 3%, rgb(0 0 0 / 0) 13%),
+      /* and where it stopped */
+      linear-gradient(283deg, rgb(0 0 0 / 0.11) 0 3%, rgb(0 0 0 / 0) 11%),
+      /* ink settling along the bottom edge */
+      linear-gradient(to top, rgb(0 0 0 / 0.15) 0, rgb(0 0 0 / 0) 44%),
+      linear-gradient(to bottom, rgb(0 0 0 / 0.06) 0, rgb(0 0 0 / 0) 26%),
+      /* the streak where the tip lifted */
+      linear-gradient(97deg, rgb(255 255 255 / 0) 26%, rgb(255 255 255 / 0.16) 34%, rgb(255 255 255 / 0) 44%);
+    transform: rotate(var(--marker-tilt));
+    opacity: var(--marker-on);
+    mask-image: var(--marker-shape);
+    -webkit-mask-image: var(--marker-shape);
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+
+  /* On a dark ground the swipe is a light ink, so the mottling has to darken
+     less or the whole stroke turns grey. */
+  .marker-light::before {
+    background-image:
+      linear-gradient(103deg, rgb(47 74 146 / 0.16) 0 3%, rgb(47 74 146 / 0) 13%),
+      linear-gradient(283deg, rgb(47 74 146 / 0.12) 0 3%, rgb(47 74 146 / 0) 11%),
+      linear-gradient(to top, rgb(47 74 146 / 0.14) 0, rgb(47 74 146 / 0) 42%),
+      linear-gradient(97deg, rgb(255 255 255 / 0) 28%, rgb(255 255 255 / 0.22) 36%, rgb(255 255 255 / 0) 46%);
   }
 
   /* --- Surfaces ----------------------------------------------------------

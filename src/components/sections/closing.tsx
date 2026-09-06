@@ -1,6 +1,7 @@
 import { closing } from '@/content/homepage'
 import { GkButton } from '@/components/primitives/gk-button'
 import { MarkAssembly } from '@/components/primitives/logo-shapes'
+import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -39,7 +40,7 @@ export function Closing() {
           <Reveal delay={0.12}>
             <h2 id="closing-heading" className="display max-w-[17ch]">
               {closing.headlineLead}{' '}
-              <span className="keyword-mark">{closing.headlineKeyword}</span>{' '}
+              <Marker>{closing.headlineKeyword}</Marker>{' '}
               {closing.headlineTail}
             </h2>
           </Reveal>
@@ -64,12 +65,12 @@ export function Closing() {
           {/* The mark assembles on phones too, under the buttons — it is the
               page's last frame and worth having on every screen. */}
           <div className="mt-14 flex justify-center lg:hidden">
-            <MarkAssembly size={180} />
+            <MarkAssembly size={150} />
           </div>
         </div>
 
         <div className="hidden lg:col-span-4 lg:flex lg:flex-col lg:items-center lg:justify-center lg:gap-12">
-          <MarkAssembly size={260} />
+          <MarkAssembly size={200} />
 
           <Reveal delay={0.54}>
             <p

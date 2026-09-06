@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Marker } from '@/components/primitives/marker'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
@@ -40,14 +41,13 @@ export function TypedPhrase({
   tail,
   /** The highlight the typed phrase sits on. */
   markBackground = 'var(--gk-white)',
-  markColor = 'var(--gk-navy)',
   className,
 }: {
   lead: string
   phrases: Array<string>
   tail: string
+  /** The highlighter's ink. A light one, since this runs on the navy hero. */
   markBackground?: string
-  markColor?: string
   className?: string
 }) {
   const reduced = useReducedMotion()
@@ -95,12 +95,9 @@ export function TypedPhrase({
         {lead}{' '}
         {phrases.map((item, i) => (
           <span key={item}>
-            <span
-              className="rounded-[2px] px-[0.16em] font-bold"
-              style={{ background: markBackground, color: markColor }}
-            >
-              {item}
-            </span>
+            <Marker hue={markBackground} onDark variant={i % 2 ? 'b' : 'a'}>
+              <span className="font-bold">{item}</span>
+            </Marker>
             {i < phrases.length - 2 ? ', ' : i === phrases.length - 2 ? ', and ' : ' '}
           </span>
         ))}
@@ -121,19 +118,16 @@ export function TypedPhrase({
 
       <span aria-hidden="true">
         {lead}{' '}
-        <span
-          className="inline-block rounded-[2px] px-[0.2em] font-bold"
-          style={{ background: markBackground, color: markColor }}
-        >
+        <Marker hue={markBackground} onDark className="font-bold">
           {phrase.slice(0, count)}
           <span
             className={cn(
               'ml-[1px] inline-block w-[2px] translate-y-[0.12em] align-baseline',
               'motion-safe:animate-[gk-caret_1s_step-end_infinite]',
             )}
-            style={{ height: '0.95em', background: markColor }}
+            style={{ height: '0.95em', background: 'var(--gk-navy)' }}
           />
-        </span>{' '}
+        </Marker>{' '}
         {tail}
       </span>
     </span>

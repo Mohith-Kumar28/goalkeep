@@ -70,6 +70,21 @@
   --gk-teal-lift: #5fc9ba;
   --gk-coral-lift: #f0a58c;
 
+  /* --- The mark's own colours -------------------------------------------
+     Sampled directly out of public/goalkeep-icon.png. These are NOT UI tokens
+     and must not be used as accents anywhere: the palette above is the muted
+     one the review asked for, and these are louder than it on purpose because
+     they are the logo. They exist so that when the mark is drawn from its own
+     arcs in the closing band it is the real mark and not an approximation.
+
+     The mark's fifth segment is a near-black. On a dark ground it becomes
+     white, exactly as the white wordmark does. */
+  --mark-yellow: #e8e724;
+  --mark-ink: #3f3d3d;
+  --mark-blue: #526eb5;
+  --mark-teal: #79c2b4;
+  --mark-coral: #ee9d90;
+
   /* --- Tints — light bands, chips, wash panels ---------------------------
      Low-chroma washes. These are the "light coloured highlights" the brief
      allows between navy and white; they are never a text colour. */

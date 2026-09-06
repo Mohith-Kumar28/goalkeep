@@ -261,48 +261,121 @@ function DriftingPiece({
 /* ── The assembly ──────────────────────────────────────────────────────────
    "One part is coming in and they are getting assembled and forming a shape."
 
-   Four arcs and the smile start scattered — pushed out along their own radius,
-   spun, and faded back — and are pulled into the mark as the band scrolls
-   through. Each fragment has its own slice of the scroll, so they arrive one
-   at a time rather than snapping into place together.
+   Every number below was sampled out of public/goalkeep-icon.png rather than
+   estimated, because the first build of this was estimated and it showed: four
+   segments with a gap at the top, in the site's muted palette, that never
+   quite met. The real mark is five segments in a *closed* ring plus the smile,
+   in the logo's own louder colours, and its stroke is 13.8% of the diameter —
+   roughly two-thirds the weight that had been guessed at.
 
-   The pieces are laid out in their FINAL positions inside a single square box
-   and the scatter is applied as a CSS transform on each fragment's wrapper.
-   Doing it that way rather than animating SVG transform attributes means the
-   transform origin is the ring's centre for free, and motion can drive it off
-   a scroll MotionValue without a React render per frame. */
+   The other thing the estimate got wrong: `stroke-linecap: round` extends a
+   dash by half the stroke width beyond each end. Set the dash to the segment's
+   angular span and every neighbour overlaps by about 12 degrees at each joint,
+   which is why the ring read as a pile of overlapping lozenges. `arcDash`
+   below subtracts that extension, so `start` and `sweep` describe what you
+   actually see and adjacent segments meet exactly cap to cap.
+   ────────────────────────────────────────────────────────────────────────── */
 
-const GAP = 26
-const PER = (360 - GAP) / 4
+/* The mark's bounding box in its own units: ring on top, smile beneath. */
+const BOX_W = 282
+const BOX_H = 428
 
-/* All four have to read on navy, which is why this is the -lift blue rather
-   than --gk-blue: the pop blue is close enough in value to the ground that the
-   fragment disappears into it.
+/** Degrees each segment runs past its neighbour, to close the cap slivers. */
+const JOIN_OVERLAP = 5
 
-   Scatter distances are kept under ~170px on purpose. Further out and the
-   fragments cross into the copy column and over the margin note on their way
-   in, which turns the assembly into clutter for the first half of its travel. */
-const SEGMENTS = [
-  { hue: 'var(--gk-yellow)', scatter: 152, spin: -120 },
-  { hue: 'var(--gk-blue-lift)', scatter: 124, spin: 145 },
-  { hue: 'var(--gk-teal-lift)', scatter: 166, spin: -95 },
-  { hue: 'var(--gk-coral-lift)', scatter: 138, spin: 130 },
+const RING = { cx: 141, cy: 141, r: 121.5, t: 39 }
+const SMILE = { cx: 142, cy: 283.8, r: 124.2, t: 39 }
+
+/** Ring centre as a percentage of the box — the origin every piece spins about. */
+const ORIGIN = `${(RING.cx / BOX_W) * 100}% ${(RING.cy / BOX_H) * 100}%`
+
+/**
+ * Dash geometry for one segment, compensated for its round caps.
+ *
+ * `start` and `sweep` are the visible extent, clockwise from twelve o'clock.
+ */
+function arcDash(start: number, sweep: number, r: number, t: number) {
+  const circumference = 2 * Math.PI * r
+  // Half a stroke width, expressed as the angle it subtends at radius r.
+  const cap = (t / 2 / r) * (180 / Math.PI)
+  /* Two round caps meeting exactly tangentially still leave a lens-shaped
+     sliver of ground at the inner and outer edges of the joint, because they
+     only touch at the mid-radius. The icon closes those by letting neighbours
+     overlap a few degrees, so one cap sits over the next. */
+  const dashSweep = Math.max(sweep - cap * 2 + JOIN_OVERLAP, 0.5)
+  return {
+    dash: (dashSweep / 360) * circumference,
+    circumference,
+    rotate: start + cap - JOIN_OVERLAP / 2 - 90,
+  }
+}
+
+type Segment = {
+  /** Visible start, degrees clockwise from twelve. */
+  start: number
+  /** Visible sweep, degrees. */
+  sweep: number
+  hue: string
+  /** On a dark ground the mark's near-black segment becomes white. */
+  hueOnDark?: string
+  circle: typeof RING
+  /** How far out it starts, in the mark's own units, and how far it tumbles. */
+  scatter: number
+  spin: number
+}
+
+/* Spans measured off the icon: 71.5, 68, 71, 77.5, 72 — they sum to 360, which
+   is the point. There is no gap in the mark. */
+const SEGMENTS: Array<Segment> = [
+  { start: 324.5, sweep: 71.5, hue: 'var(--mark-yellow)', circle: RING, scatter: 150, spin: -120 },
+  {
+    start: 36,
+    sweep: 68,
+    hue: 'var(--mark-ink)',
+    hueOnDark: 'var(--gk-white)',
+    circle: RING,
+    scatter: 118,
+    spin: 140,
+  },
+  { start: 104, sweep: 71, hue: 'var(--mark-blue)', circle: RING, scatter: 162, spin: -95 },
+  { start: 175, sweep: 77.5, hue: 'var(--mark-teal)', circle: RING, scatter: 132, spin: 128 },
+  { start: 252.5, sweep: 72, hue: 'var(--mark-coral)', circle: RING, scatter: 146, spin: -145 },
+  {
+    start: 122.3,
+    sweep: 115.4,
+    hue: 'var(--mark-ink)',
+    hueOnDark: 'var(--gk-white)',
+    circle: SMILE,
+    scatter: 175,
+    spin: 105,
+  },
 ]
 
+/**
+ * The mark, coming back together on scroll.
+ *
+ * Each fragment owns an overlapping slice of the scroll so they land one at a
+ * time. Every slice finishes by 0.82 rather than at 1: the last fragment used
+ * to complete only at the very end of the range, so if the reader stopped
+ * anywhere short of it — or the range never fully resolved because the band
+ * sits near the foot of the page — the mark stayed permanently unfinished.
+ * That was the "even after scrolling more it is not completely fulfilling".
+ */
 export function MarkAssembly({
   size = 300,
+  onDark = true,
   className,
 }: {
+  /** Width of the mark. Height follows the real mark's proportions. */
   size?: number
+  onDark?: boolean
   className?: string
 }) {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
-    /* Complete well before the band leaves: the mark should be whole while
-       the visitor is still reading the section, not as it exits. */
-    offset: ['start 0.9', 'center 0.55'],
+    offset: ['start end', 'center 0.55'],
   })
 
   return (
@@ -310,18 +383,18 @@ export function MarkAssembly({
       ref={ref}
       aria-hidden="true"
       className={cn('relative', className)}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: (size / BOX_W) * BOX_H }}
     >
       {SEGMENTS.map((segment, index) => (
         <Fragment
           key={index}
           index={index}
           segment={segment}
-          /* Scatter is authored against a 260px mark and scaled from there.
-             Left as a fixed pixel distance, the 180px mobile instance throws
-             its fragments almost a full mark-width out, which reads as debris
-             rather than as a thing coming apart. */
-          scale={size / 260}
+          onDark={onDark}
+          /* Scatter is authored in the mark's own units, so it scales with the
+             mark for free — the 180px instance throws its pieces exactly as
+             far, proportionally, as the 300px one. */
+          scale={size / BOX_W}
           progress={scrollYProgress}
           reduced={reduced}
         />
@@ -333,45 +406,73 @@ export function MarkAssembly({
 function Fragment({
   index,
   segment,
+  onDark,
   scale,
   progress,
   reduced,
 }: {
   index: number
-  segment: (typeof SEGMENTS)[number]
+  segment: Segment
+  onDark: boolean
   scale: number
   progress: ReturnType<typeof useScroll>['scrollYProgress']
   reduced: boolean
 }) {
-  // Where this arc sits on the finished ring, and therefore which way it flies
-  // out: along its own mid-angle, so the mark bursts apart evenly.
-  const start = GAP / 2 + index * PER
-  const mid = ((start + PER / 2 - 90) * Math.PI) / 180
+  const { circle } = segment
+  const { dash, circumference, rotate } = arcDash(
+    segment.start,
+    segment.sweep,
+    circle.r,
+    circle.t,
+  )
+
+  // Each piece flies out along its own mid-angle, so the mark bursts evenly.
+  const mid = ((segment.start + segment.sweep / 2 - 90) * Math.PI) / 180
   const dx = Math.cos(mid) * segment.scatter * scale
   const dy = Math.sin(mid) * segment.scatter * scale
 
-  /* Each fragment owns a quarter of the scroll, overlapping by half, so they
-     land in sequence — first, second, third, fourth — rather than together. */
-  const from = index * 0.16
-  const to = from + 0.52
+  const from = index * 0.088
+  const to = from + 0.38
 
   const t = useTransform(progress, [from, to], [0, 1], { clamp: true })
   const x = useTransform(t, (v) => dx * (1 - v))
   const y = useTransform(t, (v) => dy * (1 - v))
-  const rotate = useTransform(t, (v) => segment.spin * (1 - v))
-  const opacity = useTransform(t, [0, 0.35, 1], [0, 0.55, 1])
+  const rot = useTransform(t, (v) => segment.spin * (1 - v))
+  /* Reaches full strength early in its travel. Fading across the whole
+     journey left every fragment washed out for most of it — the yellow
+     composited over navy at half opacity reads olive, not gold. */
+  const opacity = useTransform(t, [0, 0.22, 0.55], [0, 0.75, 1])
 
-  if (reduced) {
-    return (
-      <div className="absolute inset-0">
-        <ArcPiece sweep={PER - 8} start={start} thickness={17} color={segment.hue} />
-      </div>
-    )
-  }
+  const stroke = onDark ? (segment.hueOnDark ?? segment.hue) : segment.hue
+
+  const art = (
+    <svg
+      viewBox={`0 0 ${BOX_W} ${BOX_H}`}
+      className="h-full w-full"
+      aria-hidden="true"
+    >
+      <circle
+        cx={circle.cx}
+        cy={circle.cy}
+        r={circle.r}
+        fill="none"
+        stroke={stroke}
+        strokeWidth={circle.t}
+        strokeLinecap="round"
+        strokeDasharray={`${dash} ${circumference}`}
+        transform={`rotate(${rotate} ${circle.cx} ${circle.cy})`}
+      />
+    </svg>
+  )
+
+  if (reduced) return <div className="absolute inset-0">{art}</div>
 
   return (
-    <motion.div className="absolute inset-0" style={{ x, y, rotate, opacity }}>
-      <ArcPiece sweep={PER - 8} start={start} thickness={17} color={segment.hue} />
+    <motion.div
+      className="absolute inset-0"
+      style={{ x, y, rotate: rot, opacity, transformOrigin: ORIGIN }}
+    >
+      {art}
     </motion.div>
   )
 }

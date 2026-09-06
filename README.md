@@ -187,13 +187,41 @@ learned by getting them wrong first:
    heading, a tab row, two columns and a carousel gets one. The second piece
    tried in the audiences band landed behind the carousel's own controls.
 
-`<MarkAssembly>` is the payoff: the four arcs start scattered — pushed out
-along their own radii, spun and faded — and the scroll pulls them into the
-mark. Each fragment owns an overlapping slice of the scroll so they arrive one
-at a time rather than snapping together, and scatter distance scales with the
-mark's size so the 180px mobile instance doesn't throw its pieces a full
-mark-width out. It runs in the closing band, and it is the only place on the
-site the whole mark is ever drawn from its parts.
+`<MarkAssembly>` is the payoff: the mark's own pieces start scattered — pushed
+out along their own radii, spun and faded — and the scroll pulls them back
+together. Each fragment owns an overlapping slice of the scroll so they arrive
+one at a time, and scatter is authored in the mark's own units so it scales
+with the mark for free. It runs in the closing band, and it is the only place
+on the site the whole mark is ever drawn from its parts.
+
+**Every number in it was sampled out of `public/goalkeep-icon.png`, not
+estimated.** The first build was estimated and it showed — four segments with a
+gap at the top, in the site's muted palette, that never quite met. The real
+mark is *five* segments in a **closed** ring plus the smile beneath, its stroke
+is 13.8% of the diameter (about two-thirds the weight that had been guessed),
+and its spans are 71.5° / 68° / 71° / 77.5° / 72°, which sum to 360 because
+there is no gap. The colours are the logo's own and are deliberately louder
+than the site palette — they are registered in `check-palette.mjs` as
+`--mark-*` tokens with a note that they may only be used where the logo itself
+is drawn. The mark's near-black segment becomes white on a dark ground, exactly
+as `wordmark-white.webp` does.
+
+Two geometry traps worth keeping written down:
+
+- **`stroke-linecap: round` extends a dash by half the stroke width past each
+  end.** Set the dash to a segment's angular span and every neighbour overlaps
+  by about 12°, which is why the first ring read as a pile of lozenges.
+  `arcDash()` subtracts that extension, so `start` and `sweep` describe what
+  you actually see.
+- **Two round caps meeting exactly still leave a sliver.** They only touch at
+  the mid-radius, so a lens of background shows at the inner and outer edges.
+  `JOIN_OVERLAP` runs each segment a few degrees past its neighbour, the way
+  the icon does.
+
+Every fragment's slice of the scroll finishes by 0.82 rather than at 1. The
+last one used to complete only at the very end of the range, so a reader who
+stopped short of it — or a range that never fully resolved because the band
+sits near the foot of the page — was left with a mark that never closed.
 
 Fragments are laid out in their *final* positions inside one square box and
 scattered with a CSS transform on each wrapper — not by animating SVG
@@ -214,6 +242,41 @@ per frame.
 | FAQs | pale blue | the only band with no surfaces at all |
 | Field notes | white | the deck's gold comma |
 | Closing | navy | copy assembles one element at a time; the mark assembles from its own arcs on scroll |
+
+### The highlighter — `marker.tsx`
+
+Every highlighted phrase on the page used to be a flat rectangle of brand
+colour behind a word. The brief: *"give a real highlighter effect, like
+normally on paper when you highlight — a little bit diagonal, not very clear,
+some dark and light spots."*
+
+Four things separate a marker swipe from a rectangle, and it needs all four:
+
+1. **Chisel ends.** A highlighter tip is a wedge, so both ends lean at the same
+   angle. Square ends are the biggest tell.
+2. **Wobbling edges.** Cut by a `mask-image` rather than drawn, so the text on
+   top is untouched and stays crisp.
+3. **Uneven ink.** It pools where the pen landed, where it stopped and along
+   the bottom edge, and there is one lighter streak where the tip lifted.
+4. **A degree off horizontal.**
+
+The mask is on a pseudo-element, never on the element itself — masking the
+element masks its text with it. `isolation: isolate` makes the span its own
+stacking context so `z-index: -1` reliably lands the ink behind the text and in
+front of the band, whatever the ancestors are doing. Two stroke shapes exist so
+two markers near each other aren't the same stroke twice.
+
+It runs in three places: the typed phrase in the hero (a white swipe on navy),
+the three challenge phrases in the audiences band, and `decision` in the
+closing headline.
+
+**`check-contrast.mjs` had to learn about it.** The ink is painted by a
+pseudo-element and the audit's DOM sweep cannot see pseudo-elements, so it
+walked straight past the swipe to the band behind and would have reported
+ink-on-navy for a word sitting on gold. An element carrying `data-marker="on"`
+now declares its paint, and the audit reads the *resolved* `--marker-hue`
+custom property rather than a hard-coded value, so there is no second place for
+the hue to drift.
 
 ### Motion
 

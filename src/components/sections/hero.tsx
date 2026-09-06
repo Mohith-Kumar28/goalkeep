@@ -68,7 +68,6 @@ export function Hero() {
               phrases={hero.typed.phrases}
               tail={hero.typed.tail}
               markBackground="var(--gk-white)"
-              markColor="var(--gk-navy)"
             />
           </p>
 

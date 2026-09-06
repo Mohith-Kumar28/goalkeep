@@ -32,6 +32,9 @@ const BRAND = new Set(
     '#eac452', '#cfa72f',
     // Lifted values, legible on the navy ground only
     '#8fa8e8', '#5fc9ba', '#f0a58c',
+    // The mark's own colours, sampled from goalkeep-icon.png. Only ever used
+    // where the logo itself is drawn - see tokens.css.
+    '#e8e724', '#3f3d3d', '#526eb5', '#79c2b4', '#ee9d90',
     // Tints
     '#eaeff9', '#e7f2f0', '#fbeee9', '#fbf3df',
     // Hairlines

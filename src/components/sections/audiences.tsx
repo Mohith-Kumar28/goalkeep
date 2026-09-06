@@ -5,6 +5,7 @@ import type { Audience } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhotoCarousel } from '@/components/primitives/photo-carousel'
 import { Annotate } from '@/components/primitives/doodles'
+import { Marker } from '@/components/primitives/marker'
 import { ShapeField } from '@/components/primitives/logo-shapes'
 import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
@@ -187,19 +188,22 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
         {audience.challengeLead}{' '}
         {audience.challengeBlanks.map((blank, index) => (
           <span key={blank}>
-            <span
-              className="inline-block rounded-[2px] px-[0.16em] transition-[background-color,box-shadow] duration-[var(--dur-slow)] ease-[var(--ease-out)]"
+            <Marker
+              hue={BLANK_FILL[index % 3]}
+              on={index < filled}
+              variant={index % 2 ? 'b' : 'a'}
+              /* Before the stroke lands the phrase is underscored — the blank
+                 from the brief, with the answer already written into it. */
+              className={cn(
+                'transition-[box-shadow] duration-[var(--dur-slow)] ease-[var(--ease-out)]',
+              )}
               style={{
-                backgroundColor:
-                  index < filled ? BLANK_FILL[index % 3] : 'transparent',
-                // Before the marker lands, the phrase is underscored — the
-                // blank from the brief, with the answer already written in.
                 boxShadow:
                   index < filled ? 'none' : 'inset 0 -0.09em 0 0 var(--gk-ink)',
               }}
             >
               {blank}
-            </span>
+            </Marker>
             {/* Pulled back against the fill: the marker carries 0.16em of
                 inline padding, which otherwise reads as a space before the
                 comma. */}
