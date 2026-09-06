@@ -1,12 +1,13 @@
-import { Link } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { hero } from '@/content/homepage'
-import { GkButton } from '@/components/primitives/gk-button'
-import { Spotlight } from '@/components/primitives/spotlight'
-import { TypedPhrase } from '@/components/primitives/typed-phrase'
-import { Annotate } from '@/components/primitives/doodles'
-import { ShapeField } from '@/components/primitives/logo-shapes'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import { Link } from "@tanstack/react-router"
+import { useEffect, useState } from "react"
+import { hero } from "@/content/homepage"
+import { GkButton } from "@/components/primitives/gk-button"
+import { Spotlight } from "@/components/primitives/spotlight"
+import { SpotlightCard } from "@/components/primitives/spotlight-card"
+import { TypedPhrase } from "@/components/primitives/typed-phrase"
+import { Annotate } from "@/components/primitives/doodles"
+import { ShapeField } from "@/components/primitives/logo-shapes"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 
 /**
  * The hero.
@@ -39,30 +40,37 @@ export function Hero() {
       /* Pulled up under the sticky header so the navy runs to the top of the
          viewport and the header floats on it. 82px is the header's h-20 plus
          its 2px progress rule. */
-      className="ground-navy accent-yellow relative isolate -mt-[82px] overflow-hidden"
-      style={{ backgroundColor: 'var(--gk-navy)' }}
+      className="ground-navy relative isolate -mt-[82px] overflow-hidden accent-yellow"
+      style={{ backgroundColor: "var(--gk-navy)" }}
     >
       {/* Fragments of the mark, tonal rather than coloured - the hero is the
           one ground the review asked to keep completely quiet. */}
       <ShapeField variant="hero" />
       <Spotlight />
 
-      <div className="shell relative z-10 grid items-center gap-14 pb-20 pt-[calc(82px+3rem)] md:pb-24 md:pt-[calc(82px+4.5rem)] lg:grid-cols-12 lg:gap-12">
+      <div className="shell relative z-10 grid items-center gap-14 pt-[calc(82px+3rem)] pb-20 md:pt-[calc(82px+4.5rem)] md:pb-24 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
           <p className="mb-6">
-            <span className="eyebrow text-[var(--gk-yellow)]">{hero.eyebrow}</span>
+            <span className="eyebrow text-[var(--gk-yellow)]">
+              {hero.eyebrow}
+            </span>
           </p>
 
           <h1 className="display max-w-[23ch] text-white">
-            {hero.headlineLead}{' '}
-            <Annotate mark="underline" color="var(--gk-yellow)" delay={0.5} nowrap>
+            {hero.headlineLead}{" "}
+            <Annotate
+              mark="underline"
+              color="var(--gk-yellow)"
+              delay={0.5}
+              nowrap
+            >
               {hero.headlineHighlight}
             </Annotate>
           </h1>
 
           {/* min-height reserves the tallest rendering of the typed sentence so
               the buttons below never move while it types. */}
-          <p className="mt-8 max-w-[44ch] text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] font-normal leading-[1.55] text-white/90 min-h-[4.7em] sm:min-h-[3.2em]">
+          <p className="mt-8 min-h-[4.7em] max-w-[44ch] text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] leading-[1.55] font-normal text-white/90 sm:min-h-[3.2em]">
             <TypedPhrase
               lead={hero.typed.lead}
               phrases={hero.typed.phrases}
@@ -72,7 +80,12 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <GkButton to={hero.primaryCta.to} variant="primary" onDark withArrow>
+            <GkButton
+              to={hero.primaryCta.to}
+              variant="primary"
+              onDark
+              withArrow
+            >
               {hero.primaryCta.label}
             </GkButton>
             <GkButton to={hero.secondaryCta.to} variant="secondary" onDark>
@@ -85,7 +98,7 @@ export function Hero() {
               with a drawn arrow. */}
           <p
             aria-hidden="true"
-            className="hand mt-8 hidden whitespace-pre-line leading-tight text-[var(--gk-yellow)]/90 xl:block"
+            className="hand mt-8 hidden leading-tight whitespace-pre-line text-[var(--gk-yellow)]/90 xl:block"
           >
             {hero.marginalia}
           </p>
@@ -116,7 +129,7 @@ function ProofCard() {
     if (reduced || paused) return
     const id = window.setInterval(
       () => setIndex((i) => (i + 1) % hero.proofCards.length),
-      4600,
+      4600
     )
     return () => window.clearInterval(id)
   }, [reduced, paused])
@@ -131,62 +144,69 @@ function ProofCard() {
       onBlurCapture={() => setPaused(false)}
       className="mx-auto max-w-[27rem]"
     >
-      <article
-        className="overflow-hidden rounded-[var(--r-lg)] border border-white/15 shadow-[var(--shadow-navy)] backdrop-blur-[2px]"
-        style={{ background: 'rgb(255 255 255 / 0.07)' }}
-      >
-        <div
-          className="photo-bleed photo-bleed-b relative aspect-[16/9]"
-          /* The photograph fades into the panel rather than stopping at an
-             edge. --fade-to has to be the *composited* colour of the panel
-             over navy, not the panel's own translucent value. */
-          style={{ ['--fade-to' as string]: '#39538f' }}
+      <SpotlightCard>
+        <article
+          className="overflow-hidden rounded-[var(--r-lg)] border border-white/15 shadow-[var(--shadow-navy)] backdrop-blur-[2px]"
+          style={{ background: "rgb(255 255 255 / 0.07)" }}
         >
-          {hero.proofCards.map((item, i) => (
-            <img
-              key={item.image}
-              src={item.image}
-              alt={i === index ? item.imageAlt : ''}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[700ms] ease-[var(--ease-out)]"
-              style={{ opacity: i === index ? 1 : 0 }}
-            />
-          ))}
-        </div>
-
-        <div className="-mt-8 px-7 pb-7">
-          <p className="relative text-[length:var(--fs-sm)] font-bold uppercase tracking-[var(--tracking-label)] text-[var(--gk-yellow)]">
-            {card.org}
-          </p>
-          <p className="stat-figure relative mt-3 text-[length:clamp(1.75rem,2.8vw,2.25rem)] text-white">
-            {card.stat}
-          </p>
-          <p className="relative mt-2 text-[length:var(--fs-sm)] text-white/80">
-            {card.line}
-          </p>
-
-          <div className="relative mt-6 flex items-center justify-between gap-4">
-            <Link to={card.to} className="link-cta text-[length:var(--fs-sm)]">
-              Read case study
-            </Link>
-
-            <ol className="flex gap-1.5" aria-hidden="true">
-              {hero.proofCards.map((item, i) => (
-                <li
-                  key={item.org}
-                  className="h-[3px] transition-all duration-[var(--dur-base)] ease-[var(--ease-out)]"
-                  style={{
-                    width: i === index ? 22 : 10,
-                    background:
-                      i === index ? 'var(--gk-yellow)' : 'rgb(255 255 255 / 0.3)',
-                  }}
-                />
-              ))}
-            </ol>
+          <div
+            className="photo-bleed photo-bleed-b relative aspect-[16/9]"
+            /* The photograph fades into the panel rather than stopping at an
+               edge. --fade-to has to be the *composited* colour of the panel
+               over navy, not the panel's own translucent value. */
+            style={{ ["--fade-to" as string]: "#39538f" }}
+          >
+            {hero.proofCards.map((item, i) => (
+              <img
+                key={item.image}
+                src={item.image}
+                alt={i === index ? item.imageAlt : ""}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[700ms] ease-[var(--ease-out)]"
+                style={{ opacity: i === index ? 1 : 0 }}
+              />
+            ))}
           </div>
-        </div>
-      </article>
+
+          <div className="-mt-8 px-7 pb-7">
+            <p className="relative text-[length:var(--fs-sm)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-yellow)] uppercase">
+              {card.org}
+            </p>
+            <p className="stat-figure relative mt-3 text-[length:clamp(1.75rem,2.8vw,2.25rem)] text-white">
+              {card.stat}
+            </p>
+            <p className="relative mt-2 text-[length:var(--fs-sm)] text-white/80">
+              {card.line}
+            </p>
+
+            <div className="relative mt-6 flex items-center justify-between gap-4">
+              <Link
+                to={card.to}
+                className="link-cta text-[length:var(--fs-sm)]"
+              >
+                Read case study
+              </Link>
+
+              <ol className="flex gap-1.5" aria-hidden="true">
+                {hero.proofCards.map((item, i) => (
+                  <li
+                    key={item.org}
+                    className="h-[3px] transition-all duration-[var(--dur-base)] ease-[var(--ease-out)]"
+                    style={{
+                      width: i === index ? 22 : 10,
+                      background:
+                        i === index
+                          ? "var(--gk-yellow)"
+                          : "rgb(255 255 255 / 0.3)",
+                    }}
+                  />
+                ))}
+              </ol>
+            </div>
+          </div>
+        </article>
+      </SpotlightCard>
     </div>
   )
 }

@@ -250,6 +250,30 @@ per frame.
 | Field notes | white | the deck's gold comma |
 | Closing | navy | copy assembles one element at a time; the mark assembles from its own arcs on scroll |
 
+### Pointer light — `spotlight.tsx`, `spotlight-card.tsx`
+
+The two pointer-reactive effects on the hero, and the only two on the site.
+Both are purely additive light: **nothing moves, scales or tilts.** That is the
+constraint, not an accident — the review took the tilt and the magnetic button
+pull off this page for being too casual, and a card that leans as you approach
+it puts that straight back. What it did single out as working was "the hover
+lighting up and the translucent background".
+
+- `<Spotlight>` is the band-wide glow behind the hero. Deliberately faint: at
+  its original 0.16 it read as a light being carried around behind the
+  headline. You should not be able to say what it is, only that the ground is
+  not flat.
+- `<SpotlightCard>` lights the case-study card's rim where the pointer is. The
+  trick worth knowing: a radial gradient is painted across the whole card and
+  then masked down to its 1px rim by compositing two masks — one over the
+  content box, one over the border box — and subtracting the first from the
+  second. A second, wider, much fainter layer sheens the surface so the card
+  reads as catching light rather than as an outline switching on.
+
+Neither is constructed at all under reduced motion, both overlays are
+`pointer-events-none` so the card's link stays clickable, and on a touch device
+the pointer never enters so they simply never run.
+
 ### The highlighter — `marker.tsx`
 
 Every highlighted phrase on the page used to be a flat rectangle of brand

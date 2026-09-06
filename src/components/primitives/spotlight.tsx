@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { cn } from '@/lib/utils'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import { useEffect, useRef, useState } from "react"
+import { cn } from "@/lib/utils"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 
 /**
  * A soft light that follows the pointer across a dark band.
@@ -8,11 +8,15 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
  * This is the one place a radial gradient is allowed. It is pure white at very
  * low alpha over navy, so it lifts the ground without introducing a hue — the
  * palette check skips it because nothing here is opaque.
+ *
+ * Deliberately faint. At 0.16 it read as a light being carried around behind
+ * the headline; the point is that you should not be able to say what it is,
+ * only that the ground is not flat.
  */
 export function Spotlight({
   className,
-  size = 620,
-  strength = 0.16,
+  size = 560,
+  strength = 0.075,
 }: {
   className?: string
   size?: number
@@ -37,11 +41,11 @@ export function Spotlight({
     }
     const onLeave = () => setPos((p) => ({ ...p, on: false }))
 
-    node.addEventListener('pointermove', onMove, { passive: true })
-    node.addEventListener('pointerleave', onLeave)
+    node.addEventListener("pointermove", onMove, { passive: true })
+    node.addEventListener("pointerleave", onLeave)
     return () => {
-      node.removeEventListener('pointermove', onMove)
-      node.removeEventListener('pointerleave', onLeave)
+      node.removeEventListener("pointermove", onMove)
+      node.removeEventListener("pointerleave", onLeave)
     }
   }, [reduced])
 
@@ -50,10 +54,10 @@ export function Spotlight({
       ref={ref}
       aria-hidden="true"
       className={cn(
-        'pointer-events-none absolute inset-0 hidden overflow-hidden transition-opacity duration-700 lg:block',
-        className,
+        "pointer-events-none absolute inset-0 hidden overflow-hidden transition-opacity duration-700 lg:block",
+        className
       )}
-      style={{ opacity: pos.on ? 1 : 0.55 }}
+      style={{ opacity: pos.on ? 1 : 0.4 }}
     >
       <div
         className="absolute"
@@ -63,7 +67,8 @@ export function Spotlight({
           left: `calc(${pos.x * 100}% - ${size / 2}px)`,
           top: `calc(${pos.y * 100}% - ${size / 2}px)`,
           background: `radial-gradient(circle, rgb(255 255 255 / ${strength}), transparent 62%)`,
-          transition: 'left 600ms cubic-bezier(0.22,1,0.36,1), top 600ms cubic-bezier(0.22,1,0.36,1)',
+          transition:
+            "left 600ms cubic-bezier(0.22,1,0.36,1), top 600ms cubic-bezier(0.22,1,0.36,1)",
         }}
       />
     </div>
