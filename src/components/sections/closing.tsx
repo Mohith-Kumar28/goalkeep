@@ -33,22 +33,14 @@ export function Closing() {
     >
       <div className="shell relative grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <Reveal>
-            <p className="eyebrow mb-5 text-[var(--gk-yellow)]">{closing.eyebrow}</p>
-          </Reveal>
-
+          {/* The eyebrow and the second headline line ("Sub: remove") both
+              went in the copy replacement. One sentence, then the buttons. */}
           <Reveal delay={0.12}>
-            <h2 id="closing-heading" className="display max-w-[17ch]">
+            <h2 id="closing-heading" className="display max-w-[19ch]">
               {closing.headlineLead}{' '}
               <Marker>{closing.headlineKeyword}</Marker>{' '}
               {closing.headlineTail}
             </h2>
-          </Reveal>
-
-          <Reveal delay={0.26}>
-            <p className="mt-5 max-w-[30ch] text-[length:clamp(1.25rem,2.4vw,1.875rem)] font-bold leading-tight text-[var(--gk-yellow)]">
-              {closing.headlineSecondLine}
-            </p>
           </Reveal>
 
           <Reveal delay={0.4}>

@@ -20,7 +20,7 @@ export function SiteFooter() {
             <Link to="/" aria-label="Goalkeep, home">
               <Wordmark />
             </Link>
-            <p className="max-w-[34ch] text-[length:var(--fs-sm)] text-[var(--fg-2)]">
+            <p className="max-w-[38ch] text-[length:var(--fs-sm)] text-[var(--fg-2)]">
               {site.tagline}
             </p>
           </div>
@@ -55,10 +55,10 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-[var(--hairline)] pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
-            Goalkeep — data consultancy for the social sector. Mumbai, India.
-          </p>
+        {/* The copy replacement folded the descriptor line that used to sit
+            here into the tagline above, so the bottom rule carries the
+            copyright alone. */}
+        <div className="mt-12 flex flex-col gap-2 border-t border-[var(--hairline)] pt-6 md:flex-row md:items-center md:justify-end">
           <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
             © {new Date().getFullYear()} Goalkeep
           </p>

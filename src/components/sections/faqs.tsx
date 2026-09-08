@@ -4,7 +4,8 @@ import { faqSection, faqs } from '@/content/homepage'
 import { cn } from '@/lib/utils'
 
 /**
- * Five questions, cut from seven, with answers a third of their old length.
+ * Seven questions, drafted for nonprofits with limited data maturity, tight
+ * budgets and a real need to show the impact of their programmes.
  *
  * Hairlines only — no cards, no fills. This is the one band on the page with
  * no surface of its own, which is what stops a page of stickers and photo
@@ -32,14 +33,13 @@ export function Faqs() {
       <div className="shell grid gap-10 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-4 md:sticky md:top-32 md:self-start">
           <Reveal>
-            <p className="eyebrow mb-3">{faqSection.eyebrow}</p>
+            {/* The eyebrow, the "Including the ones that cost us the work"
+                line and the handwritten "Still stuck?" aside all went in the
+                copy replacement. The doc gives this column one sentence, so
+                that is what it holds. */}
             <h2 id="faqs-heading" className="h2">
               {faqSection.headline}
             </h2>
-            <p className="lead mt-4 max-w-[32ch]">{faqSection.lead}</p>
-            <p className="hand mt-8 max-w-[24ch] text-[var(--gk-coral-ink)]">
-              {faqSection.aside}
-            </p>
           </Reveal>
         </div>
 

@@ -23,7 +23,7 @@ export function Credibility() {
       className="ground-cream band accent-blue relative !py-14 md:!py-16"
       aria-labelledby="credibility-heading"
     >
-      <div className="shell mb-10 flex justify-center">
+      <div className="shell mb-10 flex flex-col items-center gap-3 text-center">
         {/* Centred, so the eyebrow's leading rule is suppressed here — a
             dash hanging off the left of a centred label reads as a mistake. */}
         <h2
@@ -32,6 +32,12 @@ export function Credibility() {
         >
           {ticker.heading}
         </h2>
+        {/* Added in the copy replacement. Kept at body size and one step down
+            in colour: the heading above it is already a small label, so a
+            second line of equal weight would read as two headings. */}
+        <p className="max-w-[46ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
+          {ticker.subline}
+        </p>
       </div>
 
       <div className="ticker-mask">

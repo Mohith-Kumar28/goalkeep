@@ -5,17 +5,27 @@ import type {
   FieldNote,
   Pillar,
   PullQuote,
-  StatCard,
 } from './types'
 
 /**
  * Homepage copy.
  *
- * Cut from roughly 3,800 words to under 1,400 in September 2026. The feedback
- * was that the page reads text-centric and that a social-sector site has to
- * show the community it works with. Nothing distinctive was rewritten — the
- * voice ("what took longer than we said it would", "including the ones that
- * cost us the work") is the asset. It was shortened, not replaced.
+ * Replaced wholesale in September 2026 from "Goalkeep Homepage | Copy
+ * Replacement". That document is now the source of truth for every string in
+ * this file: where it gave a replacement the replacement is used verbatim,
+ * where it said "keep same" the existing line stands, and where it said
+ * "remove" the field is gone rather than commented out.
+ *
+ * Two consequences worth knowing before editing:
+ *
+ *   · The page has far fewer hard numbers than it did. The what-we-do stat
+ *     band was cut, the case-study cards no longer lead on a before/after
+ *     figure, and the hero card carries a sentence instead of a stat. The
+ *     numbers band is the one place numbers still live.
+ *   · The audience blocks changed shape. They used to open with a fill-in-the
+ *     -blanks sentence; they now open with a question and run as prose, with
+ *     one highlighted run per segment — the three colours the client marked in
+ *     the doc.
  */
 
 /* ============================================================
@@ -23,7 +33,7 @@ import type {
    ============================================================ */
 
 export const hero = {
-  eyebrow: 'Data work for the social sector',
+  /* "Eyebrow: Remove". The headline, subheader and buttons keep same. */
   /* Client's line, used exactly as written in the feedback doc. */
   headlineLead: "MEL systems aren't just meant to measure impact, but also",
   /* Kept short and unbreakable so the hand-drawn squiggle underneath it can
@@ -60,30 +70,48 @@ export const hero = {
     { src: '/photos/hero-03-circle.webp', alt: '' },
     { src: '/photos/hero-04-pair.webp', alt: '' },
   ],
-  /** Rotating proof card. One organisation, one number, one photograph. */
+  /**
+   * The rotating proof card. One organisation, one outcome, one photograph.
+   *
+   * The before/after stat is gone — "11 hrs → 40 min / monthly reporting
+   * cycle" became a sentence about what the number bought. Only the Baithak
+   * card was specified in the copy doc; the other two carry the client's own
+   * case-study lines from section 9 of the same document so nothing here is
+   * written by us.
+   */
   proofCards: [
     {
       org: 'Baithak Foundation',
       image: '/photos/case-baithak.webp',
       imageAlt: 'A Baithak Foundation music session in progress',
-      stat: '11 hrs \u2192 40 min',
-      line: 'monthly reporting cycle',
+      line: {
+        value:
+          'Funding grant closed with the help of evidence pulled from their dashboard in seconds.',
+      },
       to: '/case-studies',
     },
     {
       org: 'Vanavil Trust',
       image: '/photos/case-vanavil.webp',
       imageAlt: 'Children studying in a Vanavil Trust classroom',
-      stat: '9 weeks',
-      line: 'from paper register to first baseline',
+      line: {
+        value:
+          'From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators.',
+        verify:
+          'The copy doc replaced the Baithak card only. This line is trimmed from Vanavil’s own case-study card in the same document — confirm it should carry the hero rotation, or drop the rotation to the single Baithak card.',
+      },
       to: '/case-studies',
     },
     {
       org: 'Apni Shala Foundation',
       image: '/photos/case-apni-shala.webp',
       imageAlt: 'A student working on a craft activity at Apni Shala',
-      stat: '4 formats \u2192 1',
-      line: 'shared indicator set across teams',
+      line: {
+        value:
+          'A handful of hero metrics on the weekly dashboard surfaced student learning gaps that used to wait for year-end.',
+        verify:
+          'As above — trimmed from Apni Shala’s case-study card, not specified for the hero.',
+      },
       to: '/case-studies',
     },
   ],
@@ -96,6 +124,8 @@ export const hero = {
 export const ticker = {
   /* Feedback: "Change top text only to: Partners who trust us (centred)". */
   heading: 'Partners who trust us',
+  /* Added in the copy replacement. */
+  subline: 'Nonprofits, funders and intermediaries we have worked with across India.',
 }
 
 /* ============================================================
@@ -104,22 +134,26 @@ export const ticker = {
 
 export const whatWeDo = {
   eyebrow: 'what we do',
-  headline: 'Design, build, adopt.',
-  headlineTail: 'In that order, and usually more than once.',
+  headline: 'Most of the projects we take on',
+  headlineTail: 'involve one or more of the following.',
   lead: 'Hover a stage to see what it actually looks like.',
   cta: { label: 'See how we scope a project', to: '/what-we-do' },
 }
 
+/*
+ * The three stages carry the client's full paragraphs now. The short
+ * card-length summaries the section used to open with are gone: the copy doc
+ * replaced them with these, and running both would have meant two versions of
+ * the same sentence living one field apart.
+ */
 export const pillars: Array<Pillar> = [
   {
     index: '01',
     hue: 'blue',
     title: 'Design',
     body:
-      'Paper logs, Excel, an inherited dashboard — we start by getting the foundations right.',
-    bodyFull:
       'Most organizations have a systems design that is not adept at capturing data that actually feeds back into their program. So whether you’re working with manual data logs, excel sheets or an existing data dashboard, we help set your data foundations right.',
-    handwritten: 'who is the data actually for?',
+    handwritten: 'If we collect this information, what action will it help us take?',
     marginalia: 'we ask this first, every time',
     images: [
       { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a Goalkeep design workshop' },
@@ -131,12 +165,8 @@ export const pillars: Array<Pillar> = [
     hue: 'teal',
     title: 'Build',
     body:
-      'Data was never meant to be this daunting. We build dashboards anyone can read without being walked through them.',
-    bodyFull:
-      'Data was never meant to be this daunting, complex being. We invest time in building intuitive dashboards that are easy to read and even easier to use, so that people across the org can navigate them comfortably.',
-    /* The source doc drops a negation here ("should have all the possible
-       data on it be intuitive"). Restored; flagged in VERIFY.md. */
-    handwritten: 'not every number — just the ones that change a decision',
+      'Data was never meant to be this daunting, complex being. We invest time in building intuitive dashboards that are easy to read and even easier to use, so that people across the org can navigate them comfortably, and not get overwhelmed by the data.',
+    handwritten: 'Focus less on showing all the data, and more on showing the right data',
     marginalia: 'boring traffic-light rubric. works.',
     images: [
       { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field' },
@@ -148,10 +178,9 @@ export const pillars: Array<Pillar> = [
     hue: 'coral',
     title: 'Adopt',
     body:
-      'What’s the point of a dashboard nobody opens? We train your team until using it is just how Monday works.',
-    bodyFull:
       'What’s the point of a shiny dashboard when no one in the organization is using it? A big focus of our work is to conduct trainings and workshops on enabling data adoption, so that people of every level of the org can use the data being collected to make better decisions.',
-    handwritten: 'we hand over the keys, then we leave',
+    handwritten:
+      'Data adoption is a marathon you practise for every week, not a sprint you run once every few months.',
     images: [
       { src: '/photos/phase-adopt-a.webp', alt: 'A partner team working through a build session with Goalkeep' },
       { src: '/photos/phase-adopt-b.webp', alt: 'A Goalkeep facilitator walking a colleague through data on a phone' },
@@ -159,22 +188,18 @@ export const pillars: Array<Pillar> = [
   },
 ]
 
-export const whatWeDoStat: StatCard = {
-  value: {
-    figure: '4 hrs',
-    sentence: 'saved every Monday by one MEL lead after we rebuilt their reporting flow.',
-  },
-  verify: 'Attribution and the real figure. Taken from the brand book example.',
-}
+/* "Stat band: Remove". The 4-hrs-every-Monday figure is gone from this
+   section; the CTA it shared a row with survives on its own. */
 
 /* ============================================================
-   4 · Whom we do it for — coral tint
+   4 · Whom we do it for — pale blue
    ============================================================ */
 
 export const audienceSection = {
   eyebrow: 'whom we do it for',
-  headline: 'Three kinds of teams call us.',
-  headlineTail: 'They call for very different reasons.',
+  headline: 'We’ve worked with three kinds of organizations.',
+  headlineTail:
+    'You may choose which one resonates most closely to you, and we’ll tell you how we helped them.',
   photoCredit: {
     value: 'Partner names and locations on the carousel captions',
     verify:
@@ -186,11 +211,16 @@ export const audiences: Array<Audience> = [
   {
     id: 'early-stage',
     label: 'Early-stage NGOs',
-    challengeLead: 'Early-stage NGOs often struggle with',
-    challengeBlanks: ['messy spreadsheets', 'reporting season', 'numbers nobody owns'],
-    challengeTail:
-      'Data is scattered, budgets are tight, and the impact you know you’re having is the hardest thing to prove. Having worked with 30+ early-stage NGOs, we have the tools to organise a broken data system.',
-    circled: '30+ early-stage NGOs',
+    header:
+      'Does your organization have a lot of data but it’s often a struggle for your teams to make sense of it and use it effectively?',
+    body: [
+      'Being able to use information to make better decisions shouldn’t only be for large organisations that already have the tech and the people in place. Our Kickstarter programme helps smaller organisations put the basic systems in place to measure their Theory of Change, use that information to improve the program-related decisions, and communicate that impact so they are in a position to attract better funding.',
+      'Many small nonprofits assume that building an impact monitoring system requires complex software, dedicated data teams or significant technical expertise. It doesn’t.',
+    ],
+    highlight: {
+      text: 'measure their Theory of Change, use that information to improve the program-related decisions, and communicate that impact so they are in a position to attract better funding.',
+      hue: 'var(--gk-yellow)',
+    },
     photos: [
       { src: '/photos/org-vanavil.webp', alt: 'Children studying in a Vanavil Trust classroom', org: 'Vanavil Trust', location: 'Tamil Nadu' },
       { src: '/photos/org-apni-shala.webp', alt: 'A student working on a craft activity', org: 'Apni Shala Foundation', location: 'Mumbai' },
@@ -201,28 +231,28 @@ export const audiences: Array<Audience> = [
     testimonial: {
       quote: {
         value: {
-          text: 'We didn’t need a dashboard. We needed to agree on what we were counting.',
-          attribution: 'Dakshayini, Baithak Foundation',
+          text: 'The fact that Goalkeep made us think about this is itself valuable.',
+          attribution: 'Revathi Radhakrishnan, Vanavil Trust',
         },
-        verify:
-          'BLOCKING — this quote is currently a placeholder attributed to a real, named person. Get Dakshayini’s actual words and written permission, or pull the attribution.',
       },
-      name: 'Dakshayini',
-      credentials: 'Baithak Foundation',
-      photo: '/photos/testimonial-dakshayini.webp',
+      name: 'Revathi Radhakrishnan',
+      credentials: 'Vanavil Trust',
     },
-    primaryCta: { label: 'See the Kickstarter program', to: '/programs/kickstarter' },
-    secondaryCta: { label: 'Read the case studies', to: '/case-studies' },
+    cta: { label: 'See our Kickstarter programme', to: '/programs/kickstarter' },
   },
   {
-    /* Renamed from 'mid-sized' per the feedback. */
     id: 'data-mature',
-    label: 'Data mature nonprofits',
-    challengeLead: 'Data mature nonprofits often struggle with',
-    challengeBlanks: ['four versions of one number', 'one laptop holding the baseline', 'board decks that don’t match the field'],
-    challengeTail:
-      'You have an MEL lead. She’s excellent. She’s also the bottleneck — every number the board sees passes through her. If she leaves, the baseline leaves with her.',
-    circled: 'the baseline leaves with her',
+    label: 'Data-mature nonprofits',
+    header:
+      'Has your organization built data systems that your teams just aren’t using, despite conducting several trainings?',
+    body: [
+      'Getting teams to adopt a system that they’re not used to is a challenge. Several organizations pour in a ton of resources on data trainings, MEL workshops, data reviews — just to realize that their adoption rate hasn’t moved much. That’s why, in our Data Literacy Program, we “train the trainers” — we will equip two members from your MEL team with the skills and toolkits they need to percolate an organization-wide data culture, so that the data systems you built actually get used and adopted by your teams.',
+      'The 42 MEL leads we have trained so far have gone on to train 700+ people across their organizations.',
+    ],
+    highlight: {
+      text: 'we will equip two members from your MEL team with the skills and toolkits they need to percolate an organization-wide data culture, so that the data systems you built actually get used and adopted by your teams.',
+      hue: 'var(--gk-coral-lift)',
+    },
     photos: [
       { src: '/photos/org-baithak.webp', alt: 'A Baithak Foundation music session in progress', org: 'Baithak Foundation', location: 'Pune' },
       { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field', org: 'Live dashboard', location: 'In the field' },
@@ -233,27 +263,30 @@ export const audiences: Array<Audience> = [
     testimonial: {
       quote: {
         value: {
-          text: 'For the first time, the number in the board deck matched the number in the field.',
-          attribution: 'MEL lead, health nonprofit working in six states',
+          text: 'We constantly do trainings for tech and data, but we don’t do it as systematically as you all explain.',
+          attribution: 'Shivangi Desai, Goonj',
         },
-        verify: 'Real quote and attribution, or written permission to run it anonymised.',
       },
-      name: 'MEL lead',
-      credentials: 'Health nonprofit, six states',
-      photo: '/photos/note-01.webp',
+      name: 'Shivangi Desai',
+      credentials: 'Goonj',
     },
-    primaryCta: { label: 'See custom projects', to: '/custom-projects' },
-    secondaryCta: { label: 'Read the case studies', to: '/case-studies' },
+    cta: { label: 'See the Data Literacy Programme', to: '/programs/data-literacy' },
   },
   {
-    /* Renamed from 'funders' per the feedback. */
     id: 'intermediary',
-    label: 'Intermediary partnerships',
-    challengeLead: 'Intermediaries and funders often struggle with',
-    challengeBlanks: ['30 reports, no portfolio view', 'indicators nobody collects', 'grantees guessing the ask'],
-    challengeTail:
-      'You fund 30 organisations and get 30 different reports. Half the indicators you ask for were never collected in the first place — so the honest fix usually starts with changing the ask.',
-    circled: 'changing the ask',
+    label: 'Intermediary partners',
+    header:
+      'Are you looking to build the capacities of your partner organizations that will enable them to scale their programs and deepen their impact?',
+    body: [
+      /* "the funding we have to organization X" is verbatim from the copy doc.
+         Reads like a slip for "gave"; flagged rather than silently corrected. */
+      'As an intermediary that usually sits in the middle of both funders and nonprofits, a question you need to answer often is probably this: what impact did the funding we have to organization X create? It’s not always the easiest to answer if the data systems in place are outdated, messy, and not effectively mapped to their theory of change.',
+      'That’s where we step in, by conducting trainings with your partner orgs so that they learn to use data and not anecdotal evidence to drive both their impact communication and their internal decision making.',
+    ],
+    highlight: {
+      text: 'what impact did the funding we have to organization X create? It’s not always the easiest to answer if the data systems in place are outdated, messy, and not effectively mapped to their theory of change.',
+      hue: 'var(--gk-teal-lift)',
+    },
     photos: [
       { src: '/photos/org-veruschka.webp', alt: 'A culinary training session at Veruschka Foundation', org: 'Veruschka Foundation', location: 'Mumbai' },
       { src: '/photos/group-lineup.webp', alt: 'A Goalkeep and partner team group photograph', org: 'Partner cohort', location: 'Convening' },
@@ -264,17 +297,14 @@ export const audiences: Array<Audience> = [
     testimonial: {
       quote: {
         value: {
-          text: 'Our indicators were asking grantees for things they’d never collect. So we changed the ask.',
-          attribution: 'Program officer, Indian foundation',
+          text: 'I have seen how much attention to detail Goalkeep gives to any program that they are part of. The way they bond and form relationships with the participating NGOs is strong and it is always a nice experience to partner with them.',
+          attribution: 'Freya Ray, Dasra',
         },
-        verify: 'Real quote and attribution, or written permission to run it anonymised.',
       },
-      name: 'Program officer',
-      credentials: 'Indian foundation',
-      photo: '/photos/note-02.webp',
+      name: 'Freya Ray',
+      credentials: 'Dasra',
     },
-    primaryCta: { label: 'Partner with us', to: '/partner-with-us' },
-    secondaryCta: { label: 'Read the case studies', to: '/case-studies' },
+    cta: { label: 'Partner with us', to: '/partner-with-us' },
   },
 ]
 
@@ -282,6 +312,7 @@ export const audiences: Array<Audience> = [
    5 · Proof — navy
    ============================================================ */
 
+/* "Keep this the same for now." */
 export const proof = {
   eyebrow: 'the short version',
   headline: 'Six years of this.',
@@ -299,135 +330,137 @@ export const proof = {
       verify: 'Source and sample size for the 73% figure — it appears in the brand book.',
     },
     {
-      value: { figure: 4, suffix: '\u00A0hrs', sentence: 'back every Monday for one MEL lead' },
+      value: { figure: 4, suffix: ' hrs', sentence: 'back every Monday for one MEL lead' },
       verify: 'Attribution and the real figure.',
     },
   ],
 }
 
 /* ============================================================
-   6 · Case studies — navy
+   6 · Case studies — cream
    ============================================================ */
 
 export const caseStudySection = {
   eyebrow: 'case studies',
   headline: 'What changed,',
-  headlineTail: 'and what took longer than we said it would.',
+  headlineTail: 'and what it took to get there.',
   cta: { label: 'Read all case studies', to: '/case-studies' },
 }
 
+/*
+ * Four cards, all named organisations, each led by what actually changed
+ * rather than a before/after figure. The Veruschka card and the post-mortem
+ * card ("Delete the post-mortem card") were both cut in the copy replacement.
+ */
 export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'baithak-reporting',
+    org: 'Baithak Foundation',
+    tag: 'Kickstarter',
+    body: 'A dashboard that helped close a ₹25 lakh grant. What convinced the funder wasn’t the dashboard, but that every person on the team used it regularly.',
     image: '/photos/case-baithak.webp',
     imageAlt: 'A Baithak Foundation music session in progress',
-    tags: ['M&E'],
-    title: 'Reporting rebuilt around one weekly question',
-    stat: {
-      value: '11 hrs → 40 min',
-      verify: 'Real before/after figures, the organisation name, and permission to publish.',
-    },
   },
   {
     slug: 'vanavil-baseline',
+    org: 'Vanavil Trust',
+    tag: 'Kickstarter',
+    body: 'From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators that could give them a better glimpse of program gaps and successes.',
     image: '/photos/case-vanavil.webp',
     imageAlt: 'Children studying in a Vanavil Trust classroom',
-    tags: ['Data strategy'],
-    title: 'From a paper register to a baseline in nine weeks',
-    stat: {
-      value: '9 weeks',
-      verify: 'Real timeline and permission to name the organisation.',
-    },
+  },
+  {
+    slug: 'peepul-leadership-dashboard',
+    org: 'Peepul',
+    tag: 'Custom project',
+    body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
+    image: '/photos/case-dashboard.webp',
+    imageAlt: 'A programme dashboard open on a laptop',
   },
   {
     slug: 'apni-shala-indicators',
+    org: 'Apni Shala Foundation',
+    tag: 'Kickstarter',
+    body: 'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
     image: '/photos/case-apni-shala.webp',
     imageAlt: 'A student working on a craft activity',
-    tags: ['Capacity'],
-    title: 'Four versions of one number became one shared set',
-    stat: {
-      value: '4 formats → 1',
-      verify: 'Real figures and permission to name the organisation.',
-    },
-  },
-  {
-    slug: 'veruschka-grantee-form',
-    image: '/photos/case-veruschka.webp',
-    imageAlt: 'A culinary training session at Veruschka Foundation',
-    tags: ['Data strategy'],
-    title: 'A grantee form cut by half returned better data',
-    stat: {
-      value: '38 indicators → 17',
-      verify: 'Real figures and permission to name the organisation.',
-    },
-  },
-  {
-    slug: 'the-dashboard-was-wrong',
-    tags: ['Post-mortem'],
-    inverse: true,
-    title: 'The project where the dashboard was the wrong answer',
-    body: 'We built it. Nobody opened it. Here’s what we’d do differently, and what we refunded.',
-    stat: {
-      value: 'Published in full',
-      verify:
-        'Whether Goalkeep will publish a failure case. This card is the page’s credibility keystone — push for it.',
-    },
   },
 ]
 
 /* ============================================================
-   7 · FAQs — cream
+   7 · FAQs — pale blue
    ============================================================ */
 
+/* The heading is one plain sentence now. The eyebrow, the "Including the ones
+   that cost us the work" line and the handwritten "Still stuck? Write to us"
+   aside all went with the copy replacement — the doc gives this section one
+   heading and seven questions, and the aside was dev-build copy repeating a
+   promise the closing band already makes. */
 export const faqSection = {
-  eyebrow: 'straight answers',
   headline: 'Questions we get in the first call.',
-  lead: 'Including the ones that cost us the work.',
-  aside: 'Still stuck? Write to us. Replies come from a person.',
 }
 
-/* Cut from seven long answers to five short ones. The long-form versions
-   belong on /what-we-do and /contact, not in a homepage accordion. */
+/* Seven questions, drafted for nonprofits with limited data maturity, tight
+   budgets and a real need to show the impact of their programmes. The pricing
+   and timeline commitments the old set made are gone. */
 export const faqs: Array<Faq> = [
-  {
-    value: {
-      question: 'What does this cost?',
-      answer:
-        'Scoped, not priced off a rate card. A short audit, a milestone-based build, or a retainer while your team learns. Kickstarter is our fixed-scope, fixed-price option for early-stage orgs. You get a number and a scope in writing before you commit.',
-    },
-    verify: 'Engagement shapes and the Kickstarter pricing model, with Manije.',
-  },
-  {
-    value: {
-      question: 'How long until we see something useful?',
-      answer:
-        'Audit findings in week two or three. A first working dashboard six to 10 weeks in. Adoption is the long part — budget three months for the build and a year for the habit.',
-    },
-    verify: 'Real timelines.',
-  },
   {
     value: {
       question: 'We don’t have a data team. Is that a problem?',
       answer:
-        'No — that’s most of our clients. We need one person who owns the answer to “is this number right”, even if data isn’t in their job title. If nobody can own that, we’ll say so early.',
+        'No, and that describes most of the organisations we work with. Some of the strongest data practitioners in nonprofits come from programme teams, because they already understand the context, the constraints and the decisions the data needs to inform. What matters is that someone in the organisation is willing to own the answer to “is this number right”, even if data isn’t in their job title.',
+    },
+  },
+  {
+    value: {
+      question: 'We already collect a lot of data. Why would we need help?',
+      answer:
+        'Most organisations we meet have no shortage of data. The difficulty is that it was collected to report upward rather than to decide anything. Before adding a new indicator, it helps to ask: who will look at this, and what decision will it change? If there isn’t a good answer, it isn’t free to collect.',
     },
   },
   {
     value: {
       question: 'Do we get a dashboard at the end?',
       answer:
-        'Often, not always. Sometimes the real fix is a cleaner form, a 20-line script, or one recurring meeting where three people look at the same number. We’ve built dashboards nobody opened, and we’d rather not do it again.',
+        'Often, but the dashboard is rarely the point. With Vanavil Trust, the biggest change wasn’t the dashboard, it was that the team stopped asking “what data should we collect” and started asking “what information will actually help us make better decisions”. The most important step isn’t choosing the right software or collecting more data. It’s agreeing on what matters enough to measure.',
     },
-    verify: 'Confirm we’re comfortable saying this on the homepage.',
   },
   {
     value: {
-      question: 'What happens to our data?',
+      question: 'Our budget is small. Where do we start?',
       answer:
-        'It stays yours. We work inside your systems and your accounts wherever possible. Where we need a copy we agree in writing what it holds, who can see it and when it’s deleted — and we don’t use client data to build anything for anyone else.',
+        'Our Kickstarter program is designed for exactly this. It is meant for smaller organisations who need the basic systems in place, without a large upfront commitment. More generally, most guidance suggests setting aside 5 to 10 percent of a project budget for MEL. The number matters less than the habit: decide what MEL needs before the rest of the budget is locked, not after.',
+    },
+  },
+  {
+    value: {
+      question: 'Our funder treats MEL as overhead. What do we say?',
+      answer:
+        'Come prepared to explain why it isn’t. India’s CSR rules cap administrative overheads at 5 percent of expenditure, but define these narrowly as general management of a company’s CSR function, explicitly excluding costs incurred for designing, implementing, monitoring and evaluating a project. MEL is no more overhead than a map is on a road trip. You still need to know if you’re headed the right way.',
     },
     verify:
-      'LEGAL REVIEW REQUIRED before publishing. Every sentence here is a commitment.',
+      'The reading of the CSR overhead rule, with someone who can stand behind it — this answer tells funders what the law says.',
+  },
+  {
+    value: {
+      question: 'Should we just hire a data person instead?',
+      answer:
+        'You may well need to, but a hire alone usually changes very little. Data talent isn’t a single role, it’s a spectrum, from defining what to collect, to analysing it, to building and maintaining the systems underneath. Expecting one hire to cover all of it is unrealistic. Bringing in outside help is a bit like hiring an architect before constructing a building. The goal isn’t to outsource ownership, it’s to get specialised expertise at the moments it matters.',
+    },
+  },
+  {
+    /* Verbatim from the copy doc, bracket and closing note included. That
+       answer is unfinished — it is the one question the document left open —
+       and running it as written keeps the gap visible on the page instead of
+       hiding it behind a plausible-sounding half-answer. Replace the whole
+       string once Goalkeep says what handover includes. */
+    value: {
+      question: 'What happens after you leave?',
+      answer:
+        '[Goalkeep to confirm the specifics.] The intent, in Goalkeep’s own words, is that people at every level of the organisation can use the data being collected to make better decisions once we’re gone. Worth stating here what handover actually includes: documentation, training, and who to call.',
+    },
+    verify:
+      'BLOCKING — this answer is a placeholder and currently reads as one on the page. Goalkeep to confirm what handover actually includes: documentation, training, and who to call.',
   },
 ]
 
@@ -435,6 +468,7 @@ export const faqs: Array<Faq> = [
    8 · Field notes — cream deep
    ============================================================ */
 
+/* "Keep same." */
 export const fieldNoteSection = {
   eyebrow: 'field notes',
   headline: 'What we’re learning, written down.',
@@ -481,17 +515,20 @@ export const fieldNotes: Array<FieldNote> = [
    9 · Closing — navy
    ============================================================ */
 
+/* The eyebrow and the second headline line ("Sub: remove") are gone. What is
+   left is one sentence and two buttons. */
 export const closing = {
-  eyebrow: 'one more thing',
-  headlineLead: 'Tell us the',
-  headlineKeyword: 'decision',
-  headlineTail: 'you’re stuck on.',
-  headlineSecondLine: 'We’ll tell you if data is even the problem.',
-  primaryCta: { label: 'Start a conversation', to: '/contact' },
-  secondaryCta: { label: 'Take the data culture quiz', to: '/resources/data-quiz' },
+  /* Split three ways so the highlighter lands on one short word. `.marker` is
+     an inline-block and cannot break across lines, so a marked phrase set at
+     display size has to be short enough to survive a 360px viewport. */
+  headlineLead: 'Make your next program decision with more',
+  headlineKeyword: 'clarity',
+  headlineTail: 'and certainty.',
+  primaryCta: { label: 'Talk to us', to: '/contact' },
+  secondaryCta: { label: 'Take our data culture quiz', to: '/resources/data-quiz' },
   marginalia: {
-    value: 'replies come from\na person, usually\nwithin two days',
-    verify: 'The response-time promise, with Manije.',
+    value: 'Replies come from\na person, usually\nwithin 24 hours',
+    verify: 'The 24-hour response-time promise, with Manije.',
   },
 }
 

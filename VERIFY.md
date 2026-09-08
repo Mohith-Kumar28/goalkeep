@@ -4,7 +4,7 @@ Generated from `src/content` by `pnpm verify:report`. Do not edit by hand:
 clear the `verify` field on a content entry once it is confirmed, and this
 list shrinks on its own.
 
-**20 items outstanding.**
+**11 items outstanding.**
 
 Nothing here is invented as fact. Every line is drafted in Goalkeep's
 published voice with plausible, non-inflated stand-ins, and every one needs
@@ -13,61 +13,55 @@ a real number, a real name, or a permission before launch.
 | # | Where | What the page currently says | What to confirm |
 |---|---|---|---|
 | 1 | `homepage.audienceSection.photoCredit` | Partner names and locations on the carousel captions | Confirm the organisation and city on every carousel caption before launch. The four case-study covers are named in Drive; the workshop and field frames are labelled generically until someone confirms which partner site they were shot at. |
-| 2 | `homepage.audiences.0.testimonial.quote` | We didn’t need a dashboard. We needed to agree on what we were counting. — Dakshayini, Baithak Foundation | BLOCKING — this quote is currently a placeholder attributed to a real, named person. Get Dakshayini’s actual words and written permission, or pull the attribution. |
-| 3 | `homepage.audiences.1.testimonial.quote` | For the first time, the number in the board deck matched the number in the field. — MEL lead, health nonprofit working i | Real quote and attribution, or written permission to run it anonymised. |
-| 4 | `homepage.audiences.2.testimonial.quote` | Our indicators were asking grantees for things they’d never collect. So we changed the ask. — Program officer, Indian fo | Real quote and attribution, or written permission to run it anonymised. |
-| 5 | `homepage.caseStudies.0.stat` | 11 hrs → 40 min | Real before/after figures, the organisation name, and permission to publish. |
-| 6 | `homepage.caseStudies.1.stat` | 9 weeks | Real timeline and permission to name the organisation. |
-| 7 | `homepage.caseStudies.2.stat` | 4 formats → 1 | Real figures and permission to name the organisation. |
-| 8 | `homepage.caseStudies.3.stat` | 38 indicators → 17 | Real figures and permission to name the organisation. |
-| 9 | `homepage.caseStudies.4.stat` | Published in full | Whether Goalkeep will publish a failure case. This card is the page’s credibility keystone — push for it. |
-| 10 | `homepage.closing.marginalia` | replies come from
+| 2 | `homepage.closing.marginalia` | Replies come from
 a person, usually
-within two days | The response-time promise, with Manije. |
-| 11 | `homepage.faqs.0` | What does this cost? — Scoped, not priced off a rate card. A short audit, a milestone-based build, or a retainer while y | Engagement shapes and the Kickstarter pricing model, with Manije. |
-| 12 | `homepage.faqs.1` | How long until we see something useful? — Audit findings in week two or three. A first working dashboard six to 10 weeks | Real timelines. |
-| 13 | `homepage.faqs.3` | Do we get a dashboard at the end? — Often, not always. Sometimes the real fix is a cleaner form, a 20-line script, or on | Confirm we’re comfortable saying this on the homepage. |
-| 14 | `homepage.faqs.4` | What happens to our data? — It stays yours. We work inside your systems and your accounts wherever possible. Where we ne | LEGAL REVIEW REQUIRED before publishing. Every sentence here is a commitment. |
-| 15 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
-| 16 | `homepage.proof.stats.0` | + — early-stage NGOs we’ve worked with | The 30+ figure, quoted from the homepage feedback doc. |
-| 17 | `homepage.proof.stats.1` |  — organisations and the funders behind them | Counted from the logos on goalkeep.net. The site says “40+” elsewhere — settle on one. |
-| 18 | `homepage.proof.stats.2` | % — of dashboards we audit aren’t opened twice | Source and sample size for the 73% figure — it appears in the brand book. |
-| 19 | `homepage.proof.stats.3` |  hrs — back every Monday for one MEL lead | Attribution and the real figure. |
-| 20 | `homepage.whatWeDoStat` | 4 hrs — saved every Monday by one MEL lead after we rebuilt their reporting flow. | Attribution and the real figure. Taken from the brand book example. |
+within 24 hours | The 24-hour response-time promise, with Manije. |
+| 3 | `homepage.faqs.4` | Our funder treats MEL as overhead. What do we say? — Come prepared to explain why it isn’t. India’s CSR rules cap admini | The reading of the CSR overhead rule, with someone who can stand behind it — this answer tells funders what the law says. |
+| 4 | `homepage.faqs.6` | What happens after you leave? — [Goalkeep to confirm the specifics.] The intent, in Goalkeep’s own words, is that people | BLOCKING — this answer is a placeholder and currently reads as one on the page. Goalkeep to confirm what handover actually includes: documentation, training, and who to call. |
+| 5 | `homepage.hero.proofCards.1.line` | From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators. | The copy doc replaced the Baithak card only. This line is trimmed from Vanavil’s own case-study card in the same document — confirm it should carry the hero rotation, or drop the rotation to the single Baithak card. |
+| 6 | `homepage.hero.proofCards.2.line` | A handful of hero metrics on the weekly dashboard surfaced student learning gaps that used to wait for year-end. | As above — trimmed from Apni Shala’s case-study card, not specified for the hero. |
+| 7 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
+| 8 | `homepage.proof.stats.0` | + — early-stage NGOs we’ve worked with | The 30+ figure, quoted from the homepage feedback doc. |
+| 9 | `homepage.proof.stats.1` |  — organisations and the funders behind them | Counted from the logos on goalkeep.net. The site says “40+” elsewhere — settle on one. |
+| 10 | `homepage.proof.stats.2` | % — of dashboards we audit aren’t opened twice | Source and sample size for the 73% figure — it appears in the brand book. |
+| 11 | `homepage.proof.stats.3` |  hrs — back every Monday for one MEL lead | Attribution and the real figure. |
 
 ## Blocking before launch
 
-- **The data-privacy FAQ answer needs legal review.** Every sentence in it is
-  a commitment Goalkeep would be held to.
+- **The handover FAQ is unfinished.** "What happens after you leave?" is the
+  one answer the copy replacement left open — it says "Goalkeep to confirm
+  the specifics". It needs to name what handover actually includes:
+  documentation, training, and who to call.
 - **Logo permission** for all 27 partner marks. They now run at full colour
   and a third larger than before, which makes the permission question more
   pointed, not less.
-- **Dakshayini's testimonial.** The quote on the early-stage panel is a
-  placeholder attributed to a real, named person at a real organisation.
-  Either get her actual words in writing or pull the attribution. This is
-  the single most urgent item on this list.
-- **The failure case study.** The last card ("The project where the
-  dashboard was the wrong answer") is the page's credibility keystone. If
-  Goalkeep will not publish it, swap in a navy "how we work" card — but it
-  is worth pushing for, being the most on-brand thing the site could hold.
+- **Testimonial permission and portraits.** The three audience quotes are now
+  attributed to named people at named organisations — Revathi Radhakrishnan
+  (Vanavil Trust), Shivangi Desai (Goonj) and Freya Ray (Dasra). Written
+  permission for each, and a portrait: until one arrives the card shows a
+  monogram, because a stock photograph of somebody else beside a named quote
+  is not a thing to ship.
+- **The CSR overhead answer** tells funders what Indian law says. Somebody
+  who can stand behind that reading should sign it off.
 
 ## Back to Rumit
 
-- **A dropped negation in the feedback doc.** The Build handwritten line
-  reads "Your data dashboard should have all the possible data on it be
-  intuitive, focused, and easy to understand." That sentence is missing a
-  negation and a break. The site currently runs a short version of the
-  intended meaning — "not every number, just the ones that change a
-  decision" — which needs a yes or a rewrite.
-- **The Design phase note is cut off mid-sentence** ("then can the right 30%
-  be reserved for showing a simple "). The handwritten line in that panel is
-  ours, in voice, pending his version.
-- **The three blanks** in "Early-stage NGOs often struggle with ___, ___ and
-  ___" were filled in as "messy spreadsheets", "reporting season" and
-  "numbers nobody owns". His call.
-- **DLP video.** The two video links came through without URLs. The hero
-  currently runs a slow crossfade through four real field photographs, which
-  is the closest thing to footage we can build from what we have.
+- **A slip in the intermediary copy.** The body reads "what impact did the
+  funding we have to organization X create?" — "have" looks like it should
+  be "gave". Left verbatim rather than corrected silently.
+- **The hero card rotation.** The copy replacement specified the Baithak card
+  only. The other two cards in the rotation carry lines trimmed from Vanavil
+  and Apni Shala's own case-study cards in the same document. Either confirm
+  those, or the rotation drops to the single Baithak card.
+- **The numbers band is unchanged** ("keep this the same for now"), so it is
+  still the only place on the page carrying figures we cannot source — and
+  it is now the *only* place carrying figures at all, since the what-we-do
+  stat band and the case-study before/after numbers were both cut.
+- **Peepul has no photograph of its own.** Its case-study card runs the
+  generic dashboard frame until one arrives.
+- **DLP video.** The two video links came through without URLs. The numbers
+  band currently runs a slow crossfade through four real field photographs,
+  which is the closest thing to footage we can build from what we have.
 
 ## Photography
 

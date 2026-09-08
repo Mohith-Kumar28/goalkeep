@@ -48,12 +48,12 @@ export const Route = createRootRoute({
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: `${site.name} — ${site.tagline}` },
+        { title: `${site.name} — ${site.strapline}` },
         { name: "description", content: site.description },
         { property: "og:site_name", content: site.name },
         { property: "og:type", content: "website" },
         { property: "og:url", content: origin },
-        { property: "og:title", content: `${site.name} — ${site.tagline}` },
+        { property: "og:title", content: `${site.name} — ${site.strapline}` },
         { property: "og:description", content: site.description },
         /*
          * Absolute, because every scraper requires it — and absolute against the

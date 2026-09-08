@@ -468,6 +468,38 @@
     transition: opacity var(--dur-slow) var(--ease-out);
   }
 
+  /* --- The stroke on wrapped prose -------------------------------------
+     A highlighter run in the audiences band is a whole sentence, three or
+     four lines of body copy. `.marker` cannot carry that on its own: it is an
+     inline-block whose stroke is an absolutely-positioned, masked
+     pseudo-element, so it neither breaks across lines nor keeps its tilt if
+     it did — `transform` does not apply to a non-replaced inline box at all.
+
+     So the run is split into one `.marker` per rendered line (see
+     marker-text.tsx) and each line gets its own real stroke, which is what a
+     person with a highlighter actually leaves on a wrapped paragraph.
+
+     Two things have to change for that to work.
+
+       1. **No horizontal layout.** `.marker` adds padding and margin inline to
+          give the stroke room, and here that would change where the text
+          wraps — the lines were measured without it, so adding it after the
+          fact makes the last word of a line fall onto the next one and the
+          whole thing cascades. Zeroed; the stroke still overshoots, because
+          the overshoot lives on an absolutely-positioned pseudo-element and
+          costs no layout.
+       2. **A shorter overshoot.** The first fragment starts mid-line, right
+          after the plain text that leads into it, and `.marker`'s -0.24em
+          left inset would paint back over the end of that word. */
+  .marker-line {
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+
+  .marker-line::before {
+    inset-inline: -0.08em;
+  }
+
   /* On a dark ground the swipe is a light ink, so the mottling has to darken
      less or the whole stroke turns grey. */
   .marker-light::before {

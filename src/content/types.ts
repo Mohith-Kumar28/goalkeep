@@ -32,11 +32,8 @@ export type Pillar = {
   /** The stage's hue, carried from the hero pills into this section. */
   hue: 'blue' | 'teal' | 'coral'
   title: string
-  /** Short form, shown on the card. */
+  /** The client's paragraph for the stage, verbatim from the copy doc. */
   body: string
-  /** The client's exact wording from the brief. Shown in full on the
-   *  What we do page; kept here so the source of truth never drifts. */
-  bodyFull: string
   /** Handwritten marginalia. A note, not a label. */
   marginalia?: string
   /** The handwritten line that lands inside the open panel — the
@@ -45,11 +42,6 @@ export type Pillar = {
   /** The two photographs the panel reveals once its animation resolves. */
   images: Array<{ src: string; alt: string }>
 }
-
-export type StatCard = Verify<{
-  figure: string
-  sentence: string
-}>
 
 export type PullQuote = Verify<{
   text: string
@@ -64,37 +56,44 @@ export type AudienceId = 'early-stage' | 'data-mature' | 'intermediary'
 export type Audience = {
   id: AudienceId
   label: string
-  /** Opens the block. Reads as a sentence with gaps, and the gaps type
-   *  themselves in — they should recognise themselves before we say anything
-   *  about ourselves. */
-  challengeLead: string
-  challengeBlanks: Array<string>
-  challengeTail: string
-  /** The phrase the hand-drawn circle lands on inside `challengeTail`. */
-  circled?: string
+  /** Opens the block. A question the visitor should recognise themselves in —
+   *  "you may choose which one resonates most closely to you". */
+  header: string
+  /** Body paragraphs, in order. */
+  body: Array<string>
+  /** The run the client marked with a highlighter in the copy doc. It has to
+   *  be a verbatim substring of one of the `body` paragraphs; the renderer
+   *  splits on it. Painted with the site's own highlighter — one real stroke
+   *  per rendered line. See MarkerText. */
+  highlight?: {
+    text: string
+    /** The stroke's hue. A brand token that ink stays legible on. */
+    hue: string
+  }
   photos: Array<{ src: string; alt: string; org: string; location: string }>
   testimonial: {
     quote: PullQuote
     name: string
     credentials: string
-    photo: string
+    /** Optional. Where we have no portrait of a named, real person we show a
+     *  monogram rather than a stock photograph of somebody else. */
+    photo?: string
   }
-  primaryCta: Cta
-  secondaryCta: Cta
+  /** One CTA per segment. The "read the case study" links were cut. */
+  cta: Cta
 }
 
 export type CaseStudy = {
   slug: string
-  tags: Array<string>
-  title: string
-  /** The one hard number the card is built around. */
-  stat: Verify<string>
-  /** The navy inverse card — the honest one, for tonal break. */
-  inverse?: boolean
-  /** Inverse cards carry prose instead of a photograph. */
-  body?: string
-  image?: string
-  imageAlt?: string
+  /** The organisation the card is about — it is the card's headline now. */
+  org: string
+  /** The engagement shape: Kickstarter, Custom project. */
+  tag: string
+  /** What changed, and what it took. Carries the card on its own; the
+   *  before/after stat figures were dropped in the copy replacement. */
+  body: string
+  image: string
+  imageAlt: string
 }
 
 export type FieldNote = {

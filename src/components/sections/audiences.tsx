@@ -1,36 +1,37 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import { audienceSection, audiences } from '@/content/homepage'
 import type { Audience } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhotoCarousel } from '@/components/primitives/photo-carousel'
-import { Annotate } from '@/components/primitives/doodles'
-import { Marker } from '@/components/primitives/marker'
+import { MarkerText } from '@/components/primitives/marker-text'
 import { ShapeField } from '@/components/primitives/logo-shapes'
 import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
  * Whom we do it for.
  *
- * The structure the first feedback doc asked for is intact and was confirmed
- * in the review: "what I liked here was the ease of the top select of what is
- * happening with whom — that's good." What the review changed:
+ * The tabbed structure survives — "what I liked here was the ease of the top
+ * select of what is happening with whom" — but the copy replacement changed
+ * what sits inside a panel.
  *
- *   · "Again there's just too much bold and big stuff happening here" and
- *     "colours loud and popping too much". The band moved off coral tint onto
- *     the pale blue, the headline came down a step, and the three highlighter
- *     fills are now the muted values.
- *   · "How can we improve the spacing of this area? … Over here can we have an
- *     image and a testimonial block here only? So for each there'll be a
- *     different testimonial relevant to that particular audience." The
- *     testimonial moved out of its own full-width row into the empty right
- *     column beside the challenge statement — which is both the fix for the
- *     dead space and what was asked for.
- *   · "The read case study can be almost this type of effect — it doesn't have
- *     to be a button." It is a text link under the testimonial now.
- *   · Tabs are rectangles, not pills, and the sticker press is gone.
+ *   · Each segment used to open with a fill-in-the-blanks sentence
+ *     ("Early-stage NGOs often struggle with ___, ___, and ___") whose blanks
+ *     were struck through with a highlighter one at a time. That device is
+ *     gone: the segments now open with a question the visitor should recognise
+ *     themselves in, and run as prose underneath it.
+ *   · The client marked one run per segment with a highlighter in the copy
+ *     doc — yellow, red and green. The shading in that document says *which*
+ *     run to mark, not how; the how is the site's own highlighter, in the
+ *     brand's three hues. Each run is a whole sentence, so it is split into one
+ *     real stroke per rendered line rather than flattened into a tint. See
+ *     MarkerText.
+ *   · Two CTAs became one. Every "Read the ... case study" link was struck out
+ *     in the doc, including the one under the testimonial.
+ *   · The testimonials are now real, named people from real organisations. We
+ *     have no portraits of them, and running a stock photograph of somebody
+ *     else beside a named quote is not a thing to ship — so the portrait is a
+ *     monogram until someone sends the actual photographs.
  */
 export function Audiences() {
   const [active, setActive] = useState(0)
@@ -55,7 +56,7 @@ export function Audiences() {
       <div className="shell relative">
         <Reveal>
           <p className="eyebrow mb-4">{audienceSection.eyebrow}</p>
-          <h2 id="audiences-heading" className="h2 max-w-[24ch]">
+          <h2 id="audiences-heading" className="h2 max-w-[30ch]">
             {audienceSection.headline}{' '}
             <span className="font-medium text-[var(--fg-2)]">
               {audienceSection.headlineTail}
@@ -107,20 +108,21 @@ export function Audiences() {
         >
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
-              <ChallengeStatement audience={audience} />
+              <Pitch audience={audience} />
 
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                <GkButton to={audience.primaryCta.to} variant="primary" withArrow>
-                  {audience.primaryCta.label}
-                </GkButton>
-                <GkButton to={audience.secondaryCta.to} variant="tertiary" withArrow>
-                  {audience.secondaryCta.label}
+              <div className="mt-10">
+                <GkButton to={audience.cta.to} variant="primary" withArrow>
+                  {audience.cta.label}
                 </GkButton>
               </div>
             </div>
 
-            {/* The space the review asked us to put to use. */}
-            <div className="lg:col-span-5">
+            {/* The space the review asked us to put to use. The card sizes to
+                its quote rather than stretching to the height of the column
+                beside it — the "read the case study" link that used to fill
+                its bottom edge is gone, and a card stretched to match four
+                paragraphs of prose is mostly empty white. */}
+            <div className="lg:col-span-5 lg:self-start">
               <Testimonial audience={audience} />
             </div>
           </div>
@@ -135,100 +137,44 @@ export function Audiences() {
 }
 
 /**
- * The opener: "Early-stage NGOs often struggle with ___, ___, and ___."
+ * The question, then the answer.
  *
- * The underscores in the brief are the client leaving gaps for us to fill in
- * the copy, not a request for animated blanks — so the three phrases are
- * always present and always readable, and what arrives one at a time is the
- * marker under them. "That's the way to bring in the informality — the
- * handwriting, the highlighter effect."
- *
- * Ink on all three fills clears 5:1, which is why the marker carries the hue
- * and the text never does.
+ * `highlight.text` is a verbatim substring of one of the body paragraphs, so
+ * the split below is exact rather than fuzzy: whichever paragraph contains it
+ * is cut into before / marked / after, and every other paragraph renders
+ * plain. If the copy is edited and the substring stops matching, the paragraph
+ * simply renders unmarked — no crash, no half-highlight.
  */
-const BLANK_FILL = ['var(--gk-yellow)', 'var(--gk-teal-lift)', 'var(--gk-coral-lift)']
-
-function ChallengeStatement({ audience }: { audience: Audience }) {
-  const reduced = useReducedMotion()
-  const ref = useRef<HTMLDivElement>(null)
-  const [filled, setFilled] = useState(reduced ? audience.challengeBlanks.length : 0)
-
-  useEffect(() => {
-    setFilled(reduced ? audience.challengeBlanks.length : 0)
-    if (reduced) return
-
-    const node = ref.current
-    if (!node) return
-
-    let timers: Array<number> = []
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-        observer.disconnect()
-        timers = audience.challengeBlanks.map((_, index) =>
-          window.setTimeout(() => setFilled(index + 1), 350 + index * 620),
-        )
-      },
-      { threshold: 0.35 },
-    )
-    observer.observe(node)
-    return () => {
-      observer.disconnect()
-      timers.forEach(window.clearTimeout)
-    }
-  }, [reduced, audience])
-
-  const tailParts = audience.circled
-    ? audience.challengeTail.split(audience.circled)
-    : [audience.challengeTail]
+function Pitch({ audience }: { audience: Audience }) {
+  const mark = audience.highlight
 
   return (
-    <div ref={ref}>
-      <p className="h2 text-[length:clamp(1.375rem,2.2vw,1.875rem)] font-bold">
-        {audience.challengeLead}{' '}
-        {audience.challengeBlanks.map((blank, index) => (
-          <span key={blank}>
-            <Marker
-              hue={BLANK_FILL[index % 3]}
-              on={index < filled}
-              variant={index % 2 ? 'b' : 'a'}
-              /* Before the stroke lands the phrase is underscored — the blank
-                 from the brief, with the answer already written into it. */
-              className={cn(
-                'transition-[box-shadow] duration-[var(--dur-slow)] ease-[var(--ease-out)]',
-              )}
-              style={{
-                boxShadow:
-                  index < filled ? 'none' : 'inset 0 -0.09em 0 0 var(--gk-ink)',
-              }}
-            >
-              {blank}
-            </Marker>
-            {/* No pull-back. That existed to close the gap left by the old
-                flat fill's 0.16em of inline padding; against a highlighter it
-                dragged the comma under the end of the swipe and hid it. The
-                punctuation belongs outside the stroke anyway — a highlighter
-                marks the phrase, not the comma after it. */}
-            <span>
-              {index < audience.challengeBlanks.length - 2
-                ? ', '
-                : index === audience.challengeBlanks.length - 2
-                  ? ', and '
-                  : '.'}
-            </span>
-          </span>
-        ))}
-      </p>
+    <div>
+      <h3 className="h2 max-w-[30ch] text-[length:clamp(1.375rem,2.2vw,1.875rem)] font-bold">
+        {audience.header}
+      </h3>
 
-      <p className="lead mt-6 max-w-[58ch]">
-        {tailParts[0]}
-        {audience.circled && (
-          <Annotate mark="circle" color="var(--gk-coral)" delay={0.4} inset="-16%">
-            {audience.circled}
-          </Annotate>
-        )}
-        {tailParts[1]}
-      </p>
+      <div className="mt-6 flex max-w-[58ch] flex-col gap-4">
+        {audience.body.map((paragraph) => {
+          const at = mark ? paragraph.indexOf(mark.text) : -1
+
+          if (!mark || at < 0) {
+            return (
+              <p key={paragraph} className="lead">
+                {paragraph}
+              </p>
+            )
+          }
+
+          return (
+            <p key={paragraph} className="lead">
+              {paragraph.slice(0, at)}
+              <MarkerText hue={mark.hue}>{mark.text}</MarkerText>
+              {paragraph.slice(at + mark.text.length)}
+            </p>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -237,25 +183,40 @@ function ChallengeStatement({ audience }: { audience: Audience }) {
  * One testimonial per audience, in the right column.
  *
  * No ink outline, no hard shadow, and the portrait is not in a ring — the
- * three things the review named on this card specifically.
+ * three things the review named on this card specifically. The "read the case
+ * study" link that used to close it was struck out in the copy replacement.
  */
 function Testimonial({ audience }: { audience: Audience }) {
   const { testimonial } = audience
+  const initials = testimonial.name
+    .split(' ')
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
 
   return (
-    <figure className="flex h-full flex-col rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-8 shadow-[var(--shadow-sm)]">
-      <blockquote className="text-[length:clamp(1.125rem,1.6vw,1.3125rem)] font-semibold leading-[1.45] text-[var(--fg-1)]">
+    <figure className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-8 shadow-[var(--shadow-sm)]">
+      <blockquote className="text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] leading-[1.5] font-semibold text-[var(--fg-1)]">
         &ldquo;{testimonial.quote.value.text}&rdquo;
       </blockquote>
 
       <figcaption className="mt-7 flex items-center gap-4">
-        <img
-          src={testimonial.photo}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="size-14 rounded-full object-cover"
-        />
+        {testimonial.photo ? (
+          <img
+            src={testimonial.photo}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="size-14 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--gk-cream-deep)] font-display text-[length:var(--fs-base)] font-extrabold text-[var(--gk-navy)]"
+          >
+            {initials}
+          </span>
+        )}
         <span>
           <span className="block text-[length:var(--fs-base)] font-bold text-[var(--fg-1)]">
             {testimonial.name}
@@ -265,15 +226,6 @@ function Testimonial({ audience }: { audience: Audience }) {
           </span>
         </span>
       </figcaption>
-
-      {/* "Below the testimonial only it can be a read case study call to
-          action." */}
-      <Link
-        to={audience.secondaryCta.to}
-        className="link-cta mt-8 self-start text-[length:var(--fs-sm)]"
-      >
-        Read the case study
-      </Link>
     </figure>
   )
 }

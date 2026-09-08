@@ -50,12 +50,9 @@ export function Hero() {
 
       <div className="shell relative z-10 grid items-center gap-14 pt-[calc(82px+3rem)] pb-20 md:pt-[calc(82px+4.5rem)] md:pb-24 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
-          <p className="mb-6">
-            <span className="eyebrow text-[var(--gk-yellow)]">
-              {hero.eyebrow}
-            </span>
-          </p>
-
+          {/* "Eyebrow: Remove." The headline is the first thing on the page
+              now, so it starts at the top of the column rather than under a
+              label. */}
           <h1 className="display max-w-[23ch] text-white">
             {hero.headlineLead}{" "}
             <Annotate
@@ -179,11 +176,13 @@ function ProofCard() {
             <p className="relative text-[length:var(--fs-sm)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-yellow)] uppercase">
               {card.org}
             </p>
-            <p className="stat-figure relative mt-3 text-[length:clamp(1.75rem,2.8vw,2.25rem)] text-white">
-              {card.stat}
-            </p>
-            <p className="relative mt-2 text-[length:var(--fs-sm)] text-white/80">
-              {card.line}
+            {/* The before/after figure is gone — the card carries the outcome
+                as a sentence now, so this line does the work the stat used to
+                and is set at the size the stat used to hold. min-height keeps
+                the pager and the link still while the copy cross-fades
+                between organisations. */}
+            <p className="relative mt-3 min-h-[4.5em] text-[length:clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.45] font-semibold text-white">
+              {card.line.value}
             </p>
 
             <div className="relative mt-6 flex items-center justify-between gap-4">

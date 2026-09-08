@@ -14,7 +14,7 @@ import { site } from '@/content/site'
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: `${site.name} — ${site.tagline}` },
+      { title: `${site.name} — ${site.strapline}` },
       { name: 'description', content: site.description },
     ],
   }),

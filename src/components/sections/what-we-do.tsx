@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { pillars, whatWeDo, whatWeDoStat } from '@/content/homepage'
+import { pillars, whatWeDo } from '@/content/homepage'
 import type { Pillar } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhaseAnimation } from '@/components/primitives/phase-animation'
 import type { PhaseKind } from '@/components/primitives/phase-animation'
 import { Annotate } from '@/components/primitives/doodles'
 import { Reveal } from '@/components/primitives/reveal'
-import { StatCounter } from '@/components/primitives/stat-counter'
 import { cn } from '@/lib/utils'
 
 /**
@@ -99,7 +98,7 @@ export function WhatWeDo() {
           <div className="mb-10 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow mb-4">{whatWeDo.eyebrow}</p>
-              <h2 id="wwd-heading" className="h2 max-w-[20ch]">
+              <h2 id="wwd-heading" className="h2 max-w-[26ch]">
                 {whatWeDo.headline}{' '}
                 <span className="font-medium text-[var(--fg-2)]">
                   {whatWeDo.headlineTail}
@@ -126,18 +125,12 @@ export function WhatWeDo() {
           ))}
         </ol>
 
+        {/* "Stat band: Remove." The 4-hrs-every-Monday figure that used to sit
+            here is gone; the CTA it shared the row with is not, so it stands
+            on its own under the stages rather than keeping an empty panel
+            alive around it. */}
         <Reveal delay={0.1}>
-          <div className="mt-8 flex flex-col items-start gap-6 rounded-[var(--r-lg)] bg-[var(--gk-cream-deep)] p-8 md:flex-row md:items-center md:justify-between md:p-10">
-            <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <StatCounter
-                value={4}
-                suffix={' hrs'}
-                className="text-[length:clamp(2rem,4vw,2.75rem)] text-[var(--gk-navy)]"
-              />
-              <span className="max-w-[36ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
-                {whatWeDoStat.value.sentence}
-              </span>
-            </p>
+          <div className="mt-10 flex justify-center">
             <GkButton to={whatWeDo.cta.to} variant="primary" withArrow>
               {whatWeDo.cta.label}
             </GkButton>
@@ -199,7 +192,11 @@ function PhaseRow({
              closed ones always sums to the same total. Content-height rows
              made the whole section grow and shrink as the pointer moved down
              it, which drags everything below out from under the cursor. */
-          active ? 'md:min-h-[23rem]' : 'md:min-h-[15rem]',
+          /* Raised with the copy replacement: the stages carry the client's
+             full paragraph now, not the one-line summary, so the old 23/15
+             pair was under the content height and the rows started resizing
+             again as the pointer moved down them. */
+          active ? 'md:min-h-[28rem]' : 'md:min-h-[18rem]',
         )}
       >
         <div className="relative z-10 md:col-span-7">
@@ -224,7 +221,7 @@ function PhaseRow({
           </button>
 
           <p
-            className="mt-5 max-w-[48ch] text-[length:var(--fs-base)] leading-relaxed"
+            className="mt-5 max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed"
             style={{ color: active ? 'var(--fg-inverse-2)' : 'var(--fg-2)' }}
           >
             {pillar.body}
