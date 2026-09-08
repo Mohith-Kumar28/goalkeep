@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // The archived variant of the site, pinned to commit 03b54cc and deployed
+  // as its own Worker. Kept separate from wrangler.jsonc on purpose: the main
+  // `goalkeep` deployment tracks the working tree and must never be
+  // overwritten by this one. Deploy with `pnpm deploy:legacy`.
+  "name": "goalkeep-legacy",
+  "compatibility_date": "2026-08-31",
+  "compatibility_flags": ["nodejs_compat"],
+  // TanStack Start's own Workers entry — not the Node build output.
+  "main": "@tanstack/react-start/server-entry",
+  "observability": {
+    "enabled": true
+  }
+}

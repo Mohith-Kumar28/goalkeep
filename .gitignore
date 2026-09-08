@@ -13,3 +13,6 @@ todos.json
 
 # typescript
 *.tsbuildinfo
+
+# throwaway worktree for the pinned legacy deployment
+.legacy
