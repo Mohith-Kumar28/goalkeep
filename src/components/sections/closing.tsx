@@ -1,7 +1,6 @@
 import { closing } from '@/content/homepage'
 import { GkButton } from '@/components/primitives/gk-button'
 import { MarkAssembly } from '@/components/primitives/logo-shapes'
-import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -22,30 +21,33 @@ import { Reveal } from '@/components/primitives/reveal'
  *     by the scroll — the fragments arrive one at a time and land as the
  *     wordmark's ring. It is the page's last frame, and the only place the
  *     whole mark is ever drawn from its parts.
+ *
+ * 23 Sep: leaner. Less vertical space, a smaller mark, the headline bold with
+ * only "clarity and certainty" set light, no highlighter, no margin note, and
+ * the primary button in yellow.
  */
 export function Closing() {
   return (
     <section
       data-ground="navy"
-      className="ground-navy accent-yellow relative overflow-hidden py-20 md:py-28"
+      className="ground-navy accent-yellow relative overflow-hidden py-14 md:py-16"
       aria-labelledby="closing-heading"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <div className="shell relative grid gap-10 lg:grid-cols-12">
+      <div className="shell relative grid items-center gap-10 lg:grid-cols-12">
         <div className="lg:col-span-8">
           {/* The eyebrow and the second headline line ("Sub: remove") both
               went in the copy replacement. One sentence, then the buttons. */}
           <Reveal delay={0.12}>
-            <h2 id="closing-heading" className="display max-w-[19ch]">
+            <h2 id="closing-heading" className="display max-w-[22ch] font-extrabold">
               {closing.headlineLead}{' '}
-              <Marker>{closing.headlineKeyword}</Marker>{' '}
-              {closing.headlineTail}
+              <span className="font-normal">{closing.headlineQuiet}</span>
             </h2>
           </Reveal>
 
           <Reveal delay={0.4}>
-            <div className="mt-11 flex flex-wrap items-center gap-4">
-              <GkButton to={closing.primaryCta.to} variant="primary" onDark withArrow>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <GkButton to={closing.primaryCta.to} variant="accent" onDark withArrow>
                 {closing.primaryCta.label}
               </GkButton>
               <GkButton to={closing.secondaryCta.to} variant="secondary" onDark>
@@ -56,22 +58,13 @@ export function Closing() {
 
           {/* The mark assembles on phones too, under the buttons — it is the
               page's last frame and worth having on every screen. */}
-          <div className="mt-14 flex justify-center lg:hidden">
-            <MarkAssembly size={150} />
+          <div className="mt-10 flex justify-center lg:hidden">
+            <MarkAssembly size={120} />
           </div>
         </div>
 
-        <div className="hidden lg:col-span-4 lg:flex lg:flex-col lg:items-center lg:justify-center lg:gap-12">
-          <MarkAssembly size={200} />
-
-          <Reveal delay={0.54}>
-            <p
-              aria-hidden="true"
-              className="hand whitespace-pre-line text-center leading-tight text-white/70"
-            >
-              {closing.marginalia.value}
-            </p>
-          </Reveal>
+        <div className="hidden lg:col-span-4 lg:flex lg:items-center lg:justify-center">
+          <MarkAssembly size={150} />
         </div>
       </div>
     </section>

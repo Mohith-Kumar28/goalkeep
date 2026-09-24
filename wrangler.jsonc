@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "goalkeep",
+  "name": "goalkeep-v4",
   "compatibility_date": "2026-08-31",
   "compatibility_flags": ["nodejs_compat"],
   // TanStack Start's own Workers entry — not the Node build output.

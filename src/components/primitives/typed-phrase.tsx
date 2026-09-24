@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Marker } from '@/components/primitives/marker'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
@@ -39,15 +38,14 @@ export function TypedPhrase({
   lead,
   phrases,
   tail,
-  /** The highlight the typed phrase sits on. */
-  markBackground = 'var(--gk-white)',
+  accent = 'var(--gk-yellow)',
   className,
 }: {
   lead: string
   phrases: Array<string>
   tail: string
-  /** The highlighter's ink. A light one, since this runs on the navy hero. */
-  markBackground?: string
+  /** The typed phrase's colour, and its caret's. */
+  accent?: string
   className?: string
 }) {
   const reduced = useReducedMotion()
@@ -95,9 +93,9 @@ export function TypedPhrase({
         {lead}{' '}
         {phrases.map((item, i) => (
           <span key={item}>
-            <Marker hue={markBackground} onDark variant={i % 2 ? 'b' : 'a'}>
-              <span className="font-bold">{item}</span>
-            </Marker>
+            <span className="font-bold" style={{ color: accent }}>
+              {item}
+            </span>
             {i < phrases.length - 2 ? ', ' : i === phrases.length - 2 ? ', and ' : ' '}
           </span>
         ))}
@@ -118,16 +116,19 @@ export function TypedPhrase({
 
       <span aria-hidden="true">
         {lead}{' '}
-        <Marker hue={markBackground} onDark className="font-bold">
+        {/* 23 Sep: the white highlighter swipe behind the typed word read as
+            a blank white block between phrases. The phrase now carries itself
+            in weight and the band's accent, with the caret in the same hue. */}
+        <span className="font-bold" style={{ color: accent }}>
           {phrase.slice(0, count)}
           <span
             className={cn(
-              'ml-[1px] inline-block w-[2px] translate-y-[0.12em] align-baseline',
+              'ml-[2px] inline-block w-[2px] translate-y-[0.12em] align-baseline',
               'motion-safe:animate-[gk-caret_1s_step-end_infinite]',
             )}
-            style={{ height: '0.95em', background: 'var(--gk-navy)' }}
+            style={{ height: '0.95em', background: 'currentColor' }}
           />
-        </Marker>{' '}
+        </span>{' '}
         {tail}
       </span>
     </span>

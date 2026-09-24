@@ -11,6 +11,9 @@ import { cn } from '@/lib/utils'
  * no surface of its own, which is what stops a page of stickers and photo
  * panels from becoming exhausting right before the close.
  *
+ * 23 Sep: the band is a mid-dark yellow with black text - "I want section
+ * breaks to have more contrast… a good break from all the blue backgrounds."
+ *
  * Multiple items may be open at once. Auto-closing one to open another is a
  * small hostility, and this is the section where someone is trying to answer a
  * real question before they email.
@@ -27,7 +30,8 @@ export function Faqs() {
 
   return (
     <section
-      className="ground-cream-deep band accent-blue relative"
+      className="band relative"
+      style={{ background: 'var(--gk-yellow)', color: 'var(--gk-ink)' }}
       aria-labelledby="faqs-heading"
     >
       <div className="shell grid gap-10 md:grid-cols-12 md:gap-8">
@@ -38,7 +42,7 @@ export function Faqs() {
                 copy replacement. The doc gives this column one sentence, so
                 that is what it holds. */}
             <h2 id="faqs-heading" className="h2">
-              {faqSection.headline}
+              {faqSection.headline} <em>{faqSection.headlineEm}</em>
             </h2>
           </Reveal>
         </div>
@@ -49,7 +53,7 @@ export function Faqs() {
             return (
               <div
                 key={faq.value.question}
-                className="border-b border-[var(--hairline-strong)] first:border-t"
+                className="border-b border-[rgb(20_19_26_/_0.22)] first:border-t"
               >
                 <dt>
                   <button
@@ -68,8 +72,8 @@ export function Faqs() {
                         'relative grid size-8 shrink-0 place-items-center rounded-[var(--r-sm)] border',
                         'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
                         isOpen
-                          ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
-                          : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-navy)] group-hover:border-[var(--gk-navy)]',
+                          ? 'border-[var(--gk-ink)] bg-[var(--gk-ink)] text-[var(--gk-yellow)]'
+                          : 'border-[rgb(20_19_26_/_0.3)] bg-transparent text-[var(--gk-ink)] group-hover:border-[var(--gk-ink)] group-hover:bg-[rgb(255_255_255_/_0.3)]',
                       )}
                     >
                       <span className="absolute h-[1.5px] w-3.5 bg-current" />
@@ -88,7 +92,7 @@ export function Faqs() {
                   style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                 >
                   <div className="overflow-hidden">
-                    <p className="max-w-[62ch] pb-7 text-[length:var(--fs-base)] text-[var(--fg-2)]">
+                    <p className="max-w-[62ch] pb-7 text-[length:var(--fs-base)] text-[var(--gk-ink)]">
                       {faq.value.answer}
                     </p>
                   </div>

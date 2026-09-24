@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
  * `tertiary` is the plain text call to action the review asked for in place of
  * a button on the case-study cards.
  */
-type Variant = 'primary' | 'secondary' | 'ghost' | 'tertiary'
+type Variant = 'primary' | 'secondary' | 'ghost' | 'tertiary' | 'accent'
 
 const base =
   'group relative inline-flex items-center justify-center gap-2 ' +
@@ -25,7 +25,8 @@ const base =
   'text-[length:var(--fs-sm)] focus-visible:outline-none ' +
   'transition-[background-color,border-color,color] duration-[var(--dur-base)] ease-[var(--ease-out)]'
 
-const sizing = 'rounded-[var(--r-btn)] px-7 py-[0.95rem] border'
+/* Slimmer after the 23 Sep review: "it's too padded around here." */
+const sizing = 'rounded-[var(--r-btn)] px-5 py-[0.7rem] border'
 
 const variants: Record<Variant, string> = {
   primary:
@@ -38,6 +39,9 @@ const variants: Record<Variant, string> = {
     'bg-transparent text-[var(--gk-navy)] border-[var(--gk-navy)] ' +
     'hover:bg-[var(--gk-navy)] hover:text-white',
   tertiary: 'link-cta text-[length:var(--fs-base)]',
+  accent:
+    'bg-[var(--gk-yellow)] text-[var(--gk-navy-deep)] border-[var(--gk-yellow)] ' +
+    'hover:bg-[var(--gk-yellow-deep)] hover:border-[var(--gk-yellow-deep)]',
 }
 
 const onDarkVariants: Record<Variant, string> = {
@@ -48,6 +52,10 @@ const onDarkVariants: Record<Variant, string> = {
     'bg-transparent text-white border-white/60 hover:border-white hover:bg-white/10',
   ghost: 'bg-transparent text-white border-white/40 hover:border-white hover:bg-white/10',
   tertiary: 'link-cta text-[length:var(--fs-base)] text-[var(--gk-yellow)] hover:text-white',
+  /* The closing band's "Talk to us": yellow with navy text. */
+  accent:
+    'bg-[var(--gk-yellow)] text-[var(--gk-navy-deep)] border-[var(--gk-yellow)] ' +
+    'hover:bg-[var(--gk-white)] hover:border-[var(--gk-white)]',
 }
 
 export function GkButton({

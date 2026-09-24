@@ -34,11 +34,6 @@ export type Pillar = {
   title: string
   /** The client's paragraph for the stage, verbatim from the copy doc. */
   body: string
-  /** Handwritten marginalia. A note, not a label. */
-  marginalia?: string
-  /** The handwritten line that lands inside the open panel — the
-   *  Whole Truth Foods device the feedback asked for. */
-  handwritten: string
   /** The two photographs the panel reveals once its animation resolves. */
   images: Array<{ src: string; alt: string }>
 }
@@ -49,37 +44,28 @@ export type PullQuote = Verify<{
 }>
 
 /* Renamed per the homepage feedback: 'mid-sized' → 'data-mature',
-   'funders' → 'intermediary'. The ids move with the labels so a stale deep
-   link can never resolve to a category we no longer use. */
-export type AudienceId = 'early-stage' | 'data-mature' | 'intermediary'
+   'funders' → 'intermediary'. Funders came back as a fourth, separate segment
+   in the 23 Sep review. */
+export type AudienceId = 'early-stage' | 'data-mature' | 'intermediary' | 'funders'
 
 export type Audience = {
   id: AudienceId
   label: string
-  /** Opens the block. A question the visitor should recognise themselves in —
-   *  "you may choose which one resonates most closely to you". */
+  /** Opens the block. A question the visitor should recognise themselves in.
+   *  Two lines at most at desktop width. */
   header: string
-  /** Body paragraphs, in order. */
-  body: Array<string>
-  /** The run the client marked with a highlighter in the copy doc. It has to
-   *  be a verbatim substring of one of the `body` paragraphs; the renderer
-   *  splits on it. Painted with the site's own highlighter — one real stroke
-   *  per rendered line. See MarkerText. */
-  highlight?: {
-    text: string
-    /** The stroke's hue. A brand token that ink stays legible on. */
-    hue: string
-  }
+  /** One paragraph. */
+  body: Verify<string>
   photos: Array<{ src: string; alt: string; org: string; location: string }>
   testimonial: {
     quote: PullQuote
     name: string
     credentials: string
-    /** Optional. Where we have no portrait of a named, real person we show a
-     *  monogram rather than a stock photograph of somebody else. */
-    photo?: string
+    /** The testimonial is image-led: a large photograph with the quote over
+     *  its lower edge. */
+    photo: string
   }
-  /** One CTA per segment. The "read the case study" links were cut. */
+  /** One CTA per segment. */
   cta: Cta
 }
 
@@ -87,8 +73,10 @@ export type CaseStudy = {
   slug: string
   /** The organisation the card is about — it is the card's headline now. */
   org: string
-  /** The engagement shape: Kickstarter, Custom project. */
-  tag: string
+  /** Neutral tag: the partner's sector. */
+  sector: string
+  /** Coloured tag: the work Goalkeep did for them. */
+  intervention: string
   /** What changed, and what it took. Carries the card on its own; the
    *  before/after stat figures were dropped in the copy replacement. */
   body: string
@@ -102,6 +90,10 @@ export type FieldNote = {
   readingTime: string
   title: string
   dek: string
+  /** Neutral tag, matching the case studies' sector label (23 Sep doc: "add
+   *  sector tags to blog cards where possible"). */
+  sector: string
+  /** The topic. Tinted, like the case studies' intervention label. */
   tag: string
   inverse?: boolean
   badge?: string

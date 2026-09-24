@@ -93,6 +93,11 @@
   --gk-coral-tint: #fbeee9;
   --gk-yellow-tint: #fbf3df;
 
+  /* Neutral paper. The ground of the "Why we exist" artifact, and the sector
+     label on case studies ("a neutral beige with black text"). */
+  --gk-beige: #f6f4ef;
+  --gk-beige-deep: #ece6d8;
+
   /* --- Semantic foreground ----------------------------------------------- */
   --fg-1: var(--gk-ink);
   --fg-2: rgb(20 19 26 / 0.72);

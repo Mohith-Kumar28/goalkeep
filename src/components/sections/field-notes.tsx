@@ -27,8 +27,8 @@ export function FieldNotes() {
           <div className="mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow mb-3">{fieldNoteSection.eyebrow}</p>
-              <h2 id="field-notes-heading" className="h2 max-w-[18ch]">
-                {fieldNoteSection.headline}
+              <h2 id="field-notes-heading" className="h2 max-w-[22ch]">
+                {fieldNoteSection.headline} <em>{fieldNoteSection.headlineEm}</em>
               </h2>
               <p className="lead mt-4 max-w-[42ch]">{fieldNoteSection.lead}</p>
             </div>
@@ -77,6 +77,21 @@ function NoteCard({ note, hue }: { note: FieldNote; hue: string }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-6">
+        {/* The same two-tag pair as the case studies: sector, then topic. */}
+        <div className="flex flex-wrap gap-2">
+          <span
+            className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
+            style={{ background: note.inverse ? 'var(--gk-white)' : 'var(--gk-beige-deep)' }}
+          >
+            {note.sector}
+          </span>
+          <span
+            className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
+            style={{ background: hue }}
+          >
+            {note.tag}
+          </span>
+        </div>
         <p
           className={cn(
             'text-[length:var(--fs-sm)] font-bold',
@@ -89,20 +104,11 @@ function NoteCard({ note, hue }: { note: FieldNote; hue: string }) {
         <p
           className={cn(
             'text-[length:var(--fs-sm)]',
-            note.inverse ? 'text-white/80' : 'text-[var(--fg-2)]',
+            note.inverse ? 'text-white/85' : 'text-[var(--fg-1)]',
           )}
         >
           {note.dek}
         </p>
-        <span
-          className={cn(
-            'chip mt-auto self-start text-[length:var(--fs-xs)]',
-            note.inverse ? 'text-white' : 'text-[var(--gk-navy)]',
-          )}
-          style={{ background: note.inverse ? 'rgb(255 255 255 / 0.12)' : hue }}
-        >
-          {note.tag}
-        </span>
       </div>
     </article>
   )

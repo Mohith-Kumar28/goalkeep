@@ -18,6 +18,7 @@ contextual stock and were never Goalkeep's clients.
 | `phase-build-a/b`, `case-dashboard` | Dashboard Images | Live partner dashboards on screen |
 | `phase-adopt-a` | Workshop in progress | Partner team working through a build |
 | `phase-adopt-b` | Goalkeep team in action | Field handover on a phone |
+| `phase-adopt-training-a/b` | Data Literacy Programme films (YouTube `ZWMJNcSw0GY`, `SzKKzzZXXyc`) | Stills from cohort sessions — a trainer at the manual, participants at work |
 | `note-01..03` | Brainstorming / team in action | Discussion and facilitation moments |
 | `group-team`, `group-lineup` | Group Photos with Client Teams | Goalkeep with partner teams |
 | `testimonial-dakshayini` | Testimonial Image | Dakshayini, Baithak Foundation |
@@ -29,5 +30,7 @@ contextual stock and were never Goalkeep's clients.
 **Not used:** the five AI-generated images in the Drive folders (filenames
 beginning `ChatGPT Image …`). The brief calls for real community imagery, and a
 generated workshop photo on a social-sector site is worse than no photo.
+
+`/video/bts.*` is ~26s of b-roll cut from the same two films, subtitles cropped off.
 
 All files are WebP, quality 80–84, centre-cropped. Originals remain in Drive.

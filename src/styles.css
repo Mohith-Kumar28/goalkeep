@@ -5,6 +5,7 @@
 /* Two families, per the brief: Nunito Sans and the hand. Outfit and Plus
    Jakarta are no longer imported — see tokens.css. */
 @import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/nunito-sans/wght-italic.css";
 @import "@fontsource-variable/caveat";
 
 /* ============================================================================
@@ -278,10 +279,15 @@
   /* --- Type roles --------------------------------------------------------
      Every size here came down between 20% and 33% from v2, and the weight
      ceiling from 900 to 800. "It's screaming a little too much." */
+  /* 23 Sep review: "the headline weightage is too bulky and chunky." The
+     reference is the "Why we exist" artifact - the sentence set light, and
+     only the phrase that carries it in bold italic. So headings now sit at
+     medium, and <em>/<strong> inside one is the emphasis, never a colour or a
+     second, lighter tail. */
   .display {
     font-family: var(--font-display);
     font-size: clamp(2.125rem, 4.6vw, 3.5rem);
-    font-weight: var(--w-extrabold);
+    font-weight: var(--w-medium);
     line-height: var(--lh-display);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
@@ -289,11 +295,21 @@
 
   .h2 {
     font-family: var(--font-display);
-    font-size: clamp(1.625rem, 3vw, 2.375rem);
-    font-weight: var(--w-extrabold);
+    font-size: clamp(1.75rem, 3.2vw, 2.625rem);
+    font-weight: var(--w-regular);
     line-height: var(--lh-heading);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
+  }
+
+  .display em,
+  .h2 em {
+    font-style: italic;
+    font-weight: var(--w-extrabold);
+  }
+  .display strong,
+  .h2 strong {
+    font-weight: var(--w-extrabold);
   }
 
   .h3 {
@@ -308,7 +324,8 @@
     font-size: var(--fs-lg);
     font-weight: var(--w-regular);
     line-height: 1.6;
-    color: var(--band-ink-2, var(--fg-2));
+    /* "Paragraph body on any light thing, just keep it in black." */
+    color: var(--band-ink, var(--fg-1));
   }
 
   /* Section labels.

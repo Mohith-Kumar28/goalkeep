@@ -1,7 +1,7 @@
-import { hero, proof } from '@/content/homepage'
-import { KenBurns } from '@/components/primitives/ken-burns'
+import { proof } from '@/content/homepage'
 import { StatCounter } from '@/components/primitives/stat-counter'
 import { Reveal } from '@/components/primitives/reveal'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
  * The numbers, in one place.
@@ -15,6 +15,12 @@ import { Reveal } from '@/components/primitives/reveal'
  *
  * The ring pattern, the floating shapes and the hand-drawn zigzag that used to
  * decorate this band are gone with the rest of them.
+ *
+ * 23 Sep: "can we have the video BTS playing here instead of static images" -
+ * teaching, facilitation, working with organisations. public/video/bts is
+ * ~26s of b-roll cut from the two Data Literacy Programme films (no talking
+ * heads, burned-in subtitles cropped off), silent and looped. Under reduced
+ * motion it is the poster frame and nothing moves.
  */
 const HUES = [
   'var(--gk-yellow)',
@@ -24,6 +30,8 @@ const HUES = [
 ]
 
 export function Proof() {
+  const reduced = useReducedMotion()
+
   return (
     <section
       data-ground="navy"
@@ -32,17 +40,34 @@ export function Proof() {
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
       <div className="absolute inset-0" aria-hidden="true">
-        <KenBurns images={hero.backdrop} interval={7000} />
+        {reduced ? (
+          <img src="/video/bts-poster.jpg" alt="" className="h-full w-full object-cover" />
+        ) : (
+          <video
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/video/bts-poster.jpg"
+          >
+            <source src="/video/bts.webm" type="video/webm" />
+            <source src="/video/bts.mp4" type="video/mp4" />
+          </video>
+        )}
+        {/* Lighter than the photographs' 0.84 - footage has to read as
+            footage - but still enough for the figures to sit on. */}
         <div
           className="absolute inset-0"
-          style={{ backgroundColor: 'rgb(47 74 146 / 0.84)' }}
+          style={{ backgroundColor: 'rgb(47 74 146 / 0.78)' }}
         />
       </div>
 
       <div className="shell relative">
         <Reveal>
           <p className="eyebrow mb-4 text-[var(--gk-yellow)]">{proof.eyebrow}</p>
-          <h2 id="proof-heading" className="h2 mb-12 max-w-[20ch]">
+          <h2 id="proof-heading" className="h2 mb-12 max-w-[20ch] font-medium">
             {proof.headline}
           </h2>
         </Reveal>

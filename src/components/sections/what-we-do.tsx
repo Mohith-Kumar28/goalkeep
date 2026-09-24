@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { pillars, whatWeDo } from '@/content/homepage'
 import type { Pillar } from '@/content/types'
-import { GkButton } from '@/components/primitives/gk-button'
 import { PhaseAnimation } from '@/components/primitives/phase-animation'
 import type { PhaseKind } from '@/components/primitives/phase-animation'
-import { Annotate } from '@/components/primitives/doodles'
 import { Reveal } from '@/components/primitives/reveal'
 import { cn } from '@/lib/utils'
 
@@ -27,6 +25,11 @@ import { cn } from '@/lib/utils'
  *     and the open panel's photographs bleed to its edges.
  *   · The animations themselves were abstract. They are now the two sequences
  *     specced in the review; see phase-animation.tsx.
+ *
+ * After the 23 Sep review: the hover hint, the handwritten lines and the CTA
+ * are gone, and the photographs no longer dissolve into the navy ("it's
+ * dulling down the image… losing its vibrancy") - each is a plain, full-colour
+ * image with rounded corners. The media alternates sides, left-right-left.
  */
 
 /**
@@ -41,20 +44,6 @@ const HUE: Record<
   teal: { closed: 'var(--gk-teal)', onNavy: 'var(--gk-teal-lift)', kind: 'build' },
   coral: { closed: 'var(--gk-coral)', onNavy: 'var(--gk-coral-lift)', kind: 'adopt' },
 }
-
-/*
- * The dissolve. Both ramps are deliberately long and multi-stop.
- *
- * A two-stop ramp over a quarter of the panel reads as a strip of gradient
- * sitting on top of a photograph — you can see where it starts and stops. Four
- * stops spread across most of the panel reads as the photograph itself fading
- * out, which is the effect the whole treatment is for.
- */
-const DESKTOP_MASK =
-  'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.06) 20%, rgb(0 0 0 / 0.28) 42%, rgb(0 0 0 / 0.66) 68%, rgb(0 0 0 / 0.92) 87%, #000 100%)'
-
-const MOBILE_MASK =
-  'linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.18) 14%, rgb(0 0 0 / 0.72) 42%, #000 62%, #000 78%, rgb(0 0 0 / 0.5) 93%, transparent 100%)'
 
 export function WhatWeDo() {
   // The first row opens by default. An all-closed section reads as three
@@ -95,19 +84,11 @@ export function WhatWeDo() {
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-10 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="eyebrow mb-4">{whatWeDo.eyebrow}</p>
-              <h2 id="wwd-heading" className="h2 max-w-[26ch]">
-                {whatWeDo.headline}{' '}
-                <span className="font-medium text-[var(--fg-2)]">
-                  {whatWeDo.headlineTail}
-                </span>
-              </h2>
-            </div>
-            <p className="hand max-w-[24ch] text-[var(--gk-coral-ink)] md:mb-2">
-              {whatWeDo.lead}
-            </p>
+          <div className="mb-10 md:mb-14">
+            <p className="eyebrow mb-4">{whatWeDo.eyebrow}</p>
+            <h2 id="wwd-heading" className="h2 max-w-[28ch]">
+              {whatWeDo.headline} <em>{whatWeDo.headlineTail}</em>
+            </h2>
           </div>
         </Reveal>
 
@@ -120,22 +101,12 @@ export function WhatWeDo() {
               active={open === index}
               playing={open === index && seen}
               first={index === 0}
+              flip={index % 2 === 1}
               onOpen={() => setOpen(index)}
             />
           ))}
         </ol>
 
-        {/* "Stat band: Remove." The 4-hrs-every-Monday figure that used to sit
-            here is gone; the CTA it shared the row with is not, so it stands
-            on its own under the stages rather than keeping an empty panel
-            alive around it. */}
-        <Reveal delay={0.1}>
-          <div className="mt-10 flex justify-center">
-            <GkButton to={whatWeDo.cta.to} variant="primary" withArrow>
-              {whatWeDo.cta.label}
-            </GkButton>
-          </div>
-        </Reveal>
       </div>
     </section>
   )
@@ -146,6 +117,7 @@ function PhaseRow({
   active,
   playing,
   first,
+  flip,
   onOpen,
 }: {
   pillar: Pillar
@@ -153,53 +125,45 @@ function PhaseRow({
   /** Open *and* on screen — see the observer in WhatWeDo. */
   playing: boolean
   first: boolean
+  /** Media on the left. Every other row, so the stages alternate. */
+  flip: boolean
   onOpen: () => void
 }) {
   const hue = HUE[pillar.hue]
 
   return (
     <li
-      className={cn(
-        'group relative overflow-hidden transition-colors duration-[var(--dur-slow)] ease-[var(--ease-out)]',
-      )}
+      className="group relative overflow-hidden transition-colors duration-[var(--dur-slow)] ease-[var(--ease-out)]"
       style={{
         background: active ? 'var(--gk-navy)' : 'var(--gk-white)',
         color: active ? 'var(--fg-inverse)' : 'var(--fg-1)',
-        borderTopColor: active ? 'transparent' : undefined,
       }}
       data-ground={active ? 'navy' : undefined}
       onPointerEnter={onOpen}
       onFocusCapture={onOpen}
     >
-      {/* The divider between rows. A plain border ran straight across the
-          photograph bleeding in from the right; this fades out exactly where
-          the image stops being transparent. */}
       {!first && (
         <span
           aria-hidden="true"
-          className="absolute inset-x-0 top-0 z-10 h-px"
-          style={{
-            background:
-              'linear-gradient(to right, var(--hairline) 0%, var(--hairline) 46%, transparent 72%)',
-          }}
+          className="absolute inset-x-0 top-0 z-10 h-px bg-[var(--hairline)]"
         />
       )}
 
       <div
         className={cn(
-          'relative grid gap-6 p-6 md:grid-cols-12 md:gap-10 md:p-9',
+          'relative grid gap-6 p-6 md:grid-cols-12 md:items-stretch md:gap-10 md:p-8',
           /* Open and closed heights are fixed so that one open row plus two
-             closed ones always sums to the same total. Content-height rows
-             made the whole section grow and shrink as the pointer moved down
-             it, which drags everything below out from under the cursor. */
-          /* Raised with the copy replacement: the stages carry the client's
-             full paragraph now, not the one-line summary, so the old 23/15
-             pair was under the content height and the rows started resizing
-             again as the pointer moved down them. */
-          active ? 'md:min-h-[28rem]' : 'md:min-h-[18rem]',
+             closed ones always sums to the same total - content-height rows
+             made the section resize under the pointer. */
+          active ? 'md:min-h-[25rem]' : 'md:min-h-[15rem]',
         )}
       >
-        <div className="relative z-10 md:col-span-7">
+        <div
+          className={cn(
+            'relative z-10 flex flex-col justify-center md:col-span-6',
+            flip && 'md:order-last',
+          )}
+        >
           <button
             type="button"
             onClick={onOpen}
@@ -215,120 +179,46 @@ function PhaseRow({
             >
               {pillar.index}
             </span>
-            <span className="h2 text-[length:clamp(1.5rem,2.6vw,2rem)]">
+            <span className="text-[length:clamp(1.5rem,2.6vw,2rem)] leading-tight font-extrabold">
               {pillar.title}
             </span>
           </button>
 
           <p
-            className="mt-5 max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed"
-            style={{ color: active ? 'var(--fg-inverse-2)' : 'var(--fg-2)' }}
+            className="mt-5 max-w-[48ch] text-[length:var(--fs-base)] leading-relaxed"
+            style={{ color: active ? 'var(--fg-inverse)' : 'var(--fg-1)' }}
           >
             {pillar.body}
           </p>
-
-          {/* The handwritten aside — the device the review explicitly keeps.
-              White text with the circle in the stage accent: the hue itself is
-              not readable at text size on navy, the ring around it is. */}
-          <div
-            className="grid transition-[grid-template-rows,opacity] duration-[var(--dur-slow)] ease-[var(--ease-out)]"
-            style={{
-              gridTemplateRows: active ? '1fr' : '0fr',
-              opacity: active ? 1 : 0,
-            }}
-          >
-            {/* The colours track `active` rather than being hardcoded white.
-                A closed row is collapsed to 0fr and invisible, but its text is
-                still in the DOM on a white ground — hardcoding white there is
-                white-on-white, which the contrast audit is right to fail. */}
-            <div className="overflow-hidden">
-              <p
-                className="hand-lg mt-7 max-w-[26ch]"
-                style={{ color: active ? 'var(--fg-inverse)' : 'var(--fg-1)' }}
-              >
-                <Annotate
-                  mark="oval"
-                  color={active ? hue.onNavy : hue.closed}
-                  delay={0.35}
-                  inset="-9%"
-                >
-                  {pillar.handwritten}
-                </Annotate>
-              </p>
-              {pillar.marginalia && (
-                <p
-                  className="hand mt-7"
-                  style={{ color: active ? 'rgb(255 255 255 / 0.6)' : 'var(--fg-2)' }}
-                >
-                  {pillar.marginalia}
-                </p>
-              )}
-            </div>
-          </div>
         </div>
 
-        {/* The media track.
-
-            Open and closed now get the *same* treatment, which is what makes
-            the section read as one component: a single photograph running the
-            full height of the row, bleeding off its right edge, dissolving
-            leftward into the ground. Closed rows are greyscale and dimmed;
-            the open row is in colour and plays its sequence.
-
-            It used to be two small thumbnails side by side when closed, which
-            put the boxed look the review objected to straight back on two of
-            the three rows.
-
-            The dissolve is applied to the photographs only - see the note on
-            DESKTOP_MASK above. */}
-        <div className="md:col-span-5">
-          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] md:block">
-            {active ? (
-              <PhaseAnimation
-                kind={hue.kind}
-                images={pillar.images}
-                active={playing}
-                ink="var(--fg-inverse)"
-                accent={hue.onNavy}
-                photoMask={DESKTOP_MASK}
-                className="h-full w-full rounded-none"
-              />
-            ) : (
-              <img
-                src={pillar.images[0].src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover opacity-55 grayscale transition-[opacity,filter] duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:opacity-80"
-                style={{ maskImage: DESKTOP_MASK, WebkitMaskImage: DESKTOP_MASK }}
-              />
-            )}
-          </div>
-
-          {/* Below md the row is a single column, so the media is inline and
-              bleeds to the row's own edges instead of to the right. */}
-          <div className="pointer-events-none relative -mx-6 -mb-6 mt-2 aspect-[16/10] w-[calc(100%+3rem)] md:hidden">
-            {active ? (
-              <PhaseAnimation
-                kind={hue.kind}
-                images={pillar.images}
-                active={playing}
-                ink="var(--fg-inverse)"
-                accent={hue.onNavy}
-                photoMask={MOBILE_MASK}
-                className="h-full w-full rounded-none"
-              />
-            ) : (
-              <img
-                src={pillar.images[0].src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover opacity-55 grayscale"
-                style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
-              />
-            )}
-          </div>
+        {/* The media. A plain photograph with rounded corners, in colour,
+            open or closed - no dissolve, no greyscale. The open row plays its
+            sequence first and then settles on the photographs. */}
+        <div
+          className={cn(
+            'pointer-events-none relative aspect-[16/10] overflow-hidden rounded-[var(--r-md)] md:col-span-6 md:aspect-auto',
+          )}
+          style={{ background: active ? 'rgb(255 255 255 / 0.05)' : 'var(--gk-cream-deep)' }}
+        >
+          {active ? (
+            <PhaseAnimation
+              kind={hue.kind}
+              images={pillar.images}
+              active={playing}
+              ink="var(--fg-inverse)"
+              accent={hue.onNavy}
+              className="absolute inset-0 h-full w-full rounded-none"
+            />
+          ) : (
+            <img
+              src={pillar.images[0].src}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
         </div>
       </div>
     </li>

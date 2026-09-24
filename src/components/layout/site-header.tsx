@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
@@ -15,9 +15,16 @@ import { Wordmark } from './wordmark'
  * The threshold is 64px rather than "past the hero" on purpose: a header that
  * only changes at the very bottom of a full-height hero feels broken while
  * you're scrolling through it.
+ *
+ * Only the homepage has a navy hero under the header. Every other page opens
+ * on cream, so there the header starts in its solid state - transparent with
+ * the white wordmark, it was white on white until the first scroll (23 Sep
+ * doc, on the Partner with us page).
  */
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false)
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const [pastThreshold, setScrolled] = useState(false)
+  const scrolled = pastThreshold || pathname !== '/'
   const [menuOpen, setMenuOpen] = useState(false)
   const [progress, setProgress] = useState(0)
 

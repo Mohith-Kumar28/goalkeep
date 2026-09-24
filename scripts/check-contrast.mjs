@@ -45,6 +45,11 @@ const findings = await page.evaluate(() => {
     navy: [47, 74, 146],
     cream: [252, 252, 253],
     'cream-deep': [241, 244, 250],
+    /* Text set over a photograph on a dark gradient scrim (the audience
+     * testimonial, the gallery captions). The sweep can't see the image, so
+     * the element declares the scrim's darkest stop, which is where the text
+     * sits. */
+    scrim: [24, 30, 52],
   }
   const bgOf = (el) => {
     let n = el

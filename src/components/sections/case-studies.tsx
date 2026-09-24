@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
+import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -29,6 +30,9 @@ import { Reveal } from '@/components/primitives/reveal'
  *   · "Delete the post-mortem card." Gone, along with the navy inverse
  *     treatment it was the only user of.
  *   · Veruschka dropped out of the set; Peepul came in.
+ *
+ * 23 Sep: the programme name beside each organisation is replaced by two tags
+ * - a neutral sector label and a tinted one for the work done.
  */
 export function CaseStudies() {
   /*
@@ -48,11 +52,13 @@ export function CaseStudies() {
           <div className="mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow mb-4">{caseStudySection.eyebrow}</p>
-              <h2 id="case-studies-heading" className="h2 max-w-[22ch]">
+              <h2 id="case-studies-heading" className="h2 max-w-[36ch]">
                 {caseStudySection.headline}{' '}
-                <span className="font-medium text-[var(--fg-2)]">
-                  {caseStudySection.headlineTail}
-                </span>
+                <em>
+                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[0]}
+                  <Marker>{caseStudySection.headlineMark}</Marker>
+                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[1]}
+                </em>
               </h2>
             </div>
             <GkButton to={caseStudySection.cta.to} variant="secondary" withArrow>
@@ -77,18 +83,42 @@ export function CaseStudies() {
   )
 }
 
-/** The organisation and its engagement, as one line. */
-function Byline({ study, className }: { study: CaseStudy; className?: string }) {
+/*
+ * The intervention tag takes a light brand tint, keyed to the kind of work so
+ * the same intervention is always the same colour across the page.
+ */
+const INTERVENTION_TINTS: Record<string, string> = {
+  'Data collection & visualisation': 'var(--gk-teal-tint)',
+  'Theory of Change in practice': 'var(--gk-yellow-tint)',
+  'Grant management systems': 'var(--gk-blue-tint)',
+  'Capacity building': 'var(--gk-coral-tint)',
+}
+
+/** Two tags, then the organisation. */
+function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }) {
   return (
-    <p className={className}>
-      <span className="h3 text-[length:var(--fs-lg)]">{study.org}</span>
-      <span aria-hidden="true" className="mx-2 text-[var(--fg-2)]">
-        ·
-      </span>
-      <span className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
-        {study.tag}
-      </span>
-    </p>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-2">
+        <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: 'var(--gk-beige-deep)' }}>
+          {study.sector}
+        </span>
+        <span
+          className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
+          style={{ background: INTERVENTION_TINTS[study.intervention] ?? 'var(--gk-teal-tint)' }}
+        >
+          {study.intervention}
+        </span>
+      </div>
+      <h3
+        className={
+          size === 'lg'
+            ? 'text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold'
+            : 'text-[length:var(--fs-lg)] leading-tight font-extrabold'
+        }
+      >
+        {study.org}
+      </h3>
+    </div>
   )
 }
 
@@ -104,11 +134,8 @@ function LeadCard({ study }: { study: CaseStudy }) {
         className="h-full min-h-[16rem] w-full object-cover"
       />
       <div className="flex flex-col justify-center gap-4 p-8 md:p-12">
-        <Byline
-          study={study}
-          className="flex flex-wrap items-baseline text-[length:clamp(1.25rem,2vw,1.5rem)]"
-        />
-        <p className="max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+        <Byline study={study} size="lg" />
+        <p className="max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
           {study.body}
         </p>
         <Link to="/case-studies" className="link-cta mt-2 self-start">
@@ -131,9 +158,9 @@ function Card({ study }: { study: CaseStudy }) {
       />
 
       <div className="flex flex-1 flex-col gap-3 p-7">
-        <Byline study={study} className="flex flex-wrap items-baseline" />
+        <Byline study={study} />
 
-        <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-2)]">
+        <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">
           {study.body}
         </p>
 

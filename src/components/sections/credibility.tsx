@@ -1,47 +1,52 @@
 import { LogoTicker } from '@/components/primitives/logo-ticker'
+import type { TickerTone } from '@/components/primitives/logo-ticker'
 import { ticker } from '@/content/homepage'
 import { tickerRowOne, tickerRowTwo } from '@/content/partners'
 
 /**
  * Band 2 — the partner wall.
  *
- * Three changes out of the review, all of them subtractions:
+ * After the 23 Sep review:
  *
- *   · "Again, the boldened text is too much… just reduce the text sort of
- *     screamingness over here." The heading dropped from a 32px extrabold
- *     display line to a small letterspaced label, and the hand-drawn underline
- *     under it is gone ("or don't underline anything here, it's fine, just
- *     keep it simple").
- *   · "Jarring start and finish line." The band's 2px ink rules top and bottom
- *     were the jarring part, along with a fade mask too narrow to hide the
- *     wrap. Rules gone; the mask is now 140px a side.
- *   · "Black and white and then colour on hover" — see LogoTile.
+ *   · "The header is not standing out" - it is a real section heading now,
+ *     not a small letterspaced label, and the subline holds to one line.
+ *   · Aditya asked to see the marks in their own colours rather than
+ *     greyscale. Both are on the page, one above the other, so the two can be
+ *     compared on the same screen; delete the variant that loses and its
+ *     label. See TickerTone.
  */
+const VARIANTS: Array<{ tone: TickerTone; label: string }> = [
+  { tone: 'color', label: 'Option A · full colour' },
+  { tone: 'mono', label: 'Option B · greyscale, colour on hover' },
+  { tone: 'reveal', label: 'Option C · greyscale, turns colour as it scrolls in' },
+]
+
 export function Credibility() {
   return (
     <section
-      className="ground-cream band accent-blue relative !py-14 md:!py-16"
+      className="ground-cream band accent-blue relative !py-12 md:!py-14"
       aria-labelledby="credibility-heading"
     >
-      <div className="shell mb-10 flex flex-col items-center gap-3 text-center">
-        {/* Centred, so the eyebrow's leading rule is suppressed here — a
-            dash hanging off the left of a centred label reads as a mistake. */}
-        <h2
-          id="credibility-heading"
-          className="eyebrow text-[var(--fg-2)] [&::before]:hidden"
-        >
-          {ticker.heading}
+      <div className="shell mb-8 flex flex-col items-center gap-3 text-center">
+        <h2 id="credibility-heading" className="h2">
+          {ticker.heading} <em>{ticker.headingEm}</em>
         </h2>
-        {/* Added in the copy replacement. Kept at body size and one step down
-            in colour: the heading above it is already a small label, so a
-            second line of equal weight would read as two headings. */}
-        <p className="max-w-[46ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
+        <p className="text-[length:var(--fs-lg)] text-[var(--fg-1)] md:whitespace-nowrap">
           {ticker.subline}
         </p>
       </div>
 
-      <div className="ticker-mask">
-        <LogoTicker rowOne={tickerRowOne} rowTwo={tickerRowTwo} />
+      <div className="flex flex-col gap-10">
+        {VARIANTS.map((variant) => (
+          <div key={variant.tone}>
+            <p className="shell mb-3 text-center text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-coral-ink)] uppercase">
+              {variant.label}
+            </p>
+            <div className="ticker-mask">
+              <LogoTicker rowOne={tickerRowOne} rowTwo={tickerRowTwo} tone={variant.tone} />
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )

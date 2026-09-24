@@ -23,7 +23,12 @@ versions we've been through and can quickly reference them"):
 | Version | Where | What it was |
 |---|---|---|
 | 2.0 | tag `v2.0`, branch `v2.0-draft` | the draft reviewed on 4 September |
-| 3.0 | `master` | this one |
+| 3.0 | tag `v3.1`, branch `v3.1-draft` | the draft reviewed on 23 September — live at goalkeep.mohithkumar808.workers.dev (the `goalkeep` worker, frozen) |
+| 4.0 | branch `v4.0-draft` | the 23 September feedback — deploys to its own worker, `goalkeep-v4` |
+
+`pnpm run deploy` refuses to ship to the frozen `goalkeep` or `goalkeep-legacy`
+workers (see `scripts/deploy-guard.mjs`), so a review link is never overwritten
+by later work.
 
 ### What the review said
 

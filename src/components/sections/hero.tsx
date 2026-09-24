@@ -5,7 +5,6 @@ import { GkButton } from "@/components/primitives/gk-button"
 import { Spotlight } from "@/components/primitives/spotlight"
 import { SpotlightCard } from "@/components/primitives/spotlight-card"
 import { TypedPhrase } from "@/components/primitives/typed-phrase"
-import { Annotate } from "@/components/primitives/doodles"
 import { ShapeField } from "@/components/primitives/logo-shapes"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 
@@ -30,10 +29,37 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion"
  *     working: "I like the little hover and style effect you've given."
  *   · The subheader types and backspaces instead of being swept by a marker.
  *   · The case-study card lost its 2px ink outline, its hard offset shadow and
- *     its tilt. The photograph now dissolves into the panel rather than
- *     sitting in a frame.
+ *     its tilt.
+ *
+ * And after the 23 Sep review:
+ *
+ *   · The band is tighter, so the partner wall shows above the fold.
+ *   · The headline is set light with the phrase that carries it in bold
+ *     italic, matching the "Why we exist" reference; the machine-drawn
+ *     underline is gone, as is the handwritten margin note.
+ *   · The card is white. "The blue on blue is just looking a little off" -
+ *     a white card is what gives the band its depth.
  */
+/*
+ * "Headline weight to be mildly reduced (I would like to see variations of
+ * this banner with weight different)." The default is 500; `?hw=300`, `400`,
+ * `600` or `700` on the homepage URL shows the same banner at another weight
+ * for the review. Remove once a weight is picked.
+ */
+const HEADLINE_WEIGHTS = [300, 400, 500, 600, 700]
+
+function useHeadlineWeight() {
+  const [weight, setWeight] = useState<number | undefined>(undefined)
+  useEffect(() => {
+    const asked = Number(new URLSearchParams(window.location.search).get("hw"))
+    if (HEADLINE_WEIGHTS.includes(asked)) setWeight(asked)
+  }, [])
+  return weight
+}
+
 export function Hero() {
+  const headlineWeight = useHeadlineWeight()
+
   return (
     <section
       data-ground="navy"
@@ -48,57 +74,36 @@ export function Hero() {
       <ShapeField variant="hero" />
       <Spotlight />
 
-      <div className="shell relative z-10 grid items-center gap-14 pt-[calc(82px+3rem)] pb-20 md:pt-[calc(82px+4.5rem)] md:pb-24 lg:grid-cols-12 lg:gap-12">
+      {/* "This banner should not cover the entire above-the-fold screen" -
+          the padding is sized so the partner heading clears 900px. */}
+      <div className="shell relative z-10 grid items-center gap-12 pt-[calc(82px+2.5rem)] pb-14 md:pt-[calc(82px+3rem)] md:pb-16 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
-          {/* "Eyebrow: Remove." The headline is the first thing on the page
-              now, so it starts at the top of the column rather than under a
-              label. */}
-          <h1 className="display max-w-[23ch] text-white">
-            {hero.headlineLead}{" "}
-            <Annotate
-              mark="underline"
-              color="var(--gk-yellow)"
-              delay={0.5}
-              nowrap
-            >
-              {hero.headlineHighlight}
-            </Annotate>
+          <h1
+            className="display max-w-[22ch] text-white"
+            style={headlineWeight ? { fontWeight: headlineWeight } : undefined}
+          >
+            {hero.headlineLead} <em>{hero.headlineHighlight}</em>
           </h1>
 
           {/* min-height reserves the tallest rendering of the typed sentence so
               the buttons below never move while it types. */}
-          <p className="mt-8 min-h-[4.7em] max-w-[44ch] text-[length:clamp(1.0625rem,1.5vw,1.3125rem)] leading-[1.55] font-normal text-white/90 sm:min-h-[3.2em]">
+          <p className="mt-7 min-h-[4.7em] max-w-[44ch] text-[length:clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.55] font-normal text-white/90 sm:min-h-[3.2em]">
             <TypedPhrase
               lead={hero.typed.lead}
               phrases={hero.typed.phrases}
               tail={hero.typed.tail}
-              markBackground="var(--gk-white)"
+              accent="var(--gk-yellow)"
             />
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <GkButton
-              to={hero.primaryCta.to}
-              variant="primary"
-              onDark
-              withArrow
-            >
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <GkButton to={hero.primaryCta.to} variant="accent" onDark withArrow>
               {hero.primaryCta.label}
             </GkButton>
             <GkButton to={hero.secondaryCta.to} variant="secondary" onDark>
               {hero.secondaryCta.label}
             </GkButton>
           </div>
-
-          {/* The margin note. Handwriting is the one informal device the review
-              asked us to keep, so it survives — quieter, and no longer paired
-              with a drawn arrow. */}
-          <p
-            aria-hidden="true"
-            className="hand mt-8 hidden leading-tight whitespace-pre-line text-[var(--gk-yellow)]/90 xl:block"
-          >
-            {hero.marginalia}
-          </p>
         </div>
 
         <div className="lg:col-span-5">
@@ -112,16 +117,10 @@ export function Hero() {
 /**
  * The rotating case-study card.
  *
- * "Case study boxing needs some work" — so the box went. The photograph is not
- * in a frame; it dissolves down into the panel colour.
- *
- * The panel used to be white at 7% over navy, which composites to about
- * #3d5599 against a #2f4a92 ground — under a value step of separation, so the
- * card's edges disappeared into the section. It is now the deep navy well
- * instead. Darker rather than lighter, because a white card here would
- * out-shout the headline, duplicate the one solid-white element on the page
- * (the primary CTA) and drop the yellow accents to ~1.8:1. Going down instead
- * of up buys the same separation and keeps the hierarchy and the accent.
+ * White now, carrying the four things the review listed: an image, a
+ * headline, a small tag for the kind of project, and the read-case-study link.
+ * It stays prominent on the right - "visitors see evidence of the work as soon
+ * as they land."
  */
 function ProofCard() {
   const reduced = useReducedMotion()
@@ -149,16 +148,17 @@ function ProofCard() {
     >
       <SpotlightCard>
         <article
-          className="overflow-hidden rounded-[var(--r-lg)] border border-white/10 shadow-[0_14px_40px_rgb(12_20_44_/_0.38)]"
-          style={{ background: "var(--gk-navy-deep)" }}
+          className="overflow-hidden rounded-[var(--r-lg)] bg-[var(--gk-white)] text-[var(--gk-ink)] shadow-[0_18px_48px_rgb(12_20_44_/_0.35)]"
+          /* A light surface inside a navy band: the link colours are reset
+             here so the band's yellow-on-navy link doesn't carry in. */
+          style={
+            {
+              "--link-color": "var(--gk-navy)",
+              "--link-color-hover": "var(--gk-navy-deep)",
+            } as React.CSSProperties
+          }
         >
-          <div
-            className="photo-bleed photo-bleed-b relative aspect-[16/9]"
-            /* The photograph fades into the panel rather than stopping at an
-               edge, so --fade-to is the panel's own colour. Opaque now, so this
-               is the token itself rather than a hand-composited value. */
-            style={{ ["--fade-to" as string]: "var(--gk-navy-deep)" }}
-          >
+          <div className="relative aspect-[16/9] bg-[var(--gk-cream-deep)]">
             {hero.proofCards.map((item, i) => (
               <img
                 key={item.image}
@@ -172,20 +172,22 @@ function ProofCard() {
             ))}
           </div>
 
-          <div className="-mt-8 px-7 pb-7">
-            <p className="relative text-[length:var(--fs-sm)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-yellow)] uppercase">
-              {card.org}
-            </p>
-            {/* The before/after figure is gone — the card carries the outcome
-                as a sentence now, so this line does the work the stat used to
-                and is set at the size the stat used to hold. min-height keeps
-                the pager and the link still while the copy cross-fades
-                between organisations. */}
-            <p className="relative mt-3 min-h-[4.5em] text-[length:clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.45] font-semibold text-white">
+          <div className="px-7 pt-6 pb-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)]">
+                {card.tag}
+              </span>
+              <span className="text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
+                {card.org}
+              </span>
+            </div>
+            {/* min-height keeps the pager and the link still while the copy
+                cross-fades between organisations. */}
+            <p className="mt-3 min-h-[4.35em] text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] leading-[1.45] font-semibold text-[var(--gk-navy-deep)]">
               {card.line.value}
             </p>
 
-            <div className="relative mt-6 flex items-center justify-between gap-4">
+            <div className="mt-4 flex items-center justify-between gap-4">
               <Link
                 to={card.to}
                 className="link-cta text-[length:var(--fs-sm)]"
@@ -201,9 +203,7 @@ function ProofCard() {
                     style={{
                       width: i === index ? 22 : 10,
                       background:
-                        i === index
-                          ? "var(--gk-yellow)"
-                          : "rgb(255 255 255 / 0.3)",
+                        i === index ? "var(--gk-navy)" : "var(--hairline-strong)",
                     }}
                   />
                 ))}

@@ -53,23 +53,20 @@ export const hero = {
   typed: {
     lead: 'We',
     phrases: ['design', 'build', 'enable the adoption of'],
-    tail: 'data systems that deepen the impact of your programs.',
+    /* Reframed after the 23 Sep doc ("one of the intro sentences reads as
+       generic"): the old tail, "…that deepen the impact of your programs",
+       could be any consultancy's. This one says what's different - the
+       systems get used. Placeholder until Aditya's copy pass. */
+    tail: 'data systems your teams actually use to run better programs.',
   },
   primaryCta: { label: 'Talk to us', to: '/contact' },
   secondaryCta: { label: 'See our work', to: '/case-studies' },
-  marginalia: 'we start with\nthe decision,\nnot the tool',
   /**
    * Goalkeep photography. No longer behind the hero — "let's remove the
    * background from here and keep a simple solid blue colour like in the
    * marketing materials, and keep this video in some other component's
    * background below". It runs behind the numbers band instead.
    */
-  backdrop: [
-    { src: '/photos/hero-01-workshop.webp', alt: '' },
-    { src: '/photos/hero-02-classroom.webp', alt: '' },
-    { src: '/photos/hero-03-circle.webp', alt: '' },
-    { src: '/photos/hero-04-pair.webp', alt: '' },
-  ],
   /**
    * The rotating proof card. One organisation, one outcome, one photograph.
    *
@@ -82,6 +79,7 @@ export const hero = {
   proofCards: [
     {
       org: 'Baithak Foundation',
+      tag: 'Dashboards',
       image: '/photos/case-baithak.webp',
       imageAlt: 'A Baithak Foundation music session in progress',
       line: {
@@ -92,6 +90,7 @@ export const hero = {
     },
     {
       org: 'Vanavil Trust',
+      tag: 'Theory of Change',
       image: '/photos/case-vanavil.webp',
       imageAlt: 'Children studying in a Vanavil Trust classroom',
       line: {
@@ -104,6 +103,7 @@ export const hero = {
     },
     {
       org: 'Apni Shala Foundation',
+      tag: 'Indicator design',
       image: '/photos/case-apni-shala.webp',
       imageAlt: 'A student working on a craft activity at Apni Shala',
       line: {
@@ -123,9 +123,82 @@ export const hero = {
 
 export const ticker = {
   /* Feedback: "Change top text only to: Partners who trust us (centred)". */
-  heading: 'Partners who trust us',
+  heading: 'Partners who',
+  headingEm: 'trust us',
   /* Added in the copy replacement. */
-  subline: 'Nonprofits, funders and intermediaries we have worked with across India.',
+  subline: 'Nonprofits, funders and intermediaries across India.',
+}
+
+/* ============================================================
+   2b · Why we exist — beige
+   ============================================================ */
+
+/* Built from the "Why we exist" artifact Rumit shared after the 23 Sep call.
+   Panel 01 is the artifact verbatim. Panels 02–04 exist in the artifact only
+   as titles and one-line tags, so their body copy and figures here are drafts
+   - the whole section is waiting on Aditya's approval, and every panel
+   carries a verify note until then. */
+export const whyWeExist = {
+  eyebrow: 'why we exist',
+  headlineLead: "India's social sector isn't short on data.",
+  headlineEm: "It's short on decisions made with data.",
+  /* The one word circled. 23 Sep: "circle one key word or one key two-word
+     phrase" - a trial until the Canva highlight guide lands. */
+  headlineCircle: 'decisions',
+  lead: 'Every year, more capital flows into the Indian nonprofit sector. However, with little data flowing back into the decision-making layer, several organizations are missing a key opportunity to maximize program impact.',
+  panels: [
+    {
+      value: {
+        id: 'money',
+        title: 'The money',
+        tag: '₹27 lakh crore a year',
+        body: "India's social sector currently spends ₹27 lakh crore annually, and is projected to grow at 10% every year through 2030. The money is coming in, but the key question is: are we using it in the best way possible?",
+      },
+      verify: 'Source footnotes 1–3 from the funder deck for the ₹27 lakh crore figure and the 10% projection.',
+    },
+    {
+      value: {
+        id: 'decisions',
+        title: 'The decisions',
+        tag: '5 in 100 use data',
+        body: 'For every hundred organizations collecting data, only about five use it to change what they do next. The rest gather it for the reports that travel upward to funders.',
+      },
+      verify: 'Draft copy. The "5 in 100" figure and its source, from the funder deck.',
+    },
+    {
+      value: {
+        id: 'loop',
+        title: 'The loop',
+        tag: 'Proving, not improving',
+        body: 'Evaluations are commissioned one at a time, to prove impact to a funder. Once the report is filed, what it found rarely makes its way back into how the program runs.',
+      },
+      verify: 'Draft copy — Aditya to approve.',
+    },
+    {
+      value: {
+        id: 'layer',
+        title: 'The missing layer',
+        tag: 'Decision infrastructure',
+        body: 'What’s missing is the layer in between: the systems that turn what an organization collects into what it decides, week after week. As funding grows, that gap widens. It’s the layer Goalkeep builds.',
+      },
+      verify: 'Draft copy — Aditya to approve.',
+    },
+  ],
+  spend: {
+    label: 'Annual social sector spend in India',
+    figure: '₹27 lakh crore',
+    sub: 'Projected to grow at ~10% YoY until 2030.',
+    pill: '+61% by FY30',
+    bars: [
+      { year: 'FY25', value: 27 },
+      { year: 'FY26', value: 29.7 },
+      { year: 'FY27', value: 32.7 },
+      { year: 'FY28', value: 35.9 },
+      { year: 'FY29', value: 39.5 },
+      { year: 'FY30', value: 43.5 },
+    ],
+    note: 'Projection drawn at 10% annual growth on current sector spend.',
+  },
 }
 
 /* ============================================================
@@ -136,8 +209,6 @@ export const whatWeDo = {
   eyebrow: 'what we do',
   headline: 'Most of the projects we take on',
   headlineTail: 'involve one or more of the following.',
-  lead: 'Hover a stage to see what it actually looks like.',
-  cta: { label: 'See how we scope a project', to: '/what-we-do' },
 }
 
 /*
@@ -153,8 +224,6 @@ export const pillars: Array<Pillar> = [
     title: 'Design',
     body:
       'Most organizations have a systems design that is not adept at capturing data that actually feeds back into their program. So whether you’re working with manual data logs, excel sheets or an existing data dashboard, we help set your data foundations right.',
-    handwritten: 'If we collect this information, what action will it help us take?',
-    marginalia: 'we ask this first, every time',
     images: [
       { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a Goalkeep design workshop' },
       { src: '/photos/phase-design-b.webp', alt: 'A Goalkeep working session in progress on the floor of a partner office' },
@@ -166,8 +235,6 @@ export const pillars: Array<Pillar> = [
     title: 'Build',
     body:
       'Data was never meant to be this daunting, complex being. We invest time in building intuitive dashboards that are easy to read and even easier to use, so that people across the org can navigate them comfortably, and not get overwhelmed by the data.',
-    handwritten: 'Focus less on showing all the data, and more on showing the right data',
-    marginalia: 'boring traffic-light rubric. works.',
     images: [
       { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field' },
       { src: '/photos/phase-build-b.webp', alt: 'A Goalkeep-built dashboard showing programme indicators' },
@@ -179,11 +246,12 @@ export const pillars: Array<Pillar> = [
     title: 'Adopt',
     body:
       'What’s the point of a shiny dashboard when no one in the organization is using it? A big focus of our work is to conduct trainings and workshops on enabling data adoption, so that people of every level of the org can use the data being collected to make better decisions.',
-    handwritten:
-      'Data adoption is a marathon you practise for every week, not a sprint you run once every few months.',
     images: [
-      { src: '/photos/phase-adopt-a.webp', alt: 'A partner team working through a build session with Goalkeep' },
-      { src: '/photos/phase-adopt-b.webp', alt: 'A Goalkeep facilitator walking a colleague through data on a phone' },
+      /* 23 Sep: "use more photographs of training sessions… that visibly show
+         an organisation adopting data." Both are stills from the Data
+         Literacy Programme films. */
+      { src: '/photos/phase-adopt-training-a.webp', alt: 'A Goalkeep trainer walking a Data Literacy Programme cohort through the manual' },
+      { src: '/photos/phase-adopt-training-b.webp', alt: 'Participants working through a data exercise together at a Data Literacy Programme session' },
     ],
   },
 ]
@@ -195,38 +263,38 @@ export const pillars: Array<Pillar> = [
    4 · Whom we do it for — pale blue
    ============================================================ */
 
+/* 23 Sep review. The section lost its eyebrow and headline - the tabs lead -
+   and gained a fourth segment, Funders. Headers are two lines at most, bodies
+   one paragraph, and the testimonial is image-led. All the copy below is
+   placeholder until Aditya's content pass ("keep the placeholder content…
+   we'll finalise"), and each testimonial photo is a stand-in from the bank,
+   not yet the person quoted. */
 export const audienceSection = {
-  eyebrow: 'whom we do it for',
-  headline: 'We’ve worked with three kinds of organizations.',
-  headlineTail:
-    'You may choose which one resonates most closely to you, and we’ll tell you how we helped them.',
   photoCredit: {
-    value: 'Partner names and locations on the carousel captions',
+    value: 'Partner names and locations on the gallery captions',
     verify:
-      'Confirm the organisation and city on every carousel caption before launch. The four case-study covers are named in Drive; the workshop and field frames are labelled generically until someone confirms which partner site they were shot at.',
+      'Confirm the organisation and city on every gallery caption before launch. The four case-study covers are named in Drive; the workshop and field frames are labelled generically until someone confirms which partner site they were shot at.',
   },
 }
+
+const PLACEHOLDER = 'Placeholder copy from the 23 Sep review — Aditya to replace.'
 
 export const audiences: Array<Audience> = [
   {
     id: 'early-stage',
     label: 'Early-stage NGOs',
-    header:
-      'Does your organization have a lot of data but it’s often a struggle for your teams to make sense of it and use it effectively?',
-    body: [
-      'Being able to use information to make better decisions shouldn’t only be for large organisations that already have the tech and the people in place. Our Kickstarter programme helps smaller organisations put the basic systems in place to measure their Theory of Change, use that information to improve the program-related decisions, and communicate that impact so they are in a position to attract better funding.',
-      'Many small nonprofits assume that building an impact monitoring system requires complex software, dedicated data teams or significant technical expertise. It doesn’t.',
-    ],
-    highlight: {
-      text: 'measure their Theory of Change, use that information to improve the program-related decisions, and communicate that impact so they are in a position to attract better funding.',
-      hue: 'var(--gk-yellow)',
+    header: 'Plenty of data, but no time to make sense of it?',
+    body: {
+      value: 'You don’t need a data team or expensive software to run on evidence. Our Kickstarter programme helps smaller organisations put the basic systems in place: measure what their Theory of Change says matters, use it to make better program decisions, and show that impact to funders.',
+      verify: PLACEHOLDER,
     },
     photos: [
       { src: '/photos/org-vanavil.webp', alt: 'Children studying in a Vanavil Trust classroom', org: 'Vanavil Trust', location: 'Tamil Nadu' },
       { src: '/photos/org-apni-shala.webp', alt: 'A student working on a craft activity', org: 'Apni Shala Foundation', location: 'Mumbai' },
       { src: '/photos/org-classroom.webp', alt: 'A programme session running in a village classroom', org: 'Programme session', location: 'In the field' },
-      { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop', org: 'Design workshop', location: 'In session' },
+      { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop', org: 'Design workshop', location: 'Mumbai' },
       { src: '/photos/note-01.webp', alt: 'A partner team member speaking during a working session', org: 'Working session', location: 'In session' },
+      { src: '/photos/hero-03-circle.webp', alt: 'A floor-circle working session', org: 'Brainstorm', location: 'In the field' },
     ],
     testimonial: {
       quote: {
@@ -237,28 +305,25 @@ export const audiences: Array<Audience> = [
       },
       name: 'Revathi Radhakrishnan',
       credentials: 'Vanavil Trust',
+      photo: '/photos/org-vanavil.webp',
     },
     cta: { label: 'See our Kickstarter programme', to: '/programs/kickstarter' },
   },
   {
     id: 'data-mature',
     label: 'Data-mature nonprofits',
-    header:
-      'Has your organization built data systems that your teams just aren’t using, despite conducting several trainings?',
-    body: [
-      'Getting teams to adopt a system that they’re not used to is a challenge. Several organizations pour in a ton of resources on data trainings, MEL workshops, data reviews — just to realize that their adoption rate hasn’t moved much. That’s why, in our Data Literacy Program, we “train the trainers” — we will equip two members from your MEL team with the skills and toolkits they need to percolate an organization-wide data culture, so that the data systems you built actually get used and adopted by your teams.',
-      'The 42 MEL leads we have trained so far have gone on to train 700+ people across their organizations.',
-    ],
-    highlight: {
-      text: 'we will equip two members from your MEL team with the skills and toolkits they need to percolate an organization-wide data culture, so that the data systems you built actually get used and adopted by your teams.',
-      hue: 'var(--gk-coral-lift)',
+    header: 'Built the systems, ran the trainings, and still no one uses them?',
+    body: {
+      value: 'Adoption is the hard part. In our Data Literacy Programme we train the trainers: two people from your MEL team get the skills and toolkits to build a data culture across the organisation, so the systems you already built actually get used. The 42 MEL leads we’ve trained have gone on to train 700+ colleagues.',
+      verify: PLACEHOLDER,
     },
     photos: [
       { src: '/photos/org-baithak.webp', alt: 'A Baithak Foundation music session in progress', org: 'Baithak Foundation', location: 'Pune' },
       { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field', org: 'Live dashboard', location: 'In the field' },
-      { src: '/photos/phase-build-b.webp', alt: 'Programme indicators on a partner dashboard', org: 'Indicator review', location: 'In session' },
       { src: '/photos/group-team.webp', alt: 'Goalkeep with a partner team after a workshop', org: 'Partner team', location: 'Post-workshop' },
       { src: '/photos/note-03.webp', alt: 'A facilitator presenting findings at a partner dashboard', org: 'Findings review', location: 'In session' },
+      { src: '/photos/hero-04-pair.webp', alt: 'Two facilitators reviewing a tablet', org: 'Data review', location: 'In the field' },
+      { src: '/photos/phase-build-b.webp', alt: 'Programme indicators on a partner dashboard', org: 'Indicator review', location: 'In session' },
     ],
     testimonial: {
       quote: {
@@ -269,42 +334,69 @@ export const audiences: Array<Audience> = [
       },
       name: 'Shivangi Desai',
       credentials: 'Goonj',
+      photo: '/photos/note-02.webp',
     },
     cta: { label: 'See the Data Literacy Programme', to: '/programs/data-literacy' },
   },
   {
     id: 'intermediary',
-    label: 'Intermediary partners',
-    header:
-      'Are you looking to build the capacities of your partner organizations that will enable them to scale their programs and deepen their impact?',
-    body: [
-      /* "the funding we have to organization X" is verbatim from the copy doc.
-         Reads like a slip for "gave"; flagged rather than silently corrected. */
-      'As an intermediary that usually sits in the middle of both funders and nonprofits, a question you need to answer often is probably this: what impact did the funding we have to organization X create? It’s not always the easiest to answer if the data systems in place are outdated, messy, and not effectively mapped to their theory of change.',
-      'That’s where we step in, by conducting trainings with your partner orgs so that they learn to use data and not anecdotal evidence to drive both their impact communication and their internal decision making.',
-    ],
-    highlight: {
-      text: 'what impact did the funding we have to organization X create? It’s not always the easiest to answer if the data systems in place are outdated, messy, and not effectively mapped to their theory of change.',
-      hue: 'var(--gk-teal-lift)',
+    /* "Intermediaries" read as too narrow; this is from Aditya's written
+       options ("Funding and ecosystem partners"), minus the funding half now
+       that Funders is its own tab. Confirm with him. */
+    label: 'Ecosystem partners',
+    header: 'Building the capacity of the organisations you support?',
+    body: {
+      value: 'Capacity-building partners sit between funders and nonprofits, and are often asked what their support actually changed. We run data trainings across your partner cohort, so the organisations you work with learn to use data, not anecdotes, for their own decisions and for telling their impact story.',
+      verify: PLACEHOLDER,
     },
     photos: [
       { src: '/photos/org-veruschka.webp', alt: 'A culinary training session at Veruschka Foundation', org: 'Veruschka Foundation', location: 'Mumbai' },
       { src: '/photos/group-lineup.webp', alt: 'A Goalkeep and partner team group photograph', org: 'Partner cohort', location: 'Convening' },
       { src: '/photos/phase-adopt-a.webp', alt: 'A partner team working through a build session', org: 'Adoption workshop', location: 'In session' },
-      { src: '/photos/phase-adopt-b.webp', alt: 'A facilitator walking a colleague through data on a phone', org: 'Field handover', location: 'In the field' },
       { src: '/photos/note-02.webp', alt: 'A facilitator presenting to a partner group', org: 'Cohort session', location: 'In session' },
+      { src: '/photos/hero-01-workshop.webp', alt: 'An affinity-mapping wall during a workshop', org: 'Cohort workshop', location: 'Mumbai' },
     ],
     testimonial: {
       quote: {
         value: {
-          text: 'I have seen how much attention to detail Goalkeep gives to any program that they are part of. The way they bond and form relationships with the participating NGOs is strong and it is always a nice experience to partner with them.',
+          text: 'The way they bond and form relationships with the participating NGOs is strong, and it is always a nice experience to partner with them.',
           attribution: 'Freya Ray, Dasra',
         },
       },
       name: 'Freya Ray',
       credentials: 'Dasra',
+      photo: '/photos/group-lineup.webp',
     },
-    cta: { label: 'Partner with us', to: '/partner-with-us' },
+    cta: { label: 'Run a cohort with us', to: '/partner-with-us#ecosystem-partners' },
+  },
+  {
+    id: 'funders',
+    label: 'Funders',
+    header: 'Want your grants to leave better decisions behind?',
+    body: {
+      value: 'Funders fund reports and evaluations, but rarely the systems that let a grantee act on what they find. We work directly with foundations and CSR teams to design portfolio-level indicators, and to fund data capacity inside the organisations they back, so every rupee comes back as evidence you can use.',
+      verify: 'Placeholder copy. The Anaga/APF project is the reference engagement — Aditya to supply the line and a named quote.',
+    },
+    photos: [
+      { src: '/photos/case-dashboard.webp', alt: 'A programme dashboard open on a laptop', org: 'Portfolio dashboard', location: 'In session' },
+      { src: '/photos/hero-02-classroom.webp', alt: 'A village classroom session', org: 'Programme site', location: 'In the field' },
+      { src: '/photos/phase-adopt-b.webp', alt: 'A facilitator walking a colleague through data on a phone', org: 'Field handover', location: 'In the field' },
+      { src: '/photos/phase-design-b.webp', alt: 'A floor-circle working session', org: 'Grantee workshop', location: 'In session' },
+      { src: '/photos/case-apni-shala.webp', alt: 'A student working on a craft activity', org: 'Apni Shala Foundation', location: 'Mumbai' },
+    ],
+    testimonial: {
+      quote: {
+        value: {
+          text: 'For the first time, our grantees’ numbers told us something we could act on.',
+          attribution: 'Programme lead, funding partner',
+        },
+        verify: 'Placeholder quote — no funder testimonial exists yet. Replace with a real, named quote before launch.',
+      },
+      name: 'Programme lead',
+      credentials: 'Funding partner (placeholder)',
+      photo: '/photos/hero-04-pair.webp',
+    },
+    cta: { label: 'Partner with us', to: '/partner-with-us#funders' },
   },
 ]
 
@@ -344,6 +436,9 @@ export const caseStudySection = {
   eyebrow: 'case studies',
   headline: 'What changed,',
   headlineTail: 'and what it took to get there.',
+  /* Highlighted, as a trial of the paper-highlighter treatment on a short
+     phrase - see headlineCircle in whyWeExist. */
+  headlineMark: 'what it took',
   cta: { label: 'Read all case studies', to: '/case-studies' },
 }
 
@@ -352,11 +447,19 @@ export const caseStudySection = {
  * rather than a before/after figure. The Veruschka card and the post-mortem
  * card ("Delete the post-mortem card") were both cut in the copy replacement.
  */
+/* 23 Sep: programme names ("Kickstarter", "Custom project") meant nothing to
+   a visitor, so each card carries two tags instead - the sector, and the work
+   done. Tag vocabulary from the call: sectors Education, Livelihoods,
+   Disability, Health, Arts; interventions Data collection & visualisation,
+   Theory of Change in practice (for "operationalising", which isn't widely
+   understood), Grant management systems, Capacity building. Which card gets
+   which is a first pass for Goalkeep to correct. */
 export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'baithak-reporting',
     org: 'Baithak Foundation',
-    tag: 'Kickstarter',
+    sector: 'Arts',
+    intervention: 'Data collection & visualisation',
     body: 'A dashboard that helped close a ₹25 lakh grant. What convinced the funder wasn’t the dashboard, but that every person on the team used it regularly.',
     image: '/photos/case-baithak.webp',
     imageAlt: 'A Baithak Foundation music session in progress',
@@ -364,7 +467,8 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'vanavil-baseline',
     org: 'Vanavil Trust',
-    tag: 'Kickstarter',
+    sector: 'Education',
+    intervention: 'Theory of Change in practice',
     body: 'From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators that could give them a better glimpse of program gaps and successes.',
     image: '/photos/case-vanavil.webp',
     imageAlt: 'Children studying in a Vanavil Trust classroom',
@@ -372,7 +476,8 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'peepul-leadership-dashboard',
     org: 'Peepul',
-    tag: 'Custom project',
+    sector: 'Education',
+    intervention: 'Grant management systems',
     body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
     image: '/photos/case-dashboard.webp',
     imageAlt: 'A programme dashboard open on a laptop',
@@ -380,7 +485,8 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'apni-shala-indicators',
     org: 'Apni Shala Foundation',
-    tag: 'Kickstarter',
+    sector: 'Education',
+    intervention: 'Capacity building',
     body: 'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
     image: '/photos/case-apni-shala.webp',
     imageAlt: 'A student working on a craft activity',
@@ -397,46 +503,48 @@ export const caseStudies: Array<CaseStudy> = [
    heading and seven questions, and the aside was dev-build copy repeating a
    promise the closing band already makes. */
 export const faqSection = {
-  headline: 'Questions we get in the first call.',
+  headline: 'Questions we get',
+  headlineEm: 'in the first call.',
 }
 
-/* Seven questions, drafted for nonprofits with limited data maturity, tight
-   budgets and a real need to show the impact of their programmes. The pricing
-   and timeline commitments the old set made are gone. */
+/* Replacement content from the 23 Sep feedback doc, verbatim. Aditya is still
+   reviewing these against his BD conversations; Q7 still needs the handover
+   specifics. */
 export const faqs: Array<Faq> = [
   {
     value: {
       question: 'We don’t have a data team. Is that a problem?',
       answer:
-        'No, and that describes most of the organisations we work with. Some of the strongest data practitioners in nonprofits come from programme teams, because they already understand the context, the constraints and the decisions the data needs to inform. What matters is that someone in the organisation is willing to own the answer to “is this number right”, even if data isn’t in their job title.',
+        'No, and that describes most of the organisations we work with. Some of the strongest data practitioners in nonprofits come from program teams, because they already understand the context, the constraints and the decisions the data needs to inform. Also, we understand that having a data team is a tough ask when you’re working with limited budgets, and our engagements are designed to cater to both data mature and early stage nonprofits who have never streamlined their data systems before.',
     },
   },
   {
     value: {
       question: 'We already collect a lot of data. Why would we need help?',
       answer:
-        'Most organisations we meet have no shortage of data. The difficulty is that it was collected to report upward rather than to decide anything. Before adding a new indicator, it helps to ask: who will look at this, and what decision will it change? If there isn’t a good answer, it isn’t free to collect.',
+        'Most organisations we meet have no shortage of data. The difficulty is that it is either (a) the data is being collected only to report upward (to donors and funders) rather than to decide anything about your programs and/or (b) even if you are trying to use data to deepen your impact, there is so much data without a clear systems design to sustain it that your team ends up getting overwhelmed, and hence barely using the data at all. That’s where we come in, to help you organize the mess, slap on a new coat of paint, and teach you how to get your organization to lean in to using more data in their decision making.',
     },
   },
   {
     value: {
-      question: 'Do we get a dashboard at the end?',
+      question: 'Do we get a data dashboard at the end of our engagement with you?',
       answer:
-        'Often, but the dashboard is rarely the point. With Vanavil Trust, the biggest change wasn’t the dashboard, it was that the team stopped asking “what data should we collect” and started asking “what information will actually help us make better decisions”. The most important step isn’t choosing the right software or collecting more data. It’s agreeing on what matters enough to measure.',
+        'Often, yes; but the dashboard is only part of the picture. The most important step isn’t creating a new dashboard or collecting more data. It’s agreeing on what matters enough to measure, and then having the infrastructure in place to measure it accurately and easily. For instance, with Vanavil Trust, the biggest change wasn’t the new dashboard, it was that the team stopped asking “what more data should we add to our systems?” and started asking “how can we use our current dashboard to make better decisions?”.',
     },
   },
   {
     value: {
-      question: 'Our budget is small. Where do we start?',
+      question: 'Our budgets are really tight. Will you be able to help us?',
       answer:
-        'Our Kickstarter program is designed for exactly this. It is meant for smaller organisations who need the basic systems in place, without a large upfront commitment. More generally, most guidance suggests setting aside 5 to 10 percent of a project budget for MEL. The number matters less than the habit: decide what MEL needs before the rest of the budget is locked, not after.',
+        'Our Kickstarter program is designed for exactly this. It is meant for smaller organisations who need the basic systems in place, without a large financial commitment. We also reach out to funding organizations who help subsidize your place in the Kickstarter Cohort, so NGOs themselves usually have to bear only 50-75% of the total cost. Reach out to us and we’ll try and suggest what’s the best route forward for your organization.',
     },
+    verify: 'The 50–75% cost share for NGOs in the subsidised Kickstarter cohort.',
   },
   {
     value: {
-      question: 'Our funder treats MEL as overhead. What do we say?',
+      question: 'Our funder treats MEL as an administrative overhead. How can we change their mind?',
       answer:
-        'Come prepared to explain why it isn’t. India’s CSR rules cap administrative overheads at 5 percent of expenditure, but define these narrowly as general management of a company’s CSR function, explicitly excluding costs incurred for designing, implementing, monitoring and evaluating a project. MEL is no more overhead than a map is on a road trip. You still need to know if you’re headed the right way.',
+        'Come prepared to explain to them why it isn’t. India’s CSR rules cap administrative overheads at 5 percent of expenditure, but define these narrowly as general management of a company’s CSR function, explicitly excluding costs incurred for designing, implementing, monitoring and evaluating a project. MEL is no more overhead than a map is on a road trip. You still need to know if you’re headed the right way.',
     },
     verify:
       'The reading of the CSR overhead rule, with someone who can stand behind it — this answer tells funders what the law says.',
@@ -445,15 +553,10 @@ export const faqs: Array<Faq> = [
     value: {
       question: 'Should we just hire a data person instead?',
       answer:
-        'You may well need to, but a hire alone usually changes very little. Data talent isn’t a single role, it’s a spectrum, from defining what to collect, to analysing it, to building and maintaining the systems underneath. Expecting one hire to cover all of it is unrealistic. Bringing in outside help is a bit like hiring an architect before constructing a building. The goal isn’t to outsource ownership, it’s to get specialised expertise at the moments it matters.',
+        'You may well need to, but one hire alone usually changes very little. Data talent isn’t a single role, it’s a spectrum, from defining what to collect, to analysing it, to building and maintaining the systems underneath. Expecting one hire to cover all of it is often an unrealistic expectation. Bringing in outside help is a bit like hiring an architect before constructing a building - it can help bring you more clarity on what exactly sustaining this data system needs and what specific role you may want to hire for in the future.',
     },
   },
   {
-    /* Verbatim from the copy doc, bracket and closing note included. That
-       answer is unfinished — it is the one question the document left open —
-       and running it as written keeps the gap visible on the page instead of
-       hiding it behind a plausible-sounding half-answer. Replace the whole
-       string once Goalkeep says what handover includes. */
     value: {
       question: 'What happens after you leave?',
       answer:
@@ -471,11 +574,16 @@ export const faqs: Array<Faq> = [
 /* "Keep same." */
 export const fieldNoteSection = {
   eyebrow: 'field notes',
-  headline: 'What we’re learning, written down.',
-  lead: 'Short pieces from projects in progress. No thought leadership.',
+  headline: 'What we’re learning,',
+  headlineEm: 'written down.',
+  /* 23 Sep doc: "clarify what this section is for and how it's positioned."
+     It is the practitioner's shelf - short, specific notes for program and
+     MEL teams, not company news or opinion pieces. Placeholder wording. */
+  lead: 'Short, practical notes for program and MEL teams, from the work we’re doing right now: what worked, what didn’t, and what we’d do differently.',
   cta: { label: 'Read all field notes', to: '/resources/blog' },
 }
 
+/* Sectors are a first pass for Goalkeep to correct, like the case-study tags. */
 export const fieldNotes: Array<FieldNote> = [
   {
     slug: 'dashboards-not-opened-twice',
@@ -483,6 +591,7 @@ export const fieldNotes: Array<FieldNote> = [
     readingTime: '4 min',
     title: '73% of the dashboards we audit aren’t opened twice',
     dek: 'Two years of audits, counted. What the survivors had in common.',
+    sector: 'Cross-sector',
     tag: 'M&E',
     image: '/photos/note-03.webp',
     imageAlt: 'A facilitator presenting findings at a partner dashboard',
@@ -493,6 +602,7 @@ export const fieldNotes: Array<FieldNote> = [
     readingTime: '6 min',
     title: 'Most “data problems” are workflow problems in a data costume',
     dek: 'The fix was a 20-line script and a Tuesday standup.',
+    sector: 'Livelihoods',
     tag: 'Field note',
     inverse: true,
     badge: 'Most read',
@@ -505,6 +615,7 @@ export const fieldNotes: Array<FieldNote> = [
     readingTime: '3 min',
     title: 'Three questions to ask before you build anything',
     dek: 'Who reopens this every week? What decision changes if the number does?',
+    sector: 'Education',
     tag: 'Data strategy',
     image: '/photos/note-02.webp',
     imageAlt: 'A facilitator presenting to a partner group',
@@ -518,18 +629,12 @@ export const fieldNotes: Array<FieldNote> = [
 /* The eyebrow and the second headline line ("Sub: remove") are gone. What is
    left is one sentence and two buttons. */
 export const closing = {
-  /* Split three ways so the highlighter lands on one short word. `.marker` is
-     an inline-block and cannot break across lines, so a marked phrase set at
-     display size has to be short enough to survive a 360px viewport. */
+  /* 23 Sep doc: "full emboldened, except for the phrase 'clarity and
+     certainty.' - all white, no highlight". */
   headlineLead: 'Make your next program decision with more',
-  headlineKeyword: 'clarity',
-  headlineTail: 'and certainty.',
+  headlineQuiet: 'clarity and certainty.',
   primaryCta: { label: 'Talk to us', to: '/contact' },
   secondaryCta: { label: 'Take our data culture quiz', to: '/resources/data-quiz' },
-  marginalia: {
-    value: 'Replies come from\na person, usually\nwithin 24 hours',
-    verify: 'The 24-hour response-time promise, with Manije.',
-  },
 }
 
 export const honestStat: PullQuote = {

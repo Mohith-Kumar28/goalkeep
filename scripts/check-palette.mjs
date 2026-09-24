@@ -37,6 +37,8 @@ const BRAND = new Set(
     '#e8e724', '#3f3d3d', '#526eb5', '#79c2b4', '#ee9d90',
     // Tints
     '#eaeff9', '#e7f2f0', '#fbeee9', '#fbf3df',
+    // Neutral paper: the Why-we-exist ground and the case-study sector tag.
+    '#f6f4ef', '#ece6d8',
     // Hairlines
     '#e5e7ee', '#d3d7e2',
     // The composited value of the hero card's translucent panel over navy,

@@ -26,8 +26,9 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
  *   into three different parts of a dashboard: one becomes a pie chart, one a
  *   bar graph, and one a spreadsheet table."
  *
- *   Adopt — explicitly parked: "don't worry about this, keep it how it is,
- *   we'll come back to it." So the v2 sketch stands, restyled.
+ *   Adopt — rebuilt after the 23 Sep review from Rumit's reference: five
+ *   people side by side whose confidence with data climbs red → yellow →
+ *   green. Design was reworked in the same review; see DesignSketch.
  *
  * Each sequence then resolves into the two photographs, as before.
  */
@@ -37,7 +38,7 @@ export type PhaseKind = 'design' | 'build' | 'adopt'
 const SKETCH_MS: Record<PhaseKind, number> = {
   design: 6200,
   build: 6400,
-  adopt: 4200,
+  adopt: 5400,
 }
 const IMAGE_MS = 2600
 
@@ -176,225 +177,198 @@ function Sketch({
 }
 
 /* ============================================================================
-   Design — the brainstorm board
+   Design — subtracting the noise
    ==========================================================================*/
 
-/** Softens only the board's own ground, which is the sketch's one rectangle. */
-const BOARD_FADE =
-  'linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.35) 26%, #000 62%)'
-
-/** Two ruled lines standing in for handwriting on a note. */
-function NoteScrawl({ color, delay }: { color: string; delay: number }) {
-  return (
-    <svg viewBox="0 0 60 26" className="mt-1 w-full" aria-hidden="true">
-      {[
-        'M3 6c11-2 21-3 32-2c8 1 15 2 22 4',
-        'M4 15c9-2 17-2 26-1c6 1 12 1 17 3',
-        'M4 23c7-1 13-1 19-1',
-      ].map((d, i) => (
-        <motion.path
-          key={d}
-          d={d}
-          fill="none"
-          stroke={color}
-          strokeWidth={2}
-          strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.75 }}
-          transition={{ duration: 0.42, delay: delay + i * 0.16, ease: 'easeOut' }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-/**
- * A post-it. Lands at an angle, is written on, and — if `replacedAt` is set —
- * is peeled off and replaced by a second note in the same slot.
+/*
+ * 23 Sep review: the brainstorm board read "a little childish… too Canva
+ * amateur" once the arrow, the bulb and the question mark landed at random.
+ * Aditya's steer for what this stage actually is: organisations collect far
+ * more than they can use, and the design work is deciding what *not* to look
+ * at. So the board fills with everything a team collects, one question is
+ * asked of it, most of it is struck off, and three notes are kept.
+ *
+ * Post-its on a whiteboard still carry the brainstorming, but they land on a
+ * tidy grid and the whole thing moves in the same rhythm as Build.
  */
-function StickyNote({
-  x,
-  y,
-  rotate,
-  fill,
-  delay,
-  replacedAt,
-}: {
-  x: string
-  y: string
-  rotate: number
-  fill: string
-  delay: number
-  replacedAt?: number
-}) {
-  return (
-    <motion.div
-      className="absolute w-[27%] rounded-[2px] p-2 shadow-[0_4px_10px_rgb(0_0_0_/_0.25)]"
-      style={{ left: x, top: y, background: fill, aspectRatio: '1 / 0.86' }}
-      initial={{ scale: 0.5, rotate: rotate - 14, opacity: 0 }}
-      animate={
-        replacedAt
-          ? {
-              scale: [0.5, 1.04, 1, 1, 0.9],
-              rotate: [rotate - 14, rotate, rotate, rotate, rotate + 22],
-              opacity: [0, 1, 1, 1, 0],
-              x: [0, 0, 0, 0, 26],
-              y: [0, 0, 0, 0, 30],
-            }
-          : { scale: 1, rotate, opacity: 1 }
-      }
-      transition={
-        replacedAt
-          ? {
-              duration: replacedAt + 0.6,
-              delay,
-              times: [0, 0.14, 0.3, 0.86, 1],
-              ease: 'easeOut',
-            }
-          : { duration: 0.5, delay, ease: [0.34, 1.4, 0.64, 1] }
-      }
-    >
-      <NoteScrawl color="rgb(20 19 26 / 0.55)" delay={delay + 0.3} />
-    </motion.div>
-  )
-}
+const FIELDS = [
+  'Attendance',
+  'Village',
+  'Photos',
+  'Session notes',
+  'Test scores',
+  'Phone type',
+  'Weather',
+  'Dropouts',
+  'Travel time',
+  'Mood check',
+  'Parent income',
+  'Water source',
+  'Home visits',
+  'Feedback forms',
+  'Learning levels',
+]
+const DESIGN_COLS = 5
+/** Indices into FIELDS that survive the question. */
+const KEPT = [0, 7, 14]
+const NOTE_FILLS = ['var(--gk-yellow-tint)', 'var(--gk-teal-tint)', 'var(--gk-coral-tint)']
 
 function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
-  const notes = [
-    /* The middle note is the one that gets pulled off and swapped — "a post-it
-       being slapped and written, one being removed and replaced". */
-    { x: '13%', y: '12%', rotate: -5, fill: 'var(--gk-yellow)', delay: 0.15 },
-    { x: '41%', y: '9%', rotate: 4, fill: 'var(--gk-teal-tint)', delay: 0.5, replacedAt: 2.1 },
-    { x: '69%', y: '15%', rotate: -3, fill: 'var(--gk-coral-tint)', delay: 0.85 },
-  ]
+  /* 0 — the board fills. 1 — the question. 2 — most notes struck off.
+     3 — the three kept notes line up. */
+  const [phase, setPhase] = useState(0)
+
+  useEffect(() => {
+    const timers = [
+      window.setTimeout(() => setPhase(1), 1500),
+      window.setTimeout(() => setPhase(2), 2400),
+      window.setTimeout(() => setPhase(3), 3900),
+    ]
+    return () => timers.forEach((id) => window.clearTimeout(id))
+  }, [])
+
+  const rows = Math.ceil(FIELDS.length / DESIGN_COLS)
+  const cellW = (100 - 12 - 2.5 * (DESIGN_COLS - 1)) / DESIGN_COLS
+  const cellH = (100 - 34 - 3 * (rows - 1)) / rows
 
   return (
     <div className="absolute inset-0">
-      {/* The board itself — a faint grid, the way a whiteboard photographs.
-          This is the one piece of the sketch that is a full-panel rectangle
-          and so the one piece that needs a soft edge of its own now that the
-          sequence is no longer masked as a whole. The notes, the arrow and the
-          bulb are shapes; they have no edges to hide. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'rgb(255 255 255 / 0.04)',
-          maskImage: BOARD_FADE,
-          WebkitMaskImage: BOARD_FADE,
-        }}
+      <svg aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ opacity: 0.08 }}>
+        <defs>
+          <pattern id="gk-board-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M24 0 L0 0 0 24" fill="none" stroke={ink} strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#gk-board-grid)" />
+      </svg>
+
+      {/* The question every note has to answer. */}
+      <motion.p
+        className="absolute inset-x-[6%] top-[7%] text-center text-[length:clamp(0.8125rem,1.2vw,1rem)] font-bold"
+        style={{ color: ink }}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 6 }}
+        transition={{ duration: 0.4 }}
       >
-        <svg aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ opacity: 0.1 }}>
-          <defs>
-            <pattern id="gk-board-grid" width="26" height="26" patternUnits="userSpaceOnUse">
-              <path d="M26 0 L0 0 0 26" fill="none" stroke={ink} strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#gk-board-grid)" />
-        </svg>
-      </div>
+        {phase >= 3 ? (
+          <>
+            Three things worth measuring. <span style={{ color: accent }}>The rest can wait.</span>
+          </>
+        ) : (
+          <>
+            Which of these will change a decision?
+          </>
+        )}
+      </motion.p>
 
-      {notes.map((note) => (
-        <StickyNote key={note.x} {...note} />
-      ))}
+      {FIELDS.map((field, index) => {
+        const slot = KEPT.indexOf(index)
+        const kept = slot >= 0
+        const col = index % DESIGN_COLS
+        const row = Math.floor(index / DESIGN_COLS)
+        const grid = {
+          left: 6 + col * (cellW + 2.5),
+          top: 22 + row * (cellH + 3),
+          width: cellW,
+          height: cellH,
+        }
+        const lined = {
+          left: 8 + slot * 29.3,
+          top: 36,
+          width: 25,
+          height: 34,
+        }
+        const box = phase >= 3 && kept ? lined : grid
+        const struck = phase >= 2 && !kept
 
-      {/* The replacement note, into the slot the middle one vacates. */}
-      <StickyNote x="43%" y="11%" rotate={-6} fill="var(--gk-yellow-tint)" delay={2.9} />
+        return (
+          <motion.div
+            key={field}
+            className="absolute flex items-center justify-center rounded-[3px] px-1.5 text-center shadow-[0_3px_8px_rgb(0_0_0_/_0.22)]"
+            style={{ background: NOTE_FILLS[index % 3] }}
+            initial={{ opacity: 0, scale: 0.7, rotate: index % 2 ? 3 : -3 }}
+            animate={{
+              left: `${box.left}%`,
+              top: `${box.top}%`,
+              width: `${box.width}%`,
+              height: `${box.height}%`,
+              opacity: phase >= 3 && !kept ? 0 : struck ? 0.35 : 1,
+              scale: phase >= 3 && !kept ? 0.85 : 1,
+              rotate: phase >= 3 ? 0 : index % 2 ? 1.5 : -1.5,
+            }}
+            transition={{
+              duration: phase >= 3 ? 0.8 : 0.45,
+              delay:
+                phase === 0
+                  ? index * 0.07
+                  : phase === 2
+                    ? (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08
+                    : phase === 3 && kept
+                      ? slot * 0.1
+                      : 0,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <span
+              className={cn(
+                'font-bold leading-tight text-[var(--gk-ink)]',
+                phase >= 3 && kept
+                  ? 'text-[length:clamp(0.8125rem,1.3vw,1.0625rem)]'
+                  : 'text-[length:clamp(0.5625rem,0.85vw,0.75rem)]',
+              )}
+            >
+              {field}
+            </span>
 
-      {/* The pinned data sheet. A tiny spreadsheet, pinned, with a question
-          mark beside it — "you can put a data sheet in there, pinned to the
-          board with a question mark". */}
-      <motion.div
-        className="absolute left-[16%] top-[54%] w-[32%] rounded-[2px] bg-white/92 p-2 shadow-[0_4px_10px_rgb(0_0_0_/_0.25)]"
-        initial={{ opacity: 0, y: 14, rotate: -8 }}
-        animate={{ opacity: 1, y: 0, rotate: -3 }}
-        transition={{ duration: 0.5, delay: 1.5, ease: [0.34, 1.4, 0.64, 1] }}
-      >
-        <span
-          aria-hidden="true"
-          className="absolute -top-1.5 left-1/2 size-3 -translate-x-1/2 rounded-full shadow-[0_1px_2px_rgb(0_0_0_/_0.4)]"
-          style={{ background: 'var(--gk-coral)' }}
-        />
-        <div className="grid grid-cols-3 gap-[2px]">
-          {Array.from({ length: 9 }, (_, i) => (
-            <motion.span
-              key={i}
-              className="block h-[8px] rounded-[1px]"
-              style={{ background: i < 3 ? accent : 'rgb(20 19 26 / 0.22)' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: 1.75 + i * 0.045 }}
-            />
-          ))}
-        </div>
-      </motion.div>
+            {/* Struck off: a single pen line across the note. */}
+            {!kept && (
+              <svg
+                viewBox="0 0 100 20"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                className="absolute inset-x-[8%] top-1/2 h-3 w-[84%] -translate-y-1/2"
+              >
+                <motion.path
+                  d="M2 12 C 30 8, 60 9, 98 7"
+                  fill="none"
+                  stroke="var(--gk-ink)"
+                  strokeWidth={3}
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: struck ? 1 : 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: struck ? (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08 : 0,
+                  }}
+                />
+              </svg>
+            )}
 
-      {/* "?" — and the arrow that connects it to the sheet. */}
-      <motion.svg
-        aria-hidden="true"
-        viewBox="0 0 120 90"
-        className="absolute left-[46%] top-[52%] h-[26%] w-[26%]"
-        initial="hidden"
-        animate="shown"
-      >
-        <motion.path
-          d="M8 74C22 62 34 44 40 26"
-          fill="none"
-          stroke={ink}
-          strokeWidth={3}
-          strokeLinecap="round"
-          variants={{ hidden: { pathLength: 0, opacity: 0 }, shown: { pathLength: 1, opacity: 0.8 } }}
-          transition={{ duration: 0.55, delay: 2.4, ease: 'easeOut' }}
-        />
-        <motion.path
-          d="M28 30l14-6l3 15"
-          fill="none"
-          stroke={ink}
-          strokeWidth={3}
-          strokeLinecap="round"
-          variants={{ hidden: { pathLength: 0, opacity: 0 }, shown: { pathLength: 1, opacity: 0.8 } }}
-          transition={{ duration: 0.3, delay: 2.9, ease: 'easeOut' }}
-        />
-      </motion.svg>
-
-      <motion.span
-        aria-hidden="true"
-        className="hand-lg absolute right-[22%] top-[50%] text-[length:clamp(2rem,4vw,3rem)]"
-        style={{ color: accent }}
-        initial={{ opacity: 0, scale: 0.5, rotate: -18 }}
-        animate={{ opacity: 1, scale: 1, rotate: -8 }}
-        transition={{ duration: 0.45, delay: 3.3, ease: [0.34, 1.4, 0.64, 1] }}
-      >
-        ?
-      </motion.span>
-
-      {/* The light bulb lands last: the brainstorm arriving somewhere. */}
-      <motion.svg
-        aria-hidden="true"
-        viewBox="0 0 40 52"
-        className="absolute right-[9%] bottom-[8%] h-[26%]"
-        initial={{ opacity: 0, scale: 0.4, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 4.1, ease: [0.34, 1.4, 0.64, 1] }}
-      >
-        <path
-          d="M20 4c-8 0-14 6-14 13c0 5 3 8 5 11c1 2 2 3 2 5h14c0-2 1-3 2-5c2-3 5-6 5-11c0-7-6-13-14-13z"
-          fill="none"
-          stroke={accent}
-          strokeWidth={3}
-          strokeLinejoin="round"
-        />
-        <path d="M14 39h12M16 45h8" stroke={accent} strokeWidth={3} strokeLinecap="round" />
-        <motion.g
-          stroke={accent}
-          strokeWidth={2.5}
-          strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0.35, 1] }}
-          transition={{ duration: 1.1, delay: 4.6 }}
-        >
-          <path d="M2 12l4 2M38 12l-4 2M20 0v3" />
-        </motion.g>
-      </motion.svg>
+            {/* Kept: ticked in the stage accent, the way Build ticks its three. */}
+            {kept && (
+              <motion.span
+                className="absolute -top-2.5 -right-2.5 grid size-6 place-items-center rounded-full"
+                style={{ background: accent }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: phase >= 2 ? 1 : 0, opacity: phase >= 2 ? 1 : 0 }}
+                transition={{ duration: 0.3, delay: phase === 2 ? 0.9 + slot * 0.15 : 0 }}
+              >
+                <svg viewBox="0 0 24 24" className="size-3.5" aria-hidden="true">
+                  <path
+                    d="M4 13l5.5 5.5L20 5"
+                    fill="none"
+                    stroke="var(--gk-ink)"
+                    strokeWidth={3.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </motion.span>
+            )}
+          </motion.div>
+        )
+      })}
     </div>
   )
 }
@@ -408,12 +382,10 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
    layouts, which is what makes the morph read as the *same* blocks becoming
    the dashboard rather than one thing replacing another.
 
-   The left padding is much larger than the right because the panel dissolves
-   into the row from its left edge — anything inside PAD_L would be drawn at
-   partial opacity. */
+   The panel is a plain rounded box now (no dissolve), so the padding is even. */
 const COLS = 4
 const ROWS = 3
-const PAD_L = 16
+const PAD_L = 6
 const PAD_R = 6
 const GAP = 3
 const CELL_W = (100 - PAD_L - PAD_R - GAP * (COLS - 1)) / COLS
@@ -632,56 +604,90 @@ function TableSheet({ ink, accent, on }: { ink: string; accent: string; on: bool
 }
 
 /* ============================================================================
-   Adopt — parked by the client, restyled only
+   Adopt — five people, side by side
    ==========================================================================*/
 
-/** Pins land on a surface one at a time, then join up: a team adopting it. */
-function AdoptSketch({ ink, accent }: { ink: string; accent: string }) {
-  const pins = [
-    { x: 22, y: 30 },
-    { x: 40, y: 60 },
-    { x: 60, y: 34 },
-    { x: 74, y: 68 },
-    { x: 82, y: 22 },
-  ]
+/*
+ * Rebuilt from Rumit's reference after the 23 Sep review: people across an
+ * organisation, each with a bar for how confident they are using data, moving
+ * from red through yellow to green as the adoption work lands.
+ *
+ * What the reference had and this doesn't: the hierarchy. "This hierarchy is
+ * just not something Goalkeep wants to show" - so five people stand in one
+ * row, none above another, and every one of them moves up.
+ */
+const PEOPLE_LEVELS = [
+  [1, 2, 1, 2, 1],
+  [2, 3, 2, 3, 3],
+  [4, 5, 4, 4, 5],
+]
+const STAGE_LABELS = ['Before', 'During the programme', 'Six months on']
+const MAX_LEVEL = 5
+
+const levelColor = (level: number) =>
+  level <= 1 ? 'var(--gk-coral-lift)' : level <= 3 ? 'var(--gk-yellow)' : 'var(--gk-teal-lift)'
+
+function AdoptSketch({ ink }: { ink: string; accent: string }) {
+  const [beat, setBeat] = useState(0)
+
+  useEffect(() => {
+    const timers = [
+      window.setTimeout(() => setBeat(1), 1700),
+      window.setTimeout(() => setBeat(2), 3200),
+    ]
+    return () => timers.forEach((id) => window.clearTimeout(id))
+  }, [])
+
+  const levels = PEOPLE_LEVELS[beat]
 
   return (
-    <div className="absolute inset-0">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-        {pins.slice(0, -1).map((pin, i) => (
-          <motion.line
-            key={i}
-            x1={pin.x}
-            y1={pin.y}
-            x2={pins[i + 1].x}
-            y2={pins[i + 1].y}
-            stroke={ink}
-            strokeWidth={0.5}
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.45 }}
-            transition={{ duration: 0.5, delay: 1.1 + i * 0.3, ease: 'easeOut' }}
-          />
-        ))}
-      </svg>
-      {pins.map((pin, i) => (
+    <div className="absolute inset-0 flex flex-col px-[7%] pt-[7%] pb-[6%]">
+      <div className="flex items-baseline justify-between gap-4" style={{ color: ink }}>
+        <span className="text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] uppercase opacity-70">
+          Confidence with data
+        </span>
         <motion.span
-          key={i}
-          className="absolute block rounded-full"
-          style={{
-            left: `${pin.x}%`,
-            top: `${pin.y}%`,
-            width: 14,
-            height: 14,
-            marginLeft: -7,
-            marginTop: -7,
-            background: i === pins.length - 1 ? accent : ink,
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: i === pins.length - 1 ? 1 : 0.8 }}
-          transition={{ duration: 0.4, delay: 0.3 + i * 0.28, ease: [0.34, 1.4, 0.64, 1] }}
-        />
-      ))}
+          key={beat}
+          className="text-[length:var(--fs-sm)] font-bold"
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {STAGE_LABELS[beat]}
+        </motion.span>
+      </div>
+
+      <div className="mt-[5%] flex flex-1 items-end justify-between gap-[5%]">
+        {levels.map((level, person) => (
+          <motion.div
+            key={person}
+            className="flex h-full flex-1 flex-col items-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + person * 0.1 }}
+          >
+            {/* The bar: five steps, filling from the bottom. */}
+            <div className="flex w-[46%] flex-1 flex-col-reverse gap-[5%]">
+              {Array.from({ length: MAX_LEVEL }, (_, step) => (
+                <motion.span
+                  key={step}
+                  className="block flex-1 rounded-[3px]"
+                  animate={{
+                    backgroundColor: step < level ? levelColor(level) : 'rgb(255 255 255 / 0.1)',
+                  }}
+                  transition={{ duration: 0.45, delay: person * 0.08 + step * 0.05 }}
+                />
+              ))}
+            </div>
+
+            {/* The person. */}
+            <svg viewBox="0 0 40 40" className="mt-3 w-[62%] max-w-14" aria-hidden="true">
+              <circle cx="20" cy="13" r="7.5" fill={ink} opacity={0.9} />
+              <path d="M5 40c0-9 6.7-15 15-15s15 6 15 15" fill={ink} opacity={0.9} />
+            </svg>
+          </motion.div>
+        ))}
+      </div>
     </div>
   )
 }

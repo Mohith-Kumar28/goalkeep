@@ -9,6 +9,7 @@ import { FieldNotes } from '@/components/sections/field-notes'
 import { Hero } from '@/components/sections/hero'
 import { Proof } from '@/components/sections/proof'
 import { WhatWeDo } from '@/components/sections/what-we-do'
+import { WhyWeExist } from '@/components/sections/why-we-exist'
 import { site } from '@/content/site'
 
 export const Route = createFileRoute('/')({
@@ -31,6 +32,8 @@ export const Route = createFileRoute('/')({
  *
  *   Hero            navy        flat, the creatives' blue. No footage behind it.
  *   Partners        white       the proof you don't have to read
+ *   Why we exist    beige       added after the 23 Sep review: the problem
+ *                               before the service
  *   What we do      white       the interactive one
  *   Whom for        pale blue   the one "light coloured highlight" band
  *   Proof           navy        four numbers, over the photography moved down
@@ -49,6 +52,7 @@ function Home() {
     <>
       <Hero />
       <Credibility />
+      <WhyWeExist />
       <WhatWeDo />
       <Audiences />
       <Proof />
