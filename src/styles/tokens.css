@@ -95,8 +95,15 @@
 
   /* Neutral paper. The ground of the "Why we exist" artifact, and the sector
      label on case studies ("a neutral beige with black text"). */
-  --gk-beige: #f6f4ef;
+  --gk-beige: #f7f5ef;
   --gk-beige-deep: #ece6d8;
+
+  /* The Canva highlight guide (Rumit, 25 Sep): every hand mark - underline,
+     highlight, circle, emphasis burst - is this one yellow. The highlighter
+     is its pale body with the darker ends where the pen landed and lifted. */
+  --gk-scribble: #f6d83a;
+  --gk-highlight: #fcf0a5;
+  --gk-highlight-end: #f7db63;
 
   /* --- Semantic foreground ----------------------------------------------- */
   --fg-1: var(--gk-ink);

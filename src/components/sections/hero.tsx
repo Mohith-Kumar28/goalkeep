@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
 import { hero } from "@/content/homepage"
+import { Annotate } from "@/components/primitives/doodles"
 import { GkButton } from "@/components/primitives/gk-button"
 import { Spotlight } from "@/components/primitives/spotlight"
 import { SpotlightCard } from "@/components/primitives/spotlight-card"
@@ -82,7 +83,11 @@ export function Hero() {
             className="display max-w-[22ch] text-white"
             style={headlineWeight ? { fontWeight: headlineWeight } : undefined}
           >
-            {hero.headlineLead} <em>{hero.headlineHighlight}</em>
+            {hero.headlineLead}{" "}
+            {/* The Canva guide's first underline style, in the guide yellow. */}
+            <Annotate mark="underline-swash" delay={0.6} nowrap>
+              <em>{hero.headlineHighlight}</em>
+            </Annotate>
           </h1>
 
           {/* min-height reserves the tallest rendering of the typed sentence so

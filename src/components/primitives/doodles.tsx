@@ -31,6 +31,9 @@ export type ScribbleName =
   | 'check'
   | 'zigzag'
   | 'cross'
+  | 'ring'
+  | 'underline-swash'
+  | 'underline-pair'
 
 type ScribblePath = {
   d: Array<string>
@@ -121,6 +124,31 @@ const PATHS: Record<ScribbleName, ScribblePath> = {
     weight: 4,
     d: ['M8 8l34 34', 'M42 8L8 42'],
   },
+
+  /* ---- From the Canva highlight guide (25 Sep) -------------------------- */
+
+  /* "Circling effect (1–2 words only)": one loose loop, wider than tall, that
+     runs past where it started along the top edge. */
+  ring: {
+    viewBox: '0 0 240 100',
+    weight: 4.5,
+    d: [
+      'M58 14C104 4 184 6 218 24C244 38 238 66 196 82C150 98 72 98 32 84C4 74 -2 50 20 34C44 16 110 8 170 12',
+    ],
+  },
+  /* The first underline: one long stroke that swings back and tucks a small
+     loop under its right half. */
+  'underline-swash': {
+    viewBox: '0 0 240 30',
+    weight: 4,
+    d: ['M4 10C72 7 156 5 236 7C196 10 146 13 118 16C96 19 94 26 114 24C130 22 118 17 104 16'],
+  },
+  /* The second: two strokes, the lower one shorter and set in from the left. */
+  'underline-pair': {
+    viewBox: '0 0 240 30',
+    weight: 4.5,
+    d: ['M2 8C80 5 160 4 238 6', 'M34 22C96 19 158 18 206 19'],
+  },
 }
 
 /**
@@ -191,7 +219,7 @@ export function Scribble({
 export function Annotate({
   children,
   mark = 'circle',
-  color = 'var(--gk-yellow)',
+  color = 'var(--gk-scribble)',
   className,
   delay = 0,
   inset = '-14%',
@@ -208,7 +236,7 @@ export function Annotate({
    *  words, so any non-enclosing mark on a long phrase wants this. */
   nowrap?: boolean
 }) {
-  const isEnclosing = mark === 'circle' || mark === 'oval'
+  const isEnclosing = mark === 'circle' || mark === 'oval' || mark === 'ring'
 
   return (
     <span className={cn('relative inline-block', nowrap && 'whitespace-nowrap', className)}>
@@ -221,7 +249,9 @@ export function Annotate({
           'absolute',
           isEnclosing
             ? 'left-0 top-0 h-full w-full'
-            : 'left-0 top-full h-[0.42em] w-full translate-y-[-0.1em]',
+            : mark === 'underline-swash' || mark === 'underline-pair'
+              ? 'left-0 top-full h-[0.5em] w-full translate-y-[-0.12em]'
+              : 'left-0 top-full h-[0.42em] w-full translate-y-[-0.1em]',
         )}
         style={
           isEnclosing
@@ -234,6 +264,67 @@ export function Annotate({
             : undefined
         }
       />
+    </span>
+  )
+}
+
+/**
+ * The guide's "emphasis element": three short tapered strokes fanning out on
+ * each side of whatever it frames, like the marks you'd draw around a word to
+ * make it shout. Decorative only; the strokes pop in once, in sequence.
+ */
+const BURST = [
+  'M14 4 L22 22 L18 23 Z',
+  'M4 24 L20 30 L18 33 Z',
+  'M2 44 L19 40 L19 44 Z',
+]
+
+export function Emphasis({
+  children,
+  color = 'var(--gk-scribble)',
+  fill = 'var(--gk-highlight)',
+  className,
+  delay = 0,
+}: {
+  children: ReactNode
+  color?: string
+  fill?: string
+  className?: string
+  delay?: number
+}) {
+  const reduced = useReducedMotion()
+  const side = (flip: boolean) => (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 26 48"
+      className={cn(
+        'pointer-events-none absolute top-1/2 h-[1.1em] w-[0.6em] -translate-y-1/2 overflow-visible',
+        flip ? '-right-[0.72em] -scale-x-100' : '-left-[0.72em]',
+      )}
+    >
+      {BURST.map((d, i) => (
+        <motion.path
+          key={d}
+          d={d}
+          fill={fill}
+          stroke={color}
+          strokeWidth={2.2}
+          strokeLinejoin="round"
+          initial={reduced ? false : { opacity: 0, scale: 0.4 }}
+          whileInView={reduced ? undefined : { opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.35, delay: delay + i * 0.09, ease: [0.34, 1.5, 0.64, 1] }}
+          style={{ transformOrigin: flip ? 'left center' : 'right center' }}
+        />
+      ))}
+    </svg>
+  )
+
+  return (
+    <span className={cn('relative inline-block', className)}>
+      {side(false)}
+      {children}
+      {side(true)}
     </span>
   )
 }

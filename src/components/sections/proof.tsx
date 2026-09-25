@@ -1,4 +1,5 @@
 import { proof } from '@/content/homepage'
+import { Emphasis } from '@/components/primitives/doodles'
 import { StatCounter } from '@/components/primitives/stat-counter'
 import { Reveal } from '@/components/primitives/reveal'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
@@ -68,7 +69,8 @@ export function Proof() {
         <Reveal>
           <p className="eyebrow mb-4 text-[var(--gk-yellow)]">{proof.eyebrow}</p>
           <h2 id="proof-heading" className="h2 mb-12 max-w-[20ch] font-medium">
-            {proof.headline}
+            {/* The guide's emphasis element, framing the one line in the band. */}
+            <Emphasis className="ml-[0.7em]">{proof.headline}</Emphasis>
           </h2>
         </Reveal>
 

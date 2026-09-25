@@ -38,7 +38,17 @@ const BRAND = new Set(
     // Tints
     '#eaeff9', '#e7f2f0', '#fbeee9', '#fbf3df',
     // Neutral paper: the Why-we-exist ground and the case-study sector tag.
-    '#f6f4ef', '#ece6d8',
+    '#f7f5ef', '#ece6d8',
+    // The approved "Why we exist" artifact's own palette, used verbatim in
+    // that section (see why-we-exist.tsx).
+    '#3f3d3e', '#4a4849', '#5f5c5d', '#6b6869', '#6f6c6d', '#2f4486', '#2c3f86',
+    '#f6e2df', '#dedad0', '#c9c4b8', '#e6de6a', '#c96b58', '#e09a8c', '#f5e3e0',
+    '#8fa3d6', '#aab6de', '#dde3f4', '#92a0ce', '#e7cfcb', '#8a7c79', '#4765b3',
+    '#c0604f', '#a94f3f', '#9db0e6', '#35498f', '#f0a292', '#7e8cc2', '#9ba8d6',
+    '#3c4f95', '#56679f', '#c3cee8', '#c3ceec', '#9dacdc', '#eaeffb', '#f6c9be',
+    '#fbe3dd',
+    // The Canva highlight guide: scribble yellow, highlighter body and ends.
+    '#f6d83a', '#fcf0a5', '#f7db63',
     // Hairlines
     '#e5e7ee', '#d3d7e2',
     // The composited value of the hero card's translucent panel over navy,

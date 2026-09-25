@@ -133,71 +133,57 @@ export const ticker = {
    2b · Why we exist — beige
    ============================================================ */
 
-/* Built from the "Why we exist" artifact Rumit shared after the 23 Sep call.
-   Panel 01 is the artifact verbatim. Panels 02–04 exist in the artifact only
-   as titles and one-line tags, so their body copy and figures here are drafts
-   - the whole section is waiting on Aditya's approval, and every panel
-   carries a verify note until then. */
+/* Verbatim from the approved "Why we exist (blue variation)" artifact,
+   including its source-footnote placeholders. */
 export const whyWeExist = {
   eyebrow: 'why we exist',
   headlineLead: "India's social sector isn't short on data.",
   headlineEm: "It's short on decisions made with data.",
-  /* The one word circled. 23 Sep: "circle one key word or one key two-word
-     phrase" - a trial until the Canva highlight guide lands. */
-  headlineCircle: 'decisions',
   lead: 'Every year, more capital flows into the Indian nonprofit sector. However, with little data flowing back into the decision-making layer, several organizations are missing a key opportunity to maximize program impact.',
-  panels: [
+  chapters: [
     {
-      value: {
-        id: 'money',
-        title: 'The money',
-        tag: '₹27 lakh crore a year',
-        body: "India's social sector currently spends ₹27 lakh crore annually, and is projected to grow at 10% every year through 2030. The money is coming in, but the key question is: are we using it in the best way possible?",
-      },
-      verify: 'Source footnotes 1–3 from the funder deck for the ₹27 lakh crore figure and the 10% projection.',
+      num: '01',
+      title: 'The money',
+      stat: '₹27 lakh crore a year',
+      body: "India's social sector currently spends ₹27 lakh crore annually, and is projected to grow at 10% every year through 2030. The money is coming in, but the key question is: are we using it in the best way possible?",
     },
     {
-      value: {
-        id: 'decisions',
-        title: 'The decisions',
-        tag: '5 in 100 use data',
-        body: 'For every hundred organizations collecting data, only about five use it to change what they do next. The rest gather it for the reports that travel upward to funders.',
-      },
-      verify: 'Draft copy. The "5 in 100" figure and its source, from the funder deck.',
+      num: '02',
+      title: 'The decisions',
+      stat: '5 in 100 use data',
+      body: "Only about 5% of everyday decisions in the sector are driven by data. Program strategy and budget calls still run largely on intuition, which begs us to ask: isn't it risky spending over $250 billion on gut-feel and anecdotal evidence?",
     },
     {
-      value: {
-        id: 'loop',
-        title: 'The loop',
-        tag: 'Proving, not improving',
-        body: 'Evaluations are commissioned one at a time, to prove impact to a funder. Once the report is filed, what it found rarely makes its way back into how the program runs.',
-      },
-      verify: 'Draft copy — Aditya to approve.',
+      num: '03',
+      title: 'The loop',
+      stat: 'Proving, not improving',
+      body: 'Data gets collected to meet reporting requirements, flows into reports and evaluations, and rarely finds its way back into the program. As more money flows in, the loop only gets bigger.',
     },
     {
-      value: {
-        id: 'layer',
-        title: 'The missing layer',
-        tag: 'Decision infrastructure',
-        body: 'What’s missing is the layer in between: the systems that turn what an organization collects into what it decides, week after week. As funding grows, that gap widens. It’s the layer Goalkeep builds.',
-      },
-      verify: 'Draft copy — Aditya to approve.',
+      num: '04',
+      title: 'The missing layer',
+      stat: 'Decision infrastructure',
+      body: "In the last two decades, India's nonprofits have made steady progress in capital, talent, tools, and programs. But without a robust data system, the decision infrastructure is incomplete. That's what Goalkeep helps you build.",
     },
   ],
   spend: {
     label: 'Annual social sector spend in India',
-    figure: '₹27 lakh crore',
     sub: 'Projected to grow at ~10% YoY until 2030.',
     pill: '+61% by FY30',
-    bars: [
-      { year: 'FY25', value: 27 },
-      { year: 'FY26', value: 29.7 },
-      { year: 'FY27', value: 32.7 },
-      { year: 'FY28', value: 35.9 },
-      { year: 'FY29', value: 39.5 },
-      { year: 'FY30', value: 43.5 },
-    ],
-    note: 'Projection drawn at 10% annual growth on current sector spend.',
+    note: 'Projection drawn at 10% annual growth on current sector spend. [Add source footnotes 1 to 3 from the funder deck]',
+  },
+  decisions: {
+    claim: 'of everyday decisions in the sector are driven by data.',
+    support: "The other 95 run largely on intuition. The data exists. It just isn't built to help anyone decide.",
+    note: '[Add source footnote 4 from the funder deck]',
+  },
+  loopCaption:
+    'Most nonprofit data is collected purely for reporting and compliance purposes. It is rarely seen as an asset that can help to strengthen their programs.',
+  layerCaption:
+    'Goalkeep builds the missing layer of critical decision infrastructure required to unlock real social value and scale.',
+  sources: {
+    value: '₹27 lakh crore annual spend, 10% growth to 2030, 5% of decisions data-driven, $250 billion',
+    verify: 'Source footnotes 1–4 from the funder deck — the artifact carries them as placeholders.',
   },
 }
 
