@@ -116,17 +116,24 @@ export function TypedPhrase({
 
       <span aria-hidden="true">
         {lead}{' '}
-        {/* 23 Sep: the white highlighter swipe behind the typed word read as
-            a blank white block between phrases. The phrase now carries itself
-            in weight and the band's accent, with the caret in the same hue. */}
-        <span className="font-bold" style={{ color: accent }}>
+        {/* 28 Sep: the white highlight is back - a small-radius white pill
+            with the phrase in navy, as the typewriter first shipped. The 23
+            Sep complaint was the empty white block between phrases, so the
+            pill only paints while there are letters in it. */}
+        <span
+          className="rounded-[6px] px-[0.3em] py-[0.05em] font-bold [box-decoration-break:clone] transition-colors duration-150"
+          style={{
+            color: 'var(--gk-navy)',
+            background: count > 0 ? 'var(--gk-white)' : 'transparent',
+          }}
+        >
           {phrase.slice(0, count)}
           <span
             className={cn(
               'ml-[2px] inline-block w-[2px] translate-y-[0.12em] align-baseline',
               'motion-safe:animate-[gk-caret_1s_step-end_infinite]',
             )}
-            style={{ height: '0.95em', background: 'currentColor' }}
+            style={{ height: '0.95em', background: count > 0 ? 'currentColor' : accent }}
           />
         </span>{' '}
         {tail}
