@@ -31,7 +31,8 @@ export function Faqs() {
   return (
     <section
       className="band relative"
-      style={{ background: 'var(--gk-yellow)', color: 'var(--gk-ink)' }}
+      /* 28 Sep: the lighter yellow of the early-stage NGO band. */
+      style={{ background: 'var(--gk-yellow-tint)', color: 'var(--gk-ink)' }}
       aria-labelledby="faqs-heading"
     >
       <div className="shell grid gap-10 md:grid-cols-12 md:gap-8">
