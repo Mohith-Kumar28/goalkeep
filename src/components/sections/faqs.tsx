@@ -21,12 +21,9 @@ import { cn } from '@/lib/utils'
 export function Faqs() {
   const [open, setOpen] = useState<Array<number>>([0])
 
+  /* 28 Sep: one answer open at a time - opening a question folds the last. */
   const toggle = (index: number) =>
-    setOpen((current) =>
-      current.includes(index)
-        ? current.filter((i) => i !== index)
-        : [...current, index],
-    )
+    setOpen((current) => (current.includes(index) ? [] : [index]))
 
   return (
     <section
