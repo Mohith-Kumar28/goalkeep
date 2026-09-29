@@ -320,8 +320,10 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
               {field}
             </span>
 
-            {/* Struck off: a single pen line across the note. */}
-            {!kept && (
+            {/* Struck off: a single pen line across the note. Mounted only once
+                the note is struck - an undrawn round-capped path still paints
+                its cap, which showed as a stray dot on every note. */}
+            {struck && (
               <svg
                 viewBox="0 0 100 20"
                 preserveAspectRatio="none"
@@ -336,10 +338,10 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
                   strokeLinecap="round"
                   vectorEffect="non-scaling-stroke"
                   initial={{ pathLength: 0 }}
-                  animate={{ pathLength: struck ? 1 : 0 }}
+                  animate={{ pathLength: 1 }}
                   transition={{
                     duration: 0.3,
-                    delay: struck ? (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08 : 0,
+                    delay: (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08,
                   }}
                 />
               </svg>
