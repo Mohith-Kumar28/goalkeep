@@ -108,7 +108,7 @@ export function GkButton({
 
   if (href) {
     return (
-      <a href={href} className={classes}>
+      <a href={href} className={classes} style={rest.style}>
         {content}
       </a>
     )

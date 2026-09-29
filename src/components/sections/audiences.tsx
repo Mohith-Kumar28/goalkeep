@@ -162,7 +162,7 @@ export function Audiences() {
             aria-labelledby={`audience-tab-${audience.id}`}
             className="mt-8"
           >
-            <Pitch key={audience.id} audience={audience} reduced={reduced} />
+            <Pitch key={audience.id} audience={audience} theme={theme} reduced={reduced} />
           </div>
         </div>
         <div className="lg:col-span-5">
@@ -186,7 +186,7 @@ function step(reduced: boolean, index: number) {
       }
 }
 
-function Pitch({ audience, reduced }: { audience: Audience; reduced: boolean }) {
+function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme; reduced: boolean }) {
   return (
     <div>
       <motion.h3
@@ -209,6 +209,9 @@ function Pitch({ audience, reduced }: { audience: Audience; reduced: boolean }) 
           {...(audience.cta.to.includes('#') ? { href: audience.cta.to } : { to: audience.cta.to })}
           variant="primary"
           withArrow
+          /* 28 Sep: the button wears the selected tab's colours. */
+          className="hover:brightness-95"
+          style={{ background: theme.tab, borderColor: theme.tab, color: theme.tabInk }}
         >
           {audience.cta.label}
         </GkButton>
