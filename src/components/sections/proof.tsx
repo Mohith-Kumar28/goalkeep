@@ -47,13 +47,20 @@ export function Proof() {
             className="h-full w-full object-cover"
             autoPlay
             muted
-            loop
             playsInline
             preload="metadata"
+            /* 28 Sep: `loop` stopped after one pass in some browsers, so the
+               rewind is done here - `ended` always fires without `loop`. The
+               mp4 goes first because its index makes the seek back to 0
+               dependable. */
+            onEnded={(event) => {
+              event.currentTarget.currentTime = 0
+              void event.currentTarget.play()
+            }}
             poster="/video/bts-poster.jpg"
           >
-            <source src="/video/bts.webm" type="video/webm" />
             <source src="/video/bts.mp4" type="video/mp4" />
+            <source src="/video/bts.webm" type="video/webm" />
           </video>
         )}
         {/* Lighter than the photographs' 0.84 - footage has to read as
