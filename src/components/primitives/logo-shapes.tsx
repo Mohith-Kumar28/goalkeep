@@ -167,10 +167,10 @@ const FIELDS: Record<string, Array<Piece>> = {
   /* Field notes - the Kickstarter "When the Kickstarter stops" title slide,
      copied on request (28 Sep): a coral ring off the top corner, the yellow
      comma under it, a small blue ring with a tight hole, and a big teal ring
-     rising off the bottom edge. The deck's own colours, sampled from the
+     off the left edge. The deck's own colours, sampled from the
      slide, rather than the site's muted -lift set. The band has more copy
      than the slide, so everything stays in the right-hand third and the
-     teal ring sits behind the cards. */
+     teal ring peeks out of the left gutter. */
   notes: [
     {
       sweep: 360,
@@ -208,8 +208,9 @@ const FIELDS: Record<string, Array<Piece>> = {
       thickness: 11,
       color: '#8CC4B7',
       size: 440,
-      bottom: -300,
-      right: 260,
+      /* 28 Sep: off the centre-left edge rather than rising from the bottom. */
+      top: 300,
+      left: -330,
       drift: -20,
     },
   ],
