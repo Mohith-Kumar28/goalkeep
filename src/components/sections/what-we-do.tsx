@@ -84,7 +84,7 @@ export function WhatWeDo() {
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-10 md:mb-14">
+          <div className="mb-8 md:mb-10">
             <p className="eyebrow mb-4">{whatWeDo.eyebrow}</p>
             <h2 id="wwd-heading" className="h2 max-w-[28ch]">
               {whatWeDo.headline} <em>{whatWeDo.headlineTail}</em>
@@ -151,16 +151,17 @@ function PhaseRow({
 
       <div
         className={cn(
-          'relative grid gap-6 p-6 md:grid-cols-12 md:items-stretch md:gap-10 md:p-8',
+          'relative grid md:grid-cols-12 md:items-stretch',
           /* Open and closed heights are fixed so that one open row plus two
              closed ones always sums to the same total - content-height rows
-             made the section resize under the pointer. */
-          active ? 'md:min-h-[25rem]' : 'md:min-h-[15rem]',
+             made the section resize under the pointer. Both came down on 28
+             Sep ("tighter, less empty space"). */
+          active ? 'md:min-h-[22rem]' : 'md:min-h-[12rem]',
         )}
       >
         <div
           className={cn(
-            'relative z-10 flex flex-col justify-center md:col-span-6',
+            'relative z-10 flex flex-col justify-center p-6 md:col-span-6 md:px-10 md:py-8',
             flip && 'md:order-last',
           )}
         >
@@ -192,12 +193,14 @@ function PhaseRow({
           </p>
         </div>
 
-        {/* The media. A plain photograph with rounded corners, in colour,
-            open or closed - no dissolve, no greyscale. The open row plays its
-            sequence first and then settles on the photographs. */}
+        {/* The media. A plain photograph in colour, open or closed - no
+            dissolve, no greyscale. The open row plays its sequence first and
+            then settles on the photographs. 28 Sep: it bleeds to the row's
+            edges instead of sitting as an inset box, so each row is half
+            text, half picture. */}
         <div
           className={cn(
-            'pointer-events-none relative aspect-[16/10] overflow-hidden rounded-[var(--r-md)] md:col-span-6 md:aspect-auto',
+            'pointer-events-none relative mx-6 mb-6 aspect-[16/10] overflow-hidden rounded-[var(--r-md)] md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
           )}
           style={{ background: active ? 'rgb(255 255 255 / 0.05)' : 'var(--gk-cream-deep)' }}
         >
