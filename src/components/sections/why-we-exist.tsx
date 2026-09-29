@@ -154,7 +154,7 @@ export function WhyWeExist() {
                   className="relative flex w-full flex-col gap-2.5 overflow-hidden rounded-[20px] bg-white px-6 pt-6 pb-6 text-left md:px-7 md:pt-7"
                   style={{ border: `2px solid ${C.navy}`, color: C.ink }}
                 >
-                  <span className="flex items-baseline gap-3.5">
+                  <span className="flex shrink-0 items-baseline gap-3.5">
                     <span
                       className="text-sm font-extrabold tracking-[0.12em]"
                       style={{ color: C.navy }}
@@ -181,7 +181,7 @@ export function WhyWeExist() {
                   className="flex min-h-16 w-full items-center justify-between gap-4 rounded-[20px] bg-transparent px-6 py-[18px] text-left transition-colors hover:border-[#C9C4B8] md:px-7"
                   style={{ border: `2px solid ${C.line}`, color: C.ink }}
                 >
-                  <span className="flex items-baseline gap-3.5">
+                  <span className="flex shrink-0 items-baseline gap-3.5">
                     <span
                       className="text-sm font-extrabold tracking-[0.12em]"
                       style={{ color: C.muted }}
@@ -191,7 +191,7 @@ export function WhyWeExist() {
                     <span className="text-xl font-extrabold whitespace-nowrap">{chapter.title}</span>
                   </span>
                   <span
-                    className="hidden text-right text-sm font-bold whitespace-nowrap sm:inline"
+                    className="hidden min-w-0 text-right text-sm leading-snug font-bold sm:inline"
                     style={{ color: C.ink3 }}
                   >
                     {chapter.stat}
