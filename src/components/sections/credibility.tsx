@@ -1,4 +1,3 @@
-import { Annotate } from '@/components/primitives/doodles'
 import { LogoTicker } from '@/components/primitives/logo-ticker'
 import type { TickerTone } from '@/components/primitives/logo-ticker'
 import { ticker } from '@/content/homepage'
@@ -30,11 +29,9 @@ export function Credibility() {
     >
       <div className="shell mb-8 flex flex-col items-center gap-3 text-center">
         <h2 id="credibility-heading" className="h2">
-          {ticker.heading}{' '}
-          {/* The guide's circle: one or two words, never a phrase. */}
-          <Annotate mark="ring" inset="-13%" delay={0.3} className="ml-[0.2em]">
-            <em>{ticker.headingEm}</em>
-          </Annotate>
+          {/* The hand-drawn ring came off in the 28 Sep review - it read oddly
+              without a transparent SVG behind it. */}
+          {ticker.heading} <em>{ticker.headingEm}</em>
         </h2>
         <p className="text-[length:var(--fs-lg)] text-[var(--fg-1)] md:whitespace-nowrap">
           {ticker.subline}
