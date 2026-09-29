@@ -2,7 +2,6 @@ import { Link } from '@tanstack/react-router'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
-import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -55,9 +54,8 @@ export function CaseStudies() {
               <h2 id="case-studies-heading" className="h2 max-w-[36ch]">
                 {caseStudySection.headline}{' '}
                 <em>
-                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[0]}
-                  <Marker>{caseStudySection.headlineMark}</Marker>
-                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[1]}
+                  {/* 28 Sep: the marker highlight is gone. */}
+                  {caseStudySection.headlineTail}
                 </em>
               </h2>
             </div>
