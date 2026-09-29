@@ -126,25 +126,15 @@ export function WhyWeExist() {
       aria-labelledby="why-heading"
     >
       <div className="shell flex flex-col gap-12 md:gap-16">
-        <header className="flex max-w-[1140px] flex-col gap-6">
-          <p
-            className="text-[length:var(--fs-sm)] font-extrabold tracking-[0.16em] uppercase"
-            style={{ color: C.navy }}
-          >
-            {whyWeExist.eyebrow}
-          </p>
-          <h2
-            id="why-heading"
-            className="m-0 text-[length:clamp(2.125rem,4.2vw,3.75rem)] leading-[1.12] tracking-[-0.02em]"
-            style={{ color: C.ink }}
-          >
-            <span className="block font-normal">{whyWeExist.headlineLead}</span>
-            <span className="block font-bold italic">{whyWeExist.headlineEm}</span>
+        {/* 28 Sep: the heading uses the shared eyebrow / h2 styles so it
+            matches every other band, not the artifact's own larger type. */}
+        <header className="accent-blue flex max-w-[1140px] flex-col" style={{ color: 'var(--fg-1)' }}>
+          <p className="eyebrow mb-4">{whyWeExist.eyebrow}</p>
+          <h2 id="why-heading" className="h2">
+            <span className="block">{whyWeExist.headlineLead}</span>
+            <em className="block">{whyWeExist.headlineEm}</em>
           </h2>
-          <p
-            className="m-0 max-w-[940px] text-[length:clamp(1.125rem,1.6vw,1.375rem)] leading-[1.5]"
-            style={{ color: C.ink2 }}
-          >
+          <p className="mt-5 max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">
             {whyWeExist.lead}
           </p>
         </header>
