@@ -161,7 +161,7 @@ function PhaseRow({
       >
         <div
           className={cn(
-            'relative z-10 flex flex-col justify-center p-6 md:col-span-6 md:px-10 md:py-8',
+            'relative z-10 flex flex-col justify-center p-6 md:col-span-6 md:px-8 md:py-8',
             flip && 'md:order-last',
           )}
         >
@@ -186,7 +186,9 @@ function PhaseRow({
           </button>
 
           <p
-            className="mt-5 max-w-[48ch] text-[length:var(--fs-base)] leading-relaxed"
+            /* 28 Sep: wide enough that no row's paragraph leaves one word
+               alone on a fifth line. */
+            className="mt-5 max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed"
             style={{ color: active ? 'var(--fg-inverse)' : 'var(--fg-1)' }}
           >
             {pillar.body}
