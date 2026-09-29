@@ -32,10 +32,13 @@ const CHIP_FILLS = [
 export function PhotoMarquee({
   photos,
   durationSeconds = 60,
+  compact = false,
   className,
 }: {
   photos: Array<MarqueePhoto>
   durationSeconds?: number
+  /** Shorter cards, for a band that has to fit one screen. */
+  compact?: boolean
   className?: string
 }) {
   const reduced = useReducedMotion()
@@ -66,14 +69,17 @@ export function PhotoMarquee({
           <li
             key={`${photo.src}-${index}`}
             aria-hidden={index >= base.length}
-            className="relative w-[78vw] shrink-0 overflow-hidden rounded-[var(--r-lg)] sm:w-[22rem] md:w-[26rem] lg:w-[28rem]"
+            className={cn(
+              "relative w-[78vw] shrink-0 overflow-hidden rounded-[var(--r-lg)] sm:w-[22rem]",
+              compact ? "md:w-[20rem]" : "md:w-[26rem] lg:w-[28rem]"
+            )}
           >
             <img
               src={photo.src}
               alt={index >= base.length ? "" : photo.alt}
               loading="lazy"
               decoding="async"
-              className="aspect-[4/3] w-full object-cover"
+              className={cn("w-full object-cover", compact ? "aspect-[16/10]" : "aspect-[4/3]")}
             />
             <div
               data-ground="scrim"

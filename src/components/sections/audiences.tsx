@@ -85,7 +85,7 @@ export function Audiences() {
 
   return (
     <section
-      className="band relative overflow-hidden transition-[background-color] duration-500 ease-[var(--ease-out)]"
+      className="relative overflow-hidden py-12 transition-[background-color] md:py-14 duration-500 ease-[var(--ease-out)]"
       style={{ background: theme.ground, color: 'var(--fg-1)' }}
       aria-labelledby="audiences-heading"
     >
@@ -110,62 +110,67 @@ export function Audiences() {
         transition={{ duration: reduced ? 0 : 0.9, ease: EASE }}
       />
 
-      <div className="shell relative">
-        <div
-          role="tablist"
-          aria-label="Kinds of organisation we work with"
-          className="flex flex-wrap gap-2"
-        >
-          {audiences.map((item, index) => {
-            const selected = index === active
-            const itemTheme = THEMES[item.id]
-            return (
-              <button
-                key={item.id}
-                type="button"
-                role="tab"
-                id={`audience-tab-${item.id}`}
-                aria-selected={selected}
-                aria-controls={`audience-panel-${item.id}`}
-                tabIndex={selected ? 0 : -1}
-                onClick={() => setActive(index)}
-                onKeyDown={(event) => {
-                  if (event.key === 'ArrowRight') setActive((active + 1) % audiences.length)
-                  if (event.key === 'ArrowLeft')
-                    setActive((active - 1 + audiences.length) % audiences.length)
-                }}
-                className={cn(
-                  'rounded-[var(--r-btn)] border px-5 py-2.5 text-[length:var(--fs-base)] font-bold',
-                  'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
-                  !selected &&
-                    'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:border-[var(--gk-ink)]',
-                )}
-                style={
-                  selected
-                    ? { background: itemTheme.tab, borderColor: itemTheme.tab, color: itemTheme.tabInk }
-                    : undefined
-                }
-              >
-                {item.label}
-              </button>
-            )
-          })}
-        </div>
+      {/* 28 Sep: the band fits one screen. The four segments sit in two rows
+          directly above the pitch they switch, so the tabs and the text read
+          as one block instead of a row floating over a gap. */}
+      <div className="shell relative grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14">
+        <div className="lg:col-span-7">
+            <div
+              role="tablist"
+              aria-label="Kinds of organisation we work with"
+              className="grid max-w-[34rem] grid-cols-2 gap-2"
+            >
+              {audiences.map((item, index) => {
+                const selected = index === active
+                const itemTheme = THEMES[item.id]
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    id={`audience-tab-${item.id}`}
+                    aria-selected={selected}
+                    aria-controls={`audience-panel-${item.id}`}
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => setActive(index)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'ArrowRight') setActive((active + 1) % audiences.length)
+                      if (event.key === 'ArrowLeft')
+                        setActive((active - 1 + audiences.length) % audiences.length)
+                    }}
+                    className={cn(
+                      'rounded-[var(--r-btn)] border px-4 py-2 text-left text-[length:var(--fs-sm)] font-bold',
+                      'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
+                      !selected &&
+                        'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:border-[var(--gk-ink)]',
+                    )}
+                    style={
+                      selected
+                        ? { background: itemTheme.tab, borderColor: itemTheme.tab, color: itemTheme.tabInk }
+                        : undefined
+                    }
+                  >
+                    {item.label}
+                  </button>
+                )
+              })}
+            </div>
 
-        <div
-          role="tabpanel"
-          id={`audience-panel-${audience.id}`}
-          aria-labelledby={`audience-tab-${audience.id}`}
-          className="mt-12 grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14"
-        >
-          <Pitch key={audience.id} audience={audience} reduced={reduced} />
-          <div className="lg:col-span-5">
-            <Testimonial key={audience.id} audience={audience} reduced={reduced} />
+          <div
+            role="tabpanel"
+            id={`audience-panel-${audience.id}`}
+            aria-labelledby={`audience-tab-${audience.id}`}
+            className="mt-8"
+          >
+            <Pitch key={audience.id} audience={audience} reduced={reduced} />
           </div>
+        </div>
+        <div className="lg:col-span-5">
+          <Testimonial key={audience.id} audience={audience} reduced={reduced} />
         </div>
       </div>
 
-      <PhotoMarquee key={audience.id} photos={audience.photos} className="mt-16" />
+      <PhotoMarquee key={audience.id} photos={audience.photos} compact className="mt-10" />
     </section>
   )
 }
@@ -183,7 +188,7 @@ function step(reduced: boolean, index: number) {
 
 function Pitch({ audience, reduced }: { audience: Audience; reduced: boolean }) {
   return (
-    <div className="lg:col-span-7">
+    <div>
       <motion.h3
         {...step(reduced, 0)}
         className="max-w-[30ch] text-[length:clamp(1.875rem,3.4vw,2.75rem)] leading-[1.12] font-medium tracking-[var(--tracking-display)]"
@@ -193,12 +198,12 @@ function Pitch({ audience, reduced }: { audience: Audience; reduced: boolean }) 
 
       <motion.p
         {...step(reduced, 1)}
-        className="mt-6 max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]"
+        className="mt-4 max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]"
       >
         {audience.body.value}
       </motion.p>
 
-      <motion.div {...step(reduced, 2)} className="mt-9">
+      <motion.div {...step(reduced, 2)} className="mt-6">
         {/* A router `to` can't carry a #section, so anchored CTAs are hrefs. */}
         <GkButton
           {...(audience.cta.to.includes('#') ? { href: audience.cta.to } : { to: audience.cta.to })}
@@ -229,11 +234,11 @@ function Testimonial({ audience, reduced }: { audience: Audience; reduced: boole
         alt=""
         loading="lazy"
         decoding="async"
-        className="aspect-[4/5] w-full object-cover sm:aspect-[4/3] lg:aspect-[4/5]"
+        className="aspect-[4/5] w-full object-cover sm:aspect-[4/3] lg:aspect-[1/1]"
       />
       <div
         data-ground="scrim"
-        className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgb(12_20_44_/_0.92)] via-[rgb(12_20_44_/_0.7)] to-transparent p-7 pt-24 text-white">
+        className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgb(12_20_44_/_0.92)] via-[rgb(12_20_44_/_0.7)] to-transparent p-6 pt-20 text-white">
         <blockquote className="text-[length:clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.45] font-semibold">
           &ldquo;{testimonial.quote.value.text}&rdquo;
         </blockquote>
