@@ -819,8 +819,8 @@ function LayerPanel({ progress }: { progress: string | null }) {
               </text>
             </g>
 
-            {/* The hexagon completes. */}
-            <polygon className="gk-spin" points="300,114 400.5,172 400.5,288 300,346 199.5,288 199.5,172" fill="none" stroke={C.coralSoft} strokeWidth={1.5} strokeDasharray="4 8" style={{ animationDelay: `${at(10.4)}, ${at(10.4)}` }} />
+            {/* The hexagon completes. The spinning dashed ring that sat around it
+                came off in the 28 Sep review - the halo already does that job. */}
             <g className="gk-fade" style={{ animationDelay: at(10.6) }}>
               <polygon className="gk-halo" points={HEX} fill="#F6C9BE" />
             </g>
