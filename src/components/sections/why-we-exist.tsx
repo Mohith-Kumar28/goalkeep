@@ -222,8 +222,8 @@ export function WhyWeExist() {
             >
               <div key={epoch} className="h-full">
                 {active === 0 && (
-                  <MoneyPanel
-                    money={Math.round(27 * ease(1000, 2400))}
+                  <InvestmentPanel
+                    amount={Math.round(27 * ease(1000, 2400))}
                     progress={showProgress ? progressDur : null}
                   />
                 )}
@@ -310,7 +310,7 @@ function ScaleBox({
 const px = (n: number) => `${n.toFixed(2)}s`
 
 /* ---------------------------------------------------------------------------
-   01 — The money
+   01 — The investment
    ------------------------------------------------------------------------- */
 
 const BAR_LABELS = ['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']
@@ -325,7 +325,7 @@ const BARS = AMOUNTS.map((v, i) => ({
   labelDelay: px(3.2 + i * 0.2),
 }))
 
-function MoneyPanel({ money, progress }: { money: number; progress: string | null }) {
+function InvestmentPanel({ amount, progress }: { amount: number; progress: string | null }) {
   const { spend } = whyWeExist
   return (
     <>
@@ -343,7 +343,7 @@ function MoneyPanel({ money, progress }: { money: number; progress: string | nul
             className="gk-reveal text-[length:clamp(2.75rem,6.4vw,5.25rem)] leading-[1.05] font-black tracking-[-0.02em] text-white tabular-nums"
             style={{ animationDelay: '1s' }}
           >
-            ₹{money} lakh crore
+            ₹{amount} lakh crore
           </div>
           <div
             className="gk-up text-[length:clamp(1.0625rem,1.5vw,1.25rem)] font-semibold"
@@ -397,9 +397,6 @@ function MoneyPanel({ money, progress }: { money: number; progress: string | nul
               </span>
             ))}
           </div>
-        </div>
-        <div className="gk-fade text-xs" style={{ color: '#92A0CE', animationDelay: '5s' }}>
-          {spend.note}
         </div>
       </div>
     </>
@@ -492,9 +489,6 @@ function DecisionsPanel({ pct, progress }: { pct: number; progress: string | nul
               <span className="size-3.5 rounded" style={{ background: '#E7CFCB' }} />
               Intuition-led
             </span>
-          </div>
-          <div className="gk-fade text-xs" style={{ color: '#8A7C79', animationDelay: '5.4s' }}>
-            {d.note}
           </div>
         </div>
       </div>

@@ -133,8 +133,10 @@ export const ticker = {
    2b · Why we exist — beige
    ============================================================ */
 
-/* Verbatim from the approved "Why we exist (blue variation)" artifact,
-   including its source-footnote placeholders. */
+/* Verbatim from the approved "Why we exist (blue variation)" artifact.
+   After the 28 Sep review: "money" reads "investment" throughout, and the
+   on-page source footnote placeholders are gone. `sources` still records
+   what needs checking. */
 export const whyWeExist = {
   eyebrow: 'why we exist',
   headlineLead: "India's social sector isn't short on data.",
@@ -143,9 +145,9 @@ export const whyWeExist = {
   chapters: [
     {
       num: '01',
-      title: 'The money',
+      title: 'The investment',
       stat: '₹27 lakh crore a year',
-      body: "India's social sector currently spends ₹27 lakh crore annually, and is projected to grow at 10% every year through 2030. The money is coming in, but the key question is: are we using it in the best way possible?",
+      body: "India's social sector currently spends ₹27 lakh crore annually, and is projected to grow at 10% every year through 2030. The investment is coming in, but the key question is: are we using it in the best way possible?",
     },
     {
       num: '02',
@@ -157,7 +159,7 @@ export const whyWeExist = {
       num: '03',
       title: 'The loop',
       stat: 'Proving, not improving',
-      body: 'Data gets collected to meet reporting requirements, flows into reports and evaluations, and rarely finds its way back into the program. As more money flows in, the loop only gets bigger.',
+      body: 'Data gets collected to meet reporting requirements, flows into reports and evaluations, and rarely finds its way back into the program. As more investment flows in, the loop only gets bigger.',
     },
     {
       num: '04',
@@ -170,12 +172,10 @@ export const whyWeExist = {
     label: 'Annual social sector spend in India',
     sub: 'Projected to grow at ~10% YoY until 2030.',
     pill: '+61% by FY30',
-    note: 'Projection drawn at 10% annual growth on current sector spend. [Add source footnotes 1 to 3 from the funder deck]',
   },
   decisions: {
     claim: 'of everyday decisions in the sector are driven by data.',
     support: "The other 95 run largely on intuition. The data exists. It just isn't built to help anyone decide.",
-    note: '[Add source footnote 4 from the funder deck]',
   },
   loopCaption:
     'Most nonprofit data is collected purely for reporting and compliance purposes. It is rarely seen as an asset that can help to strengthen their programs.',
@@ -183,7 +183,7 @@ export const whyWeExist = {
     'Goalkeep builds the missing layer of critical decision infrastructure required to unlock real social value and scale.',
   sources: {
     value: '₹27 lakh crore annual spend, 10% growth to 2030, 5% of decisions data-driven, $250 billion',
-    verify: 'Source footnotes 1–4 from the funder deck — the artifact carries them as placeholders.',
+    verify: 'Source footnotes 1–4 from the funder deck. Removed from the page in the 28 Sep review; still unsourced.',
   },
 }
 
