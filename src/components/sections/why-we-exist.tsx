@@ -198,10 +198,10 @@ export function WhyWeExist() {
                     >
                       {chapter.num}
                     </span>
-                    <span className="text-xl font-extrabold">{chapter.title}</span>
+                    <span className="text-xl font-extrabold whitespace-nowrap">{chapter.title}</span>
                   </span>
                   <span
-                    className="hidden text-right text-sm font-bold sm:inline"
+                    className="hidden text-right text-sm font-bold whitespace-nowrap sm:inline"
                     style={{ color: C.ink3 }}
                   >
                     {chapter.stat}
