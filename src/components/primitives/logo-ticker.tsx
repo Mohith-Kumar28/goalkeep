@@ -6,10 +6,9 @@ import { cn } from '@/lib/utils'
 /**
  * One marquee rail.
  *
- * Pauses on hover AND focus-within — a visitor who wants to read a partner's
- * name can stop it, which is the accessibility fix for marquees and the one
- * hover behaviour on this page that hands control to the user rather than
- * performing at them.
+ * Runs continuously on hover (28 Sep review: "the scroller should be
+ * continuous"). It still pauses on focus-within, so a keyboard user tabbing
+ * through the partner links is not chasing a moving target.
  *
  * Under reduced motion the rail renders as a static wrapped grid: same
  * information, no movement, no duplicated DOM.
@@ -46,7 +45,6 @@ function Rail({
         className={cn(
           'flex w-max items-center gap-10 md:gap-16',
           'motion-safe:animate-[gk-marquee_linear_infinite]',
-          tone === 'mono' && 'group-hover/rail:[animation-play-state:paused]',
           'group-focus-within/rail:[animation-play-state:paused]',
         )}
         style={{

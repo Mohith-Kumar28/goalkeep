@@ -25,8 +25,9 @@ const CHIP_FILLS = [
  * It replaces the carousel in the audience section after the 23 Sep review:
  * "no need for left-right cards, nothing - it should just seem like a photo
  * gallery of work done and can occupy the full screen." Same marquee as the
- * partner logos, and the same accessibility contract: pauses on hover, and
- * under reduced motion it is a static row that scrolls sideways by hand.
+ * partner logos. It never pauses ("the scroller should be continuous", 28 Sep
+ * review); under reduced motion it is a static row that scrolls sideways by
+ * hand.
  */
 export function PhotoMarquee({
   photos,
@@ -46,7 +47,7 @@ export function PhotoMarquee({
   return (
     <div
       className={cn(
-        "group/marquee relative overflow-hidden",
+        "relative overflow-hidden",
         reduced && "overflow-x-auto",
         className
       )}
@@ -55,7 +56,7 @@ export function PhotoMarquee({
         className={cn(
           "flex w-max gap-5 md:gap-6",
           !reduced &&
-            "animate-[gk-marquee_linear_infinite] group-hover/marquee:[animation-play-state:paused]"
+            "animate-[gk-marquee_linear_infinite]"
         )}
         /* Reversed, so the strip travels left to right - "moving right across
            to the end of the page". */
