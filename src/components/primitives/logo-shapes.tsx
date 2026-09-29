@@ -164,21 +164,53 @@ const FIELDS: Record<string, Array<Piece>> = {
        review named. */
   ],
 
-  /* Field notes - one lozenge only, the gold comma from the deck.
-
-     A short sweep at a heavy thickness stops reading as an arc and turns into
-     a bean: at 56 degrees and a 49px stroke it had no straight run at all. A
-     longer, thinner sweep is the deck's actual shape. */
+  /* Field notes - the Kickstarter "When the Kickstarter stops" title slide,
+     copied on request (28 Sep): a coral ring off the top corner, the yellow
+     comma under it, a small blue ring with a tight hole, and a big teal ring
+     rising off the bottom edge. The deck's own colours, sampled from the
+     slide, rather than the site's muted -lift set. The band has more copy
+     than the slide, so everything stays in the right-hand third and the
+     teal ring sits behind the cards. */
   notes: [
     {
-      sweep: 82,
-      start: 196,
-      thickness: 17,
-      color: 'var(--gk-yellow)',
-      size: 240,
-      top: -58,
-      right: -46,
-      drift: 20,
+      sweep: 360,
+      start: 0,
+      thickness: 12,
+      color: '#E5A193',
+      size: 400,
+      top: -260,
+      right: -150,
+      drift: 22,
+    },
+    {
+      sweep: 100,
+      start: 68,
+      thickness: 20,
+      color: '#E6E85A',
+      size: 220,
+      top: 10,
+      right: 210,
+      drift: 34,
+    },
+    {
+      sweep: 360,
+      start: 0,
+      thickness: 30,
+      color: '#5B75BE',
+      size: 100,
+      top: 160,
+      right: 30,
+      drift: 16,
+    },
+    {
+      sweep: 360,
+      start: 0,
+      thickness: 11,
+      color: '#8CC4B7',
+      size: 440,
+      bottom: -300,
+      right: 260,
+      drift: -20,
     },
   ],
 }
