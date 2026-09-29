@@ -193,19 +193,19 @@ function Sketch({
  */
 const FIELDS = [
   'Attendance',
-  'Village',
-  'Photos',
-  'Session notes',
+  'Enrolment',
+  'Mid-day meals',
+  'Lesson plans',
   'Test scores',
-  'Phone type',
-  'Weather',
-  'Dropouts',
-  'Travel time',
-  'Mood check',
-  'Parent income',
-  'Water source',
-  'Home visits',
-  'Feedback forms',
+  'Teacher logs',
+  'Textbooks given',
+  'Dropout rate',
+  'Homework done',
+  'Parent meetings',
+  'Library visits',
+  'Uniforms issued',
+  'Training hours',
+  'Report cards',
   'Learning levels',
 ]
 const DESIGN_COLS = 5
@@ -621,7 +621,7 @@ const PEOPLE_LEVELS = [
   [2, 3, 2, 3, 3],
   [4, 5, 4, 4, 5],
 ]
-const STAGE_LABELS = ['Before', 'During the programme', 'Six months on']
+const STAGE_LABELS = ['Before engagement', 'During engagement', 'After engagement']
 const MAX_LEVEL = 5
 
 const levelColor = (level: number) =>
