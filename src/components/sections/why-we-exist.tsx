@@ -121,11 +121,11 @@ export function WhyWeExist() {
     <section
       ref={ref}
       id="why-we-exist"
-      className={cn('gk-why relative py-20 md:pt-[104px] md:pb-24', live && 'is-live')}
+      className={cn('gk-why relative py-14 md:py-16', live && 'is-live')}
       style={{ background: C.ground, color: C.ink }}
       aria-labelledby="why-heading"
     >
-      <div className="shell flex flex-col gap-12 md:gap-16">
+      <div className="shell flex flex-col gap-8 md:gap-10">
         {/* 28 Sep: the heading uses the shared eyebrow / h2 styles so it
             matches every other band, not the artifact's own larger type. */}
         <header className="accent-blue flex max-w-[1140px] flex-col" style={{ color: 'var(--fg-1)' }}>
@@ -151,7 +151,7 @@ export function WhyWeExist() {
                   type="button"
                   onClick={() => choose(index)}
                   aria-current="step"
-                  className="relative flex w-full flex-col gap-2.5 overflow-hidden rounded-[20px] bg-white px-6 pt-6 pb-6 text-left md:px-7 md:pt-7"
+                  className="relative flex w-full flex-col gap-2 overflow-hidden rounded-[18px] bg-white px-6 py-5 text-left"
                   style={{ border: `2px solid ${C.navy}`, color: C.ink }}
                 >
                   <span className="flex shrink-0 items-baseline gap-3.5">
@@ -167,7 +167,7 @@ export function WhyWeExist() {
                   </span>
                   <span
                     key={epoch}
-                    className="gk-up mt-1 block text-[17px] leading-[1.55] font-normal"
+                    className="gk-up mt-1 block text-[15px] leading-[1.55] font-normal"
                     style={{ color: C.ink2, animationDelay: '0.1s' }}
                   >
                     {chapter.body}
@@ -178,7 +178,7 @@ export function WhyWeExist() {
                   key={chapter.num}
                   type="button"
                   onClick={() => choose(index)}
-                  className="flex min-h-16 w-full items-center justify-between gap-4 rounded-[20px] bg-transparent px-6 py-[18px] text-left transition-colors hover:border-[#C9C4B8] md:px-7"
+                  className="flex min-h-14 w-full items-center justify-between gap-4 rounded-[18px] bg-transparent px-6 py-3.5 text-left transition-colors hover:border-[#C9C4B8]"
                   style={{ border: `2px solid ${C.line}`, color: C.ink }}
                 >
                   <span className="flex shrink-0 items-baseline gap-3.5">
@@ -203,7 +203,7 @@ export function WhyWeExist() {
 
           <div className="flex min-w-0 grow flex-col gap-4">
             <div
-              className="relative box-border overflow-hidden rounded-[28px] px-5 py-8 md:px-12 md:py-11 lg:h-[620px]"
+              className="relative box-border overflow-hidden rounded-[24px] px-5 py-6 md:px-9 md:py-8 lg:h-[480px]"
               style={{
                 background: PANEL_BG[active],
                 border: `1px solid ${PANEL_BG[active]}`,
@@ -278,7 +278,9 @@ function ScaleBox({
   useLayoutEffect(() => {
     const node = outer.current
     if (!node) return
-    const measure = () => setScale(Math.min(1, node.clientWidth / width))
+    /* 28 Sep: "the graph and animation is too big" - drawn at no more than
+       80% of the artifact's size, and centred in whatever is left over. */
+    const measure = () => setScale(Math.min(0.8, node.clientWidth / width))
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(node)
@@ -288,8 +290,8 @@ function ScaleBox({
   return (
     <div ref={outer} className="relative w-full" style={{ height: height * scale }}>
       <div
-        className="absolute top-0 left-0 origin-top-left"
-        style={{ width, height, transform: `scale(${scale})` }}
+        className="absolute top-0 origin-top-left"
+        style={{ width, height, left: `calc(50% - ${(width * scale) / 2}px)`, transform: `scale(${scale})` }}
       >
         {children}
       </div>
@@ -321,7 +323,7 @@ function InvestmentPanel({ amount, progress }: { amount: number; progress: strin
     <>
       <Wipes />
       <Progress duration={progress} />
-      <div className="flex h-full flex-col gap-9">
+      <div className="flex h-full flex-col gap-5">
         <div className="flex flex-col gap-1.5">
           <div
             className="gk-up text-[13px] font-extrabold tracking-[0.14em] uppercase"
@@ -330,7 +332,7 @@ function InvestmentPanel({ amount, progress }: { amount: number; progress: strin
             {spend.label}
           </div>
           <div
-            className="gk-reveal text-[length:clamp(2.75rem,6.4vw,5.25rem)] leading-[1.05] font-black tracking-[-0.02em] text-white tabular-nums"
+            className="gk-reveal text-[length:clamp(2.25rem,4.4vw,3.75rem)] leading-[1.05] font-black tracking-[-0.02em] text-white tabular-nums"
             style={{ animationDelay: '1s' }}
           >
             ₹{amount} lakh crore
@@ -352,7 +354,7 @@ function InvestmentPanel({ amount, progress }: { amount: number; progress: strin
               {spend.pill}
             </div>
           </div>
-          <div className="relative flex h-[180px] items-end gap-2 [--why-bar-scale:0.78] md:h-[236px] md:gap-[22px] md:[--why-bar-scale:1]">
+          <div className="relative flex h-[150px] items-end gap-2 [--why-bar-scale:0.66] md:h-[190px] md:gap-[22px] md:[--why-bar-scale:0.8]">
             {BARS.map((bar) => (
               <div key={bar.label} className="flex h-full grow basis-0 flex-col items-center justify-end gap-2">
                 <span
