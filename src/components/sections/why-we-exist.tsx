@@ -643,9 +643,6 @@ function LoopPanel({ morph, progress }: { morph: boolean; progress: string | nul
             </text>
           </svg>
         </ScaleBox>
-        <div className="gk-up text-[15px] leading-[1.5]" style={{ color: C.ink2, animationDelay: '8.6s' }}>
-          {whyWeExist.loopCaption}
-        </div>
       </div>
     </>
   )

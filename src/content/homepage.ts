@@ -177,8 +177,6 @@ export const whyWeExist = {
     claim: 'of everyday decisions in the sector are driven by data.',
     support: "The other 95 run largely on intuition. The data exists. It just isn't built to help anyone decide.",
   },
-  loopCaption:
-    'Most nonprofit data is collected purely for reporting and compliance purposes. It is rarely seen as an asset that can help to strengthen their programs.',
   layerCaption:
     'Goalkeep builds the missing layer of critical decision infrastructure required to unlock real social value and scale.',
   sources: {
