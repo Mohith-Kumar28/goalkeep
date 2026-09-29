@@ -118,7 +118,7 @@ export function Audiences() {
             <div
               role="tablist"
               aria-label="Kinds of organisation we work with"
-              className="grid max-w-[34rem] grid-cols-2 gap-2"
+              className="flex max-w-[27rem] flex-wrap gap-2"
             >
               {audiences.map((item, index) => {
                 const selected = index === active
@@ -139,7 +139,7 @@ export function Audiences() {
                         setActive((active - 1 + audiences.length) % audiences.length)
                     }}
                     className={cn(
-                      'rounded-[var(--r-btn)] border px-4 py-2 text-left text-[length:var(--fs-sm)] font-bold',
+                      'rounded-[var(--r-btn)] border px-5 py-2.5 text-[length:var(--fs-sm)] font-bold',
                       'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
                       !selected &&
                         'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:border-[var(--gk-ink)]',
@@ -191,14 +191,16 @@ function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme;
     <div>
       <motion.h3
         {...step(reduced, 0)}
-        className="max-w-[30ch] text-[length:clamp(1.875rem,3.4vw,2.75rem)] leading-[1.12] font-medium tracking-[var(--tracking-display)]"
+        /* 28 Sep: the shared h2 and lead styles, so this band's type matches
+           every other section. */
+        className="h2 max-w-[30ch]"
       >
         {audience.header}
       </motion.h3>
 
       <motion.p
         {...step(reduced, 1)}
-        className="mt-4 max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]"
+        className="lead mt-4 max-w-[56ch]"
       >
         {audience.body.value}
       </motion.p>
@@ -237,7 +239,7 @@ function Testimonial({ audience, reduced }: { audience: Audience; reduced: boole
         alt=""
         loading="lazy"
         decoding="async"
-        className="aspect-[4/5] w-full object-cover sm:aspect-[4/3] lg:aspect-[1/1]"
+        className="aspect-[4/5] w-full object-cover sm:aspect-[4/3] lg:aspect-[5/6]"
       />
       <div
         data-ground="scrim"

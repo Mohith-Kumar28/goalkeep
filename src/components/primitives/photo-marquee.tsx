@@ -71,7 +71,7 @@ export function PhotoMarquee({
             aria-hidden={index >= base.length}
             className={cn(
               "relative w-[78vw] shrink-0 overflow-hidden rounded-[var(--r-lg)] sm:w-[22rem]",
-              compact ? "md:w-[20rem]" : "md:w-[26rem] lg:w-[28rem]"
+              compact ? "md:w-[24rem]" : "md:w-[26rem] lg:w-[28rem]"
             )}
           >
             <img
@@ -79,7 +79,7 @@ export function PhotoMarquee({
               alt={index >= base.length ? "" : photo.alt}
               loading="lazy"
               decoding="async"
-              className={cn("w-full object-cover", compact ? "aspect-[16/10]" : "aspect-[4/3]")}
+              className={cn("w-full object-cover", compact ? "aspect-[3/2]" : "aspect-[4/3]")}
             />
             <div
               data-ground="scrim"
