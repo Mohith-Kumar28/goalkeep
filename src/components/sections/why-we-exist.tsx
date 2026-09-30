@@ -520,7 +520,7 @@ function LoopPanel({ morph, progress }: { morph: boolean; progress: string | nul
     <>
       {!morph && <Wipes first={C.panelNavy} />}
       <Progress duration={progress} />
-      <div className="relative flex h-full flex-col gap-6 md:gap-10">
+      <div className="relative flex h-full flex-col justify-center gap-6 md:gap-10">
         <ScaleBox width={680} height={440}>
           {morph && (
             <div
@@ -607,9 +607,9 @@ function LoopPanel({ morph, progress }: { morph: boolean; progress: string | nul
               <circle className="gk-burst" cx="174" cy="388" r="12" fill="none" stroke={C.coralSoft} strokeWidth={3} />
             </g>
             <path className="gk-shake" d="M160 402 L170 374 M178 402 L188 374" stroke="#C0604F" strokeWidth={4} strokeLinecap="round" style={{ animationDelay: '5s' }} />
-            <text className="gk-up" x="152" y="412" textAnchor="middle" fontSize="13" fontWeight="900" fill="#A94F3F" style={{ animationDelay: '5.3s' }}>
+            <text className="gk-up" x="152" y="424" textAnchor="middle" fontSize="13" fontWeight="900" fill="#A94F3F" style={{ animationDelay: '5.3s' }}>
               <tspan x="152" dy="0">The loop breaks</tspan>
-              <tspan x="152" dy="17">here</tspan>
+              <tspan x="152" dy="16">here</tspan>
             </text>
             <path mask="url(#gkBreakMask2)" d="M113 174 V46 H219" fill="none" stroke={C.coralSoft} strokeWidth={6} strokeDasharray="12 9" strokeLinecap="round" strokeLinejoin="round" />
             <polygon className="gk-pop" points="217,35 233,46 217,57" fill={C.coralSoft} style={{ animationDelay: '7.2s' }} />
@@ -721,7 +721,7 @@ function LayerPanel({ progress }: { progress: string | null }) {
     <>
       <Wipes />
       <Progress duration={progress} delay="0.4s" />
-      <div className="relative flex h-full flex-col gap-3.5">
+      <div className="relative flex h-full flex-col justify-center gap-3.5">
         <ScaleBox width={680} height={460}>
           <svg
             width="680"
