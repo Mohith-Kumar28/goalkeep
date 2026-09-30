@@ -828,9 +828,6 @@ function LayerPanel({ progress }: { progress: string | null }) {
             ))}
           </svg>
         </ScaleBox>
-        <div className="gk-up text-[15px] leading-[1.5]" style={{ color: '#DDE3F4', animationDelay: at(14.4) }}>
-          {whyWeExist.layerCaption}
-        </div>
       </div>
     </>
   )

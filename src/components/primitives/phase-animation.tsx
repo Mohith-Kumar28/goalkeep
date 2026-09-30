@@ -192,19 +192,19 @@ function Sketch({
  * tidy grid and the whole thing moves in the same rhythm as Build.
  */
 const FIELDS = [
-  'Attendance',
-  'Enrolment',
-  'Mid-day meals',
-  'Lesson plans',
+  'Attendance records',
+  'New enrolments',
+  'Extracurricular activities',
+  'Community support',
   'Test scores',
   'Teacher logs',
   'Textbooks given',
   'Dropout rate',
-  'Homework done',
-  'Parent meetings',
+  'Homework assignments',
+  'Parent involvement',
   'Library visits',
-  'Uniforms issued',
-  'Training hours',
+  'Household income',
+  'Upskilling sessions',
   'Report cards',
   'Learning levels',
 ]
@@ -250,15 +250,9 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
         animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 6 }}
         transition={{ duration: 0.4 }}
       >
-        {phase >= 3 ? (
-          <>
-            Three things worth measuring. <span style={{ color: accent }}>The rest can wait.</span>
-          </>
-        ) : (
-          <>
-            Which of these will change a decision?
-          </>
-        )}
+        {/* 30 Sep: the "Three things worth measuring" closing line is gone;
+            the question stays up once the three notes line up. */}
+        Which of these will help inform a key decision?
       </motion.p>
 
       {FIELDS.map((field, index) => {

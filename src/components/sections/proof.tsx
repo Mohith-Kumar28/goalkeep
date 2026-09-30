@@ -74,7 +74,7 @@ export function Proof() {
       <div className="shell relative">
         <Reveal>
           <p className="eyebrow mb-4 text-[var(--gk-yellow)]">{proof.eyebrow}</p>
-          <h2 id="proof-heading" className="h2 mb-12 max-w-[20ch] font-medium">
+          <h2 id="proof-heading" className="h2 mb-12 max-w-[34ch] font-medium">
             {/* 28 Sep: plain. The yellow emphasis marks came off with the
                 rest of the page's circles, underlines and highlights. */}
             {proof.headline}

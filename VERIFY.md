@@ -4,7 +4,7 @@ Generated from `src/content` by `pnpm verify:report`. Do not edit by hand:
 clear the `verify` field on a content entry once it is confirmed, and this
 list shrinks on its own.
 
-**11 items outstanding.**
+**3 items outstanding.**
 
 Nothing here is invented as fact. Every line is drafted in Goalkeep's
 published voice with plausible, non-inflated stand-ins, and every one needs
@@ -12,19 +12,9 @@ a real number, a real name, or a permission before launch.
 
 | # | Where | What the page currently says | What to confirm |
 |---|---|---|---|
-| 1 | `homepage.audienceSection.photoCredit` | Partner names and locations on the carousel captions | Confirm the organisation and city on every carousel caption before launch. The four case-study covers are named in Drive; the workshop and field frames are labelled generically until someone confirms which partner site they were shot at. |
-| 2 | `homepage.closing.marginalia` | Replies come from
-a person, usually
-within 24 hours | The 24-hour response-time promise, with Manije. |
-| 3 | `homepage.faqs.4` | Our funder treats MEL as overhead. What do we say? — Come prepared to explain why it isn’t. India’s CSR rules cap admini | The reading of the CSR overhead rule, with someone who can stand behind it — this answer tells funders what the law says. |
-| 4 | `homepage.faqs.6` | What happens after you leave? — [Goalkeep to confirm the specifics.] The intent, in Goalkeep’s own words, is that people | BLOCKING — this answer is a placeholder and currently reads as one on the page. Goalkeep to confirm what handover actually includes: documentation, training, and who to call. |
-| 5 | `homepage.hero.proofCards.1.line` | From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators. | The copy doc replaced the Baithak card only. This line is trimmed from Vanavil’s own case-study card in the same document — confirm it should carry the hero rotation, or drop the rotation to the single Baithak card. |
-| 6 | `homepage.hero.proofCards.2.line` | A handful of hero metrics on the weekly dashboard surfaced student learning gaps that used to wait for year-end. | As above — trimmed from Apni Shala’s case-study card, not specified for the hero. |
-| 7 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
-| 8 | `homepage.proof.stats.0` | + — early-stage NGOs we’ve worked with | The 30+ figure, quoted from the homepage feedback doc. |
-| 9 | `homepage.proof.stats.1` |  — organisations and the funders behind them | Counted from the logos on goalkeep.net. The site says “40+” elsewhere — settle on one. |
-| 10 | `homepage.proof.stats.2` | % — of dashboards we audit aren’t opened twice | Source and sample size for the 73% figure — it appears in the brand book. |
-| 11 | `homepage.proof.stats.3` |  hrs — back every Monday for one MEL lead | Attribution and the real figure. |
+| 1 | `homepage.audiences.3.testimonial.quote` | For the first time, our grantees’ numbers told us something we could act on. — Programme lead, funding partner | Placeholder quote — no funder testimonial exists yet. Replace with a real, named quote before launch. |
+| 2 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
+| 3 | `homepage.whyWeExist.sources` | ₹27 lakh crore annual spend, 10% growth to 2030, 5% of decisions data-driven, $250 billion | Source footnotes 1–4 from the funder deck. Removed from the page in the 28 Sep review; still unsourced. |
 
 ## Blocking before launch
 

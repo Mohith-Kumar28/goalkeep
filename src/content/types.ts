@@ -56,7 +56,7 @@ export type Audience = {
   header: string
   /** One paragraph. */
   body: Verify<string>
-  photos: Array<{ src: string; alt: string; org: string; location: string }>
+  photos: Array<{ src: string; alt: string }>
   testimonial: {
     quote: PullQuote
     name: string

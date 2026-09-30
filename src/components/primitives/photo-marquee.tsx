@@ -4,20 +4,7 @@ import { cn } from "@/lib/utils"
 export type MarqueePhoto = {
   src: string
   alt: string
-  org: string
-  location: string
 }
-
-/*
- * The location chip cycles through the light brand colours - "more pop of
- * colour… keep the location with the light brand colour backgrounds: green,
- * coral and yellow."
- */
-const CHIP_FILLS = [
-  "var(--gk-yellow)",
-  "var(--gk-teal-lift)",
-  "var(--gk-coral-lift)",
-]
 
 /**
  * A slow, full-bleed photo strip with nothing to click.
@@ -27,7 +14,8 @@ const CHIP_FILLS = [
  * gallery of work done and can occupy the full screen." Same marquee as the
  * partner logos. It never pauses ("the scroller should be continuous", 28 Sep
  * review); under reduced motion it is a static row that scrolls sideways by
- * hand.
+ * hand. The org-and-location captions came off in the 30 Sep content doc:
+ * "just plain image scroller is fine."
  */
 export function PhotoMarquee({
   photos,
@@ -81,20 +69,6 @@ export function PhotoMarquee({
               decoding="async"
               className={cn("w-full object-cover", compact ? "aspect-[3/2]" : "aspect-[4/3]")}
             />
-            <div
-              data-ground="scrim"
-              className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 bg-gradient-to-t from-black/70 via-black/35 to-transparent p-4 pt-12"
-            >
-              <span className="text-[length:var(--fs-base)] font-extrabold text-white">
-                {photo.org}
-              </span>
-              <span
-                className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
-                style={{ background: CHIP_FILLS[index % CHIP_FILLS.length] }}
-              >
-                {photo.location}
-              </span>
-            </div>
           </li>
         ))}
       </ul>

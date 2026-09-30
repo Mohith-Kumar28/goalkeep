@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
-import { audiences } from '@/content/homepage'
+import { audienceSection, audiences } from '@/content/homepage'
 import type { Audience, AudienceId } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
 import { PhotoMarquee } from '@/components/primitives/photo-marquee'
@@ -15,8 +15,8 @@ import { cn } from '@/lib/utils'
  * distracted by the highlight." What stayed is the one thing that worked: pick
  * your kind of organisation at the top and get the relevant story.
  *
- *   · The eyebrow and the "We've worked with three kinds…" headline are gone;
- *     the tabs lead.
+ *   · The "We've worked with three kinds…" headline is gone; a "who we do
+ *     it for" eyebrow sits over the tabs.
  *   · Each segment has its own colour. Picking one re-tints the band, moves
  *     the arc to another corner, and brings the header, paragraph and
  *     testimonial in one after another - "boom boom boom", so the switch is
@@ -89,11 +89,6 @@ export function Audiences() {
       style={{ background: theme.ground, color: 'var(--fg-1)' }}
       aria-labelledby="audiences-heading"
     >
-      {/* The visible headline was cut; the band keeps its name for anyone
-          navigating by headings. */}
-      <h2 id="audiences-heading" className="sr-only">
-        Who we do it for
-      </h2>
       {/* The arc. One ring, off-frame, that swaps corner and colour with the
           segment. */}
       <motion.span
@@ -115,6 +110,12 @@ export function Audiences() {
           as one block instead of a row floating over a gap. */}
       <div className="shell relative grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14">
         <div className="lg:col-span-7">
+            {/* 30 Sep: the section's name is back on the page, as an eyebrow
+                like "what we do" and "why we exist" - the segment questions
+                below stay the headlines. */}
+            <h2 id="audiences-heading" className="eyebrow mb-5">
+              {audienceSection.eyebrow}
+            </h2>
             <div
               role="tablist"
               aria-label="Kinds of organisation we work with"
