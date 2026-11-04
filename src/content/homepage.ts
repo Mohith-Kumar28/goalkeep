@@ -33,82 +33,75 @@ import type {
    ============================================================ */
 
 export const hero = {
-  /* "Eyebrow: Remove". The headline, subheader and buttons keep same. */
-  /* Client's line, used exactly as written in the feedback doc. */
-  headlineLead: 'Data isn’t just meant to measure impact, but also',
-  /* Kept short and unbreakable so the hand-drawn squiggle underneath it can
-     line up with a single run of text rather than a two-line block. */
-  headlineHighlight: 'strengthen it.',
+  /* 1 Nov: the headline now says what Goalkeep does, not what data is for.
+     Same shape as before - a light lead and a bold-italic ending. */
+  headlineLead: 'Enabling social sector organisations to use data to',
+  headlineHighlight: 'scale impact.',
   /*
    * The subheader, typed.
    *
-   * "Design, build and enable the adoption of getting typed out… and this one
-   * will be 'enable the adoption of', then it'll make sense in the sentence."
+   * 21 Oct call: "the typing line basically starts with a static line which
+   * is 'we work with funders, nonprofits and ecosystem partners to' and then
+   * these three things are typed and changed."
    *
-   * So the frame is `${typed.lead} ___ ${typed.tail}` and each phrase has to
-   * complete it on its own. That is why the third phrase carries its own "of":
-   * "We enable the adoption of data systems that…" only parses if the "of"
-   * belongs to the phrase being typed.
+   * The frame is `${typed.lead} ___${typed.tail}`, so each phrase has to finish
+   * the sentence on its own. The tail is just the full stop.
    */
   typed: {
-    lead: 'We',
-    phrases: ['design', 'build', 'enable the adoption of'],
-    /* Reframed after the 23 Sep doc ("one of the intro sentences reads as
-       generic"): the old tail, "…that deepen the impact of your programs",
-       could be any consultancy's. This one says what's different - the
-       systems get used. Placeholder until Aditya's copy pass. */
-    tail: 'data systems your teams actually use to run better programs.',
+    lead: 'We work with funders, nonprofits, and ecosystem partners to',
+    phrases: [
+      'build systems that scale with them',
+      'turn data into decisions',
+      'increase data adoption among their teams and cohorts',
+    ],
+    tail: '.',
   },
-  primaryCta: { label: 'Talk to us', to: '/contact' },
-  secondaryCta: { label: 'See our work', to: '/case-studies' },
+  /* The homepage launches alone, so both buttons stay on the page: "the talk
+     to us will lead down to the contact form below" and "see our work can lead
+     to the case studies on the page for now". */
+  primaryCta: { label: 'Talk to us', to: '#contact' },
+  secondaryCta: { label: 'See our work', to: '#case-studies' },
   /**
-   * Goalkeep photography. No longer behind the hero — "let's remove the
-   * background from here and keep a simple solid blue colour like in the
-   * marketing materials, and keep this video in some other component's
-   * background below". It runs behind the numbers band instead.
-   */
-  /**
-   * The rotating proof card. One organisation, one outcome, one photograph.
+   * The case cards. One organisation, one outcome, one photograph.
    *
-   * The before/after stat is gone — "11 hrs → 40 min / monthly reporting
-   * cycle" became a sentence about what the number bought. Only the Baithak
-   * card was specified in the copy doc; the other two carry the client's own
-   * case-study lines from section 9 of the same document so nothing here is
-   * written by us.
+   * 21 Oct doc: "All 3 case studies are early stage orgs - we risk pegging
+   * ourselves agency for only that target audience", so the second and third
+   * cards were replaced with Dasra and SVP India's cohort work and Peepul. The
+   * photographs are the ones pasted into the doc. There is no "read case
+   * study" link any more - there is no page for it to open yet.
    */
   proofCards: [
-    {
-      org: 'Baithak Foundation',
-      tag: 'Data Systems Design',
-      image: '/photos/case-baithak.webp',
-      imageAlt: 'A Baithak Foundation music session in progress',
-      line: {
-        value:
-          'Funding grant closed with the help of evidence pulled from their dashboard in seconds.',
-      },
-      to: '/case-studies',
-    },
-    {
-      org: 'Vanavil Trust',
-      tag: 'Operationalizing Theory of Change',
-      image: '/photos/case-vanavil.webp',
-      imageAlt: 'Children studying in a Vanavil Trust classroom',
-      line: {
-        value:
-          'We helped Vanavil map their theory of change to three distinct, measurable indicators.',
-      },
-      to: '/case-studies',
-    },
+    /* 23 Oct: Baithak's line ran to two lines and left a white gap under it,
+       so Apni Shala's card from the case studies takes its place. */
     {
       org: 'Apni Shala Foundation',
-      tag: 'Identifying Hero Metrics',
+      tag: 'Identifying key metrics',
       image: '/photos/case-apni-shala.webp',
-      imageAlt: 'A student working on a craft activity at Apni Shala',
+      imageAlt: 'The Apni Shala Foundation team standing together in their office',
       line: {
         value:
-          'A handful of hero metrics introduced on the weekly dashboard surfaced student learning gaps that used to only appear at year-end.',
+          'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
       },
-      to: '/case-studies',
+    },
+    {
+      org: 'Dasra and SVP India',
+      tag: 'Operationalizing Theory of Change',
+      image: '/photos/aud-eco-5.webp',
+      imageAlt: 'Cohort members working together around a table',
+      line: {
+        value:
+          'Conducted capacity building workshops to help 16 organizations in their cohort map their ToC to measurable indicators.',
+      },
+    },
+    {
+      org: 'Peepul',
+      tag: 'Designing Organizational Impact Framework',
+      image: '/photos/case-peepul.webp',
+      imageAlt: 'Peepul and Goalkeep team members working through a dashboard around a table',
+      line: {
+        value:
+          'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled.',
+      },
     },
   ],
 }
@@ -135,6 +128,15 @@ export const ticker = {
    what needs checking. */
 export const whyWeExist = {
   eyebrow: 'why we exist',
+  /* 21 Oct: "it's too much information overload happening in this section",
+     so the homepage carries this - a header, a paragraph and the last of the
+     four illustrations. The four-step story below is kept for the About page
+     ("keep the full narrative on a separate page"). */
+  mission: {
+    headlineLead: 'Our mission is to make data useful',
+    headlineEm: 'to the people creating impact.',
+    body: 'Social-sector organisations collect a great deal of data, but too little of it goes back into making better programmatic decisions. Goalkeep builds people-friendly systems and capabilities that turn scattered information into useful insight—so teams can make better decisions, communicate impact clearly and deepen the change they create.',
+  },
   headlineLead: "India's social sector isn't short on data.",
   headlineEm: "It's short on decisions made with data.",
   lead: 'Since reporting is the primary use case for data in the social sector, very little flows back down to inform day-to-day decision making in NGOs. To add to that, most teams are overwhelmed by the sheer volume of data circulating in their organizations to make much sense of them. As a result, the sector is missing a key opportunity to maximize social impact.',
@@ -180,28 +182,72 @@ export const whyWeExist = {
 }
 
 /* ============================================================
-   3 · What we do — cream, interactive
+   3 · What we do — white, four services
    ============================================================ */
 
+/* 21 Oct: Design / Build / Adopt "reads more like an approach… it's not
+   really a what we do". This is the new section: one headline and the four
+   services Goalkeep can be engaged for, copy from the review doc. */
 export const whatWeDo = {
   eyebrow: 'what we do',
-  headline: 'Most of the projects we take on',
-  headlineTail: 'involve one or more of the following.',
+  headline: 'We help organizations use data to',
+  headlineTail: 'measure, communicate, and deepen their impact.',
+}
+
+export type Service = {
+  /** The short label over the card, e.g. "01 / Strategy". */
+  label: string
+  title: string
+  body: string
+}
+
+export const services: Array<Service> = [
+  {
+    label: 'Strategy',
+    title: 'Impact and measurement strategy',
+    body: 'Sharpen your Theory of Change and turn it into a practical measurement framework. We enable teams to identify the decisions that matter, define measurable outcomes and indicators, and develop frameworks that can actually be used.',
+  },
+  {
+    label: 'Systems',
+    title: 'Data systems and workflows',
+    body: 'Build a data stack that can grow with your organisation. We design cost-effective, fit-for-purpose systems, ETL workflows and reliable pipelines that collect, transform and connect data across tools—providing a strong foundation for unlocking actionable insights.',
+  },
+  {
+    label: 'Dashboards',
+    title: 'Dashboards and reporting',
+    body: 'Design dashboards around the questions each team member needs answered. We translate role-specific decisions into clear views and reports, so leaders, programme teams and MEL staff see what matters—not endless charts and countless metrics.',
+  },
+  {
+    label: 'Adoption',
+    title: 'Data adoption and capacity-building',
+    body: 'We build data confidence through role-specific training and practical team routines. From field staff and MEL specialists to executive leadership, we enable organizations to navigate data without overwhelm and make smarter decisions every day.',
+  },
+]
+
+/* ============================================================
+   3b · Our approach — white, interactive
+   ============================================================ */
+
+/* The old "what we do", renamed and moved below "who we do it for". */
+export const approach = {
+  eyebrow: 'our approach',
+  headline: 'Every data system we design centres around two questions:',
+  headlineTail: 'who will use it, and to what decisions should it help them make?',
 }
 
 /*
- * The three stages carry the client's full paragraphs now. The short
- * card-length summaries the section used to open with are gone: the copy doc
- * replaced them with these, and running both would have meant two versions of
- * the same sentence living one field apart.
+ * 21 Oct doc: each stage now has a one-line heading and new copy. The
+ * illustrations and photographs stay as they were ("keep the illustrations
+ * the same for now").
  */
 export const pillars: Array<Pillar> = [
   {
     index: '01',
     hue: 'blue',
     title: 'Design',
+    heading: 'Start with the decision, not the dashboard.',
     body:
-      'Most organizations have a systems design that is optimized to capture data volumes as compared to using that data effectively. So whether you’re working with manual data logs, excel sheets or an existing data dashboard, we help set your data foundations right with one key question: what decision should this data help inform?',
+      'Are you collecting data because it is useful—or because it has always been collected? What decision should each metric inform? We start with the outcomes you want to move and the actions people need to take, then design the measurement framework, questions and views that support them.',
     images: [
       { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a Goalkeep design workshop' },
       { src: '/photos/phase-design-b.webp', alt: 'A Goalkeep working session in progress on the floor of a partner office' },
@@ -211,8 +257,9 @@ export const pillars: Array<Pillar> = [
     index: '02',
     hue: 'teal',
     title: 'Build',
+    heading: 'Build once, and let your system scale with you.',
     body:
-      'Data was never meant to be this daunting, complex being. We invest time in building intuitive dashboards that are easy to read and even easier to use, so that people across the organization can navigate them comfortably, without getting overwhelmed by the data.',
+      'Has every new request created another tracker, sheet or dashboard? We replace the pile-up with streamlined, cost-effective pipelines and systems that are clean, fast, maintainable and designed to grow with your organisation.',
     images: [
       { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field' },
       { src: '/photos/phase-build-b.webp', alt: 'A Goalkeep-built dashboard showing programme indicators' },
@@ -222,14 +269,17 @@ export const pillars: Array<Pillar> = [
     index: '03',
     hue: 'coral',
     title: 'Adopt',
+    heading: 'Make data part of how people work.',
     body:
-      'What’s the point of investing in data systems when no one in the organization is using it? Probably the biggest part of our work focuses on capacity building and on enabling data adoption among teams, so that people at every level of the organization can learn how to work with data.',
+      'Will the system be used once the launch is over? Technology creates value only when people have the confidence and capability to use it. Our data literacy curriculum, role-based training and team routines help everyone—from field staff to MEL teams and leaders—use data in practice.',
     images: [
       /* 23 Sep: "use more photographs of training sessions… that visibly show
-         an organisation adopting data." Both are stills from the Data
-         Literacy Programme films. */
-      { src: '/photos/phase-adopt-training-a.webp', alt: 'A Goalkeep trainer walking a Data Literacy Programme cohort through the manual' },
+         an organisation adopting data." 23 Oct: the projector still is out
+         ("not looking nice") - the Data Literacy Programme table session and
+         the Dasra and SVP India cohort photo from the hero, people talking it
+         through in both. */
       { src: '/photos/phase-adopt-training-b.webp', alt: 'Participants working through a data exercise together at a Data Literacy Programme session' },
+      { src: '/photos/aud-eco-5.webp', alt: 'Cohort members working together around a table' },
     ],
   },
 ]
@@ -241,10 +291,11 @@ export const pillars: Array<Pillar> = [
    4 · Whom we do it for — pale blue
    ============================================================ */
 
-/* 30 Sep content doc: final copy for all four segments (Funders keeps its
-   placeholder testimonial), the client's own photographs for the first three
-   galleries and testimonials, and no captions on the gallery - "just plain
-   image scroller is fine". */
+/* 30 Sep content doc: final copy for all four segments, the client's own
+   photographs, and no captions on the gallery - "just plain image scroller is
+   fine". 21 Oct: new copy for every segment, a real funder testimonial, and
+   every button leads to the contact form - there are no programme pages to
+   send anyone to yet ("talk to us… partner with us here is fine"). */
 export const audienceSection = {
   eyebrow: 'who we do it for',
 }
@@ -253,9 +304,10 @@ export const audiences: Array<Audience> = [
   {
     id: 'early-stage',
     label: 'Early-stage NGOs',
-    header: 'Lots of data, but no clear way to make sense of it?',
+    header: 'Lots of data, but no clear way to',
+    headerEm: 'make sense of it?',
     body: {
-      value: 'You don’t need a data team or expensive software to know whether your program is working. Our Kickstarter program is specifically designed to help early-stage NGOs put one reliable data system in place. We streamline your data input processes, develop a working dashboard, and identify a handful of key metrics to help you collectively map your Theory of Change in a way that is measurable and accurate.',
+      value: 'Your data may live across forms, spreadsheets and individual trackers, making it slow to understand progress or communicate impact. We help bring it together in a practical, affordable system that reduces manual effort, makes change visible over time and grows with your organisation.',
     },
     photos: [
       { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
@@ -276,14 +328,15 @@ export const audiences: Array<Audience> = [
       credentials: 'Apni Shala Foundation',
       photo: '/photos/aud-early-testimonial.webp',
     },
-    cta: { label: 'Explore our Kickstarter program', to: '/programs/kickstarter' },
+    cta: { label: 'Talk to us', to: '#contact' },
   },
   {
     id: 'data-mature',
-    label: 'Data-mature nonprofits',
-    header: 'Systems in place, but struggling to build a culture of data adoption?',
+    label: 'Mid-to-large Nonprofits',
+    header: 'Looking to improve insights and increase adoption of',
+    headerEm: 'your data systems?',
     body: {
-      value: 'Adoption is truly the hard part. In our Data Literacy Program we train the trainers: two people from your MEL team get the skills and toolkits to build a data culture across your organisation, so the systems you already built actually get used. The 42 MEL leads we’ve trained have gone on to train 700+ colleagues.',
+      value: 'You may already collect large volumes of data, but two problems persist: people do not use it, and the growing stack of trackers, dashboards and analyses becomes complex, slow and expensive. We streamline pipelines and systems, then build the skills and routines that help teams use the resulting insight.',
     },
     photos: [
       { src: '/photos/aud-mature-1.webp', alt: 'A facilitator speaking at a Data Literacy Program session' },
@@ -304,14 +357,15 @@ export const audiences: Array<Audience> = [
       credentials: 'Sanjhi Sikhiya',
       photo: '/photos/aud-mature-testimonial.webp',
     },
-    cta: { label: 'Explore the Data Literacy Program', to: '/programs/data-literacy' },
+    cta: { label: 'Talk to us', to: '#contact' },
   },
   {
     id: 'intermediary',
-    label: 'Ecosystem partners',
-    header: 'Looking to build the MEL capacities of organisations at scale?',
+    label: 'Ecosystem partners and Intermediaries',
+    header: 'Looking to build the MEL capacities of',
+    headerEm: 'organisations at scale?',
     body: {
-      value: 'We work alongside you as the MEL capacity building partner for your cohort and incubator organizations. Through a series of workshops, each organisation learns how to effectively map its theory of change: working out what to track, how to track it, and how to use what it learns in its day-to-day work.',
+      value: 'Build MEL capacity across the nonprofit organisations in your network or cohort. Goalkeep can serve as an MEL knowledge partner, co-design learning journeys, facilitate cohort programmes and provide train-the-trainer support.',
     },
     photos: [
       { src: '/photos/aud-eco-1.webp', alt: 'A facilitator pointing out something on a worksheet to a participant' },
@@ -331,35 +385,37 @@ export const audiences: Array<Audience> = [
       credentials: 'Dasra',
       photo: '/photos/aud-eco-testimonial.webp',
     },
-    cta: { label: 'Partner with us', to: '/partner-with-us#ecosystem-partners' },
+    cta: { label: 'Partner with us', to: '#contact' },
   },
   {
     id: 'funders',
     label: 'Funding Organizations',
-    header: 'Are you looking to develop a more robust framework to evaluate grant applications?',
+    header: 'Looking to develop stronger measurement practices and better communicate',
+    headerEm: 'portfolio-wide impact?',
     body: {
-      value: 'Funders often receive grant applications from organizations with varying submission assets and outcome parameters. Having a system that streamlines their work, impact, compliance criteria, and financial health can help you evaluate NGOs with more clarity, and help make more well-rounded investment decisions.',
+      value: 'Understand and communicate portfolio-level impact while strengthening grantees’ ability to use data. We can support portfolio measurement and reporting, sponsor capacity-building programmes, and help partners develop stronger and more consistent measurement practices.',
     },
+    /* 21 Oct doc: three of the five photographs swapped for cohort and
+       facilitation shots. */
     photos: [
       { src: '/photos/case-dashboard.webp', alt: 'A programme dashboard open on a laptop' },
-      { src: '/photos/hero-02-classroom.webp', alt: 'A village classroom session' },
+      { src: '/photos/aud-eco-1.webp', alt: 'A facilitator pointing out something on a worksheet to a participant' },
       { src: '/photos/phase-adopt-b.webp', alt: 'A facilitator walking a colleague through data on a phone' },
-      { src: '/photos/phase-design-b.webp', alt: 'A floor-circle working session' },
-      { src: '/photos/case-apni-shala.webp', alt: 'A student working on a craft activity' },
+      { src: '/photos/hero-04-pair.webp', alt: 'Two facilitators reviewing a tablet' },
+      { src: '/photos/aud-eco-3.webp', alt: 'Two participants discussing their work at laptops' },
     ],
     testimonial: {
       quote: {
         value: {
-          text: 'For the first time, our grantees’ numbers told us something we could act on.',
-          attribution: 'Programme lead, funding partner',
+          text: 'Most organizations need to shift their focus to learning rather than just monitoring. That’s the biggest change for us, and we hope to see that shift in the rest of the social sector as well.',
+          attribution: 'Rutuja Chaphekar, Forbes Marshall',
         },
-        verify: 'Placeholder quote — no funder testimonial exists yet. Replace with a real, named quote before launch.',
       },
-      name: 'Programme lead',
-      credentials: 'Funding partner (placeholder)',
-      photo: '/photos/hero-04-pair.webp',
+      name: 'Rutuja Chaphekar',
+      credentials: 'Forbes Marshall',
+      photo: '/photos/aud-funder-testimonial.webp',
     },
-    cta: { label: 'Partner with us', to: '/partner-with-us#funders' },
+    cta: { label: 'Partner with us', to: '#contact' },
   },
 ]
 
@@ -367,16 +423,16 @@ export const audiences: Array<Audience> = [
    5 · Proof — navy
    ============================================================ */
 
-/* 30 Sep content doc: new headline and four new figures, supplied by
-   Goalkeep. */
+/* 30 Sep content doc: new headline and four figures, supplied by Goalkeep.
+   4 Nov: Goalkeep revised three of them (910 unchanged). */
 export const proof = {
   eyebrow: 'the short version',
   headline: 'Six years of helping organizations to measure, communicate, and deepen their impact with confidence.',
   stats: [
     { value: { figure: 910, suffix: '+', sentence: 'people trained' } },
-    { value: { figure: 75, suffix: '%', sentence: 'reduction in average time spent on reporting' } },
-    { value: { figure: 2.5, suffix: 'x', sentence: 'increase in data systems adoption' } },
-    { value: { figure: 90, suffix: '%', sentence: 'of partner organizations now using data to make decisions' } },
+    { value: { figure: 100, suffix: '+', sentence: 'organisations partnered with' } },
+    { value: { figure: 50, suffix: '%', sentence: 'reduction in average time spent on reporting' } },
+    { value: { figure: 64, suffix: '%', sentence: 'net promoter score' } },
   ],
 }
 
@@ -391,7 +447,8 @@ export const caseStudySection = {
   /* Highlighted, as a trial of the paper-highlighter treatment on a short
      phrase - see headlineCircle in whyWeExist. */
   headlineMark: 'what it took',
-  cta: { label: 'Read all case studies', to: '/case-studies' },
+  /* 21 Oct: no "Read all case studies" button - the homepage launches on its
+     own, so there is nothing for it to open yet. */
 }
 
 /*
@@ -414,16 +471,18 @@ export const caseStudies: Array<CaseStudy> = [
     intervention: 'Data collection & visualisation',
     body: 'A real-time data system that we built for Baithak Foundation played a pivotal role in closing a ₹25 lakh grant. What convinced the funder wasn’t just the dashboard metrics, but that every person on the team also used that data regularly.',
     image: '/photos/case-baithak.webp',
-    imageAlt: 'A Baithak Foundation music session in progress',
+    imageAlt: 'Two Baithak Foundation team members smiling during a session',
   },
+  /* 21 Oct: "vanavil replaced with Dasra and SVP India", same copy as the
+     hero card. The sector tag is our guess - the doc doesn't give one. */
   {
-    slug: 'vanavil-baseline',
-    org: 'Vanavil Trust',
-    sector: 'Education',
+    slug: 'dasra-svp-cohort',
+    org: 'Dasra and SVP India',
+    sector: 'Cross-sector',
     intervention: 'Operationalizing Theory of Change',
-    body: 'From attendance data to assessing school programmes, Vanavil mapped their theory of change to key indicators that could give them a better glimpse of program gaps and successes.',
-    image: '/photos/case-vanavil.webp',
-    imageAlt: 'Children studying in a Vanavil Trust classroom',
+    body: 'Conducted capacity building workshops to help 16 organizations in their cohort map their ToC to measurable indicators.',
+    image: '/photos/aud-eco-5.webp',
+    imageAlt: 'Cohort members working together around a table',
   },
   {
     slug: 'peepul-leadership-dashboard',
@@ -432,7 +491,7 @@ export const caseStudies: Array<CaseStudy> = [
     intervention: 'Designing Organizational Impact Framework',
     body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
     image: '/photos/case-peepul.webp',
-    imageAlt: 'A teacher marking a number line on a classroom blackboard',
+    imageAlt: 'Peepul and Goalkeep team members working through a dashboard around a table',
   },
   {
     slug: 'apni-shala-indicators',
@@ -441,7 +500,7 @@ export const caseStudies: Array<CaseStudy> = [
     intervention: 'Identifying key metrics',
     body: 'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
     image: '/photos/case-apni-shala.webp',
-    imageAlt: 'A student working on a craft activity',
+    imageAlt: 'The Apni Shala Foundation team standing together in their office',
   },
 ]
 
@@ -449,66 +508,54 @@ export const caseStudies: Array<CaseStudy> = [
    7 · FAQs — pale blue
    ============================================================ */
 
-/* The heading is one plain sentence now. The eyebrow, the "Including the ones
-   that cost us the work" line and the handwritten "Still stuck? Write to us"
-   aside all went with the copy replacement — the doc gives this section one
-   heading and seven questions, and the aside was dev-build copy repeating a
-   promise the closing band already makes. */
+/* The heading is one plain sentence: a light lead and a bold-italic end.
+   23 Oct: "just change that to frequently asked questions". */
 export const faqSection = {
-  headline: 'Questions we get',
-  headlineEm: 'in the first call.',
+  headline: 'Frequently asked',
+  headlineEm: 'questions.',
 }
 
-/* Q1-Q3 from the 23 Sep feedback doc; Q4-Q7 replaced in the 30 Sep content
-   doc. */
+/* 21 Oct doc: "KEEP ONLY FAQs in this updated table". Five questions, answers
+   verbatim. A blank line in an answer starts a new paragraph.
+
+   The metrics answer opens "Yes.", which only reads against a yes/no
+   question, so it keeps the earlier wording of that question rather than the
+   doc's "What metrics should we communicate?". */
 export const faqs: Array<Faq> = [
   {
     value: {
-      question: 'We don’t have a data team. Is that a problem?',
+      question: 'We collect a lot of data, but people are not using it properly. Will you be able to help?',
       answer:
-        'No, and that describes most of the organisations we work with. Some of the strongest data practitioners in nonprofits come from program teams, because they already understand the context, the constraints and the decisions the data needs to inform. Also, we understand that having a data team is a tough ask when you’re working with limited budgets, and our engagements are designed to cater to both data mature and early stage nonprofits who have never streamlined their data systems before.',
-    },
-  },
-  {
-    value: {
-      question: 'We already collect a lot of data. Why would we need help?',
-      answer:
-        'Most organisations we meet have no shortage of data. The difficulty is that it is either (a) the data is being collected only to report upward (to donors and funders) rather than to decide anything about your programs and/or (b) even if you are trying to use data to deepen your impact, there is so much data without a clear systems design to sustain it that your team ends up getting overwhelmed, and hence barely using the data at all. That’s where we come in, to help you organize the mess, slap on a new coat of paint, and teach you how to get your organization to lean in to using more data in their decision making.',
-    },
-  },
-  {
-    value: {
-      question: 'Do we get a data dashboard at the end of our engagement with you?',
-      answer:
-        'Often, yes; but the dashboard is only part of the picture. The most important step isn’t creating a new dashboard or collecting more data. It’s agreeing on what matters enough to measure, and then having the infrastructure in place to measure it accurately and easily.',
+        'Yes. We help identify which data is useful, reduce duplication and manual effort, connect scattered sources, and create workflows that make information easier to analyse, communicate and act on.',
     },
   },
   {
     value: {
       question: 'What software do you use?',
       answer:
-        'Whatever your team can run without us. We don’t start with a tool, we start with the questions your team needs answered, then build in software you can maintain yourselves. For many organisations that means Google Sheets and a simple dashboard. For some partners, we’ve built pipelines using custom tools and AI platforms too.',
+        'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software.\n\nDepending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
     },
   },
   {
     value: {
       question: 'Will you help us figure out what metrics will truly communicate our impact?',
       answer:
-        'Yes, and it’s where we always begin. We run a key questions exercise across your organisation, from founders to field staff, asking what decisions people make and what information would help them make those decisions better. We then map your theory of change to a focused set of indicators. The test we apply to every metric is simple: if we collect this, what action will it help us take?',
+        'Yes. We don’t begin with a generic list of metrics. We start with your Theory of Change, the outcomes you are working towards and the questions your programme teams, leadership and funders need the evidence to answer.\n\nWe then review what you already collect and help you prioritise a focused set of indicators, with clear definitions, calculations and data sources. Each metric must pass three tests: does it reflect the change you are trying to create, is it feasible and responsible to collect, and will it help someone learn, decide or communicate more clearly?',
+    },
+    verify: 'Question wording: the doc has "What metrics should we communicate?", but the answer starts "Yes." - kept the earlier yes/no wording. Confirm with Rumit.',
+  },
+  {
+    value: {
+      question: 'Our teams do not see the value of data. How do we help them use it?',
+      answer:
+        'During our engagement, we address two questions. First, does the dashboard answer questions people genuinely have and help them make decisions they are responsible for? If not, you may want to consider redesigning it. Second, do people have the confidence and skills to use it? Role-based training, guided data reviews and regular team routines help increase dashboard adoption across all levels in your organization.',
     },
   },
   {
     value: {
-      question: 'We already have dashboards and people don’t use them. Why make more?',
+      question: 'Can we build what you provide internally?',
       answer:
-        'Dashboards usually go unused because they were built to report upward, not to answer the questions the people using them actually have. Often the fix is streamlining what already exists: fewer indicators, views designed for each role, and data that flows back to the teams who collect it. Then we train people at every level until using the dashboard is simply part of how your organization functions on a week-to-week basis. We know that data adoption is the hard part, and it’s the part we spend most of our time focusing on.',
-    },
-  },
-  {
-    value: {
-      question: 'We have a team that makes reports regularly. Why do we need your service?',
-      answer:
-        'Most nonprofit data goes into donor reports and very little of it feeds internal decisions. We help turn the data your team already collects into something your programs can act on regularly, and factor into program decisions they make. When the underlying system works, credible reporting follows as a byproduct, and your team spends less time assembling reports and more time using what’s in them.',
+        'Often, yes—but teams may need focused expertise to design the measurement framework, data architecture and adoption journey while building internal ownership. Goalkeep brings measurement, data-engineering, dashboard and capacity-building expertise, and works with your team so the system remains useful after the engagement.',
     },
   },
 ]
@@ -517,7 +564,8 @@ export const faqs: Array<Faq> = [
    8 · Field notes — cream deep
    ============================================================ */
 
-/* "Keep same." */
+/* 21 Oct: off the homepage until the blog is written ("keep it saved…
+   keep it removed for now"). Nothing renders this at the moment. */
 export const fieldNoteSection = {
   eyebrow: 'field notes',
   headline: 'What we’re learning,',
@@ -572,15 +620,53 @@ export const fieldNotes: Array<FieldNote> = [
    9 · Closing — navy
    ============================================================ */
 
-/* The eyebrow and the second headline line ("Sub: remove") are gone. What is
-   left is one sentence and two buttons. */
+/* One sentence and two actions. 21 Oct: the data culture quiz button became
+   a newsletter sign-up that "flips into a box where someone can type and
+   submit an email". */
 export const closing = {
   /* 23 Sep doc: "full emboldened, except for the phrase 'clarity and
-     certainty.' - all white, no highlight". */
+     certainty.'". 23 Oct, reversed: "it's opposite" - the lead is light and
+     "clarity and certainty" is bold, "because that's what you want to
+     emphasize". Set like every other headline on the page. */
   headlineLead: 'Make your next program decision with more',
-  headlineQuiet: 'clarity and certainty.',
-  primaryCta: { label: 'Talk to us', to: '/contact' },
-  secondaryCta: { label: 'Take our data culture quiz', to: '/resources/data-quiz' },
+  headlineEm: 'clarity and certainty.',
+  primaryCta: { label: 'Talk to us', to: '#contact' },
+  newsletter: {
+    label: 'Subscribe to our newsletter',
+    placeholder: 'Your email address',
+    submit: 'Subscribe',
+    done: 'Thanks - you’re subscribed.',
+  },
+}
+
+/* ============================================================
+   10 · Contact — cream
+   ============================================================ */
+
+/* 21 Oct: "a normal form… crisp and modern". The fields, labels and button
+   are goalkeep.net's own contact form, all five required as they are there;
+   the dropdown options are the four services. The heading and lead are ours. */
+export const contact = {
+  eyebrow: 'talk to us',
+  headline: 'Tell us about',
+  headlineEm: 'the decision you’re stuck on.',
+  lead: 'Leave a few details and we’ll get back to you.',
+  fields: {
+    name: 'Name',
+    email: 'Email',
+    organization: 'Organization Name',
+    service: 'How can we assist you?',
+    message: 'Do you have a message for us?',
+    messagePlaceholder: 'Write down your message here',
+  },
+  /* 23 Oct: the dropdown lists the four services from "what we do" and
+     nothing else, as Rumit asked in the 21 Oct call. */
+  serviceOptions: services.map((service) => service.title),
+  submit: 'Send',
+  done: {
+    title: 'Thanks - we’ve got your message.',
+    body: 'Someone from the Goalkeep team will write back to you shortly.',
+  },
 }
 
 export const honestStat: PullQuote = {

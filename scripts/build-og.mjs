@@ -12,6 +12,10 @@
  * change a marker or a surface there, change it here too — this card is the
  * only place the design exists twice.
  *
+ * 23 Oct: redrawn on the 21 Oct hero - flat navy, the new headline and line
+ * (matching the meta title and description Rumit sent) and the white case
+ * card in place of the angled photo panel.
+ *
  * Redrawn after the 4 September review, and for the reason the review gave:
  * "since I'm managing the social media, I want to make sure the newsletter,
  * social media and website come together — a 90% match in visual language."
@@ -40,7 +44,7 @@ const b64 = (p, mime) => `data:${mime};base64,${readFileSync(p).toString('base64
 const nunito = b64('node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2', 'font/woff2')
 const caveat = b64('node_modules/@fontsource-variable/caveat/files/caveat-latin-wght-normal.woff2', 'font/woff2')
 const wordmark = b64('public/wordmark-white.webp', 'image/webp')
-const photo = b64(process.env.PHOTO || 'public/photos/hero-01-workshop.webp', 'image/webp')
+const photo = b64(process.env.PHOTO || 'public/photos/case-apni-shala.webp', 'image/webp')
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Nunito;src:url(${nunito}) format('woff2');font-weight:200 1000;font-display:block}
@@ -49,18 +53,22 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 :root{--swipe:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0 50C2 36 1 21 1 6C40 2 78 9 118 5C158 1 200 8 239 4C240 19 239 37 238 52C200 57 160 49 120 54C80 59 40 51 0 50Z' fill='%23fff'/%3E%3C/svg%3E")}
 body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Nunito,sans-serif;color:#fff;position:relative}
 
-/* The photo panel, cut on an angle. The edge behind it was the acid yellow;
-   it is now a quiet gold hairline, which is all it needs to separate the
-   photograph from the navy. */
-.edge{position:absolute;right:0;top:0;width:47%;height:100%;background:#eac452;
-  clip-path:polygon(20% 0,100% 0,100% 100%,7% 100%)}
-.panel{position:absolute;right:0;top:0;width:46.6%;height:100%;overflow:hidden;
-  clip-path:polygon(20% 0,100% 0,100% 100%,7% 100%)}
-.panel img{width:100%;height:100%;object-fit:cover}
-.panel::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to right,#2f4a92 0%,rgb(47 74 146 / .55) 26%,rgb(47 74 146 / .22) 60%)}
+/* Two tonal rings bleeding off the corners - the hero's ShapeField, quiet. */
+.ring{position:absolute;border-radius:50%;border:13px solid #3d5aa8}
+.ring.a{width:380px;height:380px;top:-170px;right:-120px}
+.ring.b{width:220px;height:220px;bottom:-120px;left:-60px}
 
-.content{position:relative;padding:48px 56px 52px;height:100%;width:64%;display:flex;flex-direction:column}
+/* The hero's case card: white, photo on top, chip and org, the line. */
+.card{position:absolute;right:56px;top:50%;transform:translateY(-50%);width:400px;background:#fff;
+  color:#14131a;border-radius:16px;overflow:hidden;box-shadow:0 16px 36px rgb(12 20 44 / .3)}
+.card img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover}
+.card .meta{padding:18px 22px 22px}
+.card .row{display:flex;align-items:center;gap:10px}
+.card .chip{background:#fbf3df;font-size:13px;font-weight:700;padding:4px 9px;border-radius:6px}
+.card .org{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2f4a92}
+.card .line{margin-top:10px;font-size:17px;line-height:1.42;font-weight:600;color:#1f2f63}
+
+.content{position:relative;padding:48px 56px 52px;height:100%;width:62%;display:flex;flex-direction:column}
 /* The wordmark anchors the top; everything else centres in what is left, so
    the block does not sit high with a pool of empty navy under it. */
 .body{margin:auto 0}
@@ -69,9 +77,10 @@ body{width:1200px;height:630px;overflow:hidden;background:#2f4a92;font-family:Nu
   letter-spacing:.09em;text-transform:uppercase;color:#eac452;margin:30px 0 14px}
 .eyebrow::before{content:"";display:block;width:26px;height:2px;background:currentColor}
 
-h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wrap:balance}
-.mark-yellow{position:relative;display:inline-block;white-space:nowrap}
-.squiggle{position:absolute;left:-2px;top:100%;width:calc(100% + 4px);height:16px;margin-top:-5px}
+h1{font-weight:500;font-size:50px;line-height:1.06;letter-spacing:-.02em;text-wrap:balance}
+/* 21 Oct headline, set like the hero: light, with the phrase that carries it
+   in bold italic. */
+h1 em{font-style:italic;font-weight:800}
 
 .sub{margin-top:30px;font-size:21px;font-weight:400;line-height:1.5;max-width:33ch;color:rgb(255 255 255 / .9)}
 /* One mark, not three. On the page the typewriter only ever highlights one
@@ -94,44 +103,27 @@ h1{font-weight:800;font-size:54px;line-height:1.06;letter-spacing:-.02em;text-wr
   -webkit-mask-size:100% 100%;mask-size:100% 100%;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 
-/* Sits over the photo's cut edge, the way the proof card does on the site —
-   a translucent panel with a hairline, not a rotated sticker.
-
-   Tinted navy rather than white: at 10% white it took its legibility from
-   whatever happened to be behind it, and the photography here is bright and
-   busy. A dark tint means the white type reads over any frame. */
-.card{position:absolute;right:48px;bottom:52px;background:rgb(24 40 84 / .62);color:#fff;
-  border:1px solid rgb(255 255 255 / .22);border-radius:12px;padding:18px 26px 20px;
-  backdrop-filter:blur(3px);box-shadow:0 12px 34px rgb(12 20 46 / .4)}
-.card .org{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:#eac452;line-height:1}
-.card .stat{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;
-  font-variant-numeric:tabular-nums;margin-top:8px;white-space:nowrap}
-.card .line{font-size:14px;font-weight:400;margin-top:4px;color:rgb(255 255 255 / .8)}
 </style></head><body>
 
-<div class="edge"></div>
-<div class="panel"><img src="${photo}" alt=""></div>
+<div class="ring a"></div><div class="ring b"></div>
 
 <div class="content">
   <img class="mark" src="${wordmark}" alt="Goalkeep">
   <div class="body">
   <span class="eyebrow">Data work for the social sector</span>
 
-  <h1>MEL systems aren&rsquo;t just meant to measure impact, but also
-    <span class="mark-yellow">strengthen it.<svg class="squiggle" viewBox="0 0 220 26" preserveAspectRatio="none" fill="none">
-      <path d="M6 15c38-7 74-9 108-8c30 1 61 5 100 11" stroke="#eac452" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-    </svg></span>
-  </h1>
+  <h1>Enabling social sector organisations to use data to <em>scale impact.</em></h1>
 
-  <p class="sub">We <span class="m">design</span> data systems that deepen the impact of your programs.</p>
+  <p class="sub">We work with nonprofits, funders, and ecosystem partners to <span class="m">turn data into decisions.</span></p>
   </div>
 </div>
 
 <div class="card">
-  <div class="org">Baithak Foundation</div>
-  <div class="stat">11 hrs &rarr; 40 min</div>
-  <div class="line">monthly reporting cycle</div>
+  <img src="${photo}" alt="">
+  <div class="meta">
+    <div class="row"><span class="chip">Identifying key metrics</span><span class="org">Apni Shala Foundation</span></div>
+    <p class="line">A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps.</p>
+  </div>
 </div>
 </body></html>`
 

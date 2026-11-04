@@ -29,7 +29,7 @@ const BRAND = new Set(
     '#3f63c8', '#2f4d9f',
     '#2f9c8f', '#237a70', '#176059',
     '#e07a5f', '#c8613f', '#9c452a',
-    '#eac452', '#cfa72f',
+    '#eac452', '#cfa72f', '#7d5e0c',
     // Lifted values, legible on the navy ground only
     '#8fa8e8', '#5fc9ba', '#f0a58c',
     // The mark's own colours, sampled from goalkeep-icon.png. Only ever used

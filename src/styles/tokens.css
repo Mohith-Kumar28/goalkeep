@@ -57,6 +57,10 @@
   --gk-coral-ink: #9c452a;
   --gk-yellow: #eac452;      /* a gold, not the acid yellow. Still the marker. */
   --gk-yellow-deep: #cfa72f;
+  /* There was no yellow small-text value until 23 Oct, when the "What we do"
+     cards went to tints and the Strategy label needed a dark yellow on
+     --gk-yellow-tint. 5.5:1 there. */
+  --gk-yellow-ink: #7d5e0c;
 
   /* Lifted values, for use ON navy only. The muted teal and coral above are
      correct on white and drop to roughly 2.5:1 on the navy ground, which is

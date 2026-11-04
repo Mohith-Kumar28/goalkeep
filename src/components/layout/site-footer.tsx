@@ -1,68 +1,30 @@
 import { Link } from '@tanstack/react-router'
-import { footerGroups, site } from '@/content/site'
+import { site } from '@/content/site'
 import { Wordmark } from './wordmark'
 
-/** A coloured dot per column — the donut's atom, keeping the last band alive
- *  without competing with the closing above it. */
-const FOOTER_HUES = ['var(--gk-blue)', 'var(--gk-teal)', 'var(--gk-coral)']
-
 /**
- * The closing band above is navy, so the footer is cream: the page ends on the
- * dark note and the footer is the receipt underneath it, not part of the
- * ending. A second dark band here would blunt the close entirely.
+ * One thin line: the wordmark and tagline, then the copyright.
+ *
+ * 21 Oct: "the footer can just be… this thing that's there on the left… on
+ * one thin line" while the homepage is the only page live. The three link
+ * columns (`footerGroups` in site.ts) come back when the other pages do.
+ *
+ * The closing band and the contact form sit above, so the footer stays cream
+ * and quiet - the receipt underneath the ending, not part of it.
  */
 export function SiteFooter() {
   return (
     <footer className="ground-cream-deep border-t border-[var(--hairline)]">
-      <div className="shell band">
-        <div className="grid gap-10 md:grid-cols-12 md:gap-6">
-          <div className="flex flex-col gap-4 md:col-span-4">
-            <Link to="/" aria-label="Goalkeep, home">
-              <Wordmark />
-            </Link>
-            <p className="max-w-[38ch] text-[length:var(--fs-sm)] text-[var(--fg-2)]">
-              {site.tagline}
-            </p>
-          </div>
-
-          {footerGroups.map((group, i) => (
-            <nav
-              key={group.heading}
-              aria-label={group.heading}
-              className="flex flex-col gap-3 md:col-span-2"
-            >
-              <h2 className="flex items-center gap-2 font-display text-[length:var(--fs-base)] font-extrabold text-[var(--fg-1)]">
-                <span
-                  aria-hidden="true"
-                  className="size-2.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: FOOTER_HUES[i % FOOTER_HUES.length] }}
-                />
-                {group.heading}
-              </h2>
-              <ul className="flex flex-col gap-2">
-                {group.links.map((link) => (
-                  <li key={link.to}>
-                    <Link
-                      to={link.to}
-                      className="text-[length:var(--fs-sm)] text-[var(--fg-2)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-[var(--fg-1)]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
+      <div className="shell flex flex-col gap-3 py-6 md:flex-row md:items-center md:justify-between md:gap-8">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+          <Link to="/" aria-label="Goalkeep, home" className="shrink-0 self-start md:self-auto">
+            <Wordmark />
+          </Link>
+          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">{site.tagline}</p>
         </div>
-
-        {/* The copy replacement folded the descriptor line that used to sit
-            here into the tagline above, so the bottom rule carries the
-            copyright alone. */}
-        <div className="mt-12 flex flex-col gap-2 border-t border-[var(--hairline)] pt-6 md:flex-row md:items-center md:justify-end">
-          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
-            © {new Date().getFullYear()} Goalkeep
-          </p>
-        </div>
+        <p className="shrink-0 text-[length:var(--fs-sm)] text-[var(--fg-2)]">
+          © {new Date().getFullYear()} Goalkeep
+        </p>
       </div>
     </footer>
   )

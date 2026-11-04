@@ -2,7 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
-import { nav } from '@/content/site'
+import { contactHref, nav } from '@/content/site'
 import { cn } from '@/lib/utils'
 import { Wordmark } from './wordmark'
 
@@ -20,6 +20,9 @@ import { Wordmark } from './wordmark'
  * on cream, so there the header starts in its solid state - transparent with
  * the white wordmark, it was white on white until the first scroll (23 Sep
  * doc, on the Partner with us page).
+ *
+ * 21 Oct: the links are the homepage's own sections, plain anchors rather
+ * than routes, and "Partner with us" goes to the contact form.
  */
 export function SiteHeader() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
@@ -67,13 +70,13 @@ export function SiteHeader() {
           <Wordmark inverse={!scrolled} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-6 lg:flex xl:gap-8">
           {nav.map((item) => (
-            <Link
+            <a
               key={item.to}
-              to={item.to}
+              href={item.to}
               className={cn(
-                'relative py-1 font-display font-bold transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
+                'relative py-1 font-display text-[length:var(--fs-sm)] font-bold whitespace-nowrap xl:text-[length:var(--fs-base)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
                 // The underline grows from the left on hover. It is the one
                 // piece of chrome motion on the page.
                 'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-[3px] after:origin-left after:scale-x-0',
@@ -81,16 +84,15 @@ export function SiteHeader() {
                 'hover:after:scale-x-100 focus-visible:after:scale-x-100',
                 scrolled ? 'text-[var(--gk-ink)]' : 'text-white',
               )}
-              activeProps={{ className: 'after:scale-x-100' }}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
         <div className="hidden lg:block">
           <GkButton
-            to="/contact"
+            href={contactHref}
             variant={scrolled ? 'primary' : 'secondary'}
             className="!px-5 !py-3 !text-[length:var(--fs-sm)]"
           >
@@ -136,17 +138,22 @@ export function SiteHeader() {
         >
           <nav aria-label="Main" className="shell flex flex-col py-6">
             {nav.map((item) => (
-              <Link
+              <a
                 key={item.to}
-                to={item.to}
+                href={item.to}
                 onClick={() => setMenuOpen(false)}
                 className="border-b border-[var(--hairline)] py-5 text-[length:var(--fs-xl)] font-bold text-[var(--gk-ink)]"
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
             <div className="pt-6">
-              <GkButton to="/contact" variant="secondary" className="w-full">
+              <GkButton
+                href={contactHref}
+                variant="secondary"
+                className="w-full"
+                onClick={() => setMenuOpen(false)}
+              >
                 Partner with us
               </GkButton>
             </div>

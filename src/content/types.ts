@@ -32,6 +32,8 @@ export type Pillar = {
   /** The stage's hue, carried from the hero pills into this section. */
   hue: 'blue' | 'teal' | 'coral'
   title: string
+  /** One bold line under the stage name (21 Oct doc). */
+  heading: string
   /** The client's paragraph for the stage, verbatim from the copy doc. */
   body: string
   /** The two photographs the panel reveals once its animation resolves. */
@@ -54,6 +56,9 @@ export type Audience = {
   /** Opens the block. A question the visitor should recognise themselves in.
    *  Two lines at most at desktop width. */
   header: string
+  /** The end of the header, set bold italic like every other section
+   *  headline (23 Oct). */
+  headerEm: string
   /** One paragraph. */
   body: Verify<string>
   photos: Array<{ src: string; alt: string }>

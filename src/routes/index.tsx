@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { Approach } from '@/components/sections/approach'
 import { Audiences } from '@/components/sections/audiences'
 import { CaseStudies } from '@/components/sections/case-studies'
 import { Closing } from '@/components/sections/closing'
+import { Contact } from '@/components/sections/contact'
 import { Credibility } from '@/components/sections/credibility'
 import { Faqs } from '@/components/sections/faqs'
-import { FieldNotes } from '@/components/sections/field-notes'
 import { Hero } from '@/components/sections/hero'
 import { Proof } from '@/components/sections/proof'
 import { WhatWeDo } from '@/components/sections/what-we-do'
@@ -15,7 +16,7 @@ import { site } from '@/content/site'
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: `${site.name} — ${site.strapline}` },
+      { title: site.metaTitle },
       { name: 'description', content: site.description },
     ],
   }),
@@ -30,22 +31,26 @@ export const Route = createFileRoute('/')({
  * highlights", and "in general the alternating is good — light, followed by
  * dark, an alternating thing is nice".
  *
+ * 21 Oct: the homepage launches on its own as a one-pager, so nothing on it
+ * leads off the page - every button scrolls to a section, and the page ends
+ * on a contact form.
+ *
  *   Hero            navy        flat, the creatives' blue. No footage behind it.
  *   Partners        white       the proof you don't have to read
- *   Why we exist    beige       added after the 23 Sep review: the problem
- *                               before the service
- *   What we do      white       the interactive one
- *   Whom for        pale blue   the one "light coloured highlight" band
+ *   Why we exist    beige       one paragraph and the missing-layer illustration
+ *   What we do      white       the four services (new, 21 Oct)
+ *   Whom for        tinted      the one "light coloured highlight" band
+ *   Our approach    white       Design / Build / Adopt - "what we do" until 21 Oct
  *   Proof           navy        four numbers, over the photography moved down
  *                               out of the hero
  *   Case studies    white       10x-style grid; the horizontal rail is gone
- *   FAQs            pale blue   no surfaces at all
- *   Field notes     white
+ *   FAQs            pale yellow no surfaces at all
  *   Closing         navy        the ending, assembling one element at a time
+ *   Contact         white       the form every "Talk to us" lands on
  *
- * The Team band sat between case studies and FAQs. "Team — no need for team
- * over here, we can get rid of the team thing." Removed, along with its
- * component and its content file.
+ * Field notes sat between FAQs and the close. "Just remove that whole field
+ * notes section for now… keep it saved" - the component and its copy are kept
+ * for when the blog is ready.
  */
 function Home() {
   return (
@@ -55,11 +60,12 @@ function Home() {
       <WhyWeExist />
       <WhatWeDo />
       <Audiences />
+      <Approach />
       <Proof />
       <CaseStudies />
       <Faqs />
-      <FieldNotes />
       <Closing />
+      <Contact />
     </>
   )
 }

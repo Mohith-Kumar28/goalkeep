@@ -12,7 +12,7 @@ a real number, a real name, or a permission before launch.
 
 | # | Where | What the page currently says | What to confirm |
 |---|---|---|---|
-| 1 | `homepage.audiences.3.testimonial.quote` | For the first time, our grantees’ numbers told us something we could act on. — Programme lead, funding partner | Placeholder quote — no funder testimonial exists yet. Replace with a real, named quote before launch. |
+| 1 | `homepage.faqs.2` | Will you help us figure out what metrics will truly communicate our impact? — Yes. We don’t begin with a generic list of | Question wording: the doc has "What metrics should we communicate?", but the answer starts "Yes." - kept the earlier yes/no wording. Confirm with Rumit. |
 | 2 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
 | 3 | `homepage.whyWeExist.sources` | ₹27 lakh crore annual spend, 10% growth to 2030, 5% of decisions data-driven, $250 billion | Source footnotes 1–4 from the funder deck. Removed from the page in the 28 Sep review; still unsourced. |
 

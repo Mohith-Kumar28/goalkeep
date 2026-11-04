@@ -85,7 +85,8 @@ export function Audiences() {
 
   return (
     <section
-      className="relative overflow-hidden py-12 transition-[background-color] md:py-14 duration-500 ease-[var(--ease-out)]"
+      id="who-we-do-it-for"
+      className="relative scroll-mt-24 overflow-hidden py-12 transition-[background-color] md:py-14 duration-500 ease-[var(--ease-out)]"
       style={{ background: theme.ground, color: 'var(--fg-1)' }}
       aria-labelledby="audiences-heading"
     >
@@ -107,9 +108,11 @@ export function Audiences() {
 
       {/* 28 Sep: the band fits one screen. The four segments sit in two rows
           directly above the pitch they switch, so the tabs and the text read
-          as one block instead of a row floating over a gap. */}
-      <div className="shell relative grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14">
-        <div className="lg:col-span-7">
+          as one block instead of a row floating over a gap. 23 Oct: 8:5
+          rather than 7:5 on the 12-column grid, so the headlines - now with a
+          bold italic ending - stay within three lines. */}
+      <div className="shell relative grid gap-8 lg:grid-cols-[minmax(0,8fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
+        <div className="min-w-0">
             {/* 30 Sep: the section's name is back on the page, as an eyebrow
                 like "what we do" and "why we exist" - the segment questions
                 below stay the headlines. */}
@@ -119,7 +122,9 @@ export function Audiences() {
             <div
               role="tablist"
               aria-label="Kinds of organisation we work with"
-              className="flex max-w-[27rem] flex-wrap gap-2"
+              /* 21 Oct: two labels got longer ("Mid-to-large Nonprofits",
+                 "Ecosystem partners and Intermediaries"), so the row is wider. */
+              className="flex max-w-[36rem] flex-wrap gap-2"
             >
               {audiences.map((item, index) => {
                 const selected = index === active
@@ -166,7 +171,7 @@ export function Audiences() {
             <Pitch key={audience.id} audience={audience} theme={theme} reduced={reduced} />
           </div>
         </div>
-        <div className="lg:col-span-5">
+        <div className="min-w-0">
           <Testimonial key={audience.id} audience={audience} reduced={reduced} />
         </div>
       </div>
@@ -193,10 +198,11 @@ function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme;
       <motion.h3
         {...step(reduced, 0)}
         /* 28 Sep: the shared h2 and lead styles, so this band's type matches
-           every other section. */
-        className="h2 max-w-[30ch]"
+           every other section. 23 Oct: and the same lead + bold italic ending
+           as the other headlines. */
+        className="h2 max-w-[36ch]"
       >
-        {audience.header}
+        {audience.header} <em>{audience.headerEm}</em>
       </motion.h3>
 
       <motion.p

@@ -64,9 +64,12 @@ export function Approach() {
    * photographs by the time anyone scrolls down to it — so the one row that is
    * open by default is the one row whose animation nobody ever sees.
    *
-   * 21 Oct: "I nearly missed it" about the design sticky notes - so the
-   * threshold is half the section, not a quarter, and the panel returns to
-   * its sketch after the photographs (see phase-animation.tsx).
+   * 21 Oct: "I nearly missed it" about the design sticky notes - so it
+   * waits until the section's top has come well up the screen and the
+   * visitor has stopped scrolling, and the panel returns to its sketch after
+   * the photographs (see phase-animation.tsx). A position, not a visibility
+   * ratio: on a phone the section is several screens tall and never gets to
+   * half visible.
    */
   const ref = useRef<HTMLElement>(null)
   const [seen, setSeen] = useState(false)
@@ -74,17 +77,73 @@ export function Approach() {
   useEffect(() => {
     const node = ref.current
     if (!node) return
+    /* Starts once the section is in place *and* scrolling has stopped. The
+       sticky notes animate their size and position, and starting that in the
+       middle of a smooth scroll (a "Our approach" link) cut the scroll short.
+       It also means the sketch plays from the top while someone is actually
+       looking at it. */
+    let settle: number | undefined
+    let inView = false
+    const arm = () => {
+      window.clearTimeout(settle)
+      settle = window.setTimeout(() => {
+        if (!inView) return
+        setSeen(true)
+        observer.disconnect()
+        window.removeEventListener('scroll', arm)
+      }, 180)
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setSeen(true)
-          observer.disconnect()
-        }
+        inView = entry.isIntersecting
+        if (inView) arm()
       },
-      { threshold: 0.5 },
+      { rootMargin: '0px 0px -45% 0px' },
     )
     observer.observe(node)
-    return () => observer.disconnect()
+    window.addEventListener('scroll', arm, { passive: true })
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', arm)
+      window.clearTimeout(settle)
+    }
+  }, [])
+
+  /*
+   * 23 Oct: a phone has no hover, so Build and Adopt never opened unless
+   * someone thought to tap their titles - and their sequences went unseen.
+   * Without a hover-capable pointer, whichever row crosses the middle of the
+   * screen opens instead, so each stage plays as it is scrolled to. Open and
+   * closed rows are the same height below md, so this never resizes the
+   * section under the scroll.
+   */
+  const rows = useRef<Array<HTMLLIElement | null>>([])
+
+  useEffect(() => {
+    const query = window.matchMedia('(hover: none), (max-width: 767px)')
+    let observer: IntersectionObserver | undefined
+    const sync = () => {
+      observer?.disconnect()
+      observer = undefined
+      if (!query.matches) return
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue
+            const index = rows.current.indexOf(entry.target as HTMLLIElement)
+            if (index >= 0) setOpen(index)
+          }
+        },
+        { rootMargin: '-45% 0px -45% 0px' },
+      )
+      rows.current.forEach((row) => row && observer?.observe(row))
+    }
+    sync()
+    query.addEventListener('change', sync)
+    return () => {
+      observer?.disconnect()
+      query.removeEventListener('change', sync)
+    }
   }, [])
 
   return (
@@ -109,6 +168,9 @@ export function Approach() {
           {pillars.map((pillar, index) => (
             <PhaseRow
               key={pillar.title}
+              rowRef={(node) => {
+                rows.current[index] = node
+              }}
               pillar={pillar}
               active={open === index}
               playing={open === index && seen}
@@ -125,6 +187,7 @@ export function Approach() {
 }
 
 function PhaseRow({
+  rowRef,
   pillar,
   active,
   playing,
@@ -132,6 +195,7 @@ function PhaseRow({
   flip,
   onOpen,
 }: {
+  rowRef: (node: HTMLLIElement | null) => void
   pillar: Pillar
   active: boolean
   /** Open *and* on screen — see the observer in WhatWeDo. */
@@ -145,13 +209,20 @@ function PhaseRow({
 
   return (
     <li
+      ref={rowRef}
       className="group relative overflow-hidden transition-colors duration-[var(--dur-slow)] ease-[var(--ease-out)]"
       style={{
         background: active ? 'var(--gk-navy)' : 'var(--gk-white)',
         color: active ? 'var(--fg-inverse)' : 'var(--fg-1)',
       }}
       data-ground={active ? 'navy' : undefined}
-      onPointerEnter={onOpen}
+      /* 23 Oct: hover opens a row only when the pointer itself moves. A
+         "Partner with us" or "Talk to us" scrolls the page under a still
+         cursor, and a row opening on that resized the section mid-scroll and
+         stopped the page at Adopt. */
+      onPointerMove={(event) => {
+        if (!active && event.pointerType === 'mouse' && (event.movementX || event.movementY)) onOpen()
+      }}
       onFocusCapture={onOpen}
     >
       {!first && (
@@ -221,7 +292,7 @@ function PhaseRow({
             text, half picture. */}
         <div
           className={cn(
-            'pointer-events-none relative mx-6 mb-6 aspect-[16/10] overflow-hidden rounded-[var(--r-md)] md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
+            'pointer-events-none relative mx-6 mb-6 aspect-square overflow-hidden sm:aspect-[16/10] rounded-[var(--r-md)] md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
           )}
           style={{ background: active ? 'rgb(255 255 255 / 0.05)' : 'var(--gk-cream-deep)' }}
         >

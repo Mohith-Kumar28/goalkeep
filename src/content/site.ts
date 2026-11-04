@@ -9,14 +9,13 @@ export const site = {
   tagline:
     'Goalkeep helps organizations measure, communicate, and deepen their impact with confidence.',
   /**
-   * The strapline for <title> and og:title, which is where the old tagline
-   * used to end up. A 90-character sentence is not a page title, and this one
-   * would have opened with "Goalkeep — Goalkeep helps…", so the short
-   * descriptor from the footer's second line carries it instead.
+   * <title> / og:title and the meta description - what shows when the link is
+   * shared. 23 Oct: Rumit sent both, built from the hero headline and typing
+   * line, because the old ones read wrong in a shared link.
    */
-  strapline: 'Data consultancy for the social sector',
+  metaTitle: 'Goalkeep enables social sector organisations to use data to scale impact.',
   description:
-    'Goalkeep is a data consultancy for the social sector. We partner with NGOs, foundations and impact organizations to turn messy operational data into reliable systems, dashboards and decisions.',
+    'We work with nonprofits, funders, and ecosystem partners to turn data into decisions.',
   url: 'https://goalkeep.net',
 }
 
@@ -26,29 +25,22 @@ export type NavItem = {
   children?: Array<{ label: string; to: string }>
 }
 
+/* 21 Oct: the homepage launches alone, so the header jumps to its sections
+   - "whatever's there on the homepage so that if someone clicks they just go
+   to that homepage section". `/#…` so the links also work from other routes. */
 export const nav: Array<NavItem> = [
-  { label: 'About us', to: '/about' },
-  { label: 'What we do', to: '/what-we-do' },
-  { label: 'Case studies', to: '/case-studies' },
-  {
-    label: 'Programs',
-    to: '/programs/kickstarter',
-    children: [
-      { label: 'Kickstarter program', to: '/programs/kickstarter' },
-      { label: 'Data literacy program', to: '/programs/data-literacy' },
-    ],
-  },
-  {
-    label: 'Resources',
-    to: '/resources/blog',
-    children: [
-      { label: 'Blog', to: '/resources/blog' },
-      { label: 'Newsletter', to: '/resources/newsletter' },
-      { label: 'Data quiz', to: '/resources/data-quiz' },
-    ],
-  },
+  { label: 'Why we exist', to: '/#why-we-exist' },
+  { label: 'What we do', to: '/#what-we-do' },
+  { label: 'Who we do it for', to: '/#who-we-do-it-for' },
+  { label: 'Our approach', to: '/#our-approach' },
+  { label: 'Case studies', to: '/#case-studies' },
+  { label: 'FAQs', to: '/#faqs' },
 ]
 
+export const contactHref = '/#contact'
+
+/* Not rendered since 21 Oct - the footer is one line until the other pages
+   go live. */
 export const footerGroups = [
   {
     heading: 'What we do',

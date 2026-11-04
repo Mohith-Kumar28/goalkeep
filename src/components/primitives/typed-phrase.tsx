@@ -18,9 +18,8 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
  *
  * Three things it has to get right:
  *
- * 1. Grammar holds at every frame. The frame is "We ___ data systems that…",
- *    and each of the three phrases completes it — including "enable the
- *    adoption of", which is why the "of" belongs to the phrase and not the tail.
+ * 1. Grammar holds at every frame. The frame is `${lead} ___${tail}`, and
+ *    each phrase has to complete it on its own.
  * 2. No vertical jump. The paragraph reserves the height of its longest
  *    rendering up front, so the buttons below it never move. The tail reflows
  *    horizontally as the phrase grows, which is the effect, not a bug.
@@ -55,6 +54,9 @@ export function TypedPhrase({
   const timer = useRef<number | undefined>(undefined)
 
   const phrase = phrases[index] ?? ''
+  /* A tail that is only punctuation ("." on the 21 Oct line) sits flush
+     against the phrase; a tail of words gets its space. */
+  const gap = /^[.,;:!?]/.test(tail) ? '' : ' '
 
   useEffect(() => {
     if (reduced) return
@@ -96,7 +98,7 @@ export function TypedPhrase({
             <span className="font-bold" style={{ color: accent }}>
               {item}
             </span>
-            {i < phrases.length - 2 ? ', ' : i === phrases.length - 2 ? ', and ' : ' '}
+            {i < phrases.length - 2 ? ', ' : i === phrases.length - 2 ? ', and ' : gap}
           </span>
         ))}
         {tail}
@@ -106,7 +108,7 @@ export function TypedPhrase({
 
   const spokenSentence = `${lead} ${phrases
     .map((item, i) =>
-      i < phrases.length - 2 ? `${item}, ` : i === phrases.length - 2 ? `${item}, and ` : `${item} `,
+      i < phrases.length - 2 ? `${item}, ` : i === phrases.length - 2 ? `${item}, and ` : `${item}${gap}`,
     )
     .join('')}${tail}`
 
@@ -135,7 +137,8 @@ export function TypedPhrase({
             )}
             style={{ height: '0.95em', background: count > 0 ? 'currentColor' : accent }}
           />
-        </span>{' '}
+        </span>
+        {gap}
         {tail}
       </span>
     </span>

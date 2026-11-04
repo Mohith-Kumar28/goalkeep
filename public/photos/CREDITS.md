@@ -22,9 +22,11 @@ contextual stock and were never Goalkeep's clients.
 | `note-01..03` | Brainstorming / team in action | Discussion and facilitation moments |
 | `group-team`, `group-lineup` | Group Photos with Client Teams | Goalkeep with partner teams |
 | `testimonial-dakshayini` | Testimonial Image | Dakshayini, Baithak Foundation |
-| `case-baithak`, `org-baithak` | Case Study Covers | Baithak Foundation — music education |
+| `aud-funder-testimonial` | 21 Oct homepage review doc | Rutuja Chaphekar, Forbes Marshall |
+| `case-baithak` | websiteupdates.zip, 1 Nov (replaces the unapproved partner photo) | Two Baithak Foundation team members |
 | `case-vanavil`, `org-vanavil` | Case Study Covers | Vanavil Trust — children studying |
-| `case-apni-shala`, `org-apni-shala` | Case Study Covers | Apni Shala Foundation — classroom craft |
+| `case-apni-shala` | websiteupdates.zip, 1 Nov (replaces the unapproved partner photo) | Apni Shala Foundation team group photo |
+| `case-peepul` | websiteupdates.zip, 1 Nov (replaces the unapproved partner photo) | Peepul and Goalkeep working session |
 | `case-veruschka`, `org-veruschka` | Case Study Covers | Veruschka Foundation — culinary training |
 
 **Not used:** the five AI-generated images in the Drive folders (filenames

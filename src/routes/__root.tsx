@@ -40,6 +40,11 @@ const getOrigin = createIsomorphicFn()
   })
   .client(() => window.location.origin)
 
+/* Bumped whenever public/og.jpg is redrawn: WhatsApp, LinkedIn and Slack cache
+   the preview by URL, so a new query string is what makes them fetch the new
+   card. 2 = the 21 Oct hero (23 Oct). */
+const OG_VERSION = 2
+
 export const Route = createRootRoute({
   loader: () => ({ origin: getOrigin() }),
   head: ({ loaderData }) => {
@@ -48,29 +53,29 @@ export const Route = createRootRoute({
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: `${site.name} — ${site.strapline}` },
+        { title: site.metaTitle },
         { name: "description", content: site.description },
         { property: "og:site_name", content: site.name },
         { property: "og:type", content: "website" },
         { property: "og:url", content: origin },
-        { property: "og:title", content: `${site.name} — ${site.strapline}` },
+        { property: "og:title", content: site.metaTitle },
         { property: "og:description", content: site.description },
         /*
          * Absolute, because every scraper requires it — and absolute against the
          * host actually serving the page, not a hard-coded one. See getOrigin
          * above. Regenerate the card itself with `pnpm og`.
          */
-        { property: "og:image", content: `${origin}/og.jpg` },
+        { property: "og:image", content: `${origin}/og.jpg?v=${OG_VERSION}` },
         { property: "og:image:type", content: "image/jpeg" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         {
           property: "og:image:alt",
           content:
-            "Goalkeep — MEL systems aren’t just meant to measure impact, but also strengthen it. Alongside a photograph of a Goalkeep design workshop.",
+            "Goalkeep — Enabling social sector organisations to use data to scale impact. Alongside a case card for Apni Shala Foundation.",
         },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: `${origin}/og.jpg` },
+        { name: "twitter:image", content: `${origin}/og.jpg?v=${OG_VERSION}` },
         { name: "theme-color", content: "#2F4A92" },
       ],
       links: [

@@ -1,7 +1,5 @@
-import { Link } from '@tanstack/react-router'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
-import { GkButton } from '@/components/primitives/gk-button'
 import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
@@ -18,9 +16,6 @@ import { Reveal } from '@/components/primitives/reveal'
  * that is even slightly off-axis, so the page stops moving while the rail
  * eats the gesture.
  *
- * "The read case study can be almost this type of effect. It doesn't have to
- * be a button" — so every card ends in a text link, not a button.
- *
  * What the copy replacement changed:
  *
  *   · The cards no longer lead on a before/after figure. "11 hrs → 40 min" and
@@ -33,6 +28,10 @@ import { Reveal } from '@/components/primitives/reveal'
  *
  * 23 Sep: the programme name beside each organisation is replaced by two tags
  * - a neutral sector label and a tinted one for the work done.
+ *
+ * 21 Oct: the homepage launches on its own, so the cards are static - no
+ * "Read case study" links and no "Read all case studies" button until the
+ * case-study pages exist. Vanavil made way for Dasra and SVP India.
  */
 export function CaseStudies() {
   /*
@@ -44,12 +43,13 @@ export function CaseStudies() {
 
   return (
     <section
-      className="ground-cream band accent-blue relative"
+      id="case-studies"
+      className="ground-cream band accent-blue relative scroll-mt-24"
       aria-labelledby="case-studies-heading"
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between">
+          <div className="mb-10 md:mb-14">
             <div>
               <p className="eyebrow mb-4">{caseStudySection.eyebrow}</p>
               <h2 id="case-studies-heading" className="h2 max-w-[36ch]">
@@ -63,9 +63,6 @@ export function CaseStudies() {
                 </em>
               </h2>
             </div>
-            <GkButton to={caseStudySection.cta.to} variant="secondary" withArrow>
-              {caseStudySection.cta.label}
-            </GkButton>
           </div>
         </Reveal>
 
@@ -127,22 +124,25 @@ function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }
 /** The lead case study: photograph left, the story right. */
 function LeadCard({ study }: { study: CaseStudy }) {
   return (
-    <article className="card-lift grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid-cols-2">
-      <img
-        src={study.image}
-        alt={study.imageAlt}
-        loading="lazy"
-        decoding="async"
-        className="h-full min-h-[16rem] w-full object-cover"
-      />
+    <article className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid-cols-2">
+      {/* The photo fills the row the text sets rather than sizing it. Sized by
+          its own aspect ratio, it grew the card ~100px when the lazy image
+          arrived - in the middle of a scroll to the contact form, which then
+          stopped short (23 Oct). */}
+      <div className="relative min-h-[16rem]">
+        <img
+          src={study.image}
+          alt={study.imageAlt}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
       <div className="flex flex-col justify-center gap-4 p-8 md:p-12">
         <Byline study={study} size="lg" />
         <p className="max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
           {study.body}
         </p>
-        <Link to="/case-studies" className="link-cta mt-2 self-start">
-          Read case study
-        </Link>
       </div>
     </article>
   )
@@ -150,7 +150,7 @@ function LeadCard({ study }: { study: CaseStudy }) {
 
 function Card({ study }: { study: CaseStudy }) {
   return (
-    <article className="card-lift flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]">
+    <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]">
       <img
         src={study.image}
         alt={study.imageAlt}
@@ -165,13 +165,6 @@ function Card({ study }: { study: CaseStudy }) {
         <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">
           {study.body}
         </p>
-
-        <Link
-          to="/case-studies"
-          className="link-cta mt-auto self-start pt-4 text-[length:var(--fs-sm)]"
-        >
-          Read case study
-        </Link>
       </div>
     </article>
   )

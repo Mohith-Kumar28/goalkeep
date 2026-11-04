@@ -108,7 +108,12 @@ export function GkButton({
 
   if (href) {
     return (
-      <a href={href} className={classes} style={rest.style}>
+      <a
+        href={href}
+        className={classes}
+        style={rest.style}
+        onClick={rest.onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined}
+      >
         {content}
       </a>
     )

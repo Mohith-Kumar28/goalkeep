@@ -4,7 +4,7 @@ import { faqSection, faqs } from '@/content/homepage'
 import { cn } from '@/lib/utils'
 
 /**
- * Seven questions, drafted for nonprofits with limited data maturity, tight
+ * Five questions since the 21 Oct doc, drafted for nonprofits with limited data maturity, tight
  * budgets and a real need to show the impact of their programmes.
  *
  * Hairlines only — no cards, no fills. This is the one band on the page with
@@ -27,7 +27,8 @@ export function Faqs() {
 
   return (
     <section
-      className="band relative"
+      id="faqs"
+      className="band relative scroll-mt-24"
       /* 28 Sep: the lighter yellow of the early-stage NGO band. */
       style={{ background: 'var(--gk-yellow-tint)', color: 'var(--gk-ink)' }}
       aria-labelledby="faqs-heading"
@@ -89,10 +90,19 @@ export function Faqs() {
                   className="grid transition-[grid-template-rows] duration-[var(--dur-base)] ease-[var(--ease-out)]"
                   style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                 >
-                  <div className="overflow-hidden">
-                    <p className="max-w-[62ch] pb-7 text-[length:var(--fs-base)] text-[var(--gk-ink)]">
-                      {faq.value.answer}
-                    </p>
+                  {/* A blank line in the answer starts a new paragraph. */}
+                  <div className="flex flex-col gap-4 overflow-hidden">
+                    {faq.value.answer.split('\n\n').map((paragraph, i, all) => (
+                      <p
+                        key={i}
+                        className={cn(
+                          'max-w-[62ch] text-[length:var(--fs-base)] text-[var(--gk-ink)]',
+                          i === all.length - 1 && 'pb-7',
+                        )}
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
                   </div>
                 </dd>
               </div>

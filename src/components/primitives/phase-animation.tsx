@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
@@ -30,7 +30,9 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
  *   people side by side whose confidence with data climbs red → yellow →
  *   green. Design was reworked in the same review; see DesignSketch.
  *
- * Each sequence then resolves into the two photographs, as before.
+ * Each sequence then resolves into the two photographs and, since 21 Oct
+ * ("I nearly missed it"), comes back round to the sketch instead of cycling
+ * the photographs for good - the sketch is the part worth seeing twice.
  */
 export type PhaseKind = 'design' | 'build' | 'adopt'
 
@@ -71,6 +73,8 @@ export function PhaseAnimation({
   const reduced = useReducedMotion()
   // 0 = sketch, 1 = first photograph, 2 = second photograph.
   const [stage, setStage] = useState(0)
+  // Bumped each time round, so the sketch remounts and replays from the top.
+  const [cycle, setCycle] = useState(0)
 
   useEffect(() => {
     if (!active) {
@@ -85,31 +89,22 @@ export function PhaseAnimation({
     }
 
     /*
-     * The photo loop must not start until the sketch has finished. Chaining
-     * the interval off the timeout rather than starting both at once is the
-     * whole fix: run in parallel and the first interval tick lands mid-sketch
-     * and cuts it off — which is what was happening to the build sequence,
-     * where the ticks were still appearing when the first photograph faded up
-     * over them.
+     * Sketch, then each photograph, then round again. Every step is chained
+     * off the one before rather than run on parallel timers: in parallel, a
+     * photograph tick lands mid-sketch and cuts it off - which is what was
+     * happening to the build sequence, where the ticks were still appearing
+     * when the first photograph faded up over them.
      */
-    let step = 0
-    let loop: number | undefined
-    setStage(0)
-
-    const advance = () => {
-      step = step === 2 ? 1 : step + 1
-      setStage(step)
+    let timer: number | undefined
+    const run = (next: number) => {
+      setStage(next)
+      if (next === 0) setCycle((c) => c + 1)
+      const wait = next === 0 ? SKETCH_MS[kind] : IMAGE_MS
+      timer = window.setTimeout(() => run(next === 2 ? 0 : next + 1), wait)
     }
+    run(0)
 
-    const first = window.setTimeout(() => {
-      advance()
-      loop = window.setInterval(advance, IMAGE_MS)
-    }, SKETCH_MS[kind])
-
-    return () => {
-      window.clearTimeout(first)
-      if (loop !== undefined) window.clearInterval(loop)
-    }
+    return () => window.clearTimeout(timer)
   }, [active, reduced, kind])
 
   return (
@@ -156,7 +151,7 @@ export function PhaseAnimation({
         className="absolute inset-0 transition-opacity duration-500 ease-[var(--ease-out)]"
         style={{ opacity: stage === 0 ? 1 : 0 }}
       >
-        {active && !reduced && <Sketch kind={kind} ink={ink} accent={accent} />}
+        {active && !reduced && <Sketch key={cycle} kind={kind} ink={ink} accent={accent} />}
       </div>
     </div>
   )
@@ -209,6 +204,10 @@ const FIELDS = [
   'Learning levels',
 ]
 const DESIGN_COLS = 5
+/* Below this panel width five columns of notes can't hold their labels
+   ("Extracurricular" ran off its note on a phone), so the board goes to three
+   columns and five rows. */
+const NARROW_BOARD_PX = 480
 /** Indices into FIELDS that survive the question. */
 const KEPT = [0, 7, 14]
 const NOTE_FILLS = ['var(--gk-yellow-tint)', 'var(--gk-teal-tint)', 'var(--gk-coral-tint)']
@@ -227,12 +226,24 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
     return () => timers.forEach((id) => window.clearTimeout(id))
   }, [])
 
-  const rows = Math.ceil(FIELDS.length / DESIGN_COLS)
-  const cellW = (100 - 12 - 2.5 * (DESIGN_COLS - 1)) / DESIGN_COLS
+  const board = useRef<HTMLDivElement>(null)
+  const [cols, setCols] = useState(DESIGN_COLS)
+  useEffect(() => {
+    const node = board.current
+    if (!node) return
+    const measure = () => setCols(node.clientWidth < NARROW_BOARD_PX ? 3 : DESIGN_COLS)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  const rows = Math.ceil(FIELDS.length / cols)
+  const cellW = (100 - 12 - 2.5 * (cols - 1)) / cols
   const cellH = (100 - 34 - 3 * (rows - 1)) / rows
 
   return (
-    <div className="absolute inset-0">
+    <div ref={board} className="absolute inset-0">
       <svg aria-hidden="true" className="absolute inset-0 h-full w-full" style={{ opacity: 0.08 }}>
         <defs>
           <pattern id="gk-board-grid" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -258,8 +269,8 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
       {FIELDS.map((field, index) => {
         const slot = KEPT.indexOf(index)
         const kept = slot >= 0
-        const col = index % DESIGN_COLS
-        const row = Math.floor(index / DESIGN_COLS)
+        const col = index % cols
+        const row = Math.floor(index / cols)
         const grid = {
           left: 6 + col * (cellW + 2.5),
           top: 22 + row * (cellH + 3),
@@ -296,7 +307,7 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
                 phase === 0
                   ? index * 0.07
                   : phase === 2
-                    ? (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08
+                    ? (index % cols) * 0.05 + Math.floor(index / cols) * 0.08
                     : phase === 3 && kept
                       ? slot * 0.1
                       : 0,
@@ -335,7 +346,7 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
                   animate={{ pathLength: 1 }}
                   transition={{
                     duration: 0.3,
-                    delay: (index % DESIGN_COLS) * 0.05 + Math.floor(index / DESIGN_COLS) * 0.08,
+                    delay: (index % cols) * 0.05 + Math.floor(index / cols) * 0.08,
                   }}
                 />
               </svg>
