@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local dev. In production:
+#   wrangler secret put RESEND_API_KEY
+# CONTACT_EMAIL_FROM and CONTACT_EMAIL_TO live in wrangler.jsonc "vars".
+RESEND_API_KEY=re_xxxxxxxx

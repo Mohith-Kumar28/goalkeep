@@ -7,5 +7,23 @@
   "main": "@tanstack/react-start/server-entry",
   "observability": {
     "enabled": true
-  }
+  },
+  // Contact form enquiries and newsletter sign-ups from the homepage
+  // (21 Oct: "for now we'll simply store it in a database"). Schema in
+  // migrations/; apply with `wrangler d1 migrations apply goalkeep-site`.
+  // Who gets an email for each contact enquiry (comma-separated), and the
+  // sender, on the Resend-verified mail.goalkeep.org domain. The Resend API
+  // key is a secret: `wrangler secret put RESEND_API_KEY`, or .dev.vars locally.
+  "vars": {
+    "CONTACT_EMAIL_FROM": "Goalkeep website <website@mail.goalkeep.org>",
+    "CONTACT_EMAIL_TO": "aditya@goalkeep.net,mohithkumar808@gmail.com"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "goalkeep-site",
+      "database_id": "38e1972b-407d-4594-9822-71d73ec9f5fb",
+      "migrations_dir": "migrations"
+    }
+  ]
 }
