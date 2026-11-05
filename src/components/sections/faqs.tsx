@@ -18,7 +18,15 @@ import { cn } from '@/lib/utils'
  * small hostility, and this is the section where someone is trying to answer a
  * real question before they email.
  */
-export function Faqs() {
+export function Faqs({
+  headline = faqSection.headline,
+  headlineEm = faqSection.headlineEm,
+  items = faqs.map((faq) => faq.value),
+}: {
+  headline?: string
+  headlineEm?: string
+  items?: Array<{ question: string; answer: string }>
+}) {
   const [open, setOpen] = useState<Array<number>>([0])
 
   /* 28 Sep: one answer open at a time - opening a question folds the last. */
@@ -41,17 +49,17 @@ export function Faqs() {
                 copy replacement. The doc gives this column one sentence, so
                 that is what it holds. */}
             <h2 id="faqs-heading" className="h2">
-              {faqSection.headline} <em>{faqSection.headlineEm}</em>
+              {headline} <em>{headlineEm}</em>
             </h2>
           </Reveal>
         </div>
 
         <dl className="md:col-span-7 md:col-start-6">
-          {faqs.map((faq, index) => {
+          {items.map((faq, index) => {
             const isOpen = open.includes(index)
             return (
               <div
-                key={faq.value.question}
+                key={faq.question}
                 className="border-b border-[rgb(20_19_26_/_0.22)] first:border-t"
               >
                 <dt>
@@ -63,7 +71,7 @@ export function Faqs() {
                     className="group flex w-full items-center justify-between gap-6 py-6 text-left"
                   >
                     <span className="h3 text-[length:clamp(1.0625rem,1.6vw,1.25rem)]">
-                      {faq.value.question}
+                      {faq.question}
                     </span>
                     <span
                       aria-hidden="true"
@@ -92,7 +100,7 @@ export function Faqs() {
                 >
                   {/* A blank line in the answer starts a new paragraph. */}
                   <div className="flex flex-col gap-4 overflow-hidden">
-                    {faq.value.answer.split('\n\n').map((paragraph, i, all) => (
+                    {faq.answer.split('\n\n').map((paragraph, i, all) => (
                       <p
                         key={i}
                         className={cn(

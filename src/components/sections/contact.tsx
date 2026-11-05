@@ -24,10 +24,10 @@ const inputClass =
   'hover:border-[var(--gk-ink)] focus:border-[var(--gk-navy)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--gk-navy)] ' +
   'disabled:opacity-60 aria-[invalid=true]:border-[var(--gk-coral-ink)]'
 
-export function Contact() {
+export function Contact({ defaultService = contact.serviceOptions[0] }: { defaultService?: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState('')
-  const [service, setService] = useState(contact.serviceOptions[0])
+  const [service, setService] = useState(defaultService)
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

@@ -1,12 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PageStub } from '@/components/layout/page-stub'
+import { PageView } from '@/components/pages/page-blocks'
+import { dataLiteracyPage } from '@/content/programs'
 
 export const Route = createFileRoute('/programs/data-literacy')({
   head: () => ({
-    meta: [
-      { title: 'Data literacy program — Goalkeep' },
-      { name: 'description', content: 'Hands-on training that helps teams at every level use the data they already collect.' },
-    ],
+    meta: [{ title: dataLiteracyPage.title }, { name: 'description', content: dataLiteracyPage.description }],
   }),
-  component: () => <PageStub eyebrow="Data literacy program" heading={<>Data skills for people who don&rsquo;t call themselves data people.</>} />,
+  component: () => <PageView page={dataLiteracyPage} />,
 })

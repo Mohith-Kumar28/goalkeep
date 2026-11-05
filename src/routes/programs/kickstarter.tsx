@@ -1,12 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PageStub } from '@/components/layout/page-stub'
+import { PageView } from '@/components/pages/page-blocks'
+import { kickstarterPage } from '@/content/programs'
 
 export const Route = createFileRoute('/programs/kickstarter')({
   head: () => ({
-    meta: [
-      { title: 'Kickstarter program — Goalkeep' },
-      { name: 'description', content: 'Fixed-scope, fixed-price data foundations for early-stage NGOs.' },
-    ],
+    meta: [{ title: kickstarterPage.title }, { name: 'description', content: kickstarterPage.description }],
   }),
-  component: () => <PageStub eyebrow="Kickstarter program" heading={<>Data foundations for early-stage NGOs.</>} />,
+  component: () => <PageView page={kickstarterPage} />,
 })

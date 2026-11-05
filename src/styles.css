@@ -623,6 +623,20 @@
     );
   }
 
+  /* The programs and services heroes: the photograph sits under the copy on
+     a phone and fades up into the navy, then moves beside it on a wide
+     screen and fades left instead. */
+  @media (min-width: 1024px) {
+    .photo-bleed-b.photo-bleed-lg-x::after {
+      background: linear-gradient(
+        to right,
+        var(--fade-to) 0%,
+        color-mix(in srgb, var(--fade-to) 55%, transparent) 26%,
+        transparent 62%
+      );
+    }
+  }
+
   /* --- Rails ------------------------------------------------------------- */
   .ticker-mask {
     mask-image: linear-gradient(
