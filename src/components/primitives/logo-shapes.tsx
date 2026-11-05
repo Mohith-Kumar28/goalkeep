@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react'
+import { motion, useInView, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
@@ -516,5 +516,40 @@ function Fragment({
     >
       {art}
     </motion.div>
+  )
+}
+
+/*
+ * A closing band's one shape: a long piece of the mark's ring, drawn in from
+ * its one visible cap when it comes into view, running off the band's right
+ * edge. Large and cropped, so it reads as a piece of the mark, never a
+ * spinner or a broken ring.
+ */
+export function ClosingRing({ size, className }: { size: number; className?: string }) {
+  const reduced = useReducedMotion()
+  const ref = useRef<SVGSVGElement>(null)
+  /* A ring cropped by its band's corner is never half on screen; a little of it is enough. */
+  const inView = useInView(ref, { once: true, amount: 0.1 })
+  const thickness = 13
+  /* From a round cap low on the left, up over the top and off the band's
+     right edge: one continuous piece of the ring, one cap in frame. */
+  const start = 280
+  const sweep = 150
+  return (
+    <svg ref={ref} aria-hidden="true" viewBox="0 0 100 100" width={size} height={size} className={cn('overflow-visible', className)}>
+      <motion.circle
+        cx="50"
+        cy="50"
+        r={50 - thickness / 2}
+        fill="none"
+        stroke="var(--gk-yellow)"
+        strokeWidth={thickness}
+        strokeLinecap="round"
+        transform={`rotate(${start - 90} 50 50)`}
+        initial={false}
+        animate={{ pathLength: inView || reduced ? sweep / 360 : 0 }}
+        transition={reduced ? { duration: 0 } : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </svg>
   )
 }

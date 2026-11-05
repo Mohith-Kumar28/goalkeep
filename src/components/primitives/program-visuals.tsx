@@ -27,6 +27,7 @@ const STROKE = {
   ink: 'var(--gk-ink)',
   faint: 'var(--hairline-strong)',
   white: 'var(--gk-white)',
+  none: 'none',
 } as const
 
 const FILL = {
@@ -220,7 +221,6 @@ function Understand() {
 function Design() {
   return (
     <Frame label="A wireframe board with sticky notes beside a box-and-arrow data model sketch">
-      <D d={rect(12, 12, 216, 136, 6)} c="faint" fill="white" i={0} />
       <g transform="translate(24 26) rotate(-4)">
         <D d={rect(0, 0, 42, 38, 2)} c="yellow" fill="yellow" i={1} />
         <D d={lines(7, 11, 28, 3, 8)} c="yellow" w={1.5} i={2} />

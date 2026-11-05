@@ -36,7 +36,7 @@ const otherServices = (title: string): Block => ({
 const dashboardsDistinction: Block = {
   kind: 'prose',
   tone: 'navy',
-  headline: { lead: 'The dashboard is the visible layer of', em: 'a larger process.' },
+  headline: { label: 'the bigger picture', lead: 'The dashboard is the visible layer of', em: 'a larger process.' },
   highlight: 'standalone visual-design exercise',
   paragraphs: [
     'Dashboarding is not treated as a standalone visual-design exercise or a promise to simply deliver a set of charts. If the measurement framework, definitions or underlying data system are not reliable, Goalkeep addresses those foundations as part of the engagement. The dashboard is the visible layer of a larger process that makes the information trustworthy and useful.',
@@ -144,7 +144,7 @@ export const servicePages: Array<Page & { slug: string }> = [
       {
         kind: 'prose',
         tone: 'navy',
-        headline: { lead: 'Open source at the core,', em: 'no lock-in.' },
+        headline: { label: 'how we build', lead: 'Open source at the core,', em: 'no lock-in.' },
         highlight: 'open-source data stack',
         facts: [
           { label: 'Database', value: 'PostgreSQL or Supabase' },

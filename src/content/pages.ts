@@ -12,7 +12,12 @@ import type { AudienceId, Cta } from './types'
 
 /** A light lead and a bold-italic tail, the way every heading on the site
  *  is set (23 Oct). */
-export type Heading = { lead: string; em?: string }
+export type Heading = {
+  lead: string
+  em?: string
+  /** The section's eyebrow, where the renderer's own name for it is wrong. */
+  label?: string
+}
 
 export type Photo = { src: string; alt: string }
 
@@ -123,6 +128,8 @@ export type Block =
   | {
       kind: 'outcomes'
       headline: Heading
+      /** Under the pinned heading, so the column beside the ledger is not empty. */
+      photo?: Photo
       items: Array<{ title: string; body: string }>
     }
   | {
@@ -174,6 +181,9 @@ export type Block =
       body: string
       primary: Cta
       secondary?: Cta
+      /** The whole mark assembling from its parts: the programs overview's
+       *  close only. Every other close draws one segment of the ring. */
+      mark?: boolean
     }
 
 export type Page = {

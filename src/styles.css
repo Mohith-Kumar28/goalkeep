@@ -166,7 +166,13 @@
     box-shadow: var(--shadow-ring);
   }
 
-  [data-ground="navy"] :focus-visible {
+  /* A heading or statement focused by script, so a screen reader hears it,
+     is not a control: it draws no ring. */
+  [tabindex="-1"]:focus-visible {
+    box-shadow: none;
+  }
+
+  [data-ground="navy"] :focus-visible:not([tabindex="-1"]) {
     box-shadow: var(--shadow-ring-inverse);
   }
 
@@ -647,6 +653,16 @@
   .dissolve-l {
     mask-image: linear-gradient(to left, #000 0%, #000 42%, rgb(0 0 0 / 0.72) 60%, rgb(0 0 0 / 0.32) 80%, transparent 100%);
   }
+  /* A photograph above its copy on a phone, beside it from md: it fades
+     towards the copy either way. */
+  .dissolve-b-r {
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, rgb(0 0 0 / 0.5) 78%, transparent 100%);
+  }
+  @media (min-width: 48rem) {
+    .dissolve-b-r {
+      mask-image: linear-gradient(to right, #000 0%, #000 42%, rgb(0 0 0 / 0.72) 60%, rgb(0 0 0 / 0.32) 80%, transparent 100%);
+    }
+  }
   /* Right and bottom edges both thinning out: a photograph in a column. */
   .dissolve-rb {
     mask-image:
@@ -672,8 +688,8 @@
     mask-image: linear-gradient(
       to right,
       transparent 0,
-      #000 210px,
-      #000 calc(100% - 210px),
+      #000 min(210px, 12vw),
+      #000 calc(100% - min(210px, 12vw)),
       transparent 100%
     );
   }

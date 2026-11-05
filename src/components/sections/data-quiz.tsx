@@ -135,7 +135,13 @@ export function DataQuiz() {
       <div className="grid overflow-clip rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:min-h-[42rem] lg:grid-cols-[18rem_1fr]">
         <aside
           data-ground="navy"
-          className={cn('ground-navy flex-col', stage.kind === 'details' ? 'hidden lg:flex' : 'flex')}
+          className={cn(
+            'ground-navy flex-col',
+            stage.kind === 'details' ? 'hidden lg:flex' : 'flex',
+            /* On a phone the review's score row pins under the header, so the
+               score stays in view while answers further down change. */
+            stage.kind === 'review' && 'max-lg:sticky max-lg:top-[82px] max-lg:z-20',
+          )}
           style={{ backgroundColor: 'var(--gk-navy-deep)' }}
         >
           {stage.kind === 'details' || stage.kind === 'question' ? (
@@ -324,10 +330,11 @@ function ScoreAside({ score, sticky }: { score: QuizScore; sticky: boolean }) {
   const fills = Object.fromEntries(score.domains.map((d) => [d.id, share(d.average)])) as Record<DomainId, number>
   const strongest = score.domains.reduce((high, d) => (d.average > high.average ? d : high))
   const weakest = score.domains.find((d) => d.id === score.weakest.id) ?? strongest
-  const facts = [
-    { term: 'Strongest', domain: strongest },
-    { term: 'Start with', domain: weakest },
-  ]
+  const even = strongest.average === weakest.average
+  const tiedTop = score.domains.filter((d) => d.average === strongest.average).length > 1
+  const facts = even
+    ? []
+    : [...(tiedTop ? [] : [{ term: 'Strongest', domain: strongest }]), { term: 'Start with', domain: weakest }]
   return (
     <>
       <div className={cn('hidden flex-col items-center px-8 pt-12 pb-10 lg:flex', sticky && 'sticky top-28')}>
@@ -337,8 +344,7 @@ function ScoreAside({ score, sticky }: { score: QuizScore; sticky: boolean }) {
             <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
           </div>
         </ScoredMark>
-        <p className="mt-6 text-[length:var(--fs-lg)] font-extrabold text-white">{score.level.label}</p>
-        <dl className="mt-8 w-full divide-y divide-[var(--hairline-inverse)] border-y border-[var(--hairline-inverse)]">
+        <dl className="mt-8 w-full divide-y divide-[var(--hairline-inverse)] border-y border-[var(--hairline-inverse)] empty:hidden">
           {facts.map(({ term, domain }) => (
             <div key={term} className="flex items-center gap-3 py-3.5">
               <DomainArc domain={domain.id} size={18} color={DOMAIN_HUES[domain.id].lift} />
@@ -350,14 +356,22 @@ function ScoreAside({ score, sticky }: { score: QuizScore; sticky: boolean }) {
           ))}
         </dl>
       </div>
-      <div className="flex items-center gap-6 px-6 py-5 lg:hidden">
-        <ScoredMark size={112} fills={fills} />
+      <div className={cn('flex items-center px-6 lg:hidden', sticky ? 'gap-4 py-3' : 'gap-6 py-5')}>
+        <ScoredMark size={sticky ? 64 : 112} fills={fills} />
         <div>
-          <p className="stat-figure text-[length:2.5rem] leading-none text-white">{formatScore(score.average)}</p>
-          <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
-          <p className="mt-3 text-[length:var(--fs-sm)] font-bold text-white">{score.level.label}</p>
+          <p className={cn('stat-figure leading-none text-white', sticky ? 'text-[length:1.75rem]' : 'text-[length:2.5rem]')}>
+            {formatScore(score.average)}
+            <span className="ml-1.5 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</span>
+          </p>
+          {!sticky && <p className="mt-3 text-[length:var(--fs-sm)] font-bold text-white">{score.level.label}</p>}
           <p className="mt-1 text-[length:var(--fs-sm)] text-[var(--fg-inverse-2)]">
-            Strongest: {strongest.title} {formatScore(strongest.average)}
+            {even ? (
+              'Even across all four parts'
+            ) : (
+              <>
+                Start with: <span className="whitespace-nowrap">{`${weakest.title} ${formatScore(weakest.average)}`}</span>
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -403,7 +417,7 @@ function DetailsStep({
   }
 
   const text = (key: keyof QuizDetails, props: { type?: string; autoComplete?: string; required?: boolean; placeholder?: string } = {}) => (
-    <Field label={labels[key]} htmlFor={`quiz-${key}`}>
+    <Field key={key} label={labels[key]} htmlFor={`quiz-${key}`}>
       <input
         id={`quiz-${key}`}
         type={props.type ?? 'text'}
@@ -531,22 +545,39 @@ function AnswerTile({
         'relative flex cursor-pointer overflow-hidden rounded-[var(--r-sm)] border transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
         'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
         large
-          ? 'min-h-14 items-center gap-4 px-4 pt-1 pb-2 sm:min-h-[5.5rem] sm:gap-1.5 sm:px-2 sm:pb-2.5 xl:gap-2.5 xl:px-3.5'
+          ? 'min-h-14 items-center gap-4 px-4 pt-1 pb-2 sm:min-h-[6rem] sm:flex-col sm:justify-start sm:gap-1.5 sm:px-2 sm:pt-4 sm:pb-3 sm:text-center xl:flex-row xl:justify-start xl:gap-2.5 xl:px-3.5 xl:text-left'
           : 'size-11 items-center justify-center pb-1',
-        checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--tile-hover)]',
+        checked
+          ? 'border-transparent'
+          : cn(
+              'border-[var(--hairline-strong)] bg-[var(--gk-white)]',
+              /* A question's tiles tint on hover only once the pointer has moved
+                 (see QuestionStep); they take a click at any time. */
+              large ? '[[data-armed]_&:hover]:bg-[var(--tile-hover)]' : 'hover:bg-[var(--tile-hover)]',
+            ),
       )}
       style={{ '--tile-hover': `color-mix(in srgb, ${hue.arc} 10%, transparent)`, background: checked ? hue.tint : undefined } as CSSProperties}
     >
-      <input type="radio" name={name} checked={checked} onChange={onSelect} aria-label={large ? undefined : label} className="sr-only" />
+      <input
+        type="radio"
+        name={name}
+        checked={checked}
+        onChange={onSelect}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') onSelect()
+        }}
+        aria-label={large ? undefined : label}
+        className="sr-only"
+      />
       <span
         aria-hidden="true"
-        className={cn('hand shrink-0 leading-none font-bold tabular-nums', large ? 'w-4 text-[length:2.125rem]' : 'text-[length:1.625rem]')}
+        className={cn('hand shrink-0 leading-none font-bold tabular-nums', large ? 'w-4 text-[length:2.125rem] sm:w-auto xl:w-4' : 'text-[length:1.625rem]')}
         style={{ color: hue.ink }}
       >
         {number}
       </span>
       {large && (
-        <span className="text-[length:var(--fs-sm)] leading-tight font-semibold text-[var(--gk-ink)] sm:text-[length:var(--fs-xs)] xl:text-[length:var(--fs-sm)]">
+        <span className="text-[length:var(--fs-sm)] leading-tight font-semibold text-[var(--gk-ink)]">
           {label}
         </span>
       )}
@@ -576,6 +607,10 @@ function AnswerTile({
 
 /* ------------------------------------------------------------ question */
 
+/* Whether the last answer came from the keyboard, so the next question
+   focuses its tiles. Module scope: each question is a fresh mount. */
+let keyboardFlow = false
+
 const statementClass =
   'max-w-[30ch] font-display text-[length:clamp(1.5rem,3.2vw,2.75rem)] leading-[1.25] font-medium tracking-[var(--tracking-display)] text-[var(--gk-ink)]'
 
@@ -596,9 +631,25 @@ function QuestionStep({
   const statementId = `quiz-statement-${index}`
 
   /* The pointer is usually resting where the last tile was, so the next
-     question's tile would light up before anyone moved. Mouse tiles stay
-     inert until the pointer actually moves; touch has no hover to carry. */
+     question's tile would light up before anyone moved. The hover tint
+     waits for the pointer to move; a click lands at any time. */
   const [armed, setArmed] = useState(false)
+
+  /* Arrow keys move between tiles, as in any radio group; only a click,
+     Space or a number key answers. A keyboard user's focus carries on to the
+     next question's tiles. */
+  const group = useRef<HTMLDivElement>(null)
+  const arrowed = useRef(false)
+  useEffect(() => {
+    if (keyboardFlow) {
+      const tiles = group.current?.querySelectorAll<HTMLInputElement>('input[type=radio]')
+      ;(Array.from(tiles ?? []).find((t) => t.checked) ?? tiles?.[0])?.focus()
+    } else if (document.activeElement === document.body) {
+      /* The button that started the quiz has gone; the statement takes the
+         focus so a screen reader hears it. */
+      document.getElementById(statementId)?.focus({ preventScroll: true })
+    }
+  }, [statementId])
 
   /* Keys 1 to 5 answer, in the order the scale reads. */
   useEffect(() => {
@@ -614,10 +665,6 @@ function QuestionStep({
 
   return (
     <div className="relative flex flex-1 flex-col" onPointerMove={() => setArmed(true)}>
-      {/* The domain's own segment, large and faint, off the card's corner. */}
-      <span data-ghost aria-hidden="true" className="pointer-events-none absolute -top-10 -right-10 hidden opacity-[0.07] sm:block">
-        <DomainArc domain={domain.id} size={160} color={hue.arc} />
-      </span>
 
       <div className="flex items-baseline gap-4">
         <p className="hand hidden lg:block" style={{ color: hue.ink }}>
@@ -631,15 +678,15 @@ function QuestionStep({
       <div className="flex flex-1 flex-col justify-center py-8">
         {/* Every statement is laid out invisibly in the same cell, so the
             block is as tall as the longest one at any width and nothing
-            below it moves between questions. The visible one sits on the
-            block's foot, so it is always the same distance from the tiles. */}
+            below it moves between questions. The visible one is centred in
+            it, so a short statement does not leave a hole above itself. */}
         <div className="grid">
           {statements.map((s, i) => (
             <p key={i} aria-hidden="true" className={cn(statementClass, 'invisible col-start-1 row-start-1')}>
               {s.text}
             </p>
           ))}
-          <p id={statementId} className={cn(statementClass, 'col-start-1 row-start-1 self-end')}>
+          <p id={statementId} tabIndex={-1} className={cn(statementClass, 'col-start-1 row-start-1 self-center outline-none')}>
             {statement.text}
           </p>
         </div>
@@ -650,9 +697,19 @@ function QuestionStep({
         </p>
 
         <div
+          ref={group}
           role="radiogroup"
           aria-labelledby={statementId}
-          className={cn('mt-3 grid gap-2 sm:grid-cols-5', !armed && '[@media(hover:hover)]:pointer-events-none')}
+          data-armed={armed || undefined}
+          onKeyDownCapture={(event) => {
+            keyboardFlow = true
+            arrowed.current = event.key.startsWith('Arrow')
+          }}
+          onPointerDownCapture={() => {
+            keyboardFlow = false
+            arrowed.current = false
+          }}
+          className="mt-3 grid gap-2 sm:grid-cols-5"
         >
           {scale.map((option, i) => (
             <AnswerTile
@@ -663,7 +720,10 @@ function QuestionStep({
               checked={value === option.value}
               hue={hue}
               size="lg"
-              onSelect={() => onAnswer(option.value)}
+              onSelect={() => {
+                if (arrowed.current) return
+                onAnswer(option.value)
+              }}
             />
           ))}
         </div>
@@ -709,10 +769,20 @@ function Results({
   onRestart: () => void
 }) {
   const weakest = DOMAIN_HUES[score.weakest.id]
+  const even = score.domains.every((d) => d.average === score.domains[0].average)
+  /* The last tile answered has gone with its question: the reading takes the focus. */
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    if (document.activeElement === document.body || keyboardFlow) heading.current?.focus({ preventScroll: true })
+  }, [])
 
   return (
     <div className="flex flex-col gap-10">
-      <h2 className="max-w-[44ch] text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-snug font-normal text-[var(--gk-ink)]">
+      <h2
+        ref={heading}
+        tabIndex={-1}
+        className="max-w-[44ch] text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-snug font-normal text-[var(--gk-ink)] outline-none"
+      >
         <strong className="font-extrabold">{score.level.label}.</strong> {score.level.reading}
       </h2>
 
@@ -720,11 +790,11 @@ function Results({
           titles, figures and levels line up whichever column is lowest. */}
       <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
         {score.domains.map((d) => {
-          const lowest = d.id === score.weakest.id
+          const lowest = !even && d.id === score.weakest.id
           const figure = <span className="stat-figure text-[length:2.25rem] text-[var(--gk-ink)]">{formatScore(d.average)}</span>
           return (
             <div key={d.id} className="flex flex-col">
-              <span aria-hidden="true" className="flex h-8 items-start">
+              <span aria-hidden="true" className={cn('flex items-start', !even && 'h-8')}>
                 {lowest && (
                   <span className="hand flex items-start gap-1 text-[length:var(--fs-hand-sm)] leading-none font-bold whitespace-nowrap text-[var(--gk-ink)]">
                     start here
@@ -732,7 +802,13 @@ function Results({
                   </span>
                 )}
               </span>
-              <DomainArc domain={d.id} size={56} fill={share(d.average)} track={`color-mix(in srgb, ${segmentHue(d.id)} 22%, transparent)`} animate />
+              <DomainArc
+                domain={d.id}
+                size={56}
+                fill={share(d.average)}
+                track={`color-mix(in srgb, ${segmentHue(d.id)} 22%, transparent)`}
+                animate
+              />
               <dt className="mt-3 text-[length:var(--fs-sm)] font-bold text-[var(--fg-1)]">
                 {d.title}
                 {lowest && <span className="sr-only"> (your lowest score)</span>}
@@ -754,18 +830,26 @@ function Results({
         })}
       </dl>
 
-      <div className="-mx-6 px-6 py-8 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10" style={{ background: weakest.tint }}>
+      <div className="-mx-6 px-6 py-8 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10" style={{ background: even ? 'var(--gk-blue-tint)' : weakest.tint }}>
         <p className="max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed">
-          Your lowest score is in <strong>{score.weakest.title}</strong>. That is usually the best place to start, and it is what our work on{' '}
-          {score.weakest.next.label.toLowerCase()} is for.
+          {even ? (
+            <>Your scores are even across all four parts. A short call is the quickest way to find where to start.</>
+          ) : (
+            <>
+              Your lowest score is in <strong>{score.weakest.title}</strong>. That is usually the best place to start, and it is what our work on{' '}
+              {score.weakest.next.label.toLowerCase()} is for.
+            </>
+          )}
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <GkButton href="#contact" variant="primary" withArrow>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <GkButton href="#contact" variant="primary" withArrow className="justify-center">
             Talk to us about your results
           </GkButton>
-          <GkButton to={score.weakest.next.to} variant="secondary">
-            {score.weakest.next.label}
-          </GkButton>
+          {!even && (
+            <GkButton to={score.weakest.next.to} variant="secondary" className="justify-center">
+              See how we help
+            </GkButton>
+          )}
         </div>
       </div>
 
@@ -855,6 +939,12 @@ function ReviewStep({
           </section>
         )
       })}
+      <div>
+        <button type="button" onClick={onBack} className={linkClass}>
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to results
+        </button>
+      </div>
     </div>
   )
 }

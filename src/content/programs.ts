@@ -68,7 +68,7 @@ export const programsPage: Page = {
             { label: 'Next cohort', value: 'January 2027' },
           ],
           cta: { label: 'Explore Kickstarter', to: '/programs/kickstarter' },
-          photo: { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
+          photo: { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field' },
         },
         {
           eyebrow: 'Data Literacy Program',
@@ -79,13 +79,13 @@ export const programsPage: Page = {
             { label: 'Next cohort', value: 'December 2026' },
           ],
           cta: { label: 'Explore the Data Literacy Program', to: '/programs/data-literacy' },
-          photo: { src: '/photos/aud-mature-3.webp', alt: 'A Data Literacy Program cohort gathered in front of the programme banner' },
+          photo: { src: '/photos/aud-eco-5.webp', alt: 'Cohort members working through data together around a table' },
         },
       ],
     },
     {
       kind: 'prose',
-      headline: { lead: 'Run either program across', em: 'your portfolio.' },
+      headline: { label: 'for funders and intermediaries', lead: 'Run either program across', em: 'your portfolio.' },
       paragraphs: [
         'We partner with funders and intermediaries to run either program across their portfolios or cohorts.',
         'For the Data Literacy Program, Goalkeep leads the learning design, delivery, mentorship and measurement while you make the program available to the organisations you support.',
@@ -98,6 +98,7 @@ export const programsPage: Page = {
     { kind: 'partners' },
     {
       kind: 'closing',
+      mark: true,
       headline: { lead: 'Not sure which program', em: 'fits you?' },
       body: 'Tell us where your organisation is today, and we will suggest the right place to start.',
       primary: { label: 'Talk to us', to: toContact },
@@ -366,6 +367,7 @@ export const dataLiteracyPage: Page = {
     {
       kind: 'outcomes',
       headline: { lead: 'Capability that stays', em: 'inside the organisation.' },
+      photo: { src: '/photos/phase-adopt-training-b.webp', alt: 'Participants working through a data exercise together at a Data Literacy Program session' },
       items: [
         {
           title: 'Better and more timely decisions',

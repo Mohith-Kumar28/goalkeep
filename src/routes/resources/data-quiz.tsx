@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
-import { motion, useInView } from 'motion/react'
-import { useRef } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
+import { ClosingRing } from '@/components/primitives/logo-shapes'
 import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 import { DomainArc, ScoredMark, markLabelStyle } from '@/components/primitives/scored-mark'
@@ -11,7 +10,6 @@ import { Credibility } from '@/components/sections/credibility'
 import { DOMAIN_HUES, DataQuiz } from '@/components/sections/data-quiz'
 import { domains } from '@/content/quiz'
 import type { DomainId } from '@/content/quiz'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 export const Route = createFileRoute('/resources/data-quiz')({
   head: () => ({
@@ -98,11 +96,14 @@ function DataQuizPage() {
 
       <section className="ground-cream band relative">
         <div className="shell">
-          <Reveal>
-            <h2 className="h2 max-w-[22ch] pb-1">
-              Four parts, <em>and where each one leads.</em>
-            </h2>
-            <p className="lead mt-5 max-w-[52ch]">
+          <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-5">
+              <p className="eyebrow mb-4">the four parts</p>
+              <h2 className="h2 max-w-[18ch] pb-1">
+                Four parts, <em>and where each one leads.</em>
+              </h2>
+            </div>
+            <p className="lead max-w-[52ch] lg:col-span-7 lg:self-end">
               Your lowest-scoring part is usually the best place to start. Each one maps to the work we do.
             </p>
           </Reveal>
@@ -136,7 +137,7 @@ function DataQuizPage() {
 
       <section
         data-ground="navy"
-        className="ground-navy accent-yellow relative overflow-hidden py-14 md:py-16"
+        className="ground-navy accent-yellow relative overflow-hidden py-16 md:py-20"
         aria-labelledby="quiz-closing-heading"
         style={{ backgroundColor: 'var(--gk-navy)' }}
       >
@@ -156,52 +157,16 @@ function DataQuizPage() {
               </div>
             </Reveal>
           </div>
-          <div className="flex justify-center lg:hidden">
-            <ScoredMark fills={FULL} size={104} drawOnView />
-          </div>
         </div>
-        <ClosingArc />
+        {/* The page closes as every programs and services page does: one
+            drawn ring, cropped by the band's corner. */}
+        <div aria-hidden="true" className="pointer-events-none absolute -right-28 -bottom-40 hidden lg:block">
+          <ClosingRing size={420} />
+        </div>
       </section>
 
       <Contact aside={<QuizContactAside />} />
     </>
-  )
-}
-
-/*
- * The closing band's one shape: a single large segment of the mark's ring,
- * centred past the band's right edge so it runs off the edge with one round
- * cap showing, drawn in from that cap when the band comes into view. The
- * hero already has the whole mark; this is the mark's line, not the mark.
- */
-function ClosingArc() {
-  const reduced = useReducedMotion()
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.3 })
-  const thickness = 10
-  const start = 232
-  const sweep = 150
-  return (
-    <svg
-      ref={ref}
-      aria-hidden="true"
-      viewBox="0 0 100 100"
-      className="pointer-events-none absolute top-1/2 right-0 hidden size-[30rem] translate-x-[56%] -translate-y-1/2 overflow-visible lg:block"
-    >
-      <motion.circle
-        cx="50"
-        cy="50"
-        r={50 - thickness / 2}
-        fill="none"
-        stroke="var(--gk-yellow)"
-        strokeWidth={thickness}
-        strokeLinecap="round"
-        transform={`rotate(${start - 90} 50 50)`}
-        initial={false}
-        animate={{ pathLength: inView || reduced ? sweep / 360 : 0 }}
-        transition={reduced ? { duration: 0 } : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-      />
-    </svg>
   )
 }
 

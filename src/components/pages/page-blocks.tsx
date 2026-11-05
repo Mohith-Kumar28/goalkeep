@@ -1,14 +1,16 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'motion/react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { createContext, useContext, useId, useRef, useState } from 'react'
 import type { CSSProperties, KeyboardEvent, ReactNode } from 'react'
-import { audiences } from '@/content/homepage'
+import { audiences, pillars } from '@/content/homepage'
 import type { Block, Heading, Page, Photo, Story } from '@/content/pages'
 import type { AudienceId, Cta } from '@/content/types'
 import { Scribble } from '@/components/primitives/doodles'
 import { GkButton } from '@/components/primitives/gk-button'
-import { ArcPiece, MarkAssembly } from '@/components/primitives/logo-shapes'
+import { ArcPiece, ClosingRing, MarkAssembly } from '@/components/primitives/logo-shapes'
 import { Marker } from '@/components/primitives/marker'
+import { PhaseAnimation } from '@/components/primitives/phase-animation'
+import type { PhaseKind } from '@/components/primitives/phase-animation'
 import { MarkerText } from '@/components/primitives/marker-text'
 import { ProgramVisual } from '@/components/primitives/program-visuals'
 import { Reveal } from '@/components/primitives/reveal'
@@ -67,7 +69,7 @@ function ContactAside() {
         alt="The Goalkeep team with a partner organisation after a workshop"
         loading="lazy"
         decoding="async"
-        className="dissolve-b aspect-[4/3] w-full object-cover"
+        className="dissolve-rb aspect-[4/3] w-full object-cover"
       />
       <p className="mt-2 max-w-[36ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-2)]">
         Someone from this team reads every message and writes back.
@@ -164,10 +166,28 @@ function Band({
   )
 }
 
-function Title({ heading, as: As = 'h2', className }: { heading: Heading; as?: 'h1' | 'h2'; className?: string }) {
-  return (
-    <As className={cn(As === 'h1' ? 'display' : 'h2', 'pb-1', className)}>
-      {heading.lead}
+/* "data- / confident" broke across lines on a phone: hyphenated words stay whole. */
+const whole = (text: string) =>
+  text.split(/(\S+-\S+)/).map((part, i) =>
+    i % 2 ? (
+      <span key={i} className="whitespace-nowrap">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  )
+
+/**
+ * A band's heading. Most bands also carry the homepage's eyebrow above it,
+ * naming the section the way the client's documents do; a content file can
+ * name it itself with `heading.label`.
+ */
+function Title({ heading, as: As = 'h2', label, className }: { heading: Heading; as?: 'h1' | 'h2'; label?: string; className?: string }) {
+  const eyebrow = heading.label ?? label
+  const title = (
+    <As className={cn(As === 'h1' ? 'display' : 'h2', 'pb-1', !eyebrow && className)}>
+      {whole(heading.lead)}
       {heading.em && (
         <>
           {' '}
@@ -175,6 +195,26 @@ function Title({ heading, as: As = 'h2', className }: { heading: Heading; as?: '
         </>
       )}
     </As>
+  )
+  if (!eyebrow) return title
+  /* A measure in `ch` belongs to the heading's own font size; the wrapper
+     takes the rest (grid placement, pinning). */
+  const classes = (className ?? '').split(/\s+/)
+  const measure = classes.filter((c) => c.startsWith('max-w-')).join(' ')
+  const placement = classes.filter((c) => !c.startsWith('max-w-')).join(' ')
+  return (
+    <div className={placement}>
+      <p className="eyebrow mb-4">{eyebrow}</p>
+      <As className={cn(As === 'h1' ? 'display' : 'h2', 'pb-1', measure)}>
+        {whole(heading.lead)}
+        {heading.em && (
+          <>
+            {' '}
+            <em>{heading.em}</em>
+          </>
+        )}
+      </As>
+    </div>
   )
 }
 
@@ -261,9 +301,10 @@ function HandNote({
 }
 
 /** A small category label: the site's eyebrow, in the band accent. */
-function Label({ children, className }: { children: ReactNode; className?: string }) {
+function Label({ children, className, color }: { children: ReactNode; className?: string; color?: string }) {
   return (
     <span
+      style={color ? { color } : undefined}
       className={cn(
         'text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--band-accent-ink,var(--gk-blue-deep))] uppercase',
         className,
@@ -350,19 +391,19 @@ function Hero({ block }: { block: Of<'hero'> }) {
       className="ground-navy accent-yellow relative -mt-[82px] overflow-hidden pt-[82px] lg:pt-0"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <BandArc start={18} sweep={64} className="hidden lg:block -bottom-16 -left-44 size-[24rem]" />
-      <BandArc start={300} sweep={60} className="lg:hidden -right-20 -bottom-24 size-60" />
-
       {block.photo && !block.links && (
         <div
           className="photo-bleed photo-bleed-b photo-bleed-lg-x relative h-48 sm:h-72 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[44%]"
           aria-hidden="true"
         >
           <img src={block.photo.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          {/* The header's links float over the top of the photograph, so it
+              washes to navy there and they keep a navy ground. */}
+          <div className="absolute inset-x-0 top-0 hidden h-44 bg-gradient-to-b from-[var(--gk-navy)] via-[rgb(47_74_146_/_0.6)] to-transparent lg:block" />
         </div>
       )}
 
-      <div className={cn('shell relative pt-8 pb-16 lg:pt-[calc(82px+5.5rem)] lg:pb-24', block.links && 'grid items-center gap-12 lg:grid-cols-12')}>
+      <div className={cn('shell relative pt-8 pb-16 lg:pt-[calc(82px+5.5rem)] lg:pb-32', block.links && 'grid items-center gap-12 lg:grid-cols-12')}>
         <Reveal className={block.links ? 'lg:col-span-6' : 'lg:max-w-[55%]'}>
           <p className="eyebrow mb-5">{block.eyebrow}</p>
           <Title heading={block.headline} as="h1" className="max-w-[24ch]" />
@@ -384,7 +425,7 @@ function Hero({ block }: { block: Of<'hero'> }) {
         </Reveal>
 
         {block.links && (
-          <Reveal delay={0.12} className="grid gap-4 sm:grid-cols-2 lg:col-span-6">
+          <Reveal delay={0.12} className="hidden gap-4 sm:grid-cols-2 md:grid lg:col-span-6">
             {block.links.map((link) => (
               <SpotlightCard key={link.to} className="h-full rounded-[var(--r-lg)]">
                 <a
@@ -423,9 +464,9 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
       <div className="shell relative">
         {block.photo && <PhonePhoto photo={block.photo} />}
         <Reveal className={cn('flex flex-col gap-6', block.photo ? 'lg:ml-[46%] lg:max-w-[40rem]' : 'max-w-[60rem]')}>
-          <Title heading={block.headline} className="max-w-[20ch]" />
+          <Title heading={block.headline} label="why it matters" className="max-w-[20ch]" />
           <p className="lead max-w-[56ch]">
-            <Highlighted text={first} phrase={block.highlight} />
+            <Highlighted text={first} phrase={block.note ? undefined : block.highlight} />
           </p>
           {rest.map((paragraph, i) => (
             <p key={i} className="max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">
@@ -447,11 +488,11 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
 function Statement({ block }: { block: Of<'prose'> }) {
   const [first, ...rest] = block.paragraphs
   return (
-    <Band ground="" navy accent="accent-yellow" decor={<BandArc start={96} sweep={70} className="hidden lg:block -top-12 -right-16 size-[36rem]" />}>
-      <Reveal className={cn('relative', block.facts ? 'grid gap-12 lg:grid-cols-12' : 'max-w-[64rem]')}>
+    <Band ground="" navy accent="accent-yellow" decor={!block.facts && <BandArc start={96} sweep={70} className="hidden lg:block -top-12 -right-16 size-[36rem]" />}>
+      <Reveal className={cn('relative', block.facts ? 'grid items-start gap-12 lg:grid-cols-12' : 'max-w-[64rem]')}>
         <div className={block.facts ? 'lg:col-span-7' : undefined}>
         <Title heading={block.headline} className="max-w-[22ch]" />
-        <p className="mt-8 text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-[1.5] font-medium text-white">
+        <p className={cn('mt-8 max-w-[60ch] leading-[1.5] font-medium text-white', block.facts ? 'text-[length:var(--fs-xl)]' : 'text-[length:clamp(1.25rem,2.2vw,1.75rem)]')}>
           <Highlighted text={first} phrase={block.highlight} hue="var(--gk-white)" />
         </p>
         {rest.map((paragraph, i) => (
@@ -461,7 +502,7 @@ function Statement({ block }: { block: Of<'prose'> }) {
         ))}
         </div>
         {block.facts && (
-          <dl className="flex flex-col self-end lg:col-span-4 lg:col-start-9">
+          <dl className="flex flex-col lg:col-span-4 lg:col-start-9 lg:mt-2">
             {block.facts.map((fact) => (
               <div key={fact.label} className="flex flex-col gap-1 border-t border-[var(--hairline-inverse)] py-4">
                 <dt className="text-[length:var(--fs-sm)] font-bold text-[var(--gk-yellow)]">{fact.label}</dt>
@@ -479,7 +520,8 @@ function Statement({ block }: { block: Of<'prose'> }) {
 
 /**
  * "This may be right for you if…" lists as something to do: tick what sounds
- * familiar. A ticked line takes the highlighter. At three, the page says so
+ * familiar. A ticked line takes the highlighter, measured per line so it
+ * never reflows. At three, the page says so
  * and offers the conversation. Nothing is stored.
  */
 function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }) {
@@ -508,7 +550,9 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
 
   /* An odd last line runs the full width, so the grid never shows an empty cell. */
   const list = (
-    <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2">
+    <ul
+      className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2"
+    >
       {block.items.map((item, i) => {
         const on = ticked.includes(i)
         return (
@@ -517,7 +561,7 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
               type="button"
               aria-pressed={on}
               onClick={() => toggle(i)}
-              className="group flex h-full w-full items-start gap-4 px-6 py-5 text-left transition-colors duration-[var(--dur-base)] hover:bg-[var(--gk-cream-deep)] focus-visible:bg-[var(--gk-cream-deep)] focus-visible:outline-none"
+              className="group flex h-full w-full items-start gap-4 px-6 py-5 text-left transition-colors duration-[var(--dur-base)] hover:bg-[rgb(20_19_26_/_0.03)] focus-visible:bg-[rgb(20_19_26_/_0.03)] focus-visible:outline-none"
             >
               <span
                 aria-hidden="true"
@@ -528,7 +572,9 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
               >
                 {on && <Scribble name="check" color="var(--gk-navy)" weight={4} duration={0.3} className="absolute -top-2.5 -right-2.5 size-8" />}
               </span>
-              <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{on ? <MarkerText>{item}</MarkerText> : item}</span>
+              <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">
+                {on ? <MarkerText>{unbroken(item)}</MarkerText> : unbroken(item)}
+              </span>
             </button>
           </li>
         )
@@ -538,7 +584,7 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
 
   const heading = (
     <>
-      <Title heading={block.headline} className="max-w-[18ch]" />
+      <Title heading={block.headline} label="is this for you" className="max-w-[18ch]" />
       {block.intro && <p className="mt-5 max-w-[48ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">{block.intro}</p>}
       <HandNote mark="underline" tilt={-1.5} className="mt-5">
         tick what sounds familiar
@@ -565,7 +611,6 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
       ground={ground}
       accent="accent-yellow"
       className="!bg-[var(--gk-yellow-tint)]"
-      decor={<BandArc start={16} sweep={60} color="var(--gk-yellow)" className="hidden lg:block -bottom-20 -left-40 size-[20rem]" />}
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
         <Reveal className={block.aside ? 'lg:col-span-8' : 'lg:col-span-4'}>
@@ -609,6 +654,10 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
   )
 }
 
+/* A hyphenated word never breaks at its hyphen, so a line wraps the same way
+   with or without the marker over it. */
+const unbroken = (text: string) => text.replace(/-/g, '\u2011')
+
 /* --------------------------------------------------------------- steps */
 
 function Steps({ block, ground }: { block: Of<'steps'>; ground: string }) {
@@ -628,7 +677,7 @@ function Steps({ block, ground }: { block: Of<'steps'>; ground: string }) {
 function StepsHeader({ block, className }: { block: Of<'steps'>; className?: string }) {
   return (
     <Reveal className={cn('grid gap-6 lg:grid-cols-12 lg:gap-12', className)}>
-      <Title heading={block.headline} className="max-w-[18ch] lg:col-span-5" />
+      <Title heading={block.headline} label={STEPS_LABELS[block.layout]} className="max-w-[18ch] lg:col-span-5" />
       {block.intro && (
         <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
           {block.intro.map((line, i) => (
@@ -644,6 +693,27 @@ function StepsHeader({ block, className }: { block: Of<'steps'>; className?: str
 
 const number = (i: number) => String(i + 1).padStart(2, '0')
 
+const STEPS_LABELS: Record<Of<'steps'>['layout'], string> = {
+  rows: 'how it works',
+  bento: 'what you learn',
+  flow: 'how it runs',
+  paths: 'ways in',
+}
+
+/* The homepage's approach sequences, played in the open stage that shares
+   their name: the client-approved Design board, Build ticks and Adopt row. */
+const PHASE_ACCENTS: Record<PhaseKind, string> = {
+  design: 'var(--gk-yellow)',
+  build: 'var(--gk-teal-lift)',
+  adopt: 'var(--gk-coral-lift)',
+}
+const PHASES: Record<string, { kind: PhaseKind; accent: string; images: Array<Photo> } | undefined> = Object.fromEntries(
+  pillars.map((p) => {
+    const kind = p.title.toLowerCase() as PhaseKind
+    return [kind, { kind, accent: PHASE_ACCENTS[kind], images: p.images }]
+  }),
+)
+
 /**
  * Kickstarter's four stages, in the shape the homepage's "Our approach"
  * already taught the client: one surface divided by hairlines, the open
@@ -654,13 +724,17 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
   const [open, setOpen] = useState(0)
   const reduced = useReducedMotion()
   const id = useId()
+  const rows = useRef<HTMLDivElement>(null)
+  const seen = useInView(rows, { amount: 0.3 })
 
   return (
     <Band ground={ground}>
       <StepsHeader block={block} />
+      <div ref={rows}>
       <Reveal className="mt-12 overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-sm)]">
         {block.steps.map((s, i) => {
           const isOpen = open === i
+          const phase = PHASES[s.title.toLowerCase()]
           return (
             <div
               key={s.title}
@@ -668,7 +742,20 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
               style={isOpen ? { backgroundColor: 'var(--gk-navy)' } : undefined}
               data-ground={isOpen ? 'navy' : undefined}
             >
-              {isOpen && s.photo && (
+              {isOpen && s.photo && phase && (
+                <div className="absolute inset-y-0 right-0 hidden w-1/2 md:block" aria-hidden="true">
+                  <PhaseAnimation
+                    kind={phase.kind}
+                    images={phase.images}
+                    active={seen}
+                    ink="var(--fg-inverse)"
+                    accent={phase.accent}
+                    photoMask="linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.45) 26%, #000 62%)"
+                    className="absolute inset-0 h-full w-full rounded-none"
+                  />
+                </div>
+              )}
+              {isOpen && s.photo && !phase && (
                 <div className="photo-bleed photo-bleed-lg-x absolute inset-y-0 right-0 hidden w-1/2 md:block" aria-hidden="true">
                   <img src={s.photo.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
                 </div>
@@ -688,7 +775,6 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
                     {number(i)}
                   </span>
                   <span className={cn('flex-1 text-[length:var(--fs-2xl)] leading-tight font-extrabold', isOpen ? 'text-white' : 'text-[var(--gk-ink)]')}>{s.title}</span>
-                  {!isOpen && s.lead && <span className="hidden max-w-[42ch] flex-1 truncate text-[length:var(--fs-base)] text-[var(--fg-2)] lg:block">{s.lead}</span>}
                   {!isOpen && <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-[var(--gk-navy)]" />}
                 </button>
               </h3>
@@ -714,11 +800,6 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
                           {paragraph}
                         </p>
                       ))}
-                      {s.visual && (
-                        <div aria-hidden="true" className="mt-2 w-56">
-                          <ProgramVisual name={s.visual} onDark />
-                        </div>
-                      )}
                     </div>
                   </motion.div>
                 )}
@@ -727,6 +808,7 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
           )
         })}
       </Reveal>
+      </div>
     </Band>
   )
 }
@@ -737,28 +819,34 @@ function PathCells({ block, ground }: { block: Of<'steps'>; ground: string }) {
     <Band ground={ground}>
       <StepsHeader block={block} />
       <Reveal className="mt-12">
-        <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] lg:grid-cols-3">
+        <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr_auto] lg:gap-y-0">
           {block.steps.map((s) => (
-            <li key={s.title} className="flex flex-col bg-[var(--gk-white)]">
-              {s.photo && (
+            <li key={s.title} className="flex flex-col bg-[var(--gk-white)] lg:row-span-4 lg:grid lg:grid-rows-subgrid">
+              {s.photo ? (
                 <div className="dissolve-b aspect-[16/10] overflow-hidden">
                   <img src={s.photo.src} alt={s.photo.alt} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                 </div>
+              ) : (
+                <span />
               )}
-              <div className="-mt-6 flex flex-1 flex-col gap-4 p-8">
-                <h3 className="text-[length:var(--fs-xl)] leading-tight font-extrabold text-balance">{s.title}</h3>
+              <h3 className="-mt-6 px-8 pt-0 text-[length:var(--fs-xl)] leading-tight font-extrabold text-balance">{s.title}</h3>
+              <div className="flex flex-col gap-4 px-8 pt-4">
                 {s.body.map((paragraph, j) => (
                   <p key={j} className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
                     {paragraph}
                   </p>
                 ))}
-                {s.ctas && (
-                  <div className="mt-auto flex flex-col items-start gap-3 pt-3">
-                    {[...s.ctas].reverse().map((cta) => (
-                      <CtaButton key={cta.label} cta={cta} variant={cta === s.ctas?.[0] ? 'primary' : 'tertiary'} withArrow={cta === s.ctas?.[0]} />
-                    ))}
-                  </div>
-                )}
+              </div>
+              <div className="flex flex-col items-start gap-3 px-8 pt-7 pb-8">
+                {s.ctas?.map((cta, j) => (
+                  <CtaButton
+                    key={cta.label}
+                    cta={cta}
+                    variant="tertiary"
+                    withArrow={j === 0}
+                    className={cn('max-w-full !whitespace-normal text-left', j === 0 && 'font-extrabold')}
+                  />
+                ))}
               </div>
             </li>
           ))}
@@ -768,22 +856,19 @@ function PathCells({ block, ground }: { block: Of<'steps'>; ground: string }) {
   )
 }
 
-/* Five skills: one white plane divided by hairlines, two wide cells over three. */
+/* Five skills: one white plane divided by hairlines, three cells over two, each drawing on top. */
 function Bento({ block, ground }: { block: Of<'steps'>; ground: string }) {
   return (
     <Band ground={ground}>
       <StepsHeader block={block} />
       <Reveal className="mt-12">
-        <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-6">
+        <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 md:grid-cols-6">
           {block.steps.map((s, i) => {
-            const wide = i < 2
+            const wide = i >= 3
             return (
-              <li
-                key={s.title}
-                className={cn('flex flex-col gap-5 bg-[var(--gk-white)] p-8', wide ? 'md:col-span-3 lg:grid lg:grid-cols-[1fr_15rem] lg:items-center lg:gap-8' : 'md:col-span-2')}
-              >
+              <li key={s.title} className={cn('flex flex-col gap-5 bg-[var(--gk-white)] p-8', wide ? 'md:col-span-3' : 'md:col-span-2')}>
                 {s.visual && (
-                  <div className={cn('w-full max-w-[15rem]', wide && 'lg:order-last')}>
+                  <div className="w-full max-w-[13rem]">
                     <ProgramVisual name={s.visual} />
                   </div>
                 )}
@@ -804,7 +889,7 @@ function Bento({ block, ground }: { block: Of<'steps'>; ground: string }) {
   )
 }
 
-/** Three moves, read left to right: hand-circled numbers, hand-drawn arrows between. */
+/** Three moves, read left to right under hand-circled numbers, each circled at its own angle. */
 function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
   return (
     <Band ground={ground}>
@@ -816,18 +901,15 @@ function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
               <div className="relative flex items-center">
                 <span className="relative grid size-14 shrink-0 place-items-center text-[length:var(--fs-2xl)] font-extrabold text-[var(--gk-navy)]">
                   {i + 1}
-                  <Scribble name={i === 1 ? 'oval' : 'circle'} color={SCRIBBLE} weight={3.5} delay={0.15 + i * 0.25} className="absolute -inset-1.5 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]" />
-                </span>
-                {/* Runs from this number across the column to the next one. */}
-                {i < block.steps.length - 1 && (
                   <Scribble
-                    name="underline-swash"
+                    name="circle"
                     color={SCRIBBLE}
-                    weight={3}
-                    delay={0.35 + i * 0.25}
-                    className="absolute top-1/2 left-20 hidden h-4 w-[calc(100%-1rem)] -translate-y-1/2 md:block"
+                    weight={3.5}
+                    delay={0.15 + i * 0.25}
+                    className="absolute -inset-1.5 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]"
+                    style={{ rotate: `${[-8, 5, -3][i % 3]}deg` }}
                   />
-                )}
+                </span>
               </div>
               <h3 className="text-[length:var(--fs-2xl)] leading-tight font-extrabold">{s.title}</h3>
               {s.body.map((paragraph, j) => (
@@ -851,45 +933,58 @@ function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
 /* -------------------------------------------------------- deliverables */
 
 function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: string }) {
+  const checks = (columns: string) => (
+    <ul className={cn('grid content-start gap-x-10 gap-y-7', columns)}>
+      {block.items.map((item) => (
+        <li key={item} className="flex gap-4">
+          <Scribble name="check" color="var(--gk-navy)" weight={4} className="mt-0.5 size-7 shrink-0" />
+          <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{item}</span>
+        </li>
+      ))}
+    </ul>
+  )
+
+  /* Kickstarter: the before and after, then what follows from it in one
+     full-width run of checks, so no column stands empty beside the list. */
+  if (block.shift) {
+    return (
+      <Band ground={ground} accent="accent-coral">
+        <Reveal className="mb-12">
+          <Title heading={block.headline} label="before and after" className="max-w-[22ch]" />
+        </Reveal>
+        <Shift shift={block.shift} />
+        <Reveal className="mt-14">
+          {block.intro && <p className="lead mb-8 max-w-[44ch] font-semibold">{block.intro}</p>}
+          {checks('sm:grid-cols-2 lg:grid-cols-3')}
+        </Reveal>
+      </Band>
+    )
+  }
+
   return (
     <Band ground={ground} accent="accent-coral">
-      {block.shift && (
-        <>
-          <Reveal className="mb-12">
-            <Title heading={block.headline} className="max-w-[22ch]" />
-          </Reveal>
-          <Shift shift={block.shift} />
-        </>
-      )}
-
-      <div className={cn('grid gap-12 lg:grid-cols-12 lg:gap-16', block.shift && 'mt-16')}>
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
-          <Reveal>
-            {!block.shift && <Title heading={block.headline} className="max-w-[18ch]" />}
-            {block.shift && block.intro && <p className="lead max-w-[36ch] font-semibold">{block.intro}</p>}
+          <Reveal className="lg:sticky lg:top-[var(--pin-top,8rem)]">
+            <Title heading={block.headline} label="what you leave with" className="max-w-[18ch]" />
             {block.opening?.map((paragraph, i) => (
-              <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]'}>
+              <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]'}>
                 {paragraph}
               </p>
             ))}
-            {block.visual && (
-              <div aria-hidden="true" className="mt-10 hidden max-w-[20rem] lg:block">
-                <ProgramVisual name={block.visual} />
-              </div>
-            )}
           </Reveal>
         </div>
 
+        {/* The list, then the service's drawing, then its length on the
+            ruler: the right column carries the band, so both end together. */}
         <Reveal className="lg:col-span-7">
-          {!block.shift && block.intro && <p className="mb-7 text-[length:var(--fs-lg)] font-bold">{block.intro}</p>}
-          <ul className="grid content-start gap-x-10 gap-y-7 sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2">
-            {block.items.map((item) => (
-              <li key={item} className="flex gap-4">
-                <Scribble name="check" color="var(--gk-navy)" weight={4} className="mt-0.5 size-7 shrink-0" />
-                <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{item}</span>
-              </li>
-            ))}
-          </ul>
+          {block.intro && <p className="mb-7 text-[length:var(--fs-lg)] font-bold">{block.intro}</p>}
+          {checks('sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2')}
+          {block.visual && (
+            <div aria-hidden="true" className="mt-14 hidden max-w-[28rem] lg:block">
+              <ProgramVisual name={block.visual} />
+            </div>
+          )}
           {block.duration && (
             <div className="mt-12">
               <Duration text={block.duration} weeks={block.weeks} />
@@ -976,10 +1071,32 @@ function Shift({ shift }: { shift: NonNullable<Of<'deliverables'>['shift']> }) {
 /** What the program changes: the heading beside a two-column ledger under hairlines. */
 function Outcomes({ block, ground }: { block: Of<'outcomes'>; ground: string }) {
   return (
-    <Band ground={ground} accent="accent-coral" decor={<BandArc start={200} sweep={64} color="var(--gk-coral)" className="hidden lg:block -right-36 -bottom-40 size-[22rem]" />}>
+    <Band
+      ground={ground}
+      accent="accent-coral"
+      decor={
+        block.photo && (
+          <div
+            aria-hidden="true"
+            className="absolute bottom-0 left-0 hidden h-[58%] w-[34%] lg:block"
+            style={{
+              maskImage: 'linear-gradient(to right, #000 40%, transparent), linear-gradient(to top, #000 45%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, #000 40%, transparent), linear-gradient(to top, #000 45%, transparent)',
+              maskComposite: 'intersect',
+              WebkitMaskComposite: 'source-in',
+            }}
+          >
+            <img src={block.photo.src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+          </div>
+        )
+      }
+    >
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-4">
-          <Title heading={block.headline} className="max-w-[16ch] lg:sticky lg:top-[var(--pin-top,8rem)]" />
+          {/* Pinned unless a photograph fills the column under it. */}
+          <div className={block.photo ? undefined : 'lg:sticky lg:top-[var(--pin-top,8rem)]'}>
+            <Title heading={block.headline} label="what changes" className="max-w-[16ch]" />
+          </div>
         </Reveal>
         <Reveal className="lg:col-span-8">
           <ul className="grid gap-x-12 gap-y-10 md:grid-cols-2 [&>li:last-child:nth-child(odd)]:md:col-span-2">
@@ -997,8 +1114,6 @@ function Outcomes({ block, ground }: { block: Of<'outcomes'>; ground: string }) 
 }
 
 /* ------------------------------------------------------------ evidence */
-
-const STAT_HUES = ['var(--gk-yellow)', 'var(--gk-teal-lift)', 'var(--gk-coral-lift)']
 
 /** The figures over the same session footage the homepage's proof band uses. */
 function Evidence({ block }: { block: Of<'stats'> }) {
@@ -1019,7 +1134,7 @@ function Evidence({ block }: { block: Of<'stats'> }) {
 
       <div className="shell relative">
         <Reveal>
-          <Title heading={block.headline} className="max-w-[24ch]" />
+          <Title heading={block.headline} label="the evidence" className="max-w-[24ch]" />
         </Reveal>
         <dl className="mt-14 grid gap-10 sm:grid-cols-3">
           {block.stats.map((stat, i) => (
@@ -1030,7 +1145,7 @@ function Evidence({ block }: { block: Of<'stats'> }) {
                   value={stat.value}
                   suffix={stat.suffix}
                   className="text-[length:clamp(3.5rem,7vw,5.5rem)]"
-                  style={{ color: STAT_HUES[i % STAT_HUES.length] }}
+                  style={{ color: 'var(--gk-yellow)' }}
                 />
               </dd>
               <dd aria-hidden="true" className="max-w-[26ch] text-[length:var(--fs-lg)] leading-snug text-white">
@@ -1040,8 +1155,10 @@ function Evidence({ block }: { block: Of<'stats'> }) {
           ))}
         </dl>
         {block.testimonial && (
-          <div className="mt-20 border-t border-[var(--hairline-inverse)] pt-14 lg:max-w-[52rem]">
-            <Quote audience={block.testimonial} onDark />
+          <div className="mt-20 border-t border-[var(--hairline-inverse)] pt-14">
+            <div className="lg:max-w-[52rem]">
+              <Quote audience={block.testimonial} onDark />
+            </div>
           </div>
         )}
       </div>
@@ -1133,7 +1250,7 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
   return (
     <Band ground={ground}>
       <Reveal>
-        <Title heading={block.headline} className="max-w-[24ch]" />
+        <Title heading={block.headline} label="in practice" className="max-w-[24ch]" />
       </Reveal>
       {/* The grid reveals as one, so a tall card never leaves a hole while the
           smaller ones beside it have already arrived. */}
@@ -1148,8 +1265,8 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
             </div>
           </div>
         ) : block.stories.length === 1 ? (
-          <div className="relative grid overflow-hidden rounded-[var(--r-lg)] bg-[var(--gk-white)] md:grid-cols-2">
-            <div className="dissolve-r relative min-h-[18rem]">
+          <div className="relative grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid-cols-2">
+            <div className="dissolve-b-r relative min-h-[18rem]">
               <img src={lead.image} alt={lead.imageAlt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
             </div>
             <div className="flex flex-col justify-center gap-4 p-8 md:py-14 md:pr-14 md:pl-4">
@@ -1159,7 +1276,7 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
             </div>
           </div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-12">
+          <div className="grid items-start gap-6 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <StoryCard story={lead} tall />
             </div>
@@ -1197,7 +1314,7 @@ function StoryCard({ story, wide = false, tall = false, side = false }: { story:
         !wide && 'flex flex-col',
       )}
     >
-      <div className={cn('relative', wide ? 'min-h-[15rem]' : side ? 'aspect-[16/7]' : tall ? 'min-h-[20rem] flex-1' : 'aspect-[16/10]')}>
+      <div className={cn('relative', wide ? 'min-h-[15rem]' : side ? 'aspect-[16/7]' : tall ? 'aspect-[4/3]' : 'aspect-[16/10]')}>
         <img src={story.image} alt={story.imageAlt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       </div>
       <div className={cn('flex flex-col gap-3', !tall && 'flex-1', wide ? 'justify-center p-8 md:p-12' : side ? 'justify-center p-6' : 'p-8')}>
@@ -1217,7 +1334,7 @@ function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) 
     <Band ground={ground}>
       {(block.headline || block.opening) && (
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-          {block.headline && <Title heading={block.headline} className="max-w-[18ch] lg:col-span-5" />}
+          {block.headline && <Title heading={block.headline} label="our programs" className="max-w-[18ch] lg:col-span-5" />}
           <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
             {block.opening?.map((paragraph, i) => (
               <p key={i} className="lead">
@@ -1228,14 +1345,17 @@ function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) 
         </Reveal>
       )}
       {/* Subgrid rows, so the two columns' labels and buttons share a line. */}
-      <Reveal className="mt-12 grid gap-12 md:grid-cols-2 md:grid-rows-[auto_auto_auto_1fr_auto] md:gap-x-0 md:gap-y-4">
+      <Reveal className="mt-12 grid gap-12 md:grid-cols-2 md:grid-rows-[auto_auto_auto_auto_1fr_auto] md:gap-x-0 md:gap-y-4">
         {block.cards.map((card, i) => (
           <article
             key={card.title}
-            className={cn('flex flex-col gap-4 rounded-[var(--r-lg)] p-8 md:row-span-5 md:grid md:grid-rows-subgrid md:p-10', i === 0 ? 'md:mr-3' : 'md:ml-3')}
-            style={{ background: i === 0 ? 'var(--gk-yellow-tint)' : 'var(--gk-blue-tint)' }}
+            className={cn('flex flex-col gap-4 rounded-[var(--r-lg)] p-8 md:row-span-6 md:grid md:grid-rows-subgrid md:p-10', i === 0 ? 'md:mr-3' : 'md:ml-3')}
+            style={{ background: (PAGE_THEMES[card.cta.to] ?? BLUE).ground }}
           >
-            <Label>{card.eyebrow}</Label>
+            <div className="dissolve-b -mx-8 -mt-8 aspect-[16/8] overflow-hidden rounded-t-[var(--r-lg)] md:-mx-10 md:-mt-10">
+              <img src={card.photo.src} alt={card.photo.alt} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+            </div>
+            <Label color={(PAGE_THEMES[card.cta.to] ?? BLUE).label}>{card.eyebrow}</Label>
             <h2 className="text-[length:clamp(1.625rem,2.6vw,2.25rem)] leading-tight font-extrabold">{card.title}</h2>
             <p className="max-w-[52ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">{card.body}</p>
             {card.facts ? (
@@ -1243,7 +1363,7 @@ function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) 
                 {card.facts.map((fact) => (
                   <div key={fact.label} className="text-[length:var(--fs-base)] leading-relaxed">
                     <dt className="inline font-bold">{fact.label}. </dt>
-                    <dd className="inline">{fact.label === 'Next cohort' ? <Marker>{fact.value}</Marker> : fact.value}</dd>
+                    <dd className={cn('inline', fact.label === 'Next cohort' && 'font-bold')}>{fact.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -1307,35 +1427,57 @@ function Compare({ block, ground }: { block: Of<'compare'>; ground: string }) {
 
 /* ------------------------------------------------------------- related */
 
-/* The homepage "What we do" card tints, so sibling pages read in the same
-   language the homepage already taught. */
-const CARD_THEMES = [
-  { ground: 'var(--gk-yellow-tint)', label: 'var(--gk-yellow-ink)' },
-  { ground: 'var(--gk-blue-tint)', label: 'var(--gk-blue-deep)' },
-  { ground: 'var(--gk-coral-tint)', label: 'var(--gk-coral-ink)' },
-  { ground: 'var(--gk-teal-tint)', label: 'var(--gk-teal-ink)' },
-]
+/* The homepage "What we do" card tints, fixed per page, so a service is the
+   same colour wherever it is offered and the programs keep the colours of
+   their cards on the overview. */
+const YELLOW = { ground: 'var(--gk-yellow-tint)', label: 'var(--gk-yellow-ink)' }
+const BLUE = { ground: 'var(--gk-blue-tint)', label: 'var(--gk-blue-deep)' }
+const CORAL = { ground: 'var(--gk-coral-tint)', label: 'var(--gk-coral-ink)' }
+const TEAL = { ground: 'var(--gk-teal-tint)', label: 'var(--gk-teal-ink)' }
+const PAGE_THEMES: Record<string, typeof YELLOW> = {
+  '/services/impact-and-measurement-strategy': YELLOW,
+  '/services/data-systems-and-workflows': BLUE,
+  '/services/dashboards-and-reporting': CORAL,
+  '/services/data-adoption-and-capacity-building': TEAL,
+  '/programs/kickstarter': YELLOW,
+  '/programs/data-literacy': TEAL,
+}
+
+/* Each sibling page's card opens on a photograph of that kind of work. */
+const PAGE_PHOTOS: Record<string, string> = {
+  '/services/impact-and-measurement-strategy': '/photos/case-peepul.webp',
+  '/services/data-systems-and-workflows': '/photos/phase-build-b.webp',
+  '/services/dashboards-and-reporting': '/photos/case-vanavil.webp',
+  '/services/data-adoption-and-capacity-building': '/photos/aud-eco-1.webp',
+  '/programs/kickstarter': '/photos/aud-early-2.webp',
+  '/programs/data-literacy': '/photos/aud-mature-3.webp',
+}
 
 /** Sibling pages as the homepage's tinted cards, each card a link. */
 function RelatedList({ block, ground }: { block: Of<'related'>; ground: string }) {
   return (
-    <Band ground={ground}>
+    <Band ground={ground} decor={<BandArc start={196} sweep={58} color="var(--gk-coral)" className="hidden lg:block -top-60 -right-64 size-[30rem]" />}>
       <Reveal>
-        <Title heading={block.headline} className="max-w-[22ch]" />
+        <Title heading={block.headline} label="keep exploring" className="max-w-[22ch]" />
       </Reveal>
       <Reveal className="mt-10">
         <ul className={cn('grid gap-4 md:gap-5', block.items.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
-          {block.items.map((item, i) => {
-            const theme = CARD_THEMES[i % CARD_THEMES.length]
+          {block.items.map((item) => {
+            const theme = PAGE_THEMES[item.to] ?? BLUE
             return (
               <li key={item.to}>
                 <a
                   href={item.to}
-                  className="card-lift group flex h-full flex-col rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
+                  className="card-lift group flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
                   style={{ background: theme.ground }}
                 >
+                  {PAGE_PHOTOS[item.to] && (
+                    <div className="dissolve-b -mx-7 -mt-7 mb-2 aspect-[16/8] overflow-hidden md:-mx-8 md:-mt-8">
+                      <img src={PAGE_PHOTOS[item.to]} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                    </div>
+                  )}
                   <span className="text-[length:var(--fs-xs)] font-extrabold tracking-[var(--tracking-label)] uppercase" style={{ color: theme.label }}>
-                    {String(i + 1).padStart(2, '0')} / {item.label}
+                    {item.label}
                   </span>
                   <span className="mt-4 text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold text-balance">{item.title}</span>
                   <span className="mt-4 text-[length:var(--fs-base)] leading-relaxed">{item.body}</span>
@@ -1365,6 +1507,11 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
   const [active, setActive] = useState(block.options[0].id)
   const id = useId()
   const panel = useRef<HTMLDivElement>(null)
+  const region = useRef<HTMLDivElement>(null)
+  /* As the pinned region runs out, the switch fades rather than sliding up
+     under the header in a sliver. */
+  const { scrollYProgress: leaving } = useScroll({ target: region, offset: ['end 180px', 'end 100px'] })
+  const switchOpacity = useTransform(leaving, [0, 1], [1, 0])
   const option = block.options.find((o) => o.id === active) ?? block.options[0]
   /* Switching from deep in the page lands on the start of the new content,
      not in the middle of something else. */
@@ -1395,8 +1542,12 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
   return (
     <div>
       {/* Columns that pin inside this region clear the switch as well as the header. */}
-      <div className="[--pin-top:11rem]">
-        <div className="sticky top-20 z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)]">
+      <div ref={region} className="[--pin-top:11rem]">
+        {/* Pinned on desktop only: on a phone it would hold a sixth of the screen. */}
+        <motion.div
+          style={{ opacity: switchOpacity }}
+          className="z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)] lg:sticky lg:top-[82px]"
+        >
           <div className="shell flex items-center gap-x-5 py-2">
             <p id={`${id}-prompt`} className="hidden text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] sm:block">
               {block.prompt}
@@ -1432,8 +1583,8 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
               })}
             </div>
           </div>
-        </div>
-        <div ref={panel} role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`} className="scroll-mt-40 [&_h2]:scroll-mt-44">
+        </motion.div>
+        <div ref={panel} role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`} className="scroll-mt-[82px] lg:scroll-mt-[151px] [&_h2]:scroll-mt-44">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={option.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
               <Blocks blocks={body} startTone={tone} />
@@ -1451,7 +1602,11 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
 /** The homepage close, without its newsletter: one sentence, the buttons, the mark. */
 function Closing({ block }: { block: Of<'closing'> }) {
   return (
-    <section data-ground="navy" className="ground-navy accent-yellow relative overflow-hidden py-16 md:py-20" style={{ backgroundColor: 'var(--gk-navy)' }}>
+    <section
+      data-ground="navy"
+      className="ground-navy accent-yellow relative overflow-hidden py-16 md:py-20"
+      style={{ backgroundColor: 'var(--gk-navy)' }}
+    >
       <div className="shell relative grid items-center gap-10 lg:grid-cols-12">
         <div className="lg:col-span-8">
           <Reveal delay={0.12}>
@@ -1466,10 +1621,19 @@ function Closing({ block }: { block: Of<'closing'> }) {
           </Reveal>
         </div>
         <div className="flex justify-center lg:col-span-4">
-          <MarkAssembly size={170} settleAt={0.8} className="hidden lg:block" />
-          <MarkAssembly size={110} settleAt={0.85} className="lg:hidden" />
+          {block.mark ? (
+            <>
+              <MarkAssembly size={170} settleAt={0.8} className="hidden lg:block" />
+              <MarkAssembly size={110} settleAt={0.85} className="lg:hidden" />
+            </>
+          ) : null}
         </div>
       </div>
+      {!block.mark && (
+        <div aria-hidden="true" className="pointer-events-none absolute -right-28 -bottom-40 hidden lg:block">
+          <ClosingRing size={420} />
+        </div>
+      )}
     </section>
   )
 }
