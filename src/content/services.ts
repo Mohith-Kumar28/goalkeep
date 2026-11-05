@@ -1,11 +1,12 @@
-import { caseStudies, services } from './homepage'
+import { caseStudies } from './homepage'
 import { serviceTitle, toContact } from './pages'
-import type { Block, Page, Related, Story } from './pages'
+import type { Block, Page, Story } from './pages'
 import { vanavilStory } from './programs'
 
 /**
- * The four service pages. One template; the November services doc, verbatim
- * apart from typos. The homepage's "What we do" cards link here.
+ * The four service pages, one template. Copy, headings and section order are
+ * the November services doc, verbatim apart from typos and British spelling;
+ * nothing is added that the doc does not have.
  */
 
 const story = (slug: string): Story => {
@@ -16,43 +17,30 @@ const story = (slug: string): Story => {
 
 const workWithUs = { label: 'Work with us', to: toContact }
 
-const SLUGS: Record<string, string> = {
-  'Impact and measurement strategy': 'impact-and-measurement-strategy',
-  'Data systems and workflows': 'data-systems-and-workflows',
-  'Dashboards and reporting': 'dashboards-and-reporting',
-  'Data adoption and capacity-building': 'data-adoption-and-capacity-building',
-}
-
-/** The other three services, as the homepage describes them. */
-const otherServices = (title: string): Block => ({
-  kind: 'related',
-  headline: { lead: 'Other ways', em: 'we help.' },
-  items: services
-    .filter((s) => s.title !== title)
-    .map((s): Related => ({ label: s.label, title: s.title, body: s.body, to: `/services/${SLUGS[s.title]}` })),
-})
-
+const helpWhen = { lead: 'This service can', em: 'help when' }
 
 const dashboardsDistinction: Block = {
   kind: 'prose',
   tone: 'navy',
-  headline: { label: 'the bigger picture', lead: 'The dashboard is the visible layer of', em: 'a larger process.' },
+  headline: { lead: 'An important', em: 'distinction' },
   highlight: 'standalone visual-design exercise',
   paragraphs: [
     'Dashboarding is not treated as a standalone visual-design exercise or a promise to simply deliver a set of charts. If the measurement framework, definitions or underlying data system are not reliable, Goalkeep addresses those foundations as part of the engagement. The dashboard is the visible layer of a larger process that makes the information trustworthy and useful.',
   ],
 }
 
-const dashboardsDuration =
-  'Dashboard design, build and testing commonly take 4–8 weeks within a wider measurement or data-systems engagement, followed by an agreed maintenance and adoption period. The duration depends on the readiness of the underlying data and the number of user groups and views.'
+const dashboardsDuration: Block = {
+  kind: 'duration',
+  text: 'Dashboard design, build and testing commonly take 4–8 weeks within a wider measurement or data-systems engagement, followed by an agreed maintenance and adoption period. The duration depends on the readiness of the underlying data and the number of user groups and views.',
+  weeks: [4, 8],
+}
 
 export const servicePages: Array<Page & { slug: string }> = [
   {
     slug: 'impact-and-measurement-strategy',
     path: '/services/impact-and-measurement-strategy',
     title: 'Impact and measurement strategy — Goalkeep',
-    description:
-      'Turn your Theory of Change into a measurement framework your organisation can use.',
+    description: 'Turn your Theory of Change into a measurement framework your organisation can use.',
     contactService: serviceTitle('Impact and measurement strategy'),
     blocks: [
       {
@@ -60,13 +48,15 @@ export const servicePages: Array<Page & { slug: string }> = [
         eyebrow: 'impact and measurement strategy',
         headline: { lead: 'Turn your Theory of Change into a measurement framework', em: 'your organisation can use.' },
         lead: 'Your organisation may already have a Theory of Change, logframes, surveys, indicators and years of programme data. But as programmes grow, these pieces do not always add up to a clear picture of organisational impact.',
-        primary: workWithUs,
+        body: [
+          'We work with programme, MEL and leadership teams to clarify the outcomes that matter, the questions the organisation needs its data to answer, and the evidence required to answer them. The result is a measurement framework that is technically sound, realistic to implement and useful to the people who must work with it. It also gives leadership a clearer way to show funders and partners what change your program is creating and why.',
+        ],
         highlight: 'clear picture',
         photo: { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop' },
       },
       {
         kind: 'checklist',
-        headline: { lead: 'This service can', em: 'help when' },
+        headline: helpWhen,
         items: [
           'Your Theory of Change no longer reflects how your programmes have evolved.',
           'Different programmes or teams use different definitions, indicators or methods for similar outcomes.',
@@ -78,10 +68,7 @@ export const servicePages: Array<Page & { slug: string }> = [
       },
       {
         kind: 'deliverables',
-        headline: { lead: 'A framework that is sound,', em: 'and used.' },
-        opening: [
-          'We work with programme, MEL and leadership teams to clarify the outcomes that matter, the questions the organisation needs its data to answer, and the evidence required to answer them. The result is a measurement framework that is technically sound, realistic to implement and useful to the people who must work with it. It also gives leadership a clearer way to show funders and partners what change your program is creating and why.',
-        ],
+        headline: { lead: 'What you may', em: 'leave with' },
         items: [
           'A refined programme-level or organisation-level Theory of Change.',
           'A prioritised outcome and indicator framework.',
@@ -90,19 +77,11 @@ export const servicePages: Array<Page & { slug: string }> = [
           'A learning and reporting framework.',
           'A phased implementation roadmap with ownership and next steps.',
         ],
-        duration:
-          'Typically 6–8 weeks, depending on the number of programmes, stakeholder groups and the maturity of the existing framework.',
+        duration: 'Typically 6–8 weeks, depending on the number of programmes, stakeholder groups and the maturity of the existing framework.',
         weeks: [6, 8],
         visual: 'design',
       },
-      { kind: 'proof' },
-      {
-        kind: 'stories',
-        headline: { lead: 'What it looked like', em: 'at Peepul.' },
-        stories: [story('peepul-leadership-dashboard')],
-      },
-      otherServices('Impact and measurement strategy'),
-      { kind: 'partners' },
+      { kind: 'stories', stories: [story('peepul-leadership-dashboard')] },
       {
         kind: 'closing',
         headline: { lead: 'Are you ready to build a measurement framework', em: 'your team can use?' },
@@ -115,8 +94,7 @@ export const servicePages: Array<Page & { slug: string }> = [
     slug: 'data-systems-and-workflows',
     path: '/services/data-systems-and-workflows',
     title: 'Data systems and workflows — Goalkeep',
-    description:
-      'Build an integrated data system that is easier to use today and strong enough to grow with you.',
+    description: 'Build an integrated data system that is easier to use today and strong enough to grow with you.',
     contactService: serviceTitle('Data systems and workflows'),
     blocks: [
       {
@@ -124,14 +102,15 @@ export const servicePages: Array<Page & { slug: string }> = [
         eyebrow: 'data systems and workflows',
         headline: { lead: 'Build an integrated data system that is easier to use today and', em: 'strong enough to grow with you.' },
         lead: 'As organisations grow, their data infrastructure often grows one tracker at a time. Information becomes spread across spreadsheets, forms, databases and dashboards. Teams repeat data entry, spend hours consolidating reports and depend on a small number of people to locate or interpret essential information.',
-        primary: workWithUs,
-        secondary: { label: 'Explore Kickstarter', to: '/programs/kickstarter' },
+        body: [
+          'Goalkeep designs and builds fully integrated custom data systems that bring data entry, storage, management, transformation, analysis and insight into one connected experience. The system is shaped around the organisation’s programmes, terminology, roles and workflows, rather than being a templatised product. For early-stage nonprofits, this direction can be delivered through Goalkeep’s AI-enabled Kickstarter: a structured pathway from programme logic and measurement priorities to a usable system for entering, managing and making sense of data.',
+        ],
         highlight: 'one tracker at a time',
         photo: { src: '/photos/hero-04-pair.webp', alt: 'Two Goalkeep facilitators reviewing a data system on a tablet' },
       },
       {
         kind: 'checklist',
-        headline: { lead: 'This service can', em: 'help when' },
+        headline: helpWhen,
         items: [
           'Programme data is scattered across sheets, forms, folders and platforms.',
           'Teams enter the same information more than once or manually combine it for every report.',
@@ -144,26 +123,15 @@ export const servicePages: Array<Page & { slug: string }> = [
       {
         kind: 'prose',
         tone: 'navy',
-        headline: { label: 'how we build', lead: 'Open source at the core,', em: 'no lock-in.' },
+        headline: { lead: 'Technology', em: 'approach' },
         highlight: 'open-source data stack',
-        facts: [
-          { label: 'Database', value: 'PostgreSQL or Supabase' },
-          { label: 'Version control', value: 'GitHub' },
-          { label: 'Hosting', value: 'Vercel, where appropriate' },
-          { label: 'Chosen around', value: 'Your workflows, budget, existing systems, security needs and ability to maintain it' },
-        ],
         paragraphs: [
-          'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate.',
-          'The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
+          'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
         ],
       },
       {
         kind: 'deliverables',
-        headline: { lead: 'One connected system,', em: 'and the people to run it.' },
-        opening: [
-          'Goalkeep designs and builds fully integrated custom data systems that bring data entry, storage, management, transformation, analysis and insight into one connected experience. The system is shaped around the organisation’s programmes, terminology, roles and workflows, rather than being a templatised product.',
-          'For early-stage nonprofits, this direction can be delivered through Goalkeep’s AI-enabled Kickstarter: a structured pathway from programme logic and measurement priorities to a usable system for entering, managing and making sense of data.',
-        ],
+        headline: { lead: 'What you may', em: 'leave with' },
         items: [
           'A diagnostic of current data flows, tools, bottlenecks and risks.',
           'A system architecture and implementation roadmap.',
@@ -175,19 +143,15 @@ export const servicePages: Array<Page & { slug: string }> = [
           'User testing, training and a repeatable data-review process.',
           'Technical documentation, user guidance, maintenance support and a structured handover.',
         ],
-        duration:
-          'Typically 6–12 weeks for discovery, design and an initial build, followed by an agreed maintenance and adoption period. The duration varies with data complexity, migration requirements, integrations and the number of user workflows.',
-        weeks: [6, 12],
         visual: 'build',
       },
+      /* "[Apni Shala Case Study Card + testimonial of Sangeeta Zombade]" */
+      { kind: 'stories', stories: [story('apni-shala-indicators')], testimonial: 'early-stage' },
       {
-        kind: 'stories',
-        headline: { lead: 'What it looked like', em: 'at Apni Shala.' },
-        stories: [story('apni-shala-indicators')],
-        testimonial: 'early-stage',
+        kind: 'duration',
+        text: 'Typically 6–12 weeks for discovery, design and an initial build, followed by an agreed maintenance and adoption period. The duration varies with data complexity, migration requirements, integrations and the number of user workflows.',
+        weeks: [6, 12],
       },
-      otherServices('Data systems and workflows'),
-      { kind: 'partners' },
       {
         kind: 'closing',
         headline: { lead: 'Ready to build a data system around', em: 'how your organisation actually works?' },
@@ -200,32 +164,35 @@ export const servicePages: Array<Page & { slug: string }> = [
     slug: 'dashboards-and-reporting',
     path: '/services/dashboards-and-reporting',
     title: 'Dashboards and reporting — Goalkeep',
-    description:
-      'Build dashboards that answer real questions, not simply display available data. For nonprofits and funding organisations.',
+    description: 'Build dashboards that answer real questions—not simply display available data.',
     contactService: serviceTitle('Dashboards and reporting'),
     blocks: [
       {
         kind: 'hero',
         eyebrow: 'dashboards and reporting',
-        headline: { lead: 'Build dashboards that answer real questions,', em: 'not simply display available data.' },
+        headline: { lead: 'Build dashboards that answer real questions—', em: 'not simply display available data.' },
         lead: 'Many dashboards fail because they begin with the data that happens to be available. The result may contain dozens of charts but still leave programme teams, leaders and funders unable to answer the questions that matter.',
+        body: [
+          'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
+        ],
         highlight: 'happens to be available',
-        primary: workWithUs,
         photo: { src: '/photos/case-dashboard.webp', alt: 'A programme dashboard open on a laptop' },
       },
       {
+        /* "There should be an option here to select one of two identifiers:
+           funding organization or nonprofit. Basis that selection, they
+           should see different content for the remainder of the page." */
         kind: 'audienceSwitch',
-        prompt: 'I’m working with',
+        prompt: 'Show the page for',
         options: [
           {
             id: 'nonprofits',
-            label: 'A nonprofit',
-            short: 'Nonprofit',
+            label: 'For nonprofits',
+            short: 'Nonprofits',
             blocks: [
               {
                 kind: 'checklist',
-                headline: { lead: 'This service can', em: 'help when' },
-                intro: 'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
+                headline: helpWhen,
                 items: [
                   'Dashboards or reports exist, but people rarely use them.',
                   'Leadership, programme teams, MEL staff and funders need different levels of information.',
@@ -237,7 +204,7 @@ export const servicePages: Array<Page & { slug: string }> = [
               },
               {
                 kind: 'deliverables',
-                headline: { lead: 'Views built for', em: 'the people who use them.' },
+                headline: { lead: 'What you', em: 'leave with' },
                 items: [
                   'Role-specific dashboards or reporting views.',
                   'Useful filters by programme, location, beneficiary group, time period or other relevant dimensions.',
@@ -246,18 +213,11 @@ export const servicePages: Array<Page & { slug: string }> = [
                   'Data-review templates and routines that connect insight to action.',
                   'Documentation, maintenance support and handover.',
                 ],
-                duration: dashboardsDuration,
-                weeks: [4, 8],
                 visual: 'visualisation',
               },
               dashboardsDistinction,
-              {
-                kind: 'stories',
-                headline: { lead: 'What it looked like', em: 'at Vanavil.' },
-                stories: [vanavilStory],
-              },
-              otherServices('Dashboards and reporting'),
-              { kind: 'partners' },
+              { kind: 'stories', stories: [vanavilStory] },
+              dashboardsDuration,
               {
                 kind: 'closing',
                 headline: { lead: 'Ready to turn your data into answers', em: 'your team can act on?' },
@@ -268,13 +228,12 @@ export const servicePages: Array<Page & { slug: string }> = [
           },
           {
             id: 'funders',
-            label: 'A funding organisation',
-            short: 'Funder',
+            label: 'For funders',
+            short: 'Funders',
             blocks: [
               {
                 kind: 'checklist',
-                headline: { lead: 'This service can', em: 'help when' },
-                intro: 'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
+                headline: helpWhen,
                 items: [
                   'Grant, milestone and results information is spread across reports, spreadsheets, emails and individual portfolio managers.',
                   'Grantees use different indicators and definitions, so building a portfolio view means repeated clarification.',
@@ -286,7 +245,7 @@ export const servicePages: Array<Page & { slug: string }> = [
               },
               {
                 kind: 'deliverables',
-                headline: { lead: 'A portfolio view that keeps', em: 'every grantee’s context.' },
+                headline: { lead: 'What you', em: 'leave with' },
                 items: [
                   'A portfolio measurement framework linking funding priorities, grantee outcomes and leadership’s key questions.',
                   'Clear indicator definitions and reporting guidance that allow for differences between grantee programmes.',
@@ -295,15 +254,11 @@ export const servicePages: Array<Page & { slug: string }> = [
                   'Decision-ready information for portfolio reviews, renewals, resource allocation and targeted capacity-building support.',
                   'A clearer account of how you have contributed to grantee progress.',
                 ],
-                duration: dashboardsDuration,
-                weeks: [4, 8],
                 visual: 'visualisation',
               },
               dashboardsDistinction,
-              /* The BAT case study goes here once Goalkeep sends it. */
-              { kind: 'testimonial', audience: 'funders' },
-              otherServices('Dashboards and reporting'),
-              { kind: 'partners' },
+              /* "Add BAT case study [to be provided]": it goes here once Goalkeep sends it. */
+              dashboardsDuration,
               {
                 kind: 'closing',
                 headline: { lead: 'Ready to communicate portfolio-wide impact', em: 'with clarity?' },
@@ -320,22 +275,23 @@ export const servicePages: Array<Page & { slug: string }> = [
     slug: 'data-adoption-and-capacity-building',
     path: '/services/data-adoption-and-capacity-building',
     title: 'Data adoption and capacity-building — Goalkeep',
-    description:
-      'Build a data-confident workforce, not just a room of trained participants. Workshops, MEL knowledge partnerships and the Data Literacy Program.',
+    description: 'Build a data-confident workforce—not just a room of trained participants.',
     contactService: serviceTitle('Data adoption and capacity-building'),
     blocks: [
       {
         kind: 'hero',
         eyebrow: 'data adoption and capacity-building',
-        headline: { lead: 'Build a data-confident workforce,', em: 'not just a room of trained participants.' },
+        headline: { lead: 'Build a data-confident workforce—', em: 'not just a room of trained participants.' },
         lead: 'Nonprofits are collecting more data than ever, but the confidence and capability to use it have not always grown at the same pace. Dashboards and reports may exist while teams remain uncertain about how to interpret them, ask useful questions or translate insight into action.',
-        primary: workWithUs,
+        body: [
+          'Many conventional data trainings are too technical, generic or disconnected from programme realities. Goalkeep creates practical, role-sensitive learning experiences that help people use data in their everyday work. We combine technical depth, adult-learning principles, nonprofit examples and hands-on application so learning can become a habit rather than a one-off event.',
+        ],
         highlight: 'at the same pace',
         photo: { src: '/photos/phase-adopt-a.webp', alt: 'Participants working through data exercises together at a training session' },
       },
       {
         kind: 'checklist',
-        headline: { lead: 'This service can', em: 'help when' },
+        headline: helpWhen,
         items: [
           'Teams have access to data or dashboards but use them inconsistently.',
           'People lack confidence interpreting, visualising or communicating data.',
@@ -349,13 +305,10 @@ export const servicePages: Array<Page & { slug: string }> = [
       {
         kind: 'steps',
         layout: 'paths',
-        headline: { lead: 'Three ways to', em: 'work with Goalkeep.' },
-        intro: [
-          'Many conventional data trainings are too technical, generic or disconnected from programme realities. Goalkeep creates practical, role-sensitive learning experiences that help people use data in their everyday work. We combine technical depth, adult-learning principles, nonprofit examples and hands-on application so learning can become a habit rather than a one-off event.',
-        ],
+        headline: { lead: 'Ways to work', em: 'with Goalkeep' },
         steps: [
           {
-            title: 'Direct workshops with organisations',
+            title: '1. Direct workshops with organisations',
             photo: { src: '/photos/hero-01-workshop.webp', alt: 'A Goalkeep facilitator leading a data workshop with an organisation' },
             body: [
               'Goalkeep delivers ready-to-run or customised workshops directly with an organisation. Topics may include interpreting data, visualisation, basic analysis, communicating with data, operationalising a Theory of Change or logframe, essential data design, data culture, data modelling, optimising pipelines, preparing dashboard-ready tables and the responsible use of AI.',
@@ -367,22 +320,21 @@ export const servicePages: Array<Page & { slug: string }> = [
             ],
           },
           {
-            title: 'MEL knowledge partnership for ecosystem programmes',
+            title: '2. MEL knowledge partnership for ecosystem programmes',
             photo: { src: '/photos/aud-eco-1.webp', alt: 'A facilitator pointing out something on a worksheet to a participant' },
             body: [
-              'Goalkeep acts as the MEL knowledge partner or contributor to programmes run by funders, intermediaries and other ecosystem organisations. We can co-design the programme architecture, curriculum, cohort experience and implementation structures; facilitate workshops; create resources; mentor participants; and provide train-the-trainer support.',
-              'The partnership can be shaped around the MEL capability that the programme wants to build across its nonprofit partners.',
+              'Goalkeep acts as the MEL knowledge partner or contributor to programmes run by funders, intermediaries and other ecosystem organisations. We can co-design the programme architecture, curriculum, cohort experience and implementation structures; facilitate workshops; create resources; mentor participants; and provide train-the-trainer support. The partnership can be shaped around the MEL capability that the programme wants to build across its nonprofit partners.',
             ],
             ctas: [{ label: 'Partner with us', to: toContact }],
           },
           {
-            title: 'Goalkeep’s Data Literacy Program',
+            title: '3. Goalkeep’s Data Literacy Program',
             photo: { src: '/photos/aud-mature-3.webp', alt: 'A Data Literacy Program cohort gathered in front of the programme banner' },
             body: [
               'Goalkeep’s own Data Literacy Program is a cohort-based, train-the-trainer journey designed to help nonprofit professionals build data confidence and strengthen capability across their teams. It combines immersive workshops with assessment, practical resources, mentorship and implementation support so participants can apply the learning and enable others within their organisations.',
             ],
             ctas: [
-              { label: 'Explore the Data Literacy Program', to: '/programs/data-literacy' },
+              { label: 'Explore Data Literacy Program', to: '/programs/data-literacy' },
               { label: 'Fund a Data Literacy cohort', to: toContact },
             ],
           },
@@ -390,7 +342,7 @@ export const servicePages: Array<Page & { slug: string }> = [
       },
       {
         kind: 'deliverables',
-        headline: { lead: 'Learning that becomes', em: 'a habit.' },
+        headline: { lead: 'What participants or partners', em: 'may leave with' },
         visual: 'adopt',
         items: [
           'Greater confidence in interpreting, analysing, visualising and communicating data.',
@@ -401,12 +353,13 @@ export const servicePages: Array<Page & { slug: string }> = [
           'A curriculum and resource set for a cohort or ecosystem programme.',
           'A plan for sustaining capability beyond the engagement.',
         ],
-        duration:
-          'Direct workshops may range from four hours to three days. Custom learning journeys and ecosystem partnerships vary by cohort and scope. Goalkeep’s Data Literacy Program is typically a multi-month train-the-trainer journey combining workshops, mentorship and implementation support.',
       },
+      /* "[Testimonial from Homepage - of Freya Ray from Dasra]" */
       { kind: 'testimonial', audience: 'intermediary', tone: 'navy' },
-      otherServices('Data adoption and capacity-building'),
-      { kind: 'partners' },
+      {
+        kind: 'duration',
+        text: 'Direct workshops may range from four hours to three days. Custom learning journeys and ecosystem partnerships vary by cohort and scope. Goalkeep’s Data Literacy Program is typically a multi-month train-the-trainer journey combining workshops, mentorship and implementation support.',
+      },
       {
         kind: 'closing',
         headline: { lead: 'Ready to build the skills and routines that improve', em: 'your organisation’s data capacities?' },

@@ -4,7 +4,10 @@ import type { Page, Story } from './pages'
 
 /**
  * Programs: the overview and the Kickstarter and Data Literacy Program pages.
- * Copy is the November programs doc, verbatim apart from typos.
+ * Copy, headings and section order are the November programs doc, verbatim
+ * apart from typos and British spelling. Nothing is added that the doc does
+ * not have; the doc's section names ("Why Kickstarter exists") are the
+ * eyebrows.
  */
 
 const homepageStory = (slug: string, body: string): Story => {
@@ -28,81 +31,38 @@ export const programsPage: Page = {
   path: '/programs',
   title: 'Programs — Goalkeep',
   description:
-    'Goalkeep’s programs help social-purpose organisations build the data systems and the data skills that make information useful.',
+    'Goalkeep’s programs help social-purpose organisations strengthen two foundations of data use: the systems through which information flows and the capabilities people need to interpret and act on it.',
   contactService: serviceTitle('Data systems and workflows'),
   blocks: [
     {
       kind: 'hero',
       eyebrow: 'programs',
-      headline: { lead: 'Build the systems and skills that', em: 'make data useful.' },
+      headline: { lead: 'Build the systems and skills that', em: 'make data useful' },
       lead: 'Goalkeep’s programs help social-purpose organisations strengthen two foundations of data use: the systems through which information flows and the capabilities people need to interpret and act on it.',
-      highlight: 'two foundations of data use',
-      links: [
-        {
-          label: 'For early-stage nonprofits',
-          title: 'Kickstarter',
-          to: '/programs/kickstarter',
-          photo: { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
-        },
-        {
-          label: 'For cohorts of organisations',
-          title: 'Data Literacy Program',
-          to: '/programs/data-literacy',
-          photo: { src: '/photos/aud-mature-3.webp', alt: 'A Data Literacy Program cohort gathered in front of the programme banner' },
-        },
+      body: [
+        'Whether your organisation is building its first reliable data system or strengthening data confidence across its workforce, our programs combine technical expertise, practical learning and sustained adoption support. We also partner with funders and intermediaries to run either program across their portfolios or cohorts.',
       ],
+      highlight: 'two foundations of data use',
+      photo: { src: '/photos/aud-eco-2.webp', alt: 'A partner cohort group photograph at a convening' },
     },
     {
       kind: 'programs',
-      headline: { lead: 'Two programs,', em: 'one foundation each.' },
-      opening: [
-        'Whether your organisation is building its first reliable data system or strengthening data confidence across its workforce, our programs combine technical expertise, practical learning and sustained adoption support. We also partner with funders and intermediaries to run either program across their portfolios or cohorts.',
-      ],
       cards: [
         {
           eyebrow: 'Kickstarter',
           title: 'Build the data backbone your organisation needs to grow',
           body: 'A hands-on program for early-stage nonprofits that need a simple, integrated and usable data system. Work with Goalkeep to identify what matters, organise how it is captured and build a system that turns everyday data into useful insights for your programs.',
-          facts: [
-            { label: 'How it runs', value: 'Hands-on with your team: understand, design, build and adopt.' },
-            { label: 'Next cohort', value: 'January 2027' },
-          ],
           cta: { label: 'Explore Kickstarter', to: '/programs/kickstarter' },
-          photo: { src: '/photos/phase-build-a.webp', alt: 'A partner dashboard open on a laptop in the field' },
+          photo: { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
         },
         {
           eyebrow: 'Data Literacy Program',
           title: 'Build a data-confident workforce from within',
           body: 'A cohort-based, train-the-trainer program that equips organisational and MEL leaders to strengthen data literacy across their teams. Participants build foundational data skills, practise using AI responsibly and receive the resources and support to take the learnings back to improve the data culture in their respective organisations.',
-          facts: [
-            { label: 'How it runs', value: 'Cohort-based and train-the-trainer: two master trainers take the learning back.' },
-            { label: 'Next cohort', value: 'December 2026' },
-          ],
           cta: { label: 'Explore the Data Literacy Program', to: '/programs/data-literacy' },
-          photo: { src: '/photos/aud-eco-5.webp', alt: 'Cohort members working through data together around a table' },
+          photo: { src: '/photos/aud-mature-3.webp', alt: 'A Data Literacy Program cohort gathered in front of the programme banner' },
         },
       ],
-    },
-    {
-      kind: 'prose',
-      headline: { label: 'for funders and intermediaries', lead: 'Run either program across', em: 'your portfolio.' },
-      paragraphs: [
-        'We partner with funders and intermediaries to run either program across their portfolios or cohorts.',
-        'For the Data Literacy Program, Goalkeep leads the learning design, delivery, mentorship and measurement while you make the program available to the organisations you support.',
-      ],
-      highlight: 'across their portfolios or cohorts',
-      photo: { src: '/photos/aud-eco-2.webp', alt: 'A partner cohort group photograph at a convening' },
-      note: 'one cohort, many organisations',
-    },
-    { kind: 'testimonial', audience: 'intermediary', tone: 'navy' },
-    { kind: 'partners' },
-    {
-      kind: 'closing',
-      mark: true,
-      headline: { lead: 'Not sure which program', em: 'fits you?' },
-      body: 'Tell us where your organisation is today, and we will suggest the right place to start.',
-      primary: { label: 'Talk to us', to: toContact },
-      secondary: { label: 'Take the data culture quiz', to: '/resources/data-quiz' },
     },
   ],
 }
@@ -111,29 +71,31 @@ export const kickstarterPage: Page = {
   path: '/programs/kickstarter',
   title: 'Kickstarter — Goalkeep',
   description:
-    'Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits moving from scattered information to a simple, integrated data system their teams can use.',
+    'Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits that want to move from scattered information and manual reporting to a simple, integrated data system their teams can use.',
   contactService: serviceTitle('Data systems and workflows'),
   blocks: [
     {
       kind: 'hero',
       eyebrow: 'Kickstarter',
-      headline: { lead: 'Build the data backbone your organisation', em: 'needs to grow.' },
+      headline: { lead: 'Build the data backbone your organisation', em: 'needs to grow' },
       lead: 'Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits that want to move from scattered information and manual reporting to a simple, integrated data system their teams can use.',
-      primary: { label: 'Apply for the Kickstarter', to: toContact, note: 'Next cohort begins January\u00a02027' },
+      body: [
+        'Together, we identify the questions you want your data to answer for you, prioritise what should be measured and build a custom system that brings data entry, management, analysis and insight into one connected experience.',
+      ],
+      primary: { label: 'Apply for the Kickstarter', to: toContact, note: 'Next cohort begins January 2027' },
       secondary: { label: 'Partner with us to support a cohort', to: toContact },
       highlight: 'a simple, integrated data system',
       photo: { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
     },
     {
       kind: 'prose',
-      headline: { lead: 'Measuring impact should not depend on', em: 'the size of your organisation.' },
+      headline: { label: 'Why Kickstarter exists', lead: 'Measuring impact should not depend on', em: 'the size of your organisation' },
       highlight: 'long before they have the systems',
       photo: { src: '/photos/org-classroom.webp', alt: 'A programme session running in a village classroom' },
-      note: 'the change comes first, the evidence later',
       paragraphs: [
         'Early-stage nonprofits are often creating meaningful change long before they have the systems needed to demonstrate it.',
-        'Programme information may be spread across spreadsheets, forms, messages and individual team members. Founders spend time chasing updates, teams repeatedly clean and combine data only for reports, important patterns are noticed late, and communicating impact to funders depends on manually reconstructing the story. Meanwhile, little to none of the data is actually used to strengthen the programs and help team members move away from making decisions based on anecdotal evidence.',
-        'Kickstarter helps organisations build this foundation of data-driven decision making early, before fragmented processes become expensive, complicated systems.',
+        'Programme information may be spread across spreadsheets, forms, messages and individual team members. Founders spend time chasing updates, teams repeatedly clean and combine data only for reports, important patterns are noticed late, and communicating impact to funders depends on manually reconstructing the story. Meanwhile, none to little of the data is actually used to strengthen the programs and help team members move away from making decisions based on anecdotal evidence.',
+        'Kickstarter helps organisations build this foundation of data-driven decision making early—before fragmented processes become expensive, complicated systems.',
       ],
     },
     {
@@ -147,22 +109,22 @@ export const kickstarterPage: Page = {
         'Your founder or MEL lead is the only person who can make sense of the data.',
         'You need clearer evidence for strategy, programme reviews and funder conversations.',
         'You want a system that reflects your programme and workflows rather than a generic software product.',
-        'You don’t just want a dashboard but also guidance on how to drive better data adoption among your team.',
+        'You don’t just want a dashboard but also guidance on how to drive better data adoption rates among your team.',
       ],
     },
     {
       kind: 'steps',
       layout: 'rows',
-      headline: { lead: 'Four stages, from your programme', em: 'to a system people use.' },
-      intro: [
-        'Together, we identify the questions you want your data to answer for you, prioritise what should be measured and build a custom system that brings data entry, management, analysis and insight into one connected experience.',
-      ],
+      /* "Each header below should have some visual element that resembles
+         that word": the homepage's Design, Build and Adopt sequences, and
+         Understand's photograph. */
+      headline: { lead: 'How the program', em: 'works' },
       steps: [
         {
           title: 'Understand',
           photo: { src: '/photos/aud-early-2.webp', alt: 'A partner team around a meeting-room table during a working session' },
           visual: 'understand',
-          lead: 'We begin with your programme, people and decisions, not with technology.',
+          lead: 'We begin with your programme, people and decisions—not with technology.',
           body: [
             'Goalkeep works with leadership, programme, field and MEL team members to understand how the programme operates, how information currently moves and where the greatest friction lies. Together, we identify the questions the system must answer and the decisions those answers should support.',
           ],
@@ -199,11 +161,11 @@ export const kickstarterPage: Page = {
     },
     {
       kind: 'deliverables',
-      headline: { lead: 'From finding the information', em: 'to acting on it.' },
+      headline: { lead: 'What changes', em: 'after Kickstarter' },
       shift: {
-        beforeLabel: 'Before Kickstarter',
+        beforeLabel: 'Before Kickstarter, the question is often:',
         before: 'Where is the information, and who can put it together?',
-        afterLabel: 'After Kickstarter',
+        afterLabel: 'After Kickstarter, the conversation moves to:',
         after: 'What is the information telling us, and what should we do next?',
       },
       intro: 'A well-used Kickstarter system can help your organisation:',
@@ -218,33 +180,15 @@ export const kickstarterPage: Page = {
     },
     {
       kind: 'stories',
-      headline: { lead: 'See what organisations have done with', em: 'a stronger data foundation.' },
+      /* "Each story should link to a full case study": the links go on once
+         the case study pages exist. */
+      headline: { lead: 'See what organisations have done with', em: 'a stronger data foundation' },
       stories: [
         homepageStory('baithak-reporting', 'Using a more accessible data system in programme and funder conversations.'),
         vanavilStory,
         homepageStory('apni-shala-indicators', 'Using a priority learning metric to identify student needs earlier and plan interventions.'),
       ],
     },
-    { kind: 'testimonial', audience: 'early-stage', tone: 'navy' },
-    {
-      kind: 'related',
-      headline: { lead: 'Building skills', em: 'as well as systems?' },
-      items: [
-        {
-          label: 'Data Literacy Program',
-          title: 'Build a data-confident workforce from within',
-          body: 'A cohort-based, train-the-trainer program that equips organisational and MEL leaders to strengthen data literacy across their teams.',
-          to: '/programs/data-literacy',
-        },
-        {
-          label: 'Service',
-          title: 'Data systems and workflows',
-          body: 'For organisations past the early stage: integrated custom systems that bring data entry, storage, analysis and insight into one connected experience.',
-          to: '/services/data-systems-and-workflows',
-        },
-      ],
-    },
-    { kind: 'partners' },
     {
       kind: 'closing',
       headline: { lead: 'Ready to turn your messy data into a streamlined system', em: 'you can actually get insights from?' },
@@ -259,26 +203,29 @@ export const dataLiteracyPage: Page = {
   path: '/programs/data-literacy',
   title: 'Data Literacy Program — Goalkeep',
   description:
-    'A cohort-based, train-the-trainer program that builds data literacy, and the responsible use of AI, across social-purpose organisations.',
+    'The Data Literacy Program is Goalkeep’s cohort-based, train-the-trainer program for strengthening data capability across social-purpose organisations.',
   contactService: serviceTitle('Data adoption and capacity-building'),
   blocks: [
     {
       kind: 'hero',
       eyebrow: 'Data Literacy Program',
-      headline: { lead: 'Build a data\u2011confident workforce', em: 'at\u00a0your organisation.' },
+      headline: { lead: 'Build a data-confident workforce', em: 'at your organisation' },
       lead: 'The Data Literacy Program is Goalkeep’s cohort-based, train-the-trainer program for strengthening data capability across social-purpose organisations.',
-      primary: { label: 'Register your interest', to: toContact, note: 'Next cohort begins December\u00a02026' },
+      body: [
+        'Participants build foundational skills in interpreting, analysing, visualising and communicating data. They then receive the curriculum, practice and mentorship to run the training inside their own organisation and help build these data literacy skills among their colleagues.',
+        'The program also teaches participants how to leverage everyday AI tools responsibly into their work—while keeping foundational data skills, verification and human judgement at the centre.',
+      ],
+      primary: { label: 'Register your interest', to: toContact, note: 'Next cohort begins in December 2026' },
       secondary: { label: 'Partner with us to support a cohort', to: toContact },
       highlight: 'train-the-trainer program',
       photo: { src: '/photos/aud-mature-1.webp', alt: 'A facilitator speaking at a Data Literacy Program session' },
     },
     {
       kind: 'prose',
-      headline: { lead: 'Collecting more data has not automatically helped organisations', em: 'use it better.' },
+      headline: { label: 'Why the program exists', lead: 'Collecting more data has not automatically helped organisations', em: 'use it better' },
       highlight: 'MEL or data specialists',
       photo: { src: '/photos/aud-mature-2.webp', alt: 'Participants working on laptops around a training table' },
       photoPosition: 'center 75%',
-      note: 'practical, relevant, transferable',
       paragraphs: [
         'Many organisations now have dashboards, MIS platforms, surveys and reporting systems. Yet the ability to interpret and act on the information often remains concentrated with a small number of MEL or data specialists. Teams are often unsure how to separate an important pattern from a misleading one, turn an insight into a programme decision, communicate evidence and impact to different audiences, or judge when AI output can be trusted.',
         'Conventional training often fails because it is too technical, generic or disconnected from nonprofit work. The Data Literacy Program is designed to address these exact organisational gaps by teaching skills that are practical, relevant and transferable.',
@@ -286,7 +233,7 @@ export const dataLiteracyPage: Page = {
     },
     {
       kind: 'checklist',
-      headline: { lead: 'Designed for social-purpose organisations', em: 'that:' },
+      headline: { label: 'Who the program is for', lead: 'The program is designed for social-purpose organisations', em: 'that:' },
       items: [
         'Collect data but want it to inform more everyday decisions.',
         'Have dashboards or reports that are not being used consistently.',
@@ -308,10 +255,8 @@ export const dataLiteracyPage: Page = {
     {
       kind: 'steps',
       layout: 'bento',
-      headline: { lead: 'Five skills for', em: 'working with evidence.' },
-      intro: [
-        'Participants build foundational skills in interpreting, analysing, visualising and communicating data. They then receive the curriculum, practice and mentorship to run the training inside their own organisation and help build these data literacy skills among their colleagues.',
-      ],
+      /* "Each of these should be demonstrated with some visual supplement." */
+      headline: { lead: 'What participants', em: 'learn' },
       steps: [
         {
           title: 'Quantitative data analysis',
@@ -343,11 +288,8 @@ export const dataLiteracyPage: Page = {
     {
       kind: 'steps',
       layout: 'flow',
-      headline: { lead: 'Data literacy remains the core capability.', em: 'AI is an assistive layer.' },
-      intro: [
-        'The program also teaches participants how to bring everyday AI tools responsibly into their work, while keeping foundational data skills, verification and human judgement at the centre.',
-        'Every skill follows the same three-part approach.',
-      ],
+      headline: { label: 'How AI is integrated into the Program', lead: 'Data literacy remains the core capability.', em: 'AI is an assistive layer.' },
+      intro: ['Every skill follows the same three-part approach:'],
       outro: 'The goal is not to automate unrelated organisational processes. AI use remains anchored in helping people work with data more thoughtfully and efficiently.',
       steps: [
         {
@@ -366,7 +308,7 @@ export const dataLiteracyPage: Page = {
     },
     {
       kind: 'outcomes',
-      headline: { lead: 'Capability that stays', em: 'inside the organisation.' },
+      headline: { lead: 'What the program is', em: 'designed to change' },
       photo: { src: '/photos/phase-adopt-training-b.webp', alt: 'Participants working through a data exercise together at a Data Literacy Program session' },
       items: [
         {
@@ -375,7 +317,7 @@ export const dataLiteracyPage: Page = {
         },
         {
           title: 'Capability that is internally owned',
-          body: 'Organisations can incorporate adapted learning into onboarding, annual training, programme reviews or manager development, reducing dependence on external trainers.',
+          body: 'Organisations can incorporate adapted learning into onboarding, annual training, programme reviews or manager development—reducing dependence on external trainers.',
         },
         {
           title: 'Responsible use of AI',
@@ -393,32 +335,16 @@ export const dataLiteracyPage: Page = {
     },
     {
       kind: 'stats',
-      headline: { lead: 'Learning that', em: 'travels.' },
+      headline: { lead: 'Evidence from', em: 'previous cohorts' },
       stats: [
         { value: 42, label: 'participants trained' },
-        { value: 700, suffix: '+', label: 'colleagues that participants have collectively trained at their organisations' },
+        { value: 700, suffix: '+', label: 'colleagues who participants have collectively trained at their organisations' },
         { value: 76, suffix: '%', label: 'of assessed participants improved in at least one data-literacy skill' },
       ],
-      testimonial: 'data-mature',
     },
-    {
-      kind: 'related',
-      headline: { lead: 'Need the system', em: 'as well as the skills?' },
-      items: [
-        {
-          label: 'Kickstarter',
-          title: 'Build the data backbone your organisation needs to grow',
-          body: 'A hands-on program for early-stage nonprofits that need a simple, integrated and usable data system.',
-          to: '/programs/kickstarter',
-        },
-        {
-          label: 'Service',
-          title: 'Data adoption and capacity-building',
-          body: 'Direct workshops, MEL knowledge partnerships for ecosystem programmes, and custom learning journeys built around your own data.',
-          to: '/services/data-adoption-and-capacity-building',
-        },
-      ],
-    },
+    /* "Credibility proof section - take testimonial and image from the
+       homepage section (Perwinder Singh - Sanjhi Sakhiya)". */
+    { kind: 'testimonial', audience: 'data-mature' },
     {
       kind: 'faq',
       headline: { lead: 'Frequently asked', em: 'questions' },
@@ -449,10 +375,9 @@ export const dataLiteracyPage: Page = {
         },
       ],
     },
-    { kind: 'partners' },
     {
       kind: 'closing',
-      headline: { lead: 'Help data capability travel', em: 'beyond the MEL team.' },
+      headline: { lead: 'Help data capability travel', em: 'beyond the MEL team' },
       body: 'Equip leaders within your organisation to build confidence, strengthen everyday data use and enable colleagues across roles to become more data-driven in their decision making.',
       primary: { label: 'Register your interest', to: toContact },
       secondary: { label: 'Partner with Goalkeep to fund a cohort', to: toContact },

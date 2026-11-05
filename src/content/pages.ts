@@ -58,8 +58,10 @@ export type Block =
       kind: 'hero'
       eyebrow: string
       headline: Heading
-      /** One paragraph. Anything longer opens the section it introduces. */
+      /** The doc's first hero paragraph, set as the lead. */
       lead: string
+      /** The doc's further hero paragraphs, in order. */
+      body?: Array<string>
       /** A phrase in the lead that takes the highlighter. */
       highlight?: string
       primary?: Cta & { note?: string }
@@ -141,12 +143,15 @@ export type Block =
     }
   | {
       kind: 'stories'
-      headline: Heading
+      /** Optional: the services doc places a case study card with no heading. */
+      headline?: Heading
       stories: Array<Story>
       /** A homepage testimonial beside a single story. */
       testimonial?: AudienceId
     }
   | { kind: 'testimonial'; audience: AudienceId; tone?: 'navy' }
+  /** "Indicative duration", where the doc places it on its own. */
+  | { kind: 'duration'; text: string; weeks?: [number, number] }
   | { kind: 'faq'; headline: Heading; items: Array<{ question: string; answer: string }> }
   | {
       kind: 'programs'

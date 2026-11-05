@@ -129,6 +129,14 @@ function BlockView({ block, ground, tone }: { block: Block; ground: string; tone
       return <RelatedList block={block} ground={ground} />
     case 'audienceSwitch':
       return <AudienceSwitch block={block} tone={tone} />
+    case 'duration':
+      return (
+        <Band ground={ground}>
+          <div className="max-w-[48rem]">
+            <Duration text={block.text} weeks={block.weeks} />
+          </div>
+        </Band>
+      )
     case 'closing':
       return <Closing block={block} />
   }
@@ -179,9 +187,8 @@ const whole = (text: string) =>
   )
 
 /**
- * A band's heading. Most bands also carry the homepage's eyebrow above it,
- * naming the section the way the client's documents do; a content file can
- * name it itself with `heading.label`.
+ * A band's heading, with the homepage's eyebrow above it where the doc names
+ * the section (`heading.label`, e.g. "Why Kickstarter exists").
  */
 function Title({ heading, as: As = 'h2', label, className }: { heading: Heading; as?: 'h1' | 'h2'; label?: string; className?: string }) {
   const eyebrow = heading.label ?? label
@@ -190,7 +197,7 @@ function Title({ heading, as: As = 'h2', label, className }: { heading: Heading;
       {whole(heading.lead)}
       {heading.em && (
         <>
-          {' '}
+          {heading.lead.endsWith('—') ? '' : ' '}
           <em>{heading.em}</em>
         </>
       )}
@@ -209,7 +216,7 @@ function Title({ heading, as: As = 'h2', label, className }: { heading: Heading;
         {whole(heading.lead)}
         {heading.em && (
           <>
-            {' '}
+            {heading.lead.endsWith('—') ? '' : ' '}
             <em>{heading.em}</em>
           </>
         )}
@@ -410,6 +417,11 @@ function Hero({ block }: { block: Of<'hero'> }) {
           <p className="lead mt-6 max-w-[48ch]">
             <Highlighted text={block.lead} phrase={block.highlight} hue="var(--gk-white)" />
           </p>
+          {block.body?.map((paragraph, i) => (
+            <p key={i} className="mt-4 max-w-[56ch] text-[length:var(--fs-base)] leading-relaxed text-white/80">
+              {paragraph}
+            </p>
+          ))}
 
           {(block.primary || block.secondary) && (
             <div className="mt-9 flex flex-col items-stretch gap-x-6 gap-y-4 sm:flex-row sm:flex-wrap sm:items-center">
@@ -464,7 +476,7 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
       <div className="shell relative">
         {block.photo && <PhonePhoto photo={block.photo} />}
         <Reveal className={cn('flex flex-col gap-6', block.photo ? 'lg:ml-[46%] lg:max-w-[40rem]' : 'max-w-[60rem]')}>
-          <Title heading={block.headline} label="why it matters" className="max-w-[20ch]" />
+          <Title heading={block.headline} className="max-w-[20ch]" />
           <p className="lead max-w-[56ch]">
             <Highlighted text={first} phrase={block.note ? undefined : block.highlight} />
           </p>
@@ -584,12 +596,11 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
 
   const heading = (
     <>
-      <Title heading={block.headline} label="is this for you" className="max-w-[18ch]" />
+      <Title heading={block.headline} className="max-w-[18ch]" />
       {block.intro && <p className="mt-5 max-w-[48ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">{block.intro}</p>}
       <HandNote mark="underline" tilt={-1.5} className="mt-5">
         tick what sounds familiar
       </HandNote>
-      <p className="mt-3 max-w-[30ch] text-[length:var(--fs-sm)] text-[var(--fg-2)]">Nothing is saved. It is just for you.</p>
     </>
   )
 
@@ -677,7 +688,7 @@ function Steps({ block, ground }: { block: Of<'steps'>; ground: string }) {
 function StepsHeader({ block, className }: { block: Of<'steps'>; className?: string }) {
   return (
     <Reveal className={cn('grid gap-6 lg:grid-cols-12 lg:gap-12', className)}>
-      <Title heading={block.headline} label={STEPS_LABELS[block.layout]} className="max-w-[18ch] lg:col-span-5" />
+      <Title heading={block.headline} className="max-w-[18ch] lg:col-span-5" />
       {block.intro && (
         <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
           {block.intro.map((line, i) => (
@@ -693,12 +704,6 @@ function StepsHeader({ block, className }: { block: Of<'steps'>; className?: str
 
 const number = (i: number) => String(i + 1).padStart(2, '0')
 
-const STEPS_LABELS: Record<Of<'steps'>['layout'], string> = {
-  rows: 'how it works',
-  bento: 'what you learn',
-  flow: 'how it runs',
-  paths: 'ways in',
-}
 
 /* The homepage's approach sequences, played in the open stage that shares
    their name: the client-approved Design board, Build ticks and Adopt row. */
@@ -950,7 +955,7 @@ function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: st
     return (
       <Band ground={ground} accent="accent-coral">
         <Reveal className="mb-12">
-          <Title heading={block.headline} label="before and after" className="max-w-[22ch]" />
+          <Title heading={block.headline} className="max-w-[22ch]" />
         </Reveal>
         <Shift shift={block.shift} />
         <Reveal className="mt-14">
@@ -966,7 +971,7 @@ function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: st
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
           <Reveal className="lg:sticky lg:top-[var(--pin-top,8rem)]">
-            <Title heading={block.headline} label="what you leave with" className="max-w-[18ch]" />
+            <Title heading={block.headline} className="max-w-[18ch]" />
             {block.opening?.map((paragraph, i) => (
               <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]'}>
                 {paragraph}
@@ -1095,7 +1100,7 @@ function Outcomes({ block, ground }: { block: Of<'outcomes'>; ground: string }) 
         <Reveal className="lg:col-span-4">
           {/* Pinned unless a photograph fills the column under it. */}
           <div className={block.photo ? undefined : 'lg:sticky lg:top-[var(--pin-top,8rem)]'}>
-            <Title heading={block.headline} label="what changes" className="max-w-[16ch]" />
+            <Title heading={block.headline} className="max-w-[16ch]" />
           </div>
         </Reveal>
         <Reveal className="lg:col-span-8">
@@ -1134,7 +1139,7 @@ function Evidence({ block }: { block: Of<'stats'> }) {
 
       <div className="shell relative">
         <Reveal>
-          <Title heading={block.headline} label="the evidence" className="max-w-[24ch]" />
+          <Title heading={block.headline} className="max-w-[24ch]" />
         </Reveal>
         <dl className="mt-14 grid gap-10 sm:grid-cols-3">
           {block.stats.map((stat, i) => (
@@ -1249,12 +1254,14 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
 
   return (
     <Band ground={ground}>
-      <Reveal>
-        <Title heading={block.headline} label="in practice" className="max-w-[24ch]" />
-      </Reveal>
+      {block.headline && (
+        <Reveal className="mb-12">
+          <Title heading={block.headline} className="max-w-[24ch]" />
+        </Reveal>
+      )}
       {/* The grid reveals as one, so a tall card never leaves a hole while the
           smaller ones beside it have already arrived. */}
-      <Reveal className="mt-12">
+      <Reveal>
         {block.stories.length === 1 && block.testimonial ? (
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-5">
@@ -1334,7 +1341,7 @@ function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) 
     <Band ground={ground}>
       {(block.headline || block.opening) && (
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-          {block.headline && <Title heading={block.headline} label="our programs" className="max-w-[18ch] lg:col-span-5" />}
+          {block.headline && <Title heading={block.headline} className="max-w-[18ch] lg:col-span-5" />}
           <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
             {block.opening?.map((paragraph, i) => (
               <p key={i} className="lead">
@@ -1458,7 +1465,7 @@ function RelatedList({ block, ground }: { block: Of<'related'>; ground: string }
   return (
     <Band ground={ground} decor={<BandArc start={196} sweep={58} color="var(--gk-coral)" className="hidden lg:block -top-60 -right-64 size-[30rem]" />}>
       <Reveal>
-        <Title heading={block.headline} label="keep exploring" className="max-w-[22ch]" />
+        <Title heading={block.headline} className="max-w-[22ch]" />
       </Reveal>
       <Reveal className="mt-10">
         <ul className={cn('grid gap-4 md:gap-5', block.items.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
