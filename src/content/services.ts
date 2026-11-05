@@ -93,6 +93,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         duration:
           'Typically 6–8 weeks, depending on the number of programmes, stakeholder groups and the maturity of the existing framework.',
         weeks: [6, 8],
+        visual: 'design',
       },
       { kind: 'proof' },
       {
@@ -145,6 +146,12 @@ export const servicePages: Array<Page & { slug: string }> = [
         tone: 'navy',
         headline: { lead: 'Open source at the core,', em: 'no lock-in.' },
         highlight: 'open-source data stack',
+        facts: [
+          { label: 'Database', value: 'PostgreSQL or Supabase' },
+          { label: 'Version control', value: 'GitHub' },
+          { label: 'Hosting', value: 'Vercel, where appropriate' },
+          { label: 'Chosen around', value: 'Your workflows, budget, existing systems, security needs and ability to maintain it' },
+        ],
         paragraphs: [
           'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate.',
           'The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
@@ -171,6 +178,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         duration:
           'Typically 6–12 weeks for discovery, design and an initial build, followed by an agreed maintenance and adoption period. The duration varies with data complexity, migration requirements, integrations and the number of user workflows.',
         weeks: [6, 12],
+        visual: 'build',
       },
       {
         kind: 'stories',
@@ -240,6 +248,7 @@ export const servicePages: Array<Page & { slug: string }> = [
                 ],
                 duration: dashboardsDuration,
                 weeks: [4, 8],
+                visual: 'visualisation',
               },
               dashboardsDistinction,
               {
@@ -288,6 +297,7 @@ export const servicePages: Array<Page & { slug: string }> = [
                 ],
                 duration: dashboardsDuration,
                 weeks: [4, 8],
+                visual: 'visualisation',
               },
               dashboardsDistinction,
               /* The BAT case study goes here once Goalkeep sends it. */
@@ -381,6 +391,7 @@ export const servicePages: Array<Page & { slug: string }> = [
       {
         kind: 'deliverables',
         headline: { lead: 'Learning that becomes', em: 'a habit.' },
+        visual: 'adopt',
         items: [
           'Greater confidence in interpreting, analysing, visualising and communicating data.',
           'Practical frameworks, templates and tools that can be used in everyday work.',

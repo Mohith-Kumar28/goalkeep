@@ -28,7 +28,9 @@ export function Reveal({
       className={cn(className)}
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      /* A tall group (a list, a grid) starts as soon as its top is in view;
+         a share of its height would leave a phone screen blank. */
+      viewport={{ once: true, amount: 0, margin: '0px 0px -10% 0px' }}
       transition={{
         duration: 0.4,
         delay,

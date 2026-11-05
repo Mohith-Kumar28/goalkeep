@@ -76,8 +76,12 @@ export type Block =
       /** A phrase in the first paragraph that takes the highlighter. */
       highlight?: string
       photo?: Photo
+      /** Where the bleed crop holds, e.g. 'center 75%'. */
+      photoPosition?: string
       /** A handwritten note beside the photograph. */
       note?: string
+      /** Label and value pairs set beside a navy statement. */
+      facts?: Array<{ label: string; value: string }>
     }
   | {
       kind: 'checklist'
@@ -113,6 +117,8 @@ export type Block =
       duration?: string
       /** The duration's range in weeks, drawn on a ruler. */
       weeks?: [number, number]
+      /** The service's drawing, under the opening. */
+      visual?: VisualName
     }
   | {
       kind: 'outcomes'

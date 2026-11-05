@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import type { Variants } from 'motion/react'
 import { createContext, useContext } from 'react'
-import type { ReactElement, ReactNode } from 'react'
+import type { CSSProperties, ReactElement, ReactNode } from 'react'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 export type VisualName =
@@ -490,17 +490,37 @@ const VISUALS: Record<VisualName, () => ReactElement> = {
   communication: Communication,
 }
 
+/* On navy the drawings keep their colour logic: every hue they use is a
+   token, so re-pointing the tokens inside the wrapper swaps the palette for
+   the lifted one, boards become a translucent white and ink becomes white. */
+const ON_DARK = {
+  '--gk-navy': 'var(--gk-white)',
+  '--gk-ink': 'var(--gk-white)',
+  '--gk-blue': 'var(--gk-blue-lift)',
+  '--gk-teal': 'var(--gk-teal-lift)',
+  '--gk-coral': 'var(--gk-coral-lift)',
+  '--gk-yellow-deep': 'var(--gk-yellow)',
+  '--hairline-strong': 'rgb(255 255 255 / 0.35)',
+  '--gk-white': 'rgb(255 255 255 / 0.10)',
+  '--gk-blue-tint': 'rgb(143 168 232 / 0.28)',
+  '--gk-teal-tint': 'rgb(95 201 186 / 0.28)',
+  '--gk-coral-tint': 'rgb(240 165 140 / 0.28)',
+  '--gk-yellow-tint': 'rgb(234 196 82 / 0.28)',
+} as CSSProperties
+
 export function ProgramVisual({
   name,
   className,
+  onDark = false,
 }: {
   name: VisualName
   className?: string
+  onDark?: boolean
 }) {
   const reduced = useReducedMotion()
   const Visual = VISUALS[name]
   return (
-    <div className={className}>
+    <div className={className} style={onDark ? ON_DARK : undefined}>
       <ReducedContext.Provider value={reduced}>
         <Visual />
       </ReducedContext.Provider>

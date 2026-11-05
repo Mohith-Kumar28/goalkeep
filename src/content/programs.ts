@@ -264,7 +264,7 @@ export const dataLiteracyPage: Page = {
     {
       kind: 'hero',
       eyebrow: 'Data Literacy Program',
-      headline: { lead: 'Build a data\u2011confident workforce', em: 'at your organisation.' },
+      headline: { lead: 'Build a data\u2011confident workforce', em: 'at\u00a0your organisation.' },
       lead: 'The Data Literacy Program is Goalkeep’s cohort-based, train-the-trainer program for strengthening data capability across social-purpose organisations.',
       primary: { label: 'Register your interest', to: toContact, note: 'Next cohort begins December\u00a02026' },
       secondary: { label: 'Partner with us to support a cohort', to: toContact },
@@ -276,6 +276,7 @@ export const dataLiteracyPage: Page = {
       headline: { lead: 'Collecting more data has not automatically helped organisations', em: 'use it better.' },
       highlight: 'MEL or data specialists',
       photo: { src: '/photos/aud-mature-2.webp', alt: 'Participants working on laptops around a training table' },
+      photoPosition: 'center 75%',
       note: 'practical, relevant, transferable',
       paragraphs: [
         'Many organisations now have dashboards, MIS platforms, surveys and reporting systems. Yet the ability to interpret and act on the information often remains concentrated with a small number of MEL or data specialists. Teams are often unsure how to separate an important pattern from a misleading one, turn an insight into a programme decision, communicate evidence and impact to different audiences, or judge when AI output can be trusted.',

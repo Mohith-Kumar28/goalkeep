@@ -67,7 +67,7 @@ function ContactAside() {
         alt="The Goalkeep team with a partner organisation after a workshop"
         loading="lazy"
         decoding="async"
-        className="dissolve-soft aspect-[4/3] w-full object-cover"
+        className="dissolve-b aspect-[4/3] w-full object-cover"
       />
       <p className="mt-2 max-w-[36ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-2)]">
         Someone from this team reads every message and writes back.
@@ -316,10 +316,20 @@ function PhonePhoto({ photo }: { photo: Photo }) {
  * (~72°) and stroke (13.8% of the ring). `start` is chosen per placement so
  * the drawn part, with one round cap, lands inside the band.
  */
-function BandArc({ className, start, color = 'var(--gk-navy-lift)' }: { className?: string; start: number; color?: string }) {
+function BandArc({
+  className,
+  start,
+  sweep = 66,
+  color = 'var(--gk-navy-lift)',
+}: {
+  className?: string
+  start: number
+  sweep?: number
+  color?: string
+}) {
   return (
-    <div aria-hidden="true" className={cn('pointer-events-none absolute hidden lg:block', className)}>
-      <ArcPiece sweep={72} start={start} thickness={14} color={color} />
+    <div aria-hidden="true" className={cn('pointer-events-none absolute', className ?? 'hidden lg:block')}>
+      <ArcPiece sweep={sweep} start={start} thickness={14} color={color} />
     </div>
   )
 }
@@ -340,7 +350,8 @@ function Hero({ block }: { block: Of<'hero'> }) {
       className="ground-navy accent-yellow relative -mt-[82px] overflow-hidden pt-[82px] lg:pt-0"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <BandArc start={12} className="-bottom-44 -left-60 size-[24rem]" />
+      <BandArc start={18} sweep={64} className="hidden lg:block -bottom-16 -left-44 size-[24rem]" />
+      <BandArc start={300} sweep={60} className="lg:hidden -right-20 -bottom-24 size-60" />
 
       {block.photo && !block.links && (
         <div
@@ -360,9 +371,9 @@ function Hero({ block }: { block: Of<'hero'> }) {
           </p>
 
           {(block.primary || block.secondary) && (
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-9 flex flex-col items-stretch gap-x-6 gap-y-4 sm:flex-row sm:flex-wrap sm:items-center">
               {block.primary && <CtaButton cta={block.primary} variant="accent" onDark withArrow />}
-              {block.secondary && <CtaButton cta={block.secondary} variant="secondary" onDark />}
+              {block.secondary && <CtaButton cta={block.secondary} variant="tertiary" onDark className="self-start sm:self-auto" />}
             </div>
           )}
           {block.primary?.note && (
@@ -408,7 +419,7 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
 
   return (
     <section className={cn(ground, 'accent-blue band relative overflow-x-clip')}>
-      {block.photo && <BleedPhoto photo={block.photo} side="left" />}
+      {block.photo && <BleedPhoto photo={block.photo} side="left" position={block.photoPosition} />}
       <div className="shell relative">
         {block.photo && <PhonePhoto photo={block.photo} />}
         <Reveal className={cn('flex flex-col gap-6', block.photo ? 'lg:ml-[46%] lg:max-w-[40rem]' : 'max-w-[60rem]')}>
@@ -417,12 +428,12 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
             <Highlighted text={first} phrase={block.highlight} />
           </p>
           {rest.map((paragraph, i) => (
-            <p key={i} className="max-w-[62ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
+            <p key={i} className="max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">
               {paragraph}
             </p>
           ))}
           {block.note && (
-            <HandNote mark="arrow-curve" tilt={-3} className="mt-1">
+            <HandNote mark="underline" tilt={-2} className="mt-2">
               {block.note}
             </HandNote>
           )}
@@ -436,17 +447,29 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
 function Statement({ block }: { block: Of<'prose'> }) {
   const [first, ...rest] = block.paragraphs
   return (
-    <Band ground="" navy accent="accent-yellow" decor={<BandArc start={110} className="-top-6 -right-24 size-[40rem]" />}>
-      <Reveal className="relative max-w-[58rem]">
+    <Band ground="" navy accent="accent-yellow" decor={<BandArc start={96} sweep={70} className="hidden lg:block -top-12 -right-16 size-[36rem]" />}>
+      <Reveal className={cn('relative', block.facts ? 'grid gap-12 lg:grid-cols-12' : 'max-w-[64rem]')}>
+        <div className={block.facts ? 'lg:col-span-7' : undefined}>
         <Title heading={block.headline} className="max-w-[22ch]" />
         <p className="mt-8 text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-[1.5] font-medium text-white">
           <Highlighted text={first} phrase={block.highlight} hue="var(--gk-white)" />
         </p>
         {rest.map((paragraph, i) => (
-          <p key={i} className="mt-6 max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-inverse-2)]">
+          <p key={i} className="mt-6 max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-white/80">
             {paragraph}
           </p>
         ))}
+        </div>
+        {block.facts && (
+          <dl className="flex flex-col self-end lg:col-span-4 lg:col-start-9">
+            {block.facts.map((fact) => (
+              <div key={fact.label} className="flex flex-col gap-1 border-t border-[var(--hairline-inverse)] py-4">
+                <dt className="text-[length:var(--fs-sm)] font-bold text-[var(--gk-yellow)]">{fact.label}</dt>
+                <dd className="text-[length:var(--fs-lg)] leading-snug text-white">{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </Reveal>
     </Band>
   )
@@ -467,7 +490,7 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
   const enough = count >= 3
 
   const result = (
-    <div className="mt-6 hidden min-h-12 flex-wrap items-center gap-x-6 gap-y-3 lg:flex" aria-live="polite">
+    <div className="mt-8 hidden min-h-12 flex-col items-start gap-4 lg:flex" aria-live="polite">
       {enough ? (
         <>
           <p className="text-[length:var(--fs-lg)] leading-snug font-bold">
@@ -540,12 +563,16 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
   return (
     <Band
       ground={ground}
-      accent="accent-teal"
-      decor={!block.aside && <BandArc start={10} color="var(--gk-teal)" className="-bottom-44 -left-52 size-[22rem] opacity-80" />}
+      accent="accent-yellow"
+      className="!bg-[var(--gk-yellow-tint)]"
+      decor={<BandArc start={16} sweep={60} color="var(--gk-yellow)" className="hidden lg:block -bottom-20 -left-40 size-[20rem]" />}
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
         <Reveal className={block.aside ? 'lg:col-span-8' : 'lg:col-span-4'}>
-          {heading}
+          <div className={block.aside ? undefined : 'lg:sticky lg:top-[var(--pin-top,8rem)]'}>
+            {heading}
+            {!block.aside && result}
+          </div>
           {block.aside && (
             <div className="mt-8">
               {list}
@@ -556,7 +583,7 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
         </Reveal>
         {block.aside ? (
           <div className="lg:col-span-4">
-            <aside className="border-l-2 border-[var(--gk-teal)] pl-8 lg:sticky lg:top-[var(--pin-top,8rem)]">
+            <aside className="rounded-[var(--r-lg)] bg-[var(--gk-white)] p-8 shadow-[var(--shadow-xs)] lg:sticky lg:top-[var(--pin-top,8rem)]">
               <p className="max-w-[26ch] text-[length:var(--fs-lg)] leading-snug font-bold">{block.aside.intro}</p>
               <ol className="mt-6 flex flex-col">
                 {block.aside.people.map((person, i) => (
@@ -574,7 +601,6 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
         ) : (
           <Reveal className="lg:col-span-8">
             {list}
-            {result}
             {phoneBar}
           </Reveal>
         )}
@@ -654,7 +680,7 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
                   aria-controls={`${id}-${i}`}
                   onClick={() => setOpen(i)}
                   className={cn(
-                    'flex w-full items-center gap-5 px-6 py-6 text-left transition-colors duration-[var(--dur-base)] md:px-10',
+                    'flex w-full items-center gap-5 px-6 py-6 text-left transition-colors duration-[var(--dur-base)] focus-visible:shadow-[inset_0_0_0_3px_var(--gk-yellow)] focus-visible:outline-none md:px-10',
                     isOpen ? 'cursor-default md:w-1/2' : 'hover:bg-[var(--gk-cream-deep)]',
                   )}
                 >
@@ -662,6 +688,7 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
                     {number(i)}
                   </span>
                   <span className={cn('flex-1 text-[length:var(--fs-2xl)] leading-tight font-extrabold', isOpen ? 'text-white' : 'text-[var(--gk-ink)]')}>{s.title}</span>
+                  {!isOpen && s.lead && <span className="hidden max-w-[42ch] flex-1 truncate text-[length:var(--fs-base)] text-[var(--fg-2)] lg:block">{s.lead}</span>}
                   {!isOpen && <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-[var(--gk-navy)]" />}
                 </button>
               </h3>
@@ -688,8 +715,8 @@ function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
                         </p>
                       ))}
                       {s.visual && (
-                        <div aria-hidden="true" className="mt-2 w-52 opacity-90 [filter:brightness(0)_invert(1)]">
-                          <ProgramVisual name={s.visual} />
+                        <div aria-hidden="true" className="mt-2 w-56">
+                          <ProgramVisual name={s.visual} onDark />
                         </div>
                       )}
                     </div>
@@ -727,8 +754,8 @@ function PathCells({ block, ground }: { block: Of<'steps'>; ground: string }) {
                 ))}
                 {s.ctas && (
                   <div className="mt-auto flex flex-col items-start gap-3 pt-3">
-                    {s.ctas.map((cta, k) => (
-                      <CtaButton key={cta.label} cta={cta} variant={k === 0 ? 'primary' : 'tertiary'} withArrow={k === 0} />
+                    {[...s.ctas].reverse().map((cta) => (
+                      <CtaButton key={cta.label} cta={cta} variant={cta === s.ctas?.[0] ? 'primary' : 'tertiary'} withArrow={cta === s.ctas?.[0]} />
                     ))}
                   </div>
                 )}
@@ -751,9 +778,12 @@ function Bento({ block, ground }: { block: Of<'steps'>; ground: string }) {
           {block.steps.map((s, i) => {
             const wide = i < 2
             return (
-              <li key={s.title} className={cn('flex flex-col gap-5 bg-[var(--gk-white)] p-8', wide ? 'md:col-span-3' : 'md:col-span-2')}>
+              <li
+                key={s.title}
+                className={cn('flex flex-col gap-5 bg-[var(--gk-white)] p-8', wide ? 'md:col-span-3 lg:grid lg:grid-cols-[1fr_15rem] lg:items-center lg:gap-8' : 'md:col-span-2')}
+              >
                 {s.visual && (
-                  <div className="w-full max-w-[15rem]">
+                  <div className={cn('w-full max-w-[15rem]', wide && 'lg:order-last')}>
                     <ProgramVisual name={s.visual} />
                   </div>
                 )}
@@ -786,7 +816,7 @@ function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
               <div className="relative flex items-center">
                 <span className="relative grid size-14 shrink-0 place-items-center text-[length:var(--fs-2xl)] font-extrabold text-[var(--gk-navy)]">
                   {i + 1}
-                  <Scribble name="circle" color={SCRIBBLE} weight={3.5} delay={0.15 + i * 0.25} className="absolute -inset-1.5 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]" />
+                  <Scribble name={i === 1 ? 'oval' : 'circle'} color={SCRIBBLE} weight={3.5} delay={0.15 + i * 0.25} className="absolute -inset-1.5 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]" />
                 </span>
                 {/* Runs from this number across the column to the next one. */}
                 {i < block.steps.length - 1 && (
@@ -823,38 +853,48 @@ function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
 function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: string }) {
   return (
     <Band ground={ground} accent="accent-coral">
-      {block.shift && <Shift shift={block.shift} />}
+      {block.shift && (
+        <>
+          <Reveal className="mb-12">
+            <Title heading={block.headline} className="max-w-[22ch]" />
+          </Reveal>
+          <Shift shift={block.shift} />
+        </>
+      )}
 
-      <div className={cn('grid gap-12 lg:grid-cols-12 lg:gap-16', block.shift && 'mt-20')}>
-        <div className={block.duration ? 'lg:col-span-5' : 'lg:col-span-12'}>
-          <div className="flex flex-col gap-6">
-            <Reveal>
-              <Title heading={block.headline} className="max-w-[18ch]" />
-              {block.opening?.map((paragraph, i) => (
-                <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]'}>
-                  {paragraph}
-                </p>
-              ))}
-            </Reveal>
-            {block.duration && <Duration text={block.duration} weeks={block.weeks} />}
-          </div>
+      <div className={cn('grid gap-12 lg:grid-cols-12 lg:gap-16', block.shift && 'mt-16')}>
+        <div className="lg:col-span-5">
+          <Reveal>
+            {!block.shift && <Title heading={block.headline} className="max-w-[18ch]" />}
+            {block.shift && block.intro && <p className="lead max-w-[36ch] font-semibold">{block.intro}</p>}
+            {block.opening?.map((paragraph, i) => (
+              <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]'}>
+                {paragraph}
+              </p>
+            ))}
+            {block.visual && (
+              <div aria-hidden="true" className="mt-10 hidden max-w-[20rem] lg:block">
+                <ProgramVisual name={block.visual} />
+              </div>
+            )}
+          </Reveal>
         </div>
 
-        <Reveal className={block.duration ? 'lg:col-span-7' : 'lg:col-span-12 lg:-mt-4'}>
-          {block.intro && <p className="mb-7 text-[length:var(--fs-lg)] font-bold">{block.intro}</p>}
-          <ul
-            className={cn(
-              'grid content-start gap-x-10 gap-y-7 sm:grid-cols-2',
-              block.duration ? '[&>li:last-child:nth-child(odd)]:sm:col-span-2' : 'lg:grid-cols-3',
-            )}
-          >
+        <Reveal className="lg:col-span-7">
+          {!block.shift && block.intro && <p className="mb-7 text-[length:var(--fs-lg)] font-bold">{block.intro}</p>}
+          <ul className="grid content-start gap-x-10 gap-y-7 sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2">
             {block.items.map((item) => (
               <li key={item} className="flex gap-4">
-                <Scribble name="check" color={SCRIBBLE} weight={4} className="mt-0.5 size-7 shrink-0" />
+                <Scribble name="check" color="var(--gk-navy)" weight={4} className="mt-0.5 size-7 shrink-0" />
                 <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{item}</span>
               </li>
             ))}
           </ul>
+          {block.duration && (
+            <div className="mt-12">
+              <Duration text={block.duration} weeks={block.weeks} />
+            </div>
+          )}
         </Reveal>
       </div>
     </Band>
@@ -873,7 +913,7 @@ function Duration({ text, weeks }: { text: string; weeks?: [number, number] }) {
 
   return (
     <Reveal delay={0.1} className="border-t border-[var(--hairline-strong)] pt-6">
-      <p className="text-[length:var(--fs-sm)] font-bold text-[var(--band-accent-ink)]">Indicative duration</p>
+      <Label>Indicative duration</Label>
 
       {weeks && (
         <div className="relative mt-10 h-12" aria-hidden="true">
@@ -911,20 +951,16 @@ function Shift({ shift }: { shift: NonNullable<Of<'deliverables'>['shift']> }) {
   const comma = shift.after.indexOf(', ')
   const phrase = comma > 0 ? shift.after.slice(comma + 2) : shift.after
   return (
-    <Reveal className="grid items-start gap-8 border-b border-[var(--hairline-strong)] pb-16 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
+    <Reveal className="grid items-start gap-8 border-b border-[var(--hairline-strong)] pb-14 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
       <figure>
-        <figcaption>
-          <Label className="!text-[var(--fg-2)]">{shift.beforeLabel}</Label>
-        </figcaption>
+        <figcaption className="hand text-[var(--fg-2)]">{shift.beforeLabel.toLowerCase()}</figcaption>
         <blockquote className="mt-3 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-medium text-[var(--fg-2)]">
           &ldquo;{shift.before}&rdquo;
         </blockquote>
       </figure>
       <Scribble name="arrow-curve" color={SCRIBBLE} weight={4} className="mt-6 h-14 w-16 rotate-90 lg:mx-auto lg:mt-8 lg:h-16 lg:w-20 lg:rotate-0" />
       <figure>
-        <figcaption>
-          <Label>{shift.afterLabel}</Label>
-        </figcaption>
+        <figcaption className="hand text-[var(--gk-ink)]">{shift.afterLabel.toLowerCase()}</figcaption>
         <blockquote className="mt-3 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-extrabold text-[var(--gk-ink)]">
           &ldquo;
           <Highlighted text={shift.after} phrase={phrase} />
@@ -937,23 +973,25 @@ function Shift({ shift }: { shift: NonNullable<Of<'deliverables'>['shift']> }) {
 
 /* ------------------------------------------------------------ outcomes */
 
-/** What the program changes: the heading over three columns, each change under a hairline. */
+/** What the program changes: the heading beside a two-column ledger under hairlines. */
 function Outcomes({ block, ground }: { block: Of<'outcomes'>; ground: string }) {
   return (
-    <Band ground={ground} accent="accent-coral">
-      <Reveal>
-        <Title heading={block.headline} className="max-w-[22ch]" />
-      </Reveal>
-      <Reveal className="mt-12">
-        <ul className="grid gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-          {block.items.map((item) => (
-            <li key={item.title} className="flex flex-col gap-3 border-t-2 border-[var(--gk-navy)] pt-5">
-              <h3 className="text-[length:var(--fs-xl)] leading-tight font-extrabold text-balance">{item.title}</h3>
-              <p className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+    <Band ground={ground} accent="accent-coral" decor={<BandArc start={200} sweep={64} color="var(--gk-coral)" className="hidden lg:block -right-36 -bottom-40 size-[22rem]" />}>
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="lg:col-span-4">
+          <Title heading={block.headline} className="max-w-[16ch] lg:sticky lg:top-[var(--pin-top,8rem)]" />
+        </Reveal>
+        <Reveal className="lg:col-span-8">
+          <ul className="grid gap-x-12 gap-y-10 md:grid-cols-2 [&>li:last-child:nth-child(odd)]:md:col-span-2">
+            {block.items.map((item) => (
+              <li key={item.title} className="flex flex-col gap-3 border-t border-[var(--hairline-strong)] pt-5">
+                <h3 className="text-[length:var(--fs-xl)] leading-tight font-extrabold text-balance">{item.title}</h3>
+                <p className="max-w-[60ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
     </Band>
   )
 }
@@ -1110,7 +1148,16 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
             </div>
           </div>
         ) : block.stories.length === 1 ? (
-          <StoryCard story={lead} wide />
+          <div className="relative grid overflow-hidden rounded-[var(--r-lg)] bg-[var(--gk-white)] md:grid-cols-2">
+            <div className="dissolve-r relative min-h-[18rem]">
+              <img src={lead.image} alt={lead.imageAlt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+            </div>
+            <div className="flex flex-col justify-center gap-4 p-8 md:py-14 md:pr-14 md:pl-4">
+              <StoryTags story={lead} />
+              <h3 className="text-[length:clamp(1.75rem,3vw,2.5rem)] leading-tight font-extrabold">{lead.org}</h3>
+              <p className="lead max-w-[42ch]">{lead.body}</p>
+            </div>
+          </div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-12">
             <div className="lg:col-span-7">
@@ -1128,6 +1175,19 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
   )
 }
 
+function StoryTags({ story }: { story: Story }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: 'var(--gk-beige-deep)' }}>
+        {story.sector}
+      </span>
+      <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: INTERVENTION_TINTS[story.intervention] ?? 'var(--gk-teal-tint)' }}>
+        {story.intervention}
+      </span>
+    </div>
+  )
+}
+
 function StoryCard({ story, wide = false, tall = false, side = false }: { story: Story; wide?: boolean; tall?: boolean; side?: boolean }) {
   return (
     <article
@@ -1137,18 +1197,11 @@ function StoryCard({ story, wide = false, tall = false, side = false }: { story:
         !wide && 'flex flex-col',
       )}
     >
-      <div className={cn('relative', wide ? 'min-h-[15rem]' : side ? 'aspect-[16/7]' : tall ? 'aspect-[16/12]' : 'aspect-[16/10]')}>
+      <div className={cn('relative', wide ? 'min-h-[15rem]' : side ? 'aspect-[16/7]' : tall ? 'min-h-[20rem] flex-1' : 'aspect-[16/10]')}>
         <img src={story.image} alt={story.imageAlt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       </div>
-      <div className={cn('flex flex-1 flex-col gap-3', wide ? 'justify-center p-8 md:p-12' : side ? 'justify-center p-6' : 'p-8')}>
-        <div className="flex flex-wrap gap-2">
-          <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: 'var(--gk-beige-deep)' }}>
-            {story.sector}
-          </span>
-          <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: INTERVENTION_TINTS[story.intervention] ?? 'var(--gk-teal-tint)' }}>
-            {story.intervention}
-          </span>
-        </div>
+      <div className={cn('flex flex-col gap-3', !tall && 'flex-1', wide ? 'justify-center p-8 md:p-12' : side ? 'justify-center p-6' : 'p-8')}>
+        <StoryTags story={story} />
         <h3 className={cn('leading-tight font-extrabold', wide || tall ? 'text-[length:var(--fs-2xl)]' : 'text-[length:var(--fs-xl)]')}>{story.org}</h3>
         <p className={cn('leading-relaxed text-[var(--fg-1)]', tall || wide ? 'text-[length:var(--fs-lg)]' : 'text-[length:var(--fs-base)]')}>{story.body}</p>
       </div>
@@ -1177,20 +1230,20 @@ function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) 
       {/* Subgrid rows, so the two columns' labels and buttons share a line. */}
       <Reveal className="mt-12 grid gap-12 md:grid-cols-2 md:grid-rows-[auto_auto_auto_1fr_auto] md:gap-x-0 md:gap-y-4">
         {block.cards.map((card, i) => (
-          <article key={card.title} className={cn('flex flex-col gap-4 border-t border-[var(--hairline-strong)] pt-8 md:row-span-5 md:grid md:grid-rows-subgrid', i === 0 ? 'md:pr-12' : 'md:border-l md:border-l-[var(--hairline-strong)] md:pl-12')}>
+          <article
+            key={card.title}
+            className={cn('flex flex-col gap-4 rounded-[var(--r-lg)] p-8 md:row-span-5 md:grid md:grid-rows-subgrid md:p-10', i === 0 ? 'md:mr-3' : 'md:ml-3')}
+            style={{ background: i === 0 ? 'var(--gk-yellow-tint)' : 'var(--gk-blue-tint)' }}
+          >
             <Label>{card.eyebrow}</Label>
             <h2 className="text-[length:clamp(1.625rem,2.6vw,2.25rem)] leading-tight font-extrabold">{card.title}</h2>
             <p className="max-w-[52ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">{card.body}</p>
             {card.facts ? (
-              <dl className="mt-2 grid content-start gap-4 border-t border-[var(--hairline)] pt-5">
+              <dl className="mt-2 grid content-start gap-3 border-t border-[rgb(20_19_26_/_0.12)] pt-5">
                 {card.facts.map((fact) => (
-                  <div key={fact.label} className="grid gap-1 sm:grid-cols-[8rem_1fr] sm:gap-4">
-                    <dt>
-                      <Label>{fact.label}</Label>
-                    </dt>
-                    <dd className="text-[length:var(--fs-base)] leading-relaxed">
-                      {fact.label === 'Next cohort' ? <Marker>{fact.value}</Marker> : fact.value}
-                    </dd>
+                  <div key={fact.label} className="text-[length:var(--fs-base)] leading-relaxed">
+                    <dt className="inline font-bold">{fact.label}. </dt>
+                    <dd className="inline">{fact.label === 'Next cohort' ? <Marker>{fact.value}</Marker> : fact.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -1254,7 +1307,16 @@ function Compare({ block, ground }: { block: Of<'compare'>; ground: string }) {
 
 /* ------------------------------------------------------------- related */
 
-/** Sibling pages side by side under the heading, each column a link. */
+/* The homepage "What we do" card tints, so sibling pages read in the same
+   language the homepage already taught. */
+const CARD_THEMES = [
+  { ground: 'var(--gk-yellow-tint)', label: 'var(--gk-yellow-ink)' },
+  { ground: 'var(--gk-blue-tint)', label: 'var(--gk-blue-deep)' },
+  { ground: 'var(--gk-coral-tint)', label: 'var(--gk-coral-ink)' },
+  { ground: 'var(--gk-teal-tint)', label: 'var(--gk-teal-ink)' },
+]
+
+/** Sibling pages as the homepage's tinted cards, each card a link. */
 function RelatedList({ block, ground }: { block: Of<'related'>; ground: string }) {
   return (
     <Band ground={ground}>
@@ -1262,23 +1324,29 @@ function RelatedList({ block, ground }: { block: Of<'related'>; ground: string }
         <Title heading={block.headline} className="max-w-[22ch]" />
       </Reveal>
       <Reveal className="mt-10">
-        <ul className={cn('grid border-t border-[var(--hairline-strong)] md:divide-x md:divide-[var(--hairline-strong)]', block.items.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
-          {block.items.map((item) => (
-            <li key={item.to} className="border-b border-[var(--hairline-strong)] md:border-b-0">
-              <a
-                href={item.to}
-                className="group flex h-full flex-col gap-3 py-8 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)] md:px-8 md:first:pl-0 md:hover:bg-[var(--gk-white)]"
-              >
-                <Label>{item.label}</Label>
-                <span className="text-[length:var(--fs-xl)] leading-tight font-extrabold text-balance text-[var(--gk-ink)]">{item.title}</span>
-                <span className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">{item.body}</span>
-                <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)]">
-                  Read more
-                  <ArrowRight aria-hidden="true" className="size-4 transition-transform duration-[var(--dur-base)] group-hover:translate-x-1" />
-                </span>
-              </a>
-            </li>
-          ))}
+        <ul className={cn('grid gap-4 md:gap-5', block.items.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
+          {block.items.map((item, i) => {
+            const theme = CARD_THEMES[i % CARD_THEMES.length]
+            return (
+              <li key={item.to}>
+                <a
+                  href={item.to}
+                  className="card-lift group flex h-full flex-col rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
+                  style={{ background: theme.ground }}
+                >
+                  <span className="text-[length:var(--fs-xs)] font-extrabold tracking-[var(--tracking-label)] uppercase" style={{ color: theme.label }}>
+                    {String(i + 1).padStart(2, '0')} / {item.label}
+                  </span>
+                  <span className="mt-4 text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold text-balance">{item.title}</span>
+                  <span className="mt-4 text-[length:var(--fs-base)] leading-relaxed">{item.body}</span>
+                  <span className="mt-auto inline-flex items-center gap-2 pt-6 text-[length:var(--fs-sm)] font-bold" style={{ color: theme.label }}>
+                    Explore
+                    <ArrowRight aria-hidden="true" className="size-4 transition-transform duration-[var(--dur-base)] group-hover:translate-x-[3px]" />
+                  </span>
+                </a>
+              </li>
+            )
+          })}
         </ul>
       </Reveal>
     </Band>
@@ -1397,8 +1465,9 @@ function Closing({ block }: { block: Of<'closing'> }) {
             </div>
           </Reveal>
         </div>
-        <div className="hidden lg:col-span-4 lg:flex lg:justify-center">
-          <MarkAssembly size={170} settleAt={0.8} />
+        <div className="flex justify-center lg:col-span-4">
+          <MarkAssembly size={170} settleAt={0.8} className="hidden lg:block" />
+          <MarkAssembly size={110} settleAt={0.85} className="lg:hidden" />
         </div>
       </div>
     </section>
