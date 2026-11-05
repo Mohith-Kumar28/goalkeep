@@ -1,4 +1,7 @@
+import { Link } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
 import { services, whatWeDo } from '@/content/homepage'
+import { servicePages } from '@/content/services'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -14,8 +17,7 @@ import { Reveal } from '@/components/primitives/reveal'
  * than three, so the cards sit two by two. "You take a call on how you want
  * to position it."
  *
- * No "Explore" links yet - each card will lead to its service page once the
- * services pages exist.
+ * Each card leads to its service page (November).
  */
 
 /* One light tint per card with its own dark ink for the label - the same
@@ -49,10 +51,13 @@ export function WhatWeDo() {
         <ul className="grid gap-4 sm:grid-cols-2 md:gap-5 lg:col-span-8">
           {services.map((service, index) => {
             const theme = CARD_THEMES[index % CARD_THEMES.length]
+            const page = servicePages.find((p) => p.contactService === service.title)
             return (
               <Reveal as="li" key={service.title} delay={index * 0.08} className="h-full">
-                <article
-                  className="flex h-full flex-col rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
+                <Link
+                  to="/services/$slug"
+                  params={{ slug: page?.slug ?? '' }}
+                  className="card-lift group flex h-full flex-col rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
                   style={{ background: theme.ground }}
                 >
                   <p
@@ -67,7 +72,18 @@ export function WhatWeDo() {
                   <p className="mt-4 text-[length:var(--fs-base)] leading-relaxed">
                     {service.body}
                   </p>
-                </article>
+                  <span
+                    className="mt-auto inline-flex items-center gap-2 pt-6 text-[length:var(--fs-sm)] font-bold"
+                    style={{ color: theme.label }}
+                  >
+                    Explore
+                    <ArrowRight
+                      aria-hidden="true"
+                      strokeWidth={2.25}
+                      className="size-4 transition-transform duration-[var(--dur-base)] ease-[var(--ease-out)] group-hover:translate-x-[3px]"
+                    />
+                  </span>
+                </Link>
               </Reveal>
             )
           })}
