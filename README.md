@@ -24,10 +24,11 @@ versions we've been through and can quickly reference them"):
 |---|---|---|
 | 2.0 | tag `v2.0`, branch `v2.0-draft` | the draft reviewed on 4 September |
 | 3.0 | tag `v3.1`, branch `v3.1-draft` | the draft reviewed on 23 September — live at goalkeep.mohithkumar808.workers.dev (the `goalkeep` worker, frozen) |
-| 4.0 | branch `v4.0-draft` | the 23 September feedback — deploys to its own worker, `goalkeep-v4` |
+| 4.0 | branch `v4.0-draft` | the 23 September feedback — deploys to `goalkeep-v4`, which carries the production domain (frozen) |
+| 5.0 | branch `v5.0-draft` | programs, services, the data culture quiz and the nav menus — deploys to `goalkeep-v5` with its own database, `goalkeep-site-v5` |
 
-`pnpm run deploy` refuses to ship to the frozen `goalkeep` or `goalkeep-legacy`
-workers (see `scripts/deploy-guard.mjs`), so a review link is never overwritten
+`pnpm run deploy` refuses to ship to the frozen `goalkeep`, `goalkeep-legacy` or
+`goalkeep-v4` workers (see `scripts/deploy-guard.mjs`), so a review link is never overwritten
 by later work.
 
 ### What the review said
