@@ -42,7 +42,11 @@ export type Step = {
   body: Array<string>
   visual?: VisualName
   ctas?: Array<Cta>
+  photo?: Photo
 }
+
+/** A link card to a sibling page: the other services, the other program. */
+export type Related = { label: string; title: string; body: string; to: string }
 
 export type Block =
   | {
@@ -50,14 +54,28 @@ export type Block =
       eyebrow: string
       headline: Heading
       paragraphs: Array<string>
+      /** A phrase in the first paragraph that takes the highlighter. */
+      highlight?: string
       primary?: Cta & { note?: string }
       secondary?: Cta
       photo: Photo
     }
-  | { kind: 'prose'; eyebrow: string; headline: Heading; paragraphs: Array<string> }
+  /** The homepage's partner logo rail. */
+  | { kind: 'partners' }
+  /** The homepage's Design / Build / Adopt section. */
+  | { kind: 'approach' }
+  | {
+      kind: 'prose'
+      headline: Heading
+      paragraphs: Array<string>
+      /** A phrase in the first paragraph that takes the highlighter. */
+      highlight?: string
+      photo?: Photo
+      /** A handwritten note beside the photograph. */
+      note?: string
+    }
   | {
       kind: 'checklist'
-      eyebrow: string
       headline: Heading
       items: Array<string>
       /** The DLP's recommended pair of nominees, beside the checklist. */
@@ -65,30 +83,33 @@ export type Block =
     }
   | {
       kind: 'steps'
-      eyebrow: string
+      /** story: pinned illustration that changes as each step scrolls past.
+       *  bento: illustrated tiles of different sizes.
+       *  flow: a short sequence read left to right.
+       *  paths: ways in, each with its own calls to action. */
+      layout: 'story' | 'bento' | 'flow' | 'paths'
       headline: Heading
       intro?: Array<string>
       steps: Array<Step>
     }
   | {
       kind: 'deliverables'
-      eyebrow: string
       headline: Heading
       /** Kickstarter's before and after questions. */
-      shift?: { before: string; after: string }
+      shift?: { before: string; after: string; beforeLabel: string; afterLabel: string }
       intro?: string
       items: Array<string>
       duration?: string
+      /** The duration's range in weeks, drawn on a ruler. */
+      weeks?: [number, number]
     }
   | {
       kind: 'outcomes'
-      eyebrow: string
       headline: Heading
       items: Array<{ title: string; body: string }>
     }
   | {
       kind: 'stats'
-      eyebrow: string
       headline: Heading
       stats: Array<{ value: number; suffix?: string; label: string }>
       /** A homepage testimonial, under the figures. */
@@ -96,7 +117,6 @@ export type Block =
     }
   | {
       kind: 'stories'
-      eyebrow: string
       headline: Heading
       stories: Array<Story>
       /** A homepage testimonial beside a single story. */
@@ -114,6 +134,14 @@ export type Block =
         photo: Photo
       }>
     }
+  /** Rows of facts, one column per program. */
+  | {
+      kind: 'compare'
+      headline: Heading
+      columns: Array<{ title: string; to: string }>
+      rows: Array<{ label: string; values: Array<string> }>
+    }
+  | { kind: 'related'; headline: Heading; items: Array<Related> }
   | {
       kind: 'audienceSwitch'
       prompt: string

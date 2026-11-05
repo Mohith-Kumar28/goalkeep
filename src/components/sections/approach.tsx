@@ -52,7 +52,7 @@ const HUE: Record<
   coral: { closed: 'var(--gk-coral)', onNavy: 'var(--gk-coral-lift)', kind: 'adopt' },
 }
 
-export function Approach() {
+export function Approach({ ground = 'ground-cream' }: { ground?: string }) {
   // The first row opens by default. An all-closed section reads as three
   // inert bars and gives no hint that anything here responds.
   const [open, setOpen] = useState(0)
@@ -150,7 +150,7 @@ export function Approach() {
     <section
       ref={ref}
       id="our-approach"
-      className="ground-cream band accent-blue relative scroll-mt-24"
+      className={`${ground} band accent-blue relative scroll-mt-24`}
       aria-labelledby="approach-heading"
     >
       <div className="shell relative">

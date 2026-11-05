@@ -12,10 +12,10 @@ import { tickerRowOne, tickerRowTwo } from '@/content/partners'
  *   · Aditya asked to see the marks in their own colours rather than
  *     greyscale. After 28 Sep only the full-colour rail remains.
  */
-export function Credibility() {
+export function Credibility({ ground = 'ground-cream' }: { ground?: string }) {
   return (
     <section
-      className="ground-cream band accent-blue relative !py-12 md:!py-14"
+      className={`${ground} band accent-blue relative !py-12 md:!py-14`}
       aria-labelledby="credibility-heading"
     >
       <div className="shell mb-8 flex flex-col items-center gap-3 text-center">

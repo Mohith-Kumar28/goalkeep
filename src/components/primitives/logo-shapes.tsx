@@ -41,7 +41,7 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
    One primitive underneath everything: a round-capped arc on a 100×100 box.
    `sweep` of 360 gives the ring, ~60 the lozenge, 180 the half. */
 
-function ArcPiece({
+export function ArcPiece({
   sweep = 120,
   /** Where the arc starts, degrees clockwise from twelve o'clock. */
   start = 0,
