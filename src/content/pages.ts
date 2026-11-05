@@ -142,6 +142,7 @@ export type Block =
         body: string
         cta: Cta
         photo: Photo
+        facts?: Array<{ label: string; value: string }>
       }>
     }
   /** Rows of facts, one column per program. */
@@ -156,7 +157,8 @@ export type Block =
       kind: 'audienceSwitch'
       opening?: Array<string>
       prompt: string
-      options: Array<{ id: string; label: string; blocks: Array<Block> }>
+      /** `short` is the label on a phone, where the full one wraps. */
+      options: Array<{ id: string; label: string; short?: string; blocks: Array<Block> }>
     }
   | {
       kind: 'closing'

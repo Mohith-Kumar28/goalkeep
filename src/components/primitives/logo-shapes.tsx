@@ -398,11 +398,15 @@ export function MarkAssembly({
   size = 300,
   onDark = true,
   settled = false,
+  settleAt = 0.55,
   className,
 }: {
-  /** Draw the finished mark with no scroll assembly, for bands too short
-   *  for the assembly to resolve before they leave the screen. */
+  /** Draw the finished mark with no scroll assembly. */
   settled?: boolean
+  /** Where in the viewport (0 top, 1 bottom) the mark's centre sits when it
+   *  completes. Short bands near the foot of a page want a higher value so
+   *  the mark resolves before the band leaves the screen. */
+  settleAt?: number
   /** Width of the mark. Height follows the real mark's proportions. */
   size?: number
   onDark?: boolean
@@ -413,7 +417,7 @@ export function MarkAssembly({
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'center 0.55'],
+    offset: ['start end', `center ${settleAt}`],
   })
 
   return (

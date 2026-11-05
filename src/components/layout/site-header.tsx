@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
 import { contactHref, nav } from '@/content/site'
@@ -73,10 +73,10 @@ export function SiteHeader() {
           <Wordmark inverse={!scrolled} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-6 xl:flex 2xl:gap-8">
+        <nav aria-label="Main" className="hidden items-center gap-5 xl:flex 2xl:gap-8">
           {nav.map((item) =>
             item.children ? (
-              <NavMenu key={item.label} item={item} scrolled={scrolled} />
+              <NavMenu key={item.label} item={item} scrolled={scrolled} pathname={pathname} />
             ) : (
               <a key={item.to} href={item.to} className={linkClass(scrolled)}>
                 {item.label}
@@ -89,7 +89,7 @@ export function SiteHeader() {
           <GkButton
             href={contactHref}
             variant={scrolled ? 'primary' : 'secondary'}
-            className="!px-5 !py-3 !text-[length:var(--fs-sm)]"
+            className="!px-5 !py-3 !text-[length:var(--fs-sm)] whitespace-nowrap"
           >
             Partner with us
           </GkButton>
@@ -194,7 +194,7 @@ const linkClass = (scrolled: boolean) =>
  * click or Enter for everyone else; Escape, a click outside, or choosing a
  * page closes it.
  */
-function NavMenu({ item, scrolled }: { item: NavItem; scrolled: boolean }) {
+function NavMenu({ item, scrolled, pathname }: { item: NavItem; scrolled: boolean; pathname: string }) {
   const [open, setOpen] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   /* Hover has already opened the menu by the time a mouse clicks, so a
@@ -245,21 +245,26 @@ function NavMenu({ item, scrolled }: { item: NavItem; scrolled: boolean }) {
         />
       </button>
       {/* The pt bridges the gap to the button so the pointer can cross it. */}
-      <div id={id} hidden={!open} className="absolute top-full left-1/2 z-50 -translate-x-1/2 pt-3">
+      <div id={id} hidden={!open} className="absolute top-full -left-4 z-50 pt-3">
         <ul className="w-80 rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-2 shadow-[var(--shadow-md)]">
           {item.children?.map((child, i, all) => {
             const overview = i === all.length - 1
+            const current = child.to === pathname
             return (
               <li key={child.to} className={cn(overview && 'mt-1 border-t border-[var(--hairline)] pt-1')}>
                 <a
                   href={child.to}
                   onClick={() => setOpen(false)}
+                  aria-current={current ? 'page' : undefined}
                   className={cn(
-                    'block rounded-[var(--r-md)] px-4 py-2.5 text-[length:var(--fs-sm)] text-[var(--gk-ink)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-[var(--gk-cream-deep)] focus-visible:bg-[var(--gk-cream-deep)] focus-visible:outline-none',
-                    overview ? 'font-bold text-[var(--gk-navy)]' : 'font-semibold',
+                    'relative flex items-center gap-2 rounded-[var(--r-md)] px-4 py-2.5 text-[length:var(--fs-sm)] text-[var(--gk-ink)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-[var(--gk-cream-deep)] focus-visible:bg-[var(--gk-cream-deep)] focus-visible:outline-none',
+                    overview ? 'text-[var(--gk-navy)]' : 'font-semibold',
+                    current && 'bg-[var(--gk-cream-deep)]',
                   )}
                 >
+                  {current && <span aria-hidden="true" className="absolute inset-y-2 left-1 w-[3px] rounded-full bg-[var(--gk-yellow)]" />}
                   {child.label}
+                  {overview && <ArrowRight aria-hidden="true" className="size-4" />}
                 </a>
               </li>
             )

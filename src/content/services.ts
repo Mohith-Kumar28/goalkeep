@@ -37,7 +37,7 @@ const dashboardsDistinction: Block = {
   kind: 'prose',
   tone: 'navy',
   headline: { lead: 'The dashboard is the visible layer of', em: 'a larger process.' },
-  highlight: 'a standalone visual-design exercise',
+  highlight: 'standalone visual-design exercise',
   paragraphs: [
     'Dashboarding is not treated as a standalone visual-design exercise or a promise to simply deliver a set of charts. If the measurement framework, definitions or underlying data system are not reliable, Goalkeep addresses those foundations as part of the engagement. The dashboard is the visible layer of a larger process that makes the information trustworthy and useful.',
   ],
@@ -61,7 +61,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         headline: { lead: 'Turn your Theory of Change into a measurement framework', em: 'your organisation can use.' },
         lead: 'Your organisation may already have a Theory of Change, logframes, surveys, indicators and years of programme data. But as programmes grow, these pieces do not always add up to a clear picture of organisational impact.',
         primary: workWithUs,
-        highlight: 'a clear picture',
+        highlight: 'clear picture',
         photo: { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop' },
       },
       {
@@ -144,7 +144,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         kind: 'prose',
         tone: 'navy',
         headline: { lead: 'Open source at the core,', em: 'no lock-in.' },
-        highlight: 'proprietary Goalkeep software',
+        highlight: 'open-source data stack',
         paragraphs: [
           'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate.',
           'The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
@@ -214,6 +214,7 @@ export const servicePages: Array<Page & { slug: string }> = [
           {
             id: 'nonprofits',
             label: 'A nonprofit',
+            short: 'Nonprofit',
             blocks: [
               {
                 kind: 'checklist',
@@ -260,6 +261,7 @@ export const servicePages: Array<Page & { slug: string }> = [
           {
             id: 'funders',
             label: 'A funding organisation',
+            short: 'Funder',
             blocks: [
               {
                 kind: 'checklist',
@@ -344,6 +346,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         steps: [
           {
             title: 'Direct workshops with organisations',
+            photo: { src: '/photos/hero-01-workshop.webp', alt: 'A Goalkeep facilitator leading a data workshop with an organisation' },
             body: [
               'Goalkeep delivers ready-to-run or customised workshops directly with an organisation. Topics may include interpreting data, visualisation, basic analysis, communicating with data, operationalising a Theory of Change or logframe, essential data design, data culture, data modelling, optimising pipelines, preparing dashboard-ready tables and the responsible use of AI.',
               'A custom workshop can be built around the organisation’s own dataset, dashboard, report, audience or decision-making routine so participants can immediately connect the learning to their work.',

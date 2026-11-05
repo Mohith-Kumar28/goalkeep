@@ -22,10 +22,13 @@ export function Faqs({
   headline = faqSection.headline,
   headlineEm = faqSection.headlineEm,
   items = faqs.map((faq) => faq.value),
+  soft = false,
 }: {
   headline?: string
   headlineEm?: string
   items?: Array<{ question: string; answer: string }>
+  /** Hairline toggles in navy instead of the homepage's ink squares. */
+  soft?: boolean
 }) {
   const [open, setOpen] = useState<Array<number>>([0])
 
@@ -78,9 +81,13 @@ export function Faqs({
                       className={cn(
                         'relative grid size-8 shrink-0 place-items-center rounded-[var(--r-sm)] border',
                         'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
-                        isOpen
-                          ? 'border-[var(--gk-ink)] bg-[var(--gk-ink)] text-[var(--gk-yellow)]'
-                          : 'border-[rgb(20_19_26_/_0.3)] bg-transparent text-[var(--gk-ink)] group-hover:border-[var(--gk-ink)] group-hover:bg-[rgb(255_255_255_/_0.3)]',
+                        soft
+                          ? isOpen
+                            ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
+                            : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-navy)] group-hover:border-[var(--gk-navy)]'
+                          : isOpen
+                            ? 'border-[var(--gk-ink)] bg-[var(--gk-ink)] text-[var(--gk-yellow)]'
+                            : 'border-[rgb(20_19_26_/_0.3)] bg-transparent text-[var(--gk-ink)] group-hover:border-[var(--gk-ink)] group-hover:bg-[rgb(255_255_255_/_0.3)]',
                       )}
                     >
                       <span className="absolute h-[1.5px] w-3.5 bg-current" />

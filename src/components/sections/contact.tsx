@@ -21,7 +21,7 @@ type Status = 'idle' | 'sending' | 'done' | 'error'
 export const inputClass =
   'w-full rounded-[var(--r-btn)] border border-[var(--hairline-strong)] bg-[var(--gk-white)] px-4 py-3.5 text-[length:var(--fs-base)] text-[var(--gk-ink)] ' +
   'transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] placeholder:text-[var(--fg-2)] ' +
-  'hover:border-[var(--gk-ink)] focus:border-[var(--gk-navy)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--gk-navy)] ' +
+  'hover:border-[var(--gk-navy)] focus:border-[var(--gk-navy)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--gk-navy)] ' +
   'disabled:opacity-60 aria-[invalid=true]:border-[var(--gk-coral-ink)]'
 
 export function Contact({

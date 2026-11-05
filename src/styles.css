@@ -647,6 +647,14 @@
   .dissolve-l {
     mask-image: linear-gradient(to left, #000 0%, #000 42%, rgb(0 0 0 / 0.72) 60%, rgb(0 0 0 / 0.32) 80%, transparent 100%);
   }
+  /* Right and bottom edges both thinning out: a photograph in a column. */
+  .dissolve-rb {
+    mask-image:
+      linear-gradient(to right, #000 0%, #000 55%, rgb(0 0 0 / 0.4) 82%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 55%, rgb(0 0 0 / 0.4) 82%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
   .dissolve-b {
     mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / 0.7) 65%, rgb(0 0 0 / 0.3) 84%, transparent 100%);
   }

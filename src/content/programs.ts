@@ -62,6 +62,10 @@ export const programsPage: Page = {
           eyebrow: 'Kickstarter',
           title: 'Build the data backbone your organisation needs to grow',
           body: 'A hands-on program for early-stage nonprofits that need a simple, integrated and usable data system. Work with Goalkeep to identify what matters, organise how it is captured and build a system that turns everyday data into useful insights for your programs.',
+          facts: [
+            { label: 'How it runs', value: 'Hands-on with your team: understand, design, build and adopt.' },
+            { label: 'Next cohort', value: 'January 2027' },
+          ],
           cta: { label: 'Explore Kickstarter', to: '/programs/kickstarter' },
           photo: { src: '/photos/aud-early-1.webp', alt: 'A facilitator presenting a dashboard on screen to a partner team' },
         },
@@ -69,43 +73,12 @@ export const programsPage: Page = {
           eyebrow: 'Data Literacy Program',
           title: 'Build a data-confident workforce from within',
           body: 'A cohort-based, train-the-trainer program that equips organisational and MEL leaders to strengthen data literacy across their teams. Participants build foundational data skills, practise using AI responsibly and receive the resources and support to take the learnings back to improve the data culture in their respective organisations.',
+          facts: [
+            { label: 'How it runs', value: 'Cohort-based and train-the-trainer: two master trainers take the learning back.' },
+            { label: 'Next cohort', value: 'December 2026' },
+          ],
           cta: { label: 'Explore the Data Literacy Program', to: '/programs/data-literacy' },
           photo: { src: '/photos/aud-mature-3.webp', alt: 'A Data Literacy Program cohort gathered in front of the programme banner' },
-        },
-      ],
-    },
-    {
-      kind: 'compare',
-      headline: { lead: 'Two programs,', em: 'side by side.' },
-      columns: [
-        { title: 'Kickstarter', to: '/programs/kickstarter' },
-        { title: 'Data Literacy Program', to: '/programs/data-literacy' },
-      ],
-      rows: [
-        {
-          label: 'Built for',
-          values: [
-            'Early-stage nonprofits that need a simple, integrated and usable data system.',
-            'Social-purpose organisations that want data capability to extend beyond the MEL team.',
-          ],
-        },
-        {
-          label: 'What you build',
-          values: [
-            'A custom system for entering, managing and making sense of programme data.',
-            'Foundational skills in interpreting, analysing, visualising and communicating data.',
-          ],
-        },
-        {
-          label: 'How it runs',
-          values: [
-            'Hands-on with your team: understand, design, build and adopt.',
-            'Cohort-based and train-the-trainer: two master trainers take the learning back.',
-          ],
-        },
-        {
-          label: 'Next cohort',
-          values: ['January 2027', 'December 2026'],
         },
       ],
     },
@@ -193,7 +166,7 @@ export const kickstarterPage: Page = {
         },
         {
           title: 'Design',
-          photo: { src: '/photos/phase-design-b.webp', alt: 'Indicators and workflows mapped out on boards during a design session' },
+          photo: { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop' },
           visual: 'design',
           lead: 'We translate the priority questions into a practical system design.',
           body: [
