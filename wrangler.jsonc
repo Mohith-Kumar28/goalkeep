@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "goalkeep-v4",
+  "name": "goalkeep-v5",
   "compatibility_date": "2026-08-31",
   "compatibility_flags": ["nodejs_compat"],
   // TanStack Start's own Workers entry — not the Node build output.
@@ -8,9 +8,10 @@
   "observability": {
     "enabled": true
   },
-  // Contact form enquiries and newsletter sign-ups from the homepage
-  // (21 Oct: "for now we'll simply store it in a database"). Schema in
-  // migrations/; apply with `wrangler d1 migrations apply goalkeep-site`.
+  // Contact form enquiries, newsletter sign-ups and quiz responses. v5.0-draft
+  // has its own database so review traffic never mixes with goalkeep-v4's
+  // production data. Schema in migrations/; apply with
+  // `wrangler d1 migrations apply goalkeep-site-v5 --remote`.
   // Who gets an email for each contact enquiry (comma-separated), and the
   // sender, on the Resend-verified mail.goalkeep.org domain. The Resend API
   // key is a secret: `wrangler secret put RESEND_API_KEY`, or .dev.vars locally.
@@ -21,8 +22,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "goalkeep-site",
-      "database_id": "38e1972b-407d-4594-9822-71d73ec9f5fb",
+      "database_name": "goalkeep-site-v5",
+      "database_id": "aa88e92e-28ec-4c7c-b5fd-ecabd6effd0d",
       "migrations_dir": "migrations"
     }
   ]
