@@ -24,7 +24,14 @@ export const inputClass =
   'hover:border-[var(--gk-ink)] focus:border-[var(--gk-navy)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--gk-navy)] ' +
   'disabled:opacity-60 aria-[invalid=true]:border-[var(--gk-coral-ink)]'
 
-export function Contact({ defaultService = contact.serviceOptions[0] }: { defaultService?: string }) {
+export function Contact({
+  defaultService = contact.serviceOptions[0],
+  aside,
+}: {
+  defaultService?: string
+  /** Under the heading, so the column beside the form is not left empty. */
+  aside?: ReactNode
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState('')
   const [service, setService] = useState(defaultService)
@@ -73,6 +80,7 @@ export function Contact({ defaultService = contact.serviceOptions[0] }: { defaul
             {contact.headline} <em>{contact.headlineEm}</em>
           </h2>
           <p className="lead mt-5 max-w-[40ch]">{contact.lead}</p>
+          {aside}
         </Reveal>
 
         <Reveal className="lg:col-span-7" delay={0.08}>

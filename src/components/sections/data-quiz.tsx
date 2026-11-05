@@ -1,19 +1,12 @@
-import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
-import type { FormEvent, ReactNode } from 'react'
-import {
-  detailLabels,
-  detailOptions,
-  domains,
-  formatScore,
-  likert,
-  scoreQuiz,
-  statementCount,
-} from '@/content/quiz'
+import type { FormEvent } from 'react'
+import { detailOptions, domains, formatScore, likert, scoreQuiz, statementCount } from '@/content/quiz'
 import type { Answer, DomainId, QuizDetails, QuizScore } from '@/content/quiz'
 import { Scribble } from '@/components/primitives/doodles'
 import { GkButton } from '@/components/primitives/gk-button'
+import { ScoredMark } from '@/components/primitives/scored-mark'
 import { Field, inputClass } from '@/components/sections/contact'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
@@ -22,17 +15,20 @@ import { submitQuiz } from '@/server/forms'
 /**
  * The data culture quiz.
  *
- * The four domains are drawn as the four coloured arcs of the Goalkeep ring.
- * While the visitor answers, each arc fills one statement at a time; on the
- * results screen each arc is drawn to the length of that domain's score. One
- * statement per screen, and choosing an answer moves on, so twelve questions
- * read as a conversation rather than a form.
+ * Three stages: a short form about the visitor, twelve statements one at a
+ * time, and the results. The card's navy aside is the itinerary through
+ * those stages: on the form it lists what is coming, on the statements it
+ * turns into progress (three dots per domain), and on the results it draws
+ * the mark to the scores. The mark itself appears only there and in the
+ * page hero; everywhere else progress is dots, so the mark stays the mark.
  */
+
+type Delivery = 'sending' | 'sent' | 'saved' | 'error'
 
 type Stage =
   | { kind: 'details' }
   | { kind: 'question'; index: number }
-  | { kind: 'result'; score: QuizScore; delivery: 'sending' | 'sent' | 'saved' | 'error'; error?: string }
+  | { kind: 'result'; score: QuizScore; delivery: Delivery; error?: string }
 
 const emptyDetails: QuizDetails = {
   name: '',
@@ -59,6 +55,9 @@ export const DOMAIN_HUES: Record<DomainId, { arc: string; tint: string; ink: str
   process: { arc: 'var(--gk-coral)', tint: 'var(--gk-coral-tint)', ink: 'var(--gk-coral-ink)', lift: 'var(--gk-coral-lift)' },
   strategy: { arc: 'var(--gk-yellow-deep)', tint: 'var(--gk-yellow-tint)', ink: 'var(--gk-yellow-ink)', lift: 'var(--gk-yellow)' },
 }
+
+/** A score on the 1 to 5 scale as a share of the whole bar or arc. */
+const share = (average: number) => average / 5
 
 export function DataQuiz() {
   const [stage, setStage] = useState<Stage>({ kind: 'details' })
@@ -107,48 +106,43 @@ export function DataQuiz() {
     }, 240)
   }
 
-  /* How far each arc has filled: answered statements in that domain. */
-  const progress = domains.map((_, d) => {
-    const own = statements.flatMap((s, i) => (s.domain === d ? [i] : []))
-    return own.filter((i) => answers[i] !== undefined).length / own.length
-  })
-  const activeDomain = stage.kind === 'question' ? statements[stage.index].domain : undefined
+  const restart = () => {
+    setAnswers(Array(statementCount).fill(undefined))
+    go({ kind: 'question', index: 0 })
+  }
 
   return (
-    <div ref={top} id="quiz" className="scroll-mt-28">
-      <div className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:grid-cols-[21rem_1fr]">
+    <div ref={top} id="quiz" className="scroll-mt-20">
+      <div className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:grid-cols-[17rem_1fr]">
         <aside
           data-ground="navy"
-          className="ground-navy relative flex flex-col items-center gap-6 px-6 py-8 lg:justify-center lg:px-10 lg:py-12"
-          style={{ backgroundColor: 'var(--gk-navy)' }}
+          className={cn(
+            'ground-navy flex-col',
+            stage.kind === 'details' && 'hidden lg:flex',
+            stage.kind === 'question' && 'flex',
+            stage.kind === 'result' && 'flex items-center justify-center px-8 py-10',
+          )}
+          style={{ backgroundColor: 'var(--gk-navy-deep)' }}
         >
           {stage.kind === 'result' ? (
-            <ResultMark score={stage.score} />
+            <ScoredMark
+              size={176}
+              fills={Object.fromEntries(stage.score.domains.map((d) => [d.id, share(d.average)])) as Record<DomainId, number>}
+            >
+              <div className="text-center">
+                <p className="stat-figure text-[length:2.75rem] leading-none text-white">{formatScore(stage.score.average)}</p>
+                <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
+              </div>
+            </ScoredMark>
           ) : (
             <>
-              <DomainRing fills={progress} active={activeDomain} className="w-36 lg:w-52" />
-              <ul className="grid w-full max-w-[16rem] grid-cols-2 gap-x-4 gap-y-2 lg:grid-cols-1">
-                {domains.map((d, i) => (
-                  <li
-                    key={d.id}
-                    className={cn(
-                      'flex items-center gap-2 text-[length:var(--fs-sm)] font-bold transition-opacity duration-[var(--dur-base)]',
-                      activeDomain === undefined || activeDomain === i ? 'opacity-100' : 'opacity-60',
-                    )}
-                  >
-                    <span aria-hidden="true" className="h-1 w-4 rounded-full" style={{ background: DOMAIN_HUES[d.id].lift }} />
-                    <span className="text-white">{d.title}</span>
-                    <span className="ml-auto text-[var(--fg-inverse-2)] tabular-nums">
-                      {Math.round(progress[i] * d.statements.length)}/{d.statements.length}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <Itinerary stage={stage} answers={answers} className="hidden lg:flex" />
+              {stage.kind === 'question' && <ProgressStrip index={stage.index} answers={answers} className="lg:hidden" />}
             </>
           )}
         </aside>
 
-        <div className="min-h-[34rem] p-6 sm:p-8 lg:p-12">
+        <div className="flex flex-col p-6 sm:p-8 lg:p-10">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={stage.kind === 'question' ? `q${stage.index}` : stage.kind}
@@ -156,7 +150,7 @@ export function DataQuiz() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
               transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="h-full"
+              className="flex flex-1 flex-col"
             >
               {stage.kind === 'details' && (
                 <DetailsStep details={details} onChange={setDetails} onNext={() => go({ kind: 'question', index: 0 })} />
@@ -174,10 +168,8 @@ export function DataQuiz() {
                   stage={stage}
                   email={details.email}
                   onRetry={() => finish(answers)}
-                  onRestart={() => {
-                    setAnswers(Array(statementCount).fill(undefined))
-                    go({ kind: 'question', index: 0 })
-                  }}
+                  onReview={() => go({ kind: 'question', index: 0 })}
+                  onRestart={restart}
                 />
               )}
             </motion.div>
@@ -188,69 +180,137 @@ export function DataQuiz() {
   )
 }
 
-/* ------------------------------------------------------------ the ring */
+/* ----------------------------------------------------------- itinerary */
 
-/* Four arcs around a ring with a gap at twelve o'clock, like the mark. */
-const ARCS = [
-  { start: 22, sweep: 72 },
-  { start: 104, sweep: 72 },
-  { start: 186, sweep: 72 },
-  { start: 268, sweep: 72 },
-]
-const R = 40
+type Dot = { filled: boolean; current: boolean }
+type Leg =
+  | { id: 'about' | 'results'; title: string; state: 'done' | 'current' | 'upcoming' }
+  | { id: DomainId; title: string; state: 'done' | 'current' | 'upcoming'; dots: Array<Dot> }
 
-function arcPath(start: number, sweep: number) {
-  const point = (deg: number) => {
-    const rad = ((deg - 90) * Math.PI) / 180
-    return `${50 + R * Math.cos(rad)} ${50 + R * Math.sin(rad)}`
-  }
-  return `M ${point(start)} A ${R} ${R} 0 0 1 ${point(start + sweep)}`
+/** The route through the quiz, with where the visitor is on it. */
+function legs(stage: Exclude<Stage, { kind: 'result' }>, answers: Array<Answer | undefined>): Array<Leg> {
+  const current = stage.kind === 'question' ? stage.index : -1
+  return [
+    { id: 'about', title: 'About you', state: stage.kind === 'details' ? 'current' : 'done' },
+    ...domains.map((domain, d): Leg => {
+      const own = statements.flatMap((s, i) => (s.domain === d ? [i] : []))
+      const dots = own.map((i) => ({ filled: answers[i] !== undefined, current: i === current }))
+      const state = own.includes(current) ? 'current' : stage.kind === 'question' && dots.every((dot) => dot.filled) ? 'done' : 'upcoming'
+      return { id: domain.id, title: domain.title, state, dots }
+    }),
+    { id: 'results', title: 'Your results', state: 'upcoming' },
+  ]
 }
 
-/** The ring. `fills` is 0..1 per domain: how much of each arc is drawn over its faint track. */
-export function DomainRing({
-  fills,
-  active,
-  onDark = true,
+function Itinerary({
+  stage,
+  answers,
   className,
-  children,
 }: {
-  fills: Array<number>
-  active?: number
-  onDark?: boolean
+  stage: Exclude<Stage, { kind: 'result' }>
+  answers: Array<Answer | undefined>
   className?: string
-  children?: ReactNode
 }) {
-  const reduced = useReducedMotion()
+  const listing = stage.kind === 'details'
   return (
-    <div className={cn('relative aspect-square', className)}>
-      <svg viewBox="0 0 100 100" className="h-full w-full overflow-visible" aria-hidden="true">
-        {ARCS.map((arc, i) => {
-          const hue = DOMAIN_HUES[domains[i].id]
-          const d = arcPath(arc.start, arc.sweep)
-          return (
-            <g key={i}>
-              <path d={d} fill="none" stroke={onDark ? 'rgb(255 255 255 / 0.14)' : 'var(--hairline)'} strokeWidth={11} strokeLinecap="round" />
-              <motion.path
-                d={d}
-                fill="none"
-                stroke={onDark ? hue.lift : hue.arc}
-                strokeWidth={active === i ? 13 : 11}
-                strokeLinecap="round"
-                initial={false}
-                animate={{ pathLength: Math.max(fills[i], 0.001), opacity: fills[i] > 0 ? 1 : 0 }}
-                transition={reduced ? { duration: 0 } : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </g>
-          )
-        })}
-      </svg>
-      {children && <div className="absolute inset-0 grid place-items-center">{children}</div>}
+    <div className={cn('flex-col items-stretch px-8 py-10', className)}>
+      <ol className="flex flex-col">
+        {legs(stage, answers).map((leg) => (
+          <li
+            key={leg.id}
+            className={cn(
+              'flex min-h-[3.25rem] items-center gap-3 border-b border-[var(--hairline-inverse)] py-3 text-[length:var(--fs-sm)] text-white transition-opacity duration-[var(--dur-base)] last:border-b-0',
+              leg.state === 'current' ? 'font-bold' : 'font-semibold',
+              leg.state === 'upcoming' && !listing && 'opacity-60',
+              leg.state === 'done' && 'opacity-60',
+            )}
+          >
+            {'dots' in leg ? (
+              <span aria-hidden="true" className="h-[3px] w-3.5 shrink-0 rounded-full" style={{ background: DOMAIN_HUES[leg.id].lift }} />
+            ) : (
+              <span aria-hidden="true" className="h-[3px] w-3.5 shrink-0 rounded-full bg-white/70" />
+            )}
+            <span className="whitespace-nowrap">{leg.title}</span>
+            <span className="ml-auto flex items-center">
+              {leg.state === 'done' && !('dots' in leg) && <Check aria-hidden="true" strokeWidth={2.5} className="size-3.5" />}
+              {leg.id === 'about' && leg.state === 'current' && (
+                <span className="hand -mt-1 flex items-center gap-1.5 text-[length:var(--fs-hand-sm)] font-bold whitespace-nowrap text-[var(--gk-yellow)]">
+                  <Scribble name="arrow-curve" color="var(--gk-yellow)" weight={2.5} className="mt-1.5 h-6 w-5 rotate-90" />
+                  you’re here
+                </span>
+              )}
+              {'dots' in leg &&
+                (listing ? (
+                  <span className="font-semibold text-[var(--fg-inverse-2)]">3 statements</span>
+                ) : (
+                  <Dots dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} />
+                ))}
+            </span>
+          </li>
+        ))}
+      </ol>
+      {listing && (
+        <p className="mt-6 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">
+          About three minutes. Nothing is scored until the last statement.
+        </p>
+      )}
+    </div>
+  )
+}
+
+function Dots({ dots, hue }: { dots: Array<Dot>; hue: string }) {
+  return (
+    <span className="flex items-center gap-2">
+      {dots.map((dot, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className={cn(
+            'size-2 rounded-full transition-colors duration-[var(--dur-base)]',
+            dot.current && 'ring-2 ring-white ring-offset-2 ring-offset-[var(--gk-navy-deep)]',
+          )}
+          style={{ background: dot.filled ? hue : 'rgb(255 255 255 / 0.28)' }}
+        />
+      ))}
+    </span>
+  )
+}
+
+/** On a phone the itinerary collapses to one strip: the domain and the twelve dots. */
+function ProgressStrip({ index, answers, className }: { index: number; answers: Array<Answer | undefined>; className?: string }) {
+  const domain = domains[statements[index].domain]
+  return (
+    <div className={cn('flex h-14 items-center justify-between gap-4 px-5', className)}>
+      <span className="hand text-[length:var(--fs-hand-sm)]" style={{ color: DOMAIN_HUES[domain.id].lift }}>
+        {domain.title.toLowerCase()}
+      </span>
+      <span className="flex items-center gap-3">
+        {legs({ kind: 'question', index }, answers).map(
+          (leg) => 'dots' in leg && <Dots key={leg.id} dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} />,
+        )}
+      </span>
     </div>
   )
 }
 
 /* ------------------------------------------------------------- details */
+
+/* The content file's labels carry their explanations in parentheses; here
+   the aside already says what the email is for, so the labels are bare. */
+const labels: Record<keyof QuizDetails, string> = {
+  name: 'Full name',
+  email: 'Email',
+  organization: 'Organisation name',
+  region: 'Region',
+  sector: 'Sector',
+  sectorOther: 'Your sector',
+  role: 'Your role',
+  roleOther: 'Your role',
+  size: 'Organisation size',
+  budget: 'Organisation budget (optional)',
+}
+
+const quizInputClass = cn(inputClass, 'hover:border-[var(--gk-navy)]')
 
 function DetailsStep({
   details,
@@ -268,17 +328,21 @@ function DetailsStep({
     onNext()
   }
 
-  const text = (key: keyof QuizDetails, props: { type?: string; autoComplete?: string; required?: boolean; wide?: boolean } = {}) => (
-    <Field label={detailLabels[key]} htmlFor={`quiz-${key}`} wide={props.wide}>
+  const text = (
+    key: keyof QuizDetails,
+    props: { type?: string; autoComplete?: string; required?: boolean; wide?: boolean; placeholder?: string } = {},
+  ) => (
+    <Field label={labels[key]} htmlFor={`quiz-${key}`} wide={props.wide}>
       <input
         id={`quiz-${key}`}
         type={props.type ?? 'text'}
         required={props.required ?? true}
         maxLength={200}
         autoComplete={props.autoComplete}
+        placeholder={props.placeholder}
         value={details[key]}
         onChange={(event) => set(key)(event.target.value)}
-        className={inputClass}
+        className={quizInputClass}
       />
     </Field>
   )
@@ -287,9 +351,7 @@ function DetailsStep({
     <form onSubmit={submit} className="grid gap-5 md:grid-cols-2">
       <div className="md:col-span-2">
         <h2 className="text-[length:clamp(1.5rem,2.6vw,2rem)] leading-tight font-extrabold">First, a little about you.</h2>
-        <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
-          So we can email you your results. The statements come next, one at a time.
-        </p>
+        <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">So we can email you your results.</p>
       </div>
       {text('name', { autoComplete: 'name' })}
       {text('email', { type: 'email', autoComplete: 'email' })}
@@ -300,11 +362,12 @@ function DetailsStep({
       <Select id="role" value={details.role} options={detailOptions.role} onChange={set('role')} />
       {details.sector === 'Other' && text('sectorOther', { wide: details.role !== 'Other' })}
       {details.role === 'Other' && text('roleOther', { wide: details.sector !== 'Other' })}
-      {text('budget', { required: false, wide: true })}
-      <div className="flex items-center justify-end gap-4 md:col-span-2">
+      {text('budget', { required: false, wide: true, placeholder: 'e.g. INR 1 crore' })}
+      <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3 md:col-span-2">
         <GkButton type="submit" variant="primary" withArrow>
           Start the quiz
         </GkButton>
+        <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">Twelve statements come next, one at a time.</p>
       </div>
     </form>
   )
@@ -322,14 +385,14 @@ function Select({
   onChange: (value: string) => void
 }) {
   return (
-    <Field label={detailLabels[id]} htmlFor={`quiz-${id}`}>
+    <Field label={labels[id]} htmlFor={`quiz-${id}`}>
       <div className="relative">
         <select
           id={`quiz-${id}`}
           required
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className={cn(inputClass, 'cursor-pointer appearance-none pr-11', !value && 'text-[var(--fg-2)]')}
+          className={cn(quizInputClass, 'cursor-pointer appearance-none pr-11', !value && 'text-[var(--fg-2)]')}
         >
           <option value="" disabled>
             Choose one
@@ -366,6 +429,12 @@ function QuestionStep({
   const statement = statements[index]
   const domain = domains[statement.domain]
   const hue = DOMAIN_HUES[domain.id]
+  const statementId = `quiz-statement-${index}`
+
+  /* The pointer is usually resting where the last tile was, so the next
+     question's tile would light up before anyone moved. Mouse tiles stay
+     inert until the pointer actually moves; touch has no hover to carry. */
+  const [armed, setArmed] = useState(false)
 
   /* Keys 1 to 5 answer, in the order the scale reads. */
   useEffect(() => {
@@ -380,7 +449,7 @@ function QuestionStep({
   }, [onAnswer])
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-1 flex-col" onPointerMove={() => setArmed(true)}>
       <div className="flex items-center justify-between gap-4">
         <p className="hand" style={{ color: hue.ink }}>
           {domain.title.toLowerCase()}
@@ -390,60 +459,57 @@ function QuestionStep({
         </p>
       </div>
 
-      <fieldset className="mt-6 flex flex-1 flex-col">
-        <legend className="max-w-[30ch] text-[length:clamp(1.5rem,3vw,2.375rem)] leading-[1.2] font-extrabold tracking-[-0.01em] text-[var(--gk-ink)]">
+      <div className="flex flex-1 flex-col justify-center py-8 lg:py-10">
+        <p
+          id={statementId}
+          className="max-w-[30ch] text-[length:clamp(1.5rem,3vw,2.375rem)] leading-[1.2] font-extrabold tracking-[-0.01em] text-[var(--gk-ink)]"
+        >
           {statement.text}
-        </legend>
+        </p>
 
-        <div className="mt-10 grid gap-2 sm:grid-cols-5">
+        <div
+          role="radiogroup"
+          aria-labelledby={statementId}
+          className={cn('mt-8 grid gap-2 sm:grid-cols-5', !armed && '[@media(hover:hover)]:pointer-events-none')}
+        >
           {scale.map((option, i) => {
             const checked = value === option.value
             return (
               <label
-                key={option.value}
+                key={`${index}-${option.value}`}
                 className={cn(
-                  'group relative flex cursor-pointer items-center gap-3 rounded-[var(--r-md)] border-2 px-4 py-3.5 text-[length:var(--fs-sm)] font-bold transition-[background-color,border-color,transform] duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.98] sm:min-h-[6.5rem] sm:flex-col sm:items-start sm:justify-between sm:px-3.5 sm:py-4',
+                  'relative flex min-h-[3.25rem] cursor-pointer items-center gap-2 rounded-[var(--r-sm)] border px-3 py-2 text-[length:var(--fs-sm)] leading-tight font-semibold transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] sm:min-h-[4.5rem]',
                   'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
                   checked
                     ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
-                    : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:border-[var(--gk-navy)] hover:bg-[var(--gk-cream-deep)]',
+                    : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:bg-[var(--gk-cream-deep)]',
                 )}
               >
                 <input
                   type="radio"
-                  name={`quiz-statement-${index}`}
+                  name={statementId}
                   value={option.value}
                   checked={checked}
                   onChange={() => onAnswer(option.value)}
                   className="sr-only"
                 />
-                {/* Bars that grow with agreement: the scale, drawn. */}
-                <span aria-hidden="true" className="flex h-5 items-end gap-[3px]">
-                  {Array.from({ length: 5 }, (_, k) => (
-                    <span
-                      key={k}
-                      className={cn(
-                        'w-1.5 rounded-[1px]',
-                        k <= i ? (checked ? 'bg-[var(--gk-yellow)]' : 'bg-[var(--gk-navy)]') : checked ? 'bg-white/25' : 'bg-[var(--hairline-strong)]',
-                      )}
-                      style={{ height: `${(k + 1) * 20}%` }}
-                    />
-                  ))}
-                </span>
-                <span className="leading-tight">{option.label}</span>
-                <span
+                <kbd
                   aria-hidden="true"
-                  className={cn('ml-auto text-[length:var(--fs-xs)] tabular-nums sm:absolute sm:top-2.5 sm:right-3', checked ? 'text-white/70' : 'text-[var(--fg-2)]')}
+                  className={cn(
+                    'hidden size-5 shrink-0 place-items-center rounded-[3px] border font-sans text-[11px] font-bold tabular-nums xl:[@media(hover:hover)]:grid',
+                    checked ? 'border-white/40 text-white/80' : 'border-[var(--hairline-strong)] text-[var(--fg-2)]',
+                  )}
                 >
                   {i + 1}
-                </span>
+                </kbd>
+                <span className="flex-1 text-center text-balance">{option.label}</span>
               </label>
             )
           })}
         </div>
-      </fieldset>
+      </div>
 
-      <div className="mt-10 flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4">
         <button
           type="button"
           onClick={onBack}
@@ -452,7 +518,9 @@ function QuestionStep({
           <ArrowLeft aria-hidden="true" className="size-4" />
           Back
         </button>
-        <p className="hidden text-[length:var(--fs-sm)] text-[var(--fg-2)] sm:block">Answer for your organisation as it is today. Keys 1 to 5 work too.</p>
+        <p className="hidden text-[length:var(--fs-sm)] text-[var(--fg-2)] sm:block">
+          Answer for your organisation as it is today. Keys 1 to 5 work too.
+        </p>
       </div>
     </div>
   )
@@ -460,75 +528,60 @@ function QuestionStep({
 
 /* ------------------------------------------------------------- results */
 
-const LEVEL_TINTS = {
-  emerging: { ground: 'var(--gk-coral-tint)', ink: 'var(--gk-coral-ink)' },
-  developing: { ground: 'var(--gk-yellow-tint)', ink: 'var(--gk-yellow-ink)' },
-  established: { ground: 'var(--gk-teal-tint)', ink: 'var(--gk-teal-ink)' },
-}
-
-/** The ring drawn to the scores: each arc as long as its domain is strong. */
-function ResultMark({ score }: { score: QuizScore }) {
-  return (
-    <div className="flex flex-col items-center gap-5">
-      <DomainRing fills={score.domains.map((d) => (d.average - 1) / 4)} className="w-44 lg:w-56">
-        <div className="text-center">
-          <p className="stat-figure text-[length:clamp(2.75rem,5vw,3.75rem)] text-white">{formatScore(score.average)}</p>
-          <p className="text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
-        </div>
-      </DomainRing>
-      <ul className="grid w-full max-w-[16rem] grid-cols-2 gap-x-4 gap-y-2 lg:grid-cols-1">
-        {score.domains.map((d) => (
-          <li key={d.id} className="flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-white">
-            <span aria-hidden="true" className="h-1 w-4 rounded-full" style={{ background: DOMAIN_HUES[d.id].lift }} />
-            {d.title}
-            <span className="ml-auto text-[var(--fg-inverse-2)] tabular-nums">{formatScore(d.average)}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+const LEVEL_INKS = {
+  emerging: 'var(--gk-coral-ink)',
+  developing: 'var(--gk-yellow-ink)',
+  established: 'var(--gk-teal-ink)',
 }
 
 function Results({
   stage,
   email,
   onRetry,
+  onReview,
   onRestart,
 }: {
   stage: Extract<Stage, { kind: 'result' }>
   email: string
   onRetry: () => void
+  onReview: () => void
   onRestart: () => void
 }) {
+  const reduced = useReducedMotion()
   const { score } = stage
-  const tint = LEVEL_TINTS[score.level.id]
+  const weakest = DOMAIN_HUES[score.weakest.id]
 
   return (
     <div className="flex flex-col gap-10">
-      <div>
-        <span className="chip text-[length:var(--fs-sm)] font-bold" style={{ background: tint.ground, color: tint.ink }}>
-          {score.level.label}
-        </span>
-        <h2 className="mt-4 max-w-[28ch] text-[length:clamp(1.5rem,2.8vw,2.125rem)] leading-tight font-extrabold">{score.level.reading}</h2>
-      </div>
+      <h2 className="max-w-[44ch] text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-snug font-normal text-[var(--gk-ink)]">
+        <strong className="font-extrabold">{score.level.label}.</strong> {score.level.reading}
+      </h2>
 
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-10 pt-6 sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-10 pt-4 sm:grid-cols-4">
         {score.domains.map((d) => {
           const hue = DOMAIN_HUES[d.id]
-          const weakest = d.id === score.weakest.id
+          const lowest = d.id === score.weakest.id
           return (
-            <div key={d.id} className="relative flex flex-col gap-1 border-t-4 pt-3" style={{ borderColor: hue.arc }}>
-              {weakest && (
+            <div key={d.id} className="relative flex flex-col gap-1">
+              {lowest && (
                 <span className="hand pointer-events-none absolute -top-9 left-0 text-[var(--gk-coral-ink)]" aria-hidden="true">
                   start here
                 </span>
               )}
+              <motion.span
+                aria-hidden="true"
+                className="mb-2 block h-1 rounded-full"
+                style={{ background: hue.arc }}
+                initial={{ width: 0 }}
+                animate={{ width: `${share(d.average) * 100}%` }}
+                transition={reduced ? { duration: 0 } : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              />
               <dt className="text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)]">
                 {d.title}
-                {weakest && <span className="sr-only"> (your lowest score)</span>}
+                {lowest && <span className="sr-only"> (your lowest score)</span>}
               </dt>
               <dd className="stat-figure text-[length:2.25rem] text-[var(--gk-ink)]">{formatScore(d.average)}</dd>
-              <dd className="text-[length:var(--fs-sm)] font-semibold" style={{ color: LEVEL_TINTS[d.level.id].ink }}>
+              <dd className="text-[length:var(--fs-sm)] font-semibold" style={{ color: LEVEL_INKS[d.level.id] }}>
                 {d.level.label}
               </dd>
             </div>
@@ -536,13 +589,13 @@ function Results({
         })}
       </dl>
 
-      <div className="rounded-[var(--r-lg)] p-6 md:p-8" style={{ background: DOMAIN_HUES[score.weakest.id].tint }}>
+      <div className="rounded-[var(--r-lg)] p-6 md:p-8" style={{ background: weakest.tint }}>
         <p className="max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed">
           Your lowest score is in <strong>{score.weakest.title}</strong>. That is usually the best place to start, and it is what our work on{' '}
           {score.weakest.next.label.toLowerCase()} is for.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <GkButton to="/#contact" variant="primary" withArrow>
+          <GkButton href="#contact" variant="primary" withArrow>
             Talk to us about your results
           </GkButton>
           <GkButton to={score.weakest.next.to} variant="secondary">
@@ -551,7 +604,7 @@ function Results({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-[var(--hairline)] pt-6">
         <p role="status" className="flex items-center gap-2 text-[length:var(--fs-sm)] text-[var(--fg-2)]">
           {stage.delivery === 'sending' && 'Sending a copy to your inbox…'}
           {stage.delivery === 'sent' && (
@@ -572,10 +625,19 @@ function Results({
             </span>
           )}
         </p>
-        <button type="button" onClick={onRestart} className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline">
-          Retake the quiz
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </button>
+        <span className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <button type="button" onClick={onReview} className="text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline">
+            Review your answers
+          </button>
+          <button
+            type="button"
+            onClick={onRestart}
+            className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
+          >
+            Retake the quiz
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </button>
+        </span>
       </div>
     </div>
   )

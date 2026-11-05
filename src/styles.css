@@ -637,6 +637,20 @@
     }
   }
 
+  /* Photographs that dissolve into whatever ground they sit on, rather than
+     sitting in a frame: a mask, not an overlay, so it works on navy, white
+     and the light-blue band alike. Five stops, so the fade reads as the
+     photograph thinning out rather than a gradient laid over it. */
+  .dissolve-r {
+    mask-image: linear-gradient(to right, #000 0%, #000 42%, rgb(0 0 0 / 0.72) 60%, rgb(0 0 0 / 0.32) 80%, transparent 100%);
+  }
+  .dissolve-l {
+    mask-image: linear-gradient(to left, #000 0%, #000 42%, rgb(0 0 0 / 0.72) 60%, rgb(0 0 0 / 0.32) 80%, transparent 100%);
+  }
+  .dissolve-b {
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / 0.7) 65%, rgb(0 0 0 / 0.3) 84%, transparent 100%);
+  }
+
   /* --- Rails ------------------------------------------------------------- */
   .ticker-mask {
     mask-image: linear-gradient(

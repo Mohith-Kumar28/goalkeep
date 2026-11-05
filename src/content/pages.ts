@@ -53,19 +53,24 @@ export type Block =
       kind: 'hero'
       eyebrow: string
       headline: Heading
-      paragraphs: Array<string>
-      /** A phrase in the first paragraph that takes the highlighter. */
+      /** One paragraph. Anything longer opens the section it introduces. */
+      lead: string
+      /** A phrase in the lead that takes the highlighter. */
       highlight?: string
       primary?: Cta & { note?: string }
       secondary?: Cta
-      photo: Photo
+      photo?: Photo
+      /** In place of the photograph: the pages this one leads to, as panels. */
+      links?: Array<{ label: string; title: string; to: string; photo: Photo }>
     }
   /** The homepage's partner logo rail. */
   | { kind: 'partners' }
-  /** The homepage's Design / Build / Adopt section. */
-  | { kind: 'approach' }
+  /** The homepage's proof band: the figures over session footage. */
+  | { kind: 'proof' }
   | {
       kind: 'prose'
+      /** A navy statement band, for the one dark moment mid-page. */
+      tone?: 'navy'
       headline: Heading
       paragraphs: Array<string>
       /** A phrase in the first paragraph that takes the highlighter. */
@@ -83,18 +88,22 @@ export type Block =
     }
   | {
       kind: 'steps'
-      /** story: pinned illustration that changes as each step scrolls past.
-       *  bento: illustrated tiles of different sizes.
+      /** rows: one surface of stages; the open one turns navy with its photograph.
+       *  bento: illustrated cells of one surface, divided by hairlines.
        *  flow: a short sequence read left to right.
        *  paths: ways in, each with its own calls to action. */
-      layout: 'story' | 'bento' | 'flow' | 'paths'
+      layout: 'rows' | 'bento' | 'flow' | 'paths'
       headline: Heading
       intro?: Array<string>
+      /** A closing line under the steps. */
+      outro?: string
       steps: Array<Step>
     }
   | {
       kind: 'deliverables'
       headline: Heading
+      /** What the service is, before what you leave with. */
+      opening?: Array<string>
       /** Kickstarter's before and after questions. */
       shift?: { before: string; after: string; beforeLabel: string; afterLabel: string }
       intro?: string
@@ -122,10 +131,11 @@ export type Block =
       /** A homepage testimonial beside a single story. */
       testimonial?: AudienceId
     }
-  | { kind: 'testimonial'; audience: AudienceId }
+  | { kind: 'testimonial'; audience: AudienceId; tone?: 'navy' }
   | { kind: 'faq'; headline: Heading; items: Array<{ question: string; answer: string }> }
   | {
       kind: 'programs'
+      opening?: Array<string>
       cards: Array<{
         eyebrow: string
         title: string
@@ -144,6 +154,7 @@ export type Block =
   | { kind: 'related'; headline: Heading; items: Array<Related> }
   | {
       kind: 'audienceSwitch'
+      opening?: Array<string>
       prompt: string
       options: Array<{ id: string; label: string; blocks: Array<Block> }>
     }

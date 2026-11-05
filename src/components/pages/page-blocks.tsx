@@ -1,42 +1,46 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { ArrowRight, ArrowUpRight, BookOpenCheck, Clock, ScanSearch, Sparkles } from 'lucide-react'
-import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+import { createContext, useContext, useId, useState } from 'react'
 import type { ReactNode } from 'react'
 import { audiences } from '@/content/homepage'
-import type { Block, Heading, Page, Step, Story } from '@/content/pages'
+import type { Block, Heading, Page, Photo, Story } from '@/content/pages'
 import type { AudienceId, Cta } from '@/content/types'
 import { Scribble } from '@/components/primitives/doodles'
 import { GkButton } from '@/components/primitives/gk-button'
-import { ArcPiece, MarkAssembly, ShapeField } from '@/components/primitives/logo-shapes'
-import { Marker } from '@/components/primitives/marker'
+import { ArcPiece, MarkAssembly } from '@/components/primitives/logo-shapes'
+import { MarkerText } from '@/components/primitives/marker-text'
 import { ProgramVisual } from '@/components/primitives/program-visuals'
 import { Reveal } from '@/components/primitives/reveal'
+import { SpotlightCard } from '@/components/primitives/spotlight-card'
 import { StatCounter } from '@/components/primitives/stat-counter'
-import { Approach } from '@/components/sections/approach'
 import { Contact } from '@/components/sections/contact'
 import { Credibility } from '@/components/sections/credibility'
 import { Faqs } from '@/components/sections/faqs'
+import { Proof } from '@/components/sections/proof'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
 /**
  * Renders a programs or services page from its blocks.
  *
- * Grounds are decided here, not in content. The hero, the evidence band and
- * the close are navy and the FAQ is the homepage's pale yellow; everything
- * else alternates white and the light-blue highlight, so two adjacent bands
- * never share a ground however a page is ordered. Every page ends on the
- * contact form, which is where its in-page buttons land.
+ * The rules this follows came out of a six-reviewer design council in
+ * November, measured against the client-approved homepage:
  *
- * Each block kind has its own composition. The November review of the first
- * pass ("looking a bit AI generated") was right that one sticky split and one
- * card grid repeated down a page reads as a template.
+ *   · One accent per band. The mark's four hues appear only where they mean
+ *     something; checks, labels and glyphs take the band's accent.
+ *   · Photographs dissolve into the ground through a mask. None sits in a
+ *     rounded, shadowed box, and no small arc is stuck to a corner.
+ *   · Surfaces are one plane divided by hairlines, never cards inside cards.
+ *   · Every page has one navy band mid-page; the rest alternate white and the
+ *     light-blue highlight. Grounds are decided here, never in content.
+ *   · The hand (Caveat) is rationed to a few notes a page, and the
+ *     highlighter marks one phrase per band at most.
  */
 export function PageView({ page }: { page: Page }) {
   return (
     <ContactCta.Provider value={contactLabel(page.blocks)}>
       <Blocks blocks={page.blocks} />
-      <Contact defaultService={page.contactService} />
+      <Contact defaultService={page.contactService} aside={<ContactAside />} />
     </ContactCta.Provider>
   )
 }
@@ -53,14 +57,37 @@ function contactLabel(blocks: Array<Block>): string {
   return 'Talk to us'
 }
 
+/** The column beside the contact form: the team, so a reader sees who replies. */
+function ContactAside() {
+  return (
+    <div className="mt-10 hidden lg:block">
+      <img
+        src="/photos/group-team.webp"
+        alt="The Goalkeep team with a partner organisation after a workshop"
+        loading="lazy"
+        decoding="async"
+        className="dissolve-b aspect-[4/3] w-full object-cover"
+      />
+      <p className="mt-2 max-w-[36ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-2)]">
+        Someone from this team reads every message and writes back.
+      </p>
+    </div>
+  )
+}
+
 const LIGHT = ['ground-cream', 'ground-cream-deep'] as const
-const NAVY = new Set<Block['kind']>(['stats', 'closing'])
+
+const isNavy = (block: Block) =>
+  block.kind === 'stats' ||
+  block.kind === 'closing' ||
+  block.kind === 'proof' ||
+  ((block.kind === 'prose' || block.kind === 'testimonial') && block.tone === 'navy')
 
 function Blocks({ blocks, startTone = 0 }: { blocks: Array<Block>; startTone?: number }) {
   let tone = startTone
   return blocks.map((block, index) => {
     const ground = LIGHT[tone % 2]
-    if (!NAVY.has(block.kind) && block.kind !== 'faq' && block.kind !== 'audienceSwitch') tone += 1
+    if (!isNavy(block) && block.kind !== 'hero' && block.kind !== 'faq' && block.kind !== 'audienceSwitch') tone += 1
     return <BlockView key={index} block={block} ground={ground} tone={tone} />
   })
 }
@@ -68,13 +95,13 @@ function Blocks({ blocks, startTone = 0 }: { blocks: Array<Block>; startTone?: n
 function BlockView({ block, ground, tone }: { block: Block; ground: string; tone: number }) {
   switch (block.kind) {
     case 'hero':
-      return <Hero block={block} ground={ground} />
+      return <Hero block={block} />
     case 'partners':
       return <Credibility ground={ground} />
-    case 'approach':
-      return <Approach ground={ground} />
+    case 'proof':
+      return <Proof />
     case 'prose':
-      return <Prose block={block} ground={ground} />
+      return block.tone === 'navy' ? <Statement block={block} /> : <Prose block={block} ground={ground} />
     case 'checklist':
       return <SelfCheck block={block} ground={ground} />
     case 'steps':
@@ -88,11 +115,7 @@ function BlockView({ block, ground, tone }: { block: Block; ground: string; tone
     case 'stories':
       return <Stories block={block} ground={ground} />
     case 'testimonial':
-      return (
-        <Band ground={ground}>
-          <Testimonial audience={block.audience} />
-        </Band>
-      )
+      return <TestimonialBand audience={block.audience} navy={block.tone === 'navy'} ground={ground} />
     case 'faq':
       return <Faqs headline={block.headline.lead} headlineEm={block.headline.em} items={block.items} />
     case 'programs':
@@ -117,16 +140,20 @@ function Band({
   accent = 'accent-blue',
   children,
   className,
-  id,
+  navy = false,
 }: {
   ground: string
   accent?: string
   children: ReactNode
   className?: string
-  id?: string
+  navy?: boolean
 }) {
   return (
-    <section id={id} className={cn(ground, accent, 'band relative overflow-x-clip', className)}>
+    <section
+      data-ground={navy ? 'navy' : undefined}
+      className={cn(navy ? 'ground-navy' : ground, accent, 'band relative overflow-x-clip', className)}
+      style={navy ? { backgroundColor: 'var(--gk-navy)' } : undefined}
+    >
       <div className="shell relative">{children}</div>
     </section>
   )
@@ -146,14 +173,14 @@ function Title({ heading, as: As = 'h2', className }: { heading: Heading; as?: '
   )
 }
 
-/** The text with `phrase` (if it occurs) under the highlighter. */
-function Highlighted({ text, phrase, onDark = false }: { text: string; phrase?: string; onDark?: boolean }) {
+/** The text with `phrase` (if it occurs) under the highlighter, one swipe per line. */
+function Highlighted({ text, phrase, hue }: { text: string; phrase?: string; hue?: string }) {
   const at = phrase ? text.indexOf(phrase) : -1
   if (!phrase || at < 0) return <>{text}</>
   return (
     <>
       {text.slice(0, at)}
-      <Marker onDark={onDark}>{phrase}</Marker>
+      <MarkerText hue={hue}>{phrase}</MarkerText>
       {text.slice(at + phrase.length)}
     </>
   )
@@ -169,180 +196,191 @@ function CtaButton({ cta, ...rest }: { cta: Cta } & Omit<Parameters<typeof GkBut
   )
 }
 
-/** A handwritten aside with an arrow back at what it annotates. */
+/** A handwritten aside, with an arrow back at what it annotates. */
 function HandNote({
   children,
-  color = 'var(--gk-coral-ink)',
-  arrow = 'left',
+  color = 'var(--band-accent-ink)',
   className,
 }: {
   children: ReactNode
   color?: string
-  arrow?: 'left' | 'up' | 'none'
   className?: string
 }) {
   return (
     <span aria-hidden="true" className={cn('pointer-events-none flex items-start gap-1.5', className)} style={{ color }}>
-      {arrow === 'left' && <Scribble name="arrow-curve" color={color} className="mt-1 h-10 w-9 shrink-0 -scale-x-100" />}
-      {arrow === 'up' && <Scribble name="arrow-hook" color={color} className="mt-0.5 h-8 w-12 shrink-0 -scale-y-100" />}
+      <Scribble name="arrow-hook" color={color} className="mt-0.5 h-8 w-12 shrink-0 -scale-y-100" />
       <span className="hand -rotate-2 leading-tight">{children}</span>
     </span>
   )
 }
 
-/* The mark's four hues, for anything that cycles through them. */
-const HUES = [
-  { arc: 'var(--gk-blue)', tint: 'var(--gk-blue-tint)', ink: 'var(--gk-blue-deep)' },
-  { arc: 'var(--gk-teal)', tint: 'var(--gk-teal-tint)', ink: 'var(--gk-teal-ink)' },
-  { arc: 'var(--gk-coral)', tint: 'var(--gk-coral-tint)', ink: 'var(--gk-coral-ink)' },
-  { arc: 'var(--gk-yellow-deep)', tint: 'var(--gk-yellow-tint)', ink: 'var(--gk-yellow-ink)' },
-]
+/** A small category label: the site's eyebrow, in the band accent. */
+function Label({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <span
+      className={cn(
+        'text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--band-accent-ink,var(--gk-blue-deep))] uppercase',
+        className,
+      )}
+    >
+      {children}
+    </span>
+  )
+}
+
+/**
+ * A photograph bled to one edge of its band and dissolving towards the copy.
+ * Desktop only; on a phone the same photograph sits above the copy and
+ * dissolves downwards.
+ */
+function BleedPhoto({ photo, side, width = '42%' }: { photo: Photo; side: 'left' | 'right'; width?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn('absolute inset-y-0 hidden lg:block', side === 'left' ? 'dissolve-r left-0' : 'dissolve-l right-0')}
+      style={{ width }}
+    >
+      <img src={photo.src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+    </div>
+  )
+}
+
+function PhonePhoto({ photo }: { photo: Photo }) {
+  return (
+    <div className="dissolve-b -mx-4 mb-8 h-64 sm:h-80 md:-mx-12 lg:hidden">
+      <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+    </div>
+  )
+}
+
+/** One large piece of the mark, bleeding off a band's edge: the shape layer's own rule. */
+function BandArc({ className, color = 'var(--gk-navy-lift)' }: { className?: string; color?: string }) {
+  return (
+    <div aria-hidden="true" className={cn('pointer-events-none absolute hidden lg:block', className)}>
+      <ArcPiece sweep={130} start={200} thickness={14} color={color} />
+    </div>
+  )
+}
 
 /* ---------------------------------------------------------------- hero */
 
 /**
- * Flat navy with the mark's arcs in the corners, as on the homepage. The
- * photograph bleeds off the right edge and dissolves into the panel. Only the
- * first paragraph stays in the hero; the rest opens the page below it as a
- * standfirst, so the buttons are on screen without scrolling.
+ * Flat navy, the photograph bled off the right edge and dissolving into the
+ * panel. One paragraph, so the buttons are on screen without scrolling. The
+ * programs overview carries its two programs as panels in place of a photo.
  */
-function Hero({ block, ground }: { block: Of<'hero'>; ground: string }) {
-  const [first, ...rest] = block.paragraphs
-
+function Hero({ block }: { block: Of<'hero'> }) {
+  const long = `${block.headline.lead} ${block.headline.em ?? ''}`.length > 60
   return (
-    <>
-      <section
-        data-ground="navy"
-        className="ground-navy accent-yellow relative overflow-hidden"
-        style={{ backgroundColor: 'var(--gk-navy)' }}
-      >
-        <ShapeField variant="hero" />
+    <section data-ground="navy" className="ground-navy accent-yellow relative overflow-hidden" style={{ backgroundColor: 'var(--gk-navy)' }}>
+      <BandArc className="-bottom-56 -left-40 size-[26rem]" />
+
+      {block.photo && !block.links && (
         <div
           className="photo-bleed photo-bleed-b photo-bleed-lg-x relative h-64 sm:h-80 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[44%]"
           aria-hidden="true"
         >
           <img src={block.photo.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
         </div>
-
-        <div className="shell relative pt-6 pb-16 lg:py-24">
-          <Reveal className="lg:max-w-[54%]">
-            <p className="eyebrow mb-5">{block.eyebrow}</p>
-            <Title
-              heading={block.headline}
-              as="h1"
-              className={
-                /* The services doc's headlines run long; a long one steps down a size rather than running to five lines. */
-                `${block.headline.lead} ${block.headline.em ?? ''}`.length > 60
-                  ? 'max-w-[24ch] !text-[length:clamp(2rem,3.4vw,2.75rem)]'
-                  : 'max-w-[18ch]'
-              }
-            />
-            <p className="lead mt-6 max-w-[48ch]">
-              <Highlighted text={first} phrase={block.highlight} onDark />
-            </p>
-
-            {(block.primary || block.secondary) && (
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                {block.primary && <CtaButton cta={block.primary} variant="accent" onDark withArrow />}
-                {block.secondary && <CtaButton cta={block.secondary} variant="secondary" onDark />}
-              </div>
-            )}
-            {block.primary?.note && (
-              <HandNote arrow="up" color="var(--gk-yellow)" className="mt-3 ml-6">
-                {block.primary.note}
-              </HandNote>
-            )}
-          </Reveal>
-        </div>
-      </section>
-
-      {rest.length > 0 && (
-        <section className={cn(ground, 'relative pt-14 pb-4 md:pt-20')}>
-          <div className="shell">
-            <Reveal className="grid gap-6 lg:grid-cols-12">
-              <div className="flex flex-col gap-5 lg:col-span-9 lg:col-start-2">
-                {rest.map((paragraph, i) => (
-                  <p
-                    key={i}
-                    className={
-                      i === 0
-                        ? 'text-[length:clamp(1.25rem,2vw,1.625rem)] leading-[1.5] font-medium text-[var(--gk-ink)]'
-                        : 'max-w-[68ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]'
-                    }
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </section>
       )}
-    </>
+
+      <div className={cn('shell relative pt-8 pb-16 lg:py-24', block.links && 'grid items-center gap-12 lg:grid-cols-12')}>
+        <Reveal className={block.links ? 'lg:col-span-6' : 'lg:max-w-[54%]'}>
+          <p className="eyebrow mb-5">{block.eyebrow}</p>
+          <Title
+            heading={block.headline}
+            as="h1"
+            className={long ? 'max-w-[24ch] !text-[length:clamp(2rem,3.4vw,2.75rem)]' : 'max-w-[18ch]'}
+          />
+          <p className="lead mt-6 max-w-[48ch]">
+            <Highlighted text={block.lead} phrase={block.highlight} hue="var(--gk-white)" />
+          </p>
+
+          {(block.primary || block.secondary) && (
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              {block.primary && <CtaButton cta={block.primary} variant="accent" onDark withArrow />}
+              {block.secondary && <CtaButton cta={block.secondary} variant="secondary" onDark />}
+            </div>
+          )}
+          {block.primary?.note && (
+            <HandNote color="var(--gk-yellow)" className="mt-3 ml-6">
+              {block.primary.note}
+            </HandNote>
+          )}
+        </Reveal>
+
+        {block.links && (
+          <Reveal delay={0.12} className="grid gap-4 sm:grid-cols-2 lg:col-span-6">
+            {block.links.map((link) => (
+              <SpotlightCard key={link.to} className="h-full rounded-[var(--r-lg)]">
+                <a
+                  href={link.to}
+                  className="group flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline-inverse)] bg-[rgb(255_255_255_/_0.07)] text-white"
+                >
+                  <div className="dissolve-b aspect-[4/3] overflow-hidden">
+                    <img src={link.photo.src} alt={link.photo.alt} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="-mt-8 flex flex-1 flex-col gap-1.5 p-6">
+                    <span className="text-[length:var(--fs-sm)] text-[var(--fg-inverse-2)]">{link.label}</span>
+                    <span className="flex items-center justify-between gap-3 text-[length:var(--fs-xl)] font-extrabold">
+                      {link.title}
+                      <ArrowRight aria-hidden="true" className="size-5 text-[var(--gk-yellow)] transition-transform duration-[var(--dur-base)] group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </a>
+              </SpotlightCard>
+            ))}
+          </Reveal>
+        )}
+      </div>
+    </section>
   )
 }
 
 /* --------------------------------------------------------------- prose */
 
+/** A statement with its photograph bled off the band's left edge. */
 function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
   const [first, ...rest] = block.paragraphs
 
-  if (block.photo) {
-    return (
-      <Band ground={ground}>
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-          <Reveal className="relative lg:col-span-5">
-            <img
-              src={block.photo.src}
-              alt={block.photo.alt}
-              loading="lazy"
-              decoding="async"
-              className="aspect-[4/5] w-full rounded-[var(--r-lg)] object-cover shadow-[var(--shadow-md)]"
-            />
-            {/* A quarter of the mark, pinned to the photograph's corner. */}
-            <div className="absolute -right-8 -bottom-8 hidden size-28 md:block" aria-hidden="true">
-              <ArcPiece sweep={110} start={95} thickness={16} color="var(--gk-yellow)" />
-            </div>
-            {block.note && (
-              <HandNote className="mt-5 md:ml-10" color="var(--gk-blue-deep)" arrow="up">
-                {block.note}
-              </HandNote>
-            )}
-          </Reveal>
-          <Reveal delay={0.08} className="flex flex-col gap-6 lg:col-span-7">
-            <Title heading={block.headline} className="max-w-[20ch]" />
-            <p className="lead max-w-[56ch]">
-              <Highlighted text={first} phrase={block.highlight} />
-            </p>
-            {rest.map((paragraph, i) => (
-              <p key={i} className="max-w-[62ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
-                {paragraph}
-              </p>
-            ))}
-          </Reveal>
-        </div>
-      </Band>
-    )
-  }
-
-  /* Without a photograph the statement is the picture: one large sentence,
-     the rest in two quiet columns under it. */
   return (
-    <Band ground={ground}>
-      <Reveal className="max-w-[60rem]">
-        <Title heading={block.headline} className="max-w-[24ch]" />
-        <p className="mt-8 text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-[1.45] font-medium text-[var(--gk-ink)]">
-          <Highlighted text={first} phrase={block.highlight} />
+    <section className={cn(ground, 'accent-blue band relative overflow-x-clip')}>
+      {block.photo && <BleedPhoto photo={block.photo} side="left" />}
+      <div className="shell relative">
+        {block.photo && <PhonePhoto photo={block.photo} />}
+        <Reveal className={cn('flex flex-col gap-6', block.photo ? 'lg:ml-[46%] lg:max-w-[40rem]' : 'max-w-[60rem]')}>
+          <Title heading={block.headline} className="max-w-[20ch]" />
+          <p className="lead max-w-[56ch]">
+            <Highlighted text={first} phrase={block.highlight} />
+          </p>
+          {rest.map((paragraph, i) => (
+            <p key={i} className="max-w-[62ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+              {paragraph}
+            </p>
+          ))}
+          {block.note && <HandNote className="mt-1">{block.note}</HandNote>}
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+/** The page's navy moment: one large sentence, the rest under it, a piece of the mark off the edge. */
+function Statement({ block }: { block: Of<'prose'> }) {
+  const [first, ...rest] = block.paragraphs
+  return (
+    <Band ground="" navy accent="accent-yellow">
+      <BandArc className="-top-24 -right-56 size-[34rem]" />
+      <Reveal className="relative max-w-[58rem]">
+        <Title heading={block.headline} className="max-w-[22ch]" />
+        <p className="mt-8 text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-[1.5] font-medium text-white">
+          <Highlighted text={first} phrase={block.highlight} hue="var(--gk-white)" />
         </p>
-        {rest.length > 0 && (
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            {rest.map((paragraph, i) => (
-              <p key={i} className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        )}
+        {rest.map((paragraph, i) => (
+          <p key={i} className="mt-6 max-w-[62ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-inverse-2)]">
+            {paragraph}
+          </p>
+        ))}
       </Reveal>
     </Band>
   )
@@ -351,114 +389,100 @@ function Prose({ block, ground }: { block: Of<'prose'>; ground: string }) {
 /* ---------------------------------------------------------- self-check */
 
 /**
- * "This may be right for you if…" lists, made into something to do: tick
- * what sounds familiar. Three or more and the page says so and offers the
- * conversation. Nothing is stored; it is a reading aid.
+ * "This may be right for you if…" lists as something to do: tick what sounds
+ * familiar. A ticked line takes the highlighter. At three, the page says so
+ * and offers the conversation. Nothing is stored.
  */
 function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }) {
   const [ticked, setTicked] = useState<Array<number>>([])
   const ctaLabel = useContext(ContactCta)
   const count = ticked.length
   const toggle = (i: number) => setTicked((t) => (t.includes(i) ? t.filter((x) => x !== i) : [...t, i]))
+  const odd = block.items.length % 2 === 1
+
+  const result = (
+    <div className="flex min-h-12 flex-col justify-center gap-3" aria-live="polite">
+      {count >= 3 ? (
+        <>
+          <p className="text-[length:var(--fs-lg)] leading-snug font-bold">
+            {count} of {block.items.length} sound familiar. That is worth a conversation.
+          </p>
+          <div>
+            <GkButton href="#contact" variant="primary" withArrow>
+              {ctaLabel}
+            </GkButton>
+          </div>
+        </>
+      ) : (
+        <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">
+          {count === 0 ? 'Nothing is saved. It is just for you.' : `${count} ticked so far.`}
+        </p>
+      )}
+    </div>
+  )
 
   return (
     <Band ground={ground} accent="accent-teal">
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-        <Reveal className="lg:col-span-12">
+        <Reveal className={block.aside ? 'lg:col-span-8' : 'lg:col-span-12'}>
           <Title heading={block.headline} className="max-w-[22ch]" />
-          <HandNote color="var(--gk-teal-ink)" arrow="none" className="mt-4">
-            tick what sounds familiar
-          </HandNote>
-        </Reveal>
+          <HandNote className="mt-3">tick what sounds familiar</HandNote>
 
-        <div className={cn(block.aside ? 'lg:col-span-8' : 'lg:col-span-12')}>
-          <ul className={cn('grid gap-3 sm:grid-cols-2', !block.aside && block.items.length % 3 === 0 && 'xl:grid-cols-3')}>
+          <ul className="mt-8 grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2">
             {block.items.map((item, i) => {
               const on = ticked.includes(i)
               return (
-                <Reveal as="li" key={item} delay={Math.min(i, 5) * 0.04} className="h-full">
+                <li key={item} className="bg-[var(--gk-white)]">
                   <button
                     type="button"
                     aria-pressed={on}
                     onClick={() => toggle(i)}
-                    className={cn(
-                      'group flex h-full w-full items-start gap-4 rounded-[var(--r-lg)] border p-5 text-left transition-[background-color,border-color,box-shadow] duration-[var(--dur-base)] ease-[var(--ease-out)]',
-                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gk-teal-ink)]',
-                      on
-                        ? 'border-[var(--gk-teal)] bg-[var(--gk-teal-tint)] shadow-[var(--shadow-xs)]'
-                        : 'border-[var(--hairline)] bg-[var(--gk-white)] hover:border-[var(--gk-teal)] hover:shadow-[var(--shadow-sm)]',
-                    )}
+                    className="group flex h-full w-full items-start gap-4 px-6 py-5 text-left transition-colors duration-[var(--dur-base)] hover:bg-[var(--gk-cream-deep)] focus-visible:bg-[var(--gk-cream-deep)] focus-visible:outline-none"
                   >
                     <span
                       aria-hidden="true"
                       className={cn(
-                        'relative mt-0.5 grid size-7 shrink-0 place-items-center rounded-[var(--r-sm)] border-2 transition-colors duration-[var(--dur-fast)]',
-                        on ? 'border-[var(--gk-teal)] bg-[var(--gk-white)]' : 'border-[var(--hairline-strong)] group-hover:border-[var(--gk-teal)]',
+                        'relative mt-1 grid size-6 shrink-0 place-items-center rounded-[var(--r-sm)] border-2 transition-colors duration-[var(--dur-fast)]',
+                        on ? 'border-[var(--gk-teal-ink)]' : 'border-[var(--hairline-strong)] group-hover:border-[var(--gk-teal-ink)]',
                       )}
                     >
-                      {on && <Scribble name="check" color="var(--gk-teal-ink)" weight={4} duration={0.35} className="absolute -top-2 -right-2 size-9" />}
+                      {on && <Scribble name="check" color="var(--gk-teal-ink)" weight={4} duration={0.3} className="absolute -top-2.5 -right-2.5 size-8" />}
                     </span>
-                    <span className="text-[length:var(--fs-lg)] leading-snug font-semibold text-[var(--gk-ink)]">{item}</span>
+                    <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">
+                      {on ? <MarkerText>{item}</MarkerText> : item}
+                    </span>
                   </button>
-                </Reveal>
+                </li>
               )
             })}
+            {odd && <li className="bg-[var(--gk-white)] px-6 py-5">{result}</li>}
           </ul>
-
-          <div className="mt-6 flex min-h-12 flex-wrap items-center gap-x-5 gap-y-3" aria-live="polite">
-            <AnimatePresence mode="wait" initial={false}>
-              {count >= 3 ? (
-                <motion.div
-                  key="cta"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex flex-wrap items-center gap-x-5 gap-y-3"
-                >
-                  <p className="text-[length:var(--fs-lg)] font-bold">
-                    {count} of {block.items.length} sound familiar. That is a conversation worth having.
-                  </p>
-                  <GkButton href="#contact" variant="primary" withArrow>
-                    {ctaLabel}
-                  </GkButton>
-                </motion.div>
-              ) : (
-                <motion.p
-                  key="count"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-[length:var(--fs-sm)] text-[var(--fg-2)]"
-                >
-                  {count === 0 ? 'Nothing is saved. It is just for you.' : `${count} ticked so far.`}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
+          {!odd && <div className="mt-6">{result}</div>}
+        </Reveal>
 
         {block.aside && (
-          <Reveal delay={0.1} className="lg:col-span-4">
+          <div className="lg:col-span-4">
             <aside
-              className="ground-navy relative overflow-hidden rounded-[var(--r-lg)] p-7 shadow-[var(--shadow-md)] lg:sticky lg:top-[var(--pin-top,8rem)]"
+              data-ground="navy"
+              className="ground-navy rounded-[var(--r-lg)] p-8 lg:sticky lg:top-[var(--pin-top,8rem)]"
               style={{ backgroundColor: 'var(--gk-navy)' }}
             >
-              <div className="absolute -right-12 -bottom-12 size-32 opacity-90" aria-hidden="true">
-                <ArcPiece sweep={120} start={170} thickness={18} color="var(--gk-teal-lift)" />
-              </div>
-              <p className="relative max-w-[26ch] text-[length:var(--fs-lg)] leading-snug font-bold text-white">{block.aside.intro}</p>
-              <ol className="relative mt-6 flex flex-col gap-4">
+              <p className="max-w-[26ch] text-[length:var(--fs-lg)] leading-snug font-bold text-white">{block.aside.intro}</p>
+              <ol className="mt-6 flex flex-col">
                 {block.aside.people.map((person, i) => (
-                  <li key={person} className="flex flex-col gap-1 border-t border-[var(--hairline-inverse)] pt-4">
-                    <span className="hand text-[var(--gk-yellow)]">{i === 0 ? 'organisational influence' : 'measurement expertise'}</span>
+                  <li key={person} className="flex flex-col gap-1.5 border-t border-[var(--hairline-inverse)] py-4">
+                    <span className="text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-yellow)] uppercase">
+                      {i === 0 ? 'Organisational influence' : 'Measurement expertise'}
+                    </span>
                     <span className="text-[length:var(--fs-base)] leading-snug text-white">{person}</span>
                   </li>
                 ))}
               </ol>
-              <p className="relative mt-6 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">{block.aside.outro}</p>
+              <p className="border-t border-[var(--hairline-inverse)] pt-4 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">
+                {block.aside.outro}
+              </p>
             </aside>
-          </Reveal>
+          </div>
         )}
       </div>
     </Band>
@@ -469,8 +493,8 @@ function SelfCheck({ block, ground }: { block: Of<'checklist'>; ground: string }
 
 function Steps({ block, ground }: { block: Of<'steps'>; ground: string }) {
   switch (block.layout) {
-    case 'story':
-      return <StoryScroll block={block} ground={ground} />
+    case 'rows':
+      return <StageRows block={block} ground={ground} />
     case 'bento':
       return <Bento block={block} ground={ground} />
     case 'flow':
@@ -480,268 +504,213 @@ function Steps({ block, ground }: { block: Of<'steps'>; ground: string }) {
   }
 }
 
+function StepsHeader({ block, className }: { block: Of<'steps'>; className?: string }) {
+  return (
+    <Reveal className={cn('max-w-[48rem]', className)}>
+      <Title heading={block.headline} className="max-w-[22ch]" />
+      {block.intro?.map((line, i) => (
+        <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]'}>
+          {line}
+        </p>
+      ))}
+    </Reveal>
+  )
+}
+
+const number = (i: number) => String(i + 1).padStart(2, '0')
+
 /**
- * Kickstarter's four stages. The illustration pins beside the text and
- * changes as each stage scrolls past, so the reader always sees the stage
- * they are reading about. On a phone each stage carries its own.
+ * Kickstarter's four stages, in the shape the homepage's "Our approach"
+ * already taught the client: one surface divided by hairlines, the open
+ * stage inverted to navy with its photograph dissolving into the panel. The
+ * order is the information here, so the stages keep their numbers.
  */
-function StoryScroll({ block, ground }: { block: Of<'steps'>; ground: string }) {
-  const [active, setActive] = useState(0)
-  const refs = useRef<Array<HTMLLIElement | null>>([])
+function StageRows({ block, ground }: { block: Of<'steps'>; ground: string }) {
+  const [open, setOpen] = useState(0)
   const reduced = useReducedMotion()
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(Number((entry.target as HTMLElement).dataset.index))
-        }
-      },
-      { rootMargin: '-45% 0px -45% 0px' },
-    )
-    refs.current.forEach((el) => el && observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-
-  const step = block.steps[active]
+  const id = useId()
 
   return (
     <Band ground={ground}>
-      <Reveal>
-        <Title heading={block.headline} className="max-w-[22ch]" />
-      </Reveal>
-
-      <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-16">
-        <div className="hidden lg:col-span-5 lg:block">
-          <div className="sticky top-32">
-            <div className="relative overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-10 shadow-[var(--shadow-sm)]">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={active}
-                  initial={reduced ? false : { opacity: 0, filter: 'blur(6px)' }}
-                  animate={{ opacity: 1, filter: 'blur(0px)' }}
-                  exit={reduced ? undefined : { opacity: 0, filter: 'blur(6px)' }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      <StepsHeader block={block} />
+      <Reveal className="mt-12 overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-sm)]">
+        {block.steps.map((s, i) => {
+          const isOpen = open === i
+          return (
+            <div key={s.title} className={cn('border-[var(--hairline)] [&:not(:first-child)]:border-t', isOpen && 'ground-navy')} style={isOpen ? { backgroundColor: 'var(--gk-navy)' } : undefined} data-ground={isOpen ? 'navy' : undefined}>
+              <h3>
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={`${id}-${i}`}
+                  onClick={() => setOpen(i)}
+                  className={cn(
+                    'flex w-full items-center gap-5 px-6 py-5 text-left transition-colors duration-[var(--dur-base)] md:px-8',
+                    isOpen ? 'cursor-default' : 'hover:bg-[var(--gk-cream-deep)]',
+                  )}
                 >
-                  {step.visual && <ProgramVisual name={step.visual} className="mx-auto max-w-[22rem]" />}
-                </motion.div>
+                  <span
+                    className={cn(
+                      'grid size-9 shrink-0 place-items-center rounded-[var(--r-sm)] text-[length:var(--fs-sm)] font-extrabold tabular-nums',
+                      isOpen ? 'bg-[var(--gk-yellow)] text-[var(--gk-navy-deep)]' : 'bg-[var(--gk-blue-tint)] text-[var(--gk-blue-deep)]',
+                    )}
+                  >
+                    {number(i)}
+                  </span>
+                  <span className={cn('text-[length:var(--fs-2xl)] leading-tight font-extrabold', isOpen ? 'text-white' : 'text-[var(--gk-ink)]')}>
+                    {s.title}
+                  </span>
+                  {!isOpen && s.lead && (
+                    <span className="hidden flex-1 truncate text-[length:var(--fs-base)] text-[var(--fg-2)] md:block">{s.lead}</span>
+                  )}
+                  {s.visual && !isOpen && (
+                    <span aria-hidden="true" className="ml-auto hidden w-24 shrink-0 opacity-90 lg:block">
+                      <ProgramVisual name={s.visual} />
+                    </span>
+                  )}
+                  <ChevronDown
+                    aria-hidden="true"
+                    className={cn('size-5 shrink-0 transition-transform duration-[var(--dur-base)]', isOpen ? 'ml-auto rotate-180 text-white lg:ml-auto' : 'text-[var(--gk-navy)]', !isOpen && s.visual ? 'lg:ml-0' : 'ml-auto')}
+                  />
+                </button>
+              </h3>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    id={`${id}-${i}`}
+                    initial={reduced ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={reduced ? undefined : { height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid md:grid-cols-2">
+                      <div className="flex flex-col gap-4 px-6 pt-2 pb-10 md:px-8 md:pb-12">
+                        {s.lead && <p className="text-[length:var(--fs-xl)] leading-snug font-bold text-[var(--gk-yellow)]">{s.lead}</p>}
+                        {s.body.map((paragraph, j) => (
+                          <p key={j} className="max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-inverse-2)]">
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
+                      {s.photo && (
+                        <div className="photo-bleed relative min-h-[16rem] md:min-h-0" aria-hidden="true">
+                          <img src={s.photo.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
-            <ol className="mt-6 grid grid-cols-4 gap-2" aria-label="Stages">
-              {block.steps.map((s, i) => (
-                <li key={s.title}>
-                  <button
-                    type="button"
-                    onClick={() => refs.current[i]?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' })}
-                    className="flex w-full flex-col items-start gap-2 text-left"
-                    aria-current={i === active ? 'step' : undefined}
-                  >
-                    <span
-                      className={cn(
-                        'h-1 w-full rounded-full transition-colors duration-[var(--dur-base)]',
-                        i <= active ? 'bg-[var(--gk-navy)]' : 'bg-[var(--hairline-strong)]',
-                      )}
-                    />
-                    <span className={cn('text-[length:var(--fs-sm)] font-bold', i === active ? 'text-[var(--gk-ink)]' : 'text-[var(--fg-2)]')}>
-                      {s.title}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
+          )
+        })}
+      </Reveal>
+    </Band>
+  )
+}
 
-        <ol className="flex flex-col gap-16 lg:col-span-7 lg:gap-0">
-          {block.steps.map((s, i) => (
-            <li
-              key={s.title}
-              ref={(el) => {
-                refs.current[i] = el
-              }}
-              data-index={i}
-              className="flex flex-col gap-4 lg:min-h-[50vh] lg:justify-center"
-            >
-              {s.visual && (
-                <div className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-6 lg:hidden">
-                  <ProgramVisual name={s.visual} className="mx-auto max-w-[18rem]" />
+/* Five skills: one white plane divided by hairlines, two wide cells over three. */
+function Bento({ block, ground }: { block: Of<'steps'>; ground: string }) {
+  return (
+    <Band ground={ground}>
+      <StepsHeader block={block} />
+      <Reveal className="mt-12">
+        <ul className="grid gap-px overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-6">
+          {block.steps.map((s, i) => {
+            const wide = i < 2
+            return (
+              <li key={s.title} className={cn('flex flex-col gap-4 bg-[var(--gk-white)] p-8', wide ? 'md:col-span-3 lg:flex-row lg:items-center lg:gap-8' : 'md:col-span-2')}>
+                {s.visual && (
+                  <div className={cn('w-full', wide ? 'max-w-[15rem] lg:w-1/2' : 'max-w-[14rem]')}>
+                    <ProgramVisual name={s.visual} />
+                  </div>
+                )}
+                <div className={cn('flex flex-col gap-2', wide && 'lg:w-1/2')}>
+                  <h3 className="text-[length:var(--fs-xl)] leading-tight font-extrabold">{s.title}</h3>
+                  {s.body.map((paragraph, j) => (
+                    <p key={j} className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
-              )}
-              <p className="hand text-[var(--gk-coral-ink)]">stage {i + 1} of {block.steps.length}</p>
-              <h3 className="text-[length:clamp(2rem,4vw,3rem)] leading-none font-extrabold tracking-[-0.02em]">{s.title}</h3>
-              {s.lead && <p className="lead max-w-[46ch] font-bold">{s.lead}</p>}
+              </li>
+            )
+          })}
+        </ul>
+      </Reveal>
+    </Band>
+  )
+}
+
+/** Three moves, read left to right: hand-circled numbers, hand-drawn arrows between. */
+function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
+  return (
+    <Band ground={ground}>
+      <StepsHeader block={block} />
+      <Reveal className="mt-14">
+        <ol className="grid gap-12 md:grid-cols-3 md:gap-10">
+          {block.steps.map((s, i) => (
+            <li key={s.title} className="relative flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                <span className="relative grid size-14 shrink-0 place-items-center text-[length:var(--fs-2xl)] font-extrabold text-[var(--gk-navy)]">
+                  {i + 1}
+                  <Scribble name="circle" color="var(--band-accent)" weight={3} delay={0.15 + i * 0.25} className="absolute -inset-1.5 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]" />
+                </span>
+                {i < block.steps.length - 1 && (
+                  <Scribble name="arrow-hook" color="var(--band-accent)" weight={3} delay={0.35 + i * 0.25} className="hidden h-9 w-20 -rotate-6 md:block" />
+                )}
+              </div>
+              <h3 className="text-[length:var(--fs-2xl)] leading-tight font-extrabold">{s.title}</h3>
               {s.body.map((paragraph, j) => (
-                <p key={j} className="max-w-[58ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+                <p key={j} className="max-w-[36ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">
                   {paragraph}
                 </p>
               ))}
             </li>
           ))}
         </ol>
-      </div>
-    </Band>
-  )
-}
-
-/* Five skills: two wide tiles over three. Each tile its own tint. */
-function Bento({ block, ground }: { block: Of<'steps'>; ground: string }) {
-  return (
-    <Band ground={ground}>
-      <Reveal>
-        <Title heading={block.headline} className="max-w-[22ch]" />
       </Reveal>
-      <ul className="mt-12 grid gap-4 md:grid-cols-6 md:gap-5">
-        {block.steps.map((s, i) => {
-          const hue = HUES[i % HUES.length]
-          const wide = i < 2
-          return (
-            <Reveal as="li" key={s.title} delay={(i % 3) * 0.06} className={cn('h-full', wide ? 'md:col-span-3' : 'md:col-span-2')}>
-              <article
-                className={cn('flex h-full flex-col overflow-hidden rounded-[var(--r-lg)]', wide && 'lg:flex-row')}
-                style={{ background: i === 4 ? 'var(--gk-white)' : hue.tint, boxShadow: i === 4 ? 'var(--shadow-sm)' : undefined }}
-              >
-                {s.visual && (
-                  <div className={cn('flex items-center justify-center p-6', wide ? 'lg:w-1/2 lg:p-8' : '')}>
-                    <div className="w-full max-w-[17rem] rounded-[var(--r-md)] bg-[var(--gk-white)] p-4 shadow-[var(--shadow-xs)]">
-                      <ProgramVisual name={s.visual} />
-                    </div>
-                  </div>
-                )}
-                <div className={cn('flex flex-col gap-3 px-7 pb-7', wide && 'lg:w-1/2 lg:justify-center lg:py-8 lg:pl-0')}>
-                  <h3 className="text-[length:var(--fs-xl)] leading-tight font-extrabold">{s.title}</h3>
-                  {s.body.map((paragraph, j) => (
-                    <p key={j} className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </article>
-            </Reveal>
-          )
-        })}
-      </ul>
-    </Band>
-  )
-}
-
-const FLOW_ICONS = [BookOpenCheck, Sparkles, ScanSearch]
-
-/** Three moves, read left to right, the arrows between them drawn by hand. */
-function Flow({ block, ground }: { block: Of<'steps'>; ground: string }) {
-  const [opening, closing] = block.intro ?? []
-  return (
-    <Band ground={ground}>
-      <Reveal className="max-w-[48rem]">
-        <Title heading={block.headline} className="max-w-[24ch]" />
-        {opening && <p className="lead mt-6">{opening}</p>}
-      </Reveal>
-
-      <ol className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
-        {block.steps.map((s, i) => {
-          const Icon = FLOW_ICONS[i % FLOW_ICONS.length]
-          const hue = HUES[i % HUES.length]
-          return (
-            <Reveal as="li" key={s.title} delay={i * 0.12} className="relative flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <span className="grid size-20 shrink-0 place-items-center rounded-full" style={{ background: hue.tint, color: hue.ink }}>
-                  <Icon aria-hidden="true" strokeWidth={1.75} className="size-9" />
-                </span>
-                {i < block.steps.length - 1 && (
-                  <Scribble
-                    name="arrow-hook"
-                    color="var(--gk-coral)"
-                    weight={3}
-                    delay={0.3 + i * 0.2}
-                    className="ml-auto mr-4 hidden h-10 w-20 -rotate-6 md:block"
-                  />
-                )}
-              </div>
-              <h3 className="text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold">{s.title}</h3>
-              {s.body.map((paragraph, j) => (
-                <p key={j} className="max-w-[36ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">
-                  {paragraph}
-                </p>
-              ))}
-            </Reveal>
-          )
-        })}
-      </ol>
-
-      {closing && (
-        <Reveal className="mt-14 max-w-[52rem] rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-7 shadow-[var(--shadow-xs)]">
-          <p className="text-[length:var(--fs-lg)] leading-relaxed">{closing}</p>
+      {block.outro && (
+        <Reveal className="mt-14 max-w-[52rem] border-t border-[var(--hairline-strong)] pt-8">
+          <p className="lead">{block.outro}</p>
         </Reveal>
       )}
     </Band>
   )
 }
 
-/** Ways in: the first full width, the next two side by side. */
+/** Ways in: an index of rows, one photograph for the band bled off the right edge. */
 function Paths({ block, ground }: { block: Of<'steps'>; ground: string }) {
-  const [lead, ...rest] = block.steps
+  const photo = block.steps.find((s) => s.photo)?.photo
   return (
-    <Band ground={ground}>
-      <Reveal>
-        <Title heading={block.headline} className="max-w-[22ch]" />
-      </Reveal>
-
-      <Reveal className="mt-12">
-        <PathCard step={lead} wide />
-      </Reveal>
-      <div className="mt-5 grid gap-5 md:grid-cols-2">
-        {rest.map((s, i) => (
-          <Reveal key={s.title} delay={i * 0.08} className="h-full">
-            <PathCard step={s} navy={i === rest.length - 1} />
-          </Reveal>
-        ))}
-      </div>
-    </Band>
-  )
-}
-
-function PathCard({ step, wide = false, navy = false }: { step: Step; wide?: boolean; navy?: boolean }) {
-  return (
-    <article
-      data-ground={navy ? 'navy' : undefined}
-      className={cn(
-        'flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] shadow-[var(--shadow-sm)]',
-        wide && 'md:flex-row',
-        navy ? 'ground-navy text-white' : 'border border-[var(--hairline)] bg-[var(--gk-white)]',
-      )}
-      style={navy ? { backgroundColor: 'var(--gk-navy)' } : undefined}
-    >
-      {step.photo && (
-        <div className={cn('relative', wide ? 'aspect-[16/10] md:aspect-auto md:w-[42%]' : 'aspect-[16/9]')}>
-          <img src={step.photo.src} alt={step.photo.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
-        </div>
-      )}
-      <div className={cn('flex flex-1 flex-col gap-4 p-7 md:p-9', wide && 'md:justify-center md:p-12')}>
-        <h3 className={cn('leading-tight font-extrabold', wide ? 'text-[length:clamp(1.5rem,2.6vw,2.125rem)]' : 'text-[length:var(--fs-xl)]')}>
-          {step.title}
-        </h3>
-        {step.body.map((paragraph, j) => (
-          <p
-            key={j}
-            className={cn('max-w-[60ch] text-[length:var(--fs-base)] leading-relaxed', navy ? 'text-[var(--fg-inverse-2)]' : 'text-[var(--fg-2)]')}
-          >
-            {paragraph}
-          </p>
-        ))}
-        {step.ctas && (
-          <div className="mt-auto flex flex-wrap gap-3 pt-3">
-            {step.ctas.map((cta, k) => (
-              <CtaButton
-                key={cta.label}
-                cta={cta}
-                variant={k === 0 ? (navy ? 'accent' : 'primary') : 'secondary'}
-                onDark={navy}
-                withArrow={k === 0}
-              />
+    <section className={cn(ground, 'accent-blue band relative overflow-x-clip')}>
+      {photo && <BleedPhoto photo={photo} side="right" width="36%" />}
+      <div className="shell relative">
+        <div className="lg:max-w-[58%]">
+          <StepsHeader block={block} />
+          <ol className="mt-12 border-t border-[var(--hairline-strong)]">
+            {block.steps.map((s) => (
+              <Reveal as="li" key={s.title} className="flex flex-col gap-4 border-b border-[var(--hairline-strong)] py-9">
+                <h3 className="text-[length:var(--fs-2xl)] leading-tight font-extrabold">{s.title}</h3>
+                {s.body.map((paragraph, j) => (
+                  <p key={j} className="max-w-[62ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+                    {paragraph}
+                  </p>
+                ))}
+                {s.ctas && (
+                  <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-3">
+                    {s.ctas.map((cta, k) => (
+                      <CtaButton key={cta.label} cta={cta} variant={k === 0 ? 'primary' : 'tertiary'} withArrow={k === 0} />
+                    ))}
+                  </div>
+                )}
+              </Reveal>
             ))}
-          </div>
-        )}
+          </ol>
+        </div>
       </div>
-    </article>
+    </section>
   )
 }
 
@@ -754,23 +723,30 @@ function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: st
 
       <div className={cn('grid gap-12 lg:grid-cols-12 lg:gap-16', block.shift && 'mt-20')}>
         <div className="lg:col-span-5">
-          <div className="flex flex-col gap-8 lg:sticky lg:top-[var(--pin-top,8rem)]">
+          <div className="flex flex-col gap-6 lg:sticky lg:top-[var(--pin-top,8rem)]">
             <Reveal>
               <Title heading={block.headline} className="max-w-[18ch]" />
-              {block.intro && <p className="lead mt-5 max-w-[40ch]">{block.intro}</p>}
+              {block.opening?.map((paragraph, i) => (
+                <p key={i} className={i === 0 ? 'lead mt-6' : 'mt-4 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]'}>
+                  {paragraph}
+                </p>
+              ))}
             </Reveal>
             {block.duration && <Duration text={block.duration} weeks={block.weeks} />}
           </div>
         </div>
 
-        <ul className="grid content-start gap-x-10 gap-y-7 sm:grid-cols-2 lg:col-span-7">
-          {block.items.map((item, i) => (
-            <Reveal as="li" key={item} delay={Math.min(i, 6) * 0.04} className="flex gap-4">
-              <Scribble name="check" color={HUES[i % HUES.length].arc} weight={4} delay={0.1 + i * 0.05} className="mt-0.5 size-7 shrink-0" />
-              <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{item}</span>
-            </Reveal>
-          ))}
-        </ul>
+        <Reveal className="lg:col-span-7">
+          {block.intro && <p className="mb-7 text-[length:var(--fs-lg)] font-bold">{block.intro}</p>}
+          <ul className="grid content-start gap-x-10 gap-y-7 sm:grid-cols-2">
+            {block.items.map((item) => (
+              <li key={item} className="flex gap-4">
+                <Scribble name="check" color="var(--band-accent)" weight={4} className="mt-0.5 size-7 shrink-0" />
+                <span className="text-[length:var(--fs-lg)] leading-snug text-[var(--gk-ink)]">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </Band>
   )
@@ -778,7 +754,7 @@ function Deliverables({ block, ground }: { block: Of<'deliverables'>; ground: st
 
 /**
  * The indicative duration on a ruler of weeks, the range swiped with the
- * highlighter. A number range is easier to hold in the head as a length.
+ * highlighter. A range is easier to hold in the head as a length.
  */
 function Duration({ text, weeks }: { text: string; weeks?: [number, number] }) {
   const reduced = useReducedMotion()
@@ -786,34 +762,27 @@ function Duration({ text, weeks }: { text: string; weeks?: [number, number] }) {
   const ticks = weeks ? Array.from({ length: max / 2 + 1 }, (_, i) => i * 2) : []
 
   return (
-    <Reveal delay={0.1} className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-6 shadow-[var(--shadow-xs)]">
-      <p className="flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-coral-ink)]">
-        <Clock aria-hidden="true" className="size-4" strokeWidth={2.25} />
-        Indicative duration
-      </p>
+    <Reveal delay={0.1} className="border-t border-[var(--hairline-strong)] pt-6">
+      <p className="text-[length:var(--fs-sm)] font-bold text-[var(--band-accent-ink)]">Indicative duration</p>
 
       {weeks && (
-        <div className="mt-6" aria-hidden="true">
-          <div className="relative h-10">
-            <motion.div
-              className="absolute top-1 h-7 -skew-x-6 rounded-[3px] bg-[var(--gk-yellow)] opacity-80"
+        <div className="mt-5" aria-hidden="true">
+          <div className="relative h-9">
+            <motion.span
+              className="marker absolute top-0 flex h-8 items-center justify-center !m-0 text-[length:var(--fs-sm)] font-bold whitespace-nowrap"
               style={{ left: `${(weeks[0] / max) * 100}%`, width: `${((weeks[1] - weeks[0]) / max) * 100}%`, transformOrigin: 'left' }}
               initial={reduced ? false : { scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            />
-            <span
-              className="hand absolute top-0 -translate-x-1/2 text-[var(--gk-ink)]"
-              style={{ left: `${(((weeks[0] + weeks[1]) / 2) / max) * 100}%` }}
             >
               {weeks[0]}-{weeks[1]} weeks
-            </span>
+            </motion.span>
           </div>
-          <div className="relative mt-1 h-6 border-t-2 border-[var(--gk-ink)]">
+          <div className="relative mt-1 h-6 border-t-2 border-[var(--gk-navy)]">
             {ticks.map((t) => (
               <span key={t} className="absolute top-0 flex -translate-x-1/2 flex-col items-center" style={{ left: `${(t / max) * 100}%` }}>
-                <span className="h-2 w-px bg-[var(--gk-ink)]" />
+                <span className="h-2 w-px bg-[var(--gk-navy)]" />
                 <span className="mt-0.5 text-[length:var(--fs-xs)] text-[var(--fg-2)] tabular-nums">{t}</span>
               </span>
             ))}
@@ -821,25 +790,34 @@ function Duration({ text, weeks }: { text: string; weeks?: [number, number] }) {
         </div>
       )}
 
-      <p className="mt-5 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-2)]">{text}</p>
+      <p className="mt-5 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">{text}</p>
     </Reveal>
   )
 }
 
+/** Before and after: the "after" question's second clause takes the highlighter. */
 function Shift({ shift }: { shift: NonNullable<Of<'deliverables'>['shift']> }) {
+  const comma = shift.after.indexOf(', ')
+  const phrase = comma > 0 ? shift.after.slice(comma + 2) : shift.after
   return (
-    <Reveal className="grid items-center gap-6 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
+    <Reveal className="grid items-start gap-8 border-b border-[var(--hairline-strong)] pb-16 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
       <figure>
-        <figcaption className="hand text-[var(--fg-2)]">{shift.beforeLabel.toLowerCase()}</figcaption>
-        <blockquote className="mt-2 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-medium text-[var(--fg-2)]">
+        <figcaption>
+          <Label className="!text-[var(--fg-2)]">{shift.beforeLabel}</Label>
+        </figcaption>
+        <blockquote className="mt-3 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-medium text-[var(--fg-2)]">
           &ldquo;{shift.before}&rdquo;
         </blockquote>
       </figure>
-      <Scribble name="arrow-curve" color="var(--gk-coral)" weight={4} className="mx-auto h-16 w-20 rotate-90 lg:rotate-0" />
+      <Scribble name="arrow-curve" color="var(--band-accent)" weight={4} className="mx-auto mt-8 h-16 w-20 rotate-90 lg:rotate-0" />
       <figure>
-        <figcaption className="hand text-[var(--gk-coral-ink)]">{shift.afterLabel.toLowerCase()}</figcaption>
-        <blockquote className="mt-2 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-extrabold text-[var(--gk-ink)]">
-          <Marker>&ldquo;{shift.after}&rdquo;</Marker>
+        <figcaption>
+          <Label>{shift.afterLabel}</Label>
+        </figcaption>
+        <blockquote className="mt-3 text-[length:clamp(1.375rem,2.6vw,2rem)] leading-snug font-extrabold text-[var(--gk-ink)]">
+          &ldquo;
+          <Highlighted text={shift.after} phrase={phrase} />
+          &rdquo;
         </blockquote>
       </figure>
     </Reveal>
@@ -848,41 +826,34 @@ function Shift({ shift }: { shift: NonNullable<Of<'deliverables'>['shift']> }) {
 
 /* ------------------------------------------------------------ outcomes */
 
-/** What the program changes: a ledger, each line opened by a piece of the mark. */
+/** What the program changes: a ledger, each line opened by the same piece of the mark. */
 function Outcomes({ block, ground }: { block: Of<'outcomes'>; ground: string }) {
   return (
-    <Band ground={ground}>
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="lg:col-span-4">
-          <div className="lg:sticky lg:top-32">
-            <Title heading={block.headline} className="max-w-[16ch]" />
-            <img
-              src="/photos/aud-mature-4.webp"
-              alt="A participant making a point during a table discussion"
-              loading="lazy"
-              decoding="async"
-              className="mt-10 hidden aspect-[4/5] w-full rounded-[var(--r-lg)] object-cover shadow-[var(--shadow-md)] lg:block"
-            />
-          </div>
-        </Reveal>
-        <ul className="flex flex-col lg:col-span-8">
-          {block.items.map((item, i) => {
-            const hue = HUES[i % HUES.length]
-            return (
-              <Reveal as="li" key={item.title} delay={0.04} className="grid gap-4 border-b border-[var(--hairline)] py-9 first:pt-0 last:border-0 md:grid-cols-[3.5rem_1fr]">
-                <span className="size-11" aria-hidden="true">
-                  <ArcPiece sweep={240} start={i * 70} thickness={20} color={hue.arc} />
-                </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold">{item.title}</h3>
-                  <p className="max-w-[60ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">{item.body}</p>
-                </div>
-              </Reveal>
-            )
-          })}
-        </ul>
+    <section className={cn(ground, 'accent-teal band relative overflow-x-clip')}>
+      <BleedPhoto photo={{ src: '/photos/aud-mature-4.webp', alt: '' }} side="right" width="34%" />
+      <div className="shell relative">
+        <div className="lg:max-w-[60%]">
+          <Reveal>
+            <Title heading={block.headline} className="max-w-[20ch]" />
+          </Reveal>
+          <Reveal className="mt-10">
+            <ul className="border-t border-[var(--hairline-strong)]">
+              {block.items.map((item) => (
+                <li key={item.title} className="grid gap-3 border-b border-[var(--hairline-strong)] py-7 md:grid-cols-[2.75rem_1fr]">
+                  <span className="mt-1 size-8" aria-hidden="true">
+                    <ArcPiece sweep={110} start={300} thickness={22} color="var(--band-accent)" />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-[length:var(--fs-2xl)] leading-tight font-extrabold">{item.title}</h3>
+                    <p className="max-w-[60ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
       </div>
-    </Band>
+    </section>
   )
 }
 
@@ -913,9 +884,9 @@ function Evidence({ block }: { block: Of<'stats'> }) {
         </Reveal>
         <dl className="mt-14 grid gap-10 sm:grid-cols-3">
           {block.stats.map((stat, i) => (
-            <Reveal key={stat.label} delay={i * 0.1} className="flex flex-col gap-3">
+            <Reveal key={stat.label} delay={i * 0.1} className="flex flex-col gap-2">
               <dt className="sr-only">{stat.label}</dt>
-              <dd>
+              <dd className="leading-none">
                 <StatCounter
                   value={stat.value}
                   suffix={stat.suffix}
@@ -930,8 +901,8 @@ function Evidence({ block }: { block: Of<'stats'> }) {
           ))}
         </dl>
         {block.testimonial && (
-          <div className="mt-20 border-t border-[var(--hairline-inverse)] pt-14">
-            <Testimonial audience={block.testimonial} onDark />
+          <div className="mt-20 border-t border-[var(--hairline-inverse)] pt-14 lg:max-w-[52rem]">
+            <Quote audience={block.testimonial} onDark />
           </div>
         )}
       </div>
@@ -941,80 +912,71 @@ function Evidence({ block }: { block: Of<'stats'> }) {
 
 /* --------------------------------------------------------- testimonial */
 
-/** A homepage testimonial: the photograph, the quote at reading size, the name. */
-function Testimonial({
-  audience: id,
-  onDark = false,
-  compact = false,
-}: {
-  audience: AudienceId
-  onDark?: boolean
-  /** Beside a case-study card: the quote carries it, with a small portrait
-   *  by the name instead of a large photograph. */
-  compact?: boolean
-}) {
+function useTestimonial(id: AudienceId) {
   const audience = audiences.find((a) => a.id === id)
   if (!audience) throw new Error(`No homepage audience "${id}"`)
-  const { testimonial } = audience
-  const quote = (
-    <blockquote
-      className={cn(
-        'relative text-[length:clamp(1.25rem,2.3vw,1.875rem)] leading-[1.4] font-medium',
-        onDark ? 'text-white' : 'text-[var(--gk-ink)]',
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className="absolute -top-10 -left-1 font-[family-name:var(--font-display)] text-[5rem] leading-none font-extrabold"
-        style={{ color: onDark ? 'var(--gk-yellow)' : 'var(--gk-coral-deep)' }}
-      >
-        &ldquo;
-      </span>
-      {testimonial.quote.value.text}
-    </blockquote>
-  )
-  const credit = (
-    <>
-      <span className="font-bold">{testimonial.name}</span>
-      <span className={onDark ? 'text-[var(--fg-inverse-2)]' : 'text-[var(--fg-2)]'}>, {testimonial.credentials}</span>
-    </>
-  )
+  return audience.testimonial
+}
 
-  if (compact) {
-    return (
-      <Reveal delay={0.08} className="h-full">
-        <figure className="flex h-full flex-col justify-center pt-8">
-          {quote}
-          <figcaption className="mt-8 flex items-center gap-4 text-[length:var(--fs-base)]">
-            <img src={testimonial.photo} alt="" loading="lazy" decoding="async" className="size-14 shrink-0 rounded-full object-cover shadow-[var(--shadow-xs)]" />
-            <span>{credit}</span>
-          </figcaption>
-        </figure>
-      </Reveal>
-    )
-  }
-
+/** The quote with a small portrait by the name. */
+function Quote({ audience, onDark = false }: { audience: AudienceId; onDark?: boolean }) {
+  const testimonial = useTestimonial(audience)
   return (
-    <Reveal>
-      <figure className="grid items-center gap-10 md:grid-cols-12 md:gap-14">
-        <div className="relative md:col-span-5">
-          <img
-            src={testimonial.photo}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="aspect-[4/3] w-full rounded-[var(--r-lg)] object-cover shadow-[var(--shadow-md)] md:aspect-[5/6]"
-          />
-          <div className="absolute -bottom-6 -left-6 hidden size-24 md:block" aria-hidden="true">
-            <ArcPiece sweep={100} start={200} thickness={18} color={onDark ? 'var(--gk-teal-lift)' : 'var(--gk-teal)'} />
-          </div>
-        </div>
-        <div className="pt-8 md:col-span-7">
-          {quote}
-          <figcaption className="mt-8 text-[length:var(--fs-base)]">{credit}</figcaption>
-        </div>
-      </figure>
-    </Reveal>
+    <figure className="flex flex-col pt-8">
+      <blockquote className={cn('relative text-[length:clamp(1.25rem,2.3vw,1.75rem)] leading-[1.45] font-medium', onDark ? 'text-white' : 'text-[var(--gk-ink)]')}>
+        <span
+          aria-hidden="true"
+          className="absolute -top-10 -left-1 font-[family-name:var(--font-display)] text-[5rem] leading-none font-extrabold"
+          style={{ color: onDark ? 'var(--gk-yellow)' : 'var(--gk-coral-deep)' }}
+        >
+          &ldquo;
+        </span>
+        {testimonial.quote.value.text}
+      </blockquote>
+      <figcaption className="mt-8 flex items-center gap-4 text-[length:var(--fs-base)]">
+        <img src={testimonial.photo} alt="" loading="lazy" decoding="async" className="size-14 shrink-0 rounded-full object-cover" />
+        <span>
+          <span className="font-bold">{testimonial.name}</span>
+          <span className={onDark ? 'text-[var(--fg-inverse-2)]' : 'text-[var(--fg-2)]'}>, {testimonial.credentials}</span>
+        </span>
+      </figcaption>
+    </figure>
+  )
+}
+
+/** A testimonial band: the person's photograph bled off the right edge, the quote beside it. */
+function TestimonialBand({ audience, navy, ground }: { audience: AudienceId; navy: boolean; ground: string }) {
+  const testimonial = useTestimonial(audience)
+  const photo = { src: testimonial.photo, alt: '' }
+  return (
+    <section
+      data-ground={navy ? 'navy' : undefined}
+      className={cn(navy ? 'ground-navy' : ground, 'accent-yellow band relative overflow-x-clip')}
+      style={navy ? { backgroundColor: 'var(--gk-navy)' } : undefined}
+    >
+      <BleedPhoto photo={photo} side="right" width="40%" />
+      <div className="shell relative">
+        <PhonePhoto photo={{ src: testimonial.photo, alt: testimonial.name }} />
+        <Reveal className="lg:max-w-[54%]">
+          <figure className="flex flex-col pt-8">
+            <blockquote className={cn('relative text-[length:clamp(1.375rem,2.6vw,2.125rem)] leading-[1.4] font-medium', navy ? 'text-white' : 'text-[var(--gk-ink)]')}>
+              <span
+                aria-hidden="true"
+                className="absolute -top-12 -left-1 font-[family-name:var(--font-display)] text-[6rem] leading-none font-extrabold"
+                style={{ color: navy ? 'var(--gk-yellow)' : 'var(--gk-coral-deep)' }}
+              >
+                &ldquo;
+              </span>
+              {testimonial.quote.value.text}
+            </blockquote>
+            <figcaption className="mt-8 text-[length:var(--fs-lg)]">
+              <span className="font-bold">{testimonial.name}</span>
+              <span className={navy ? 'text-[var(--fg-inverse-2)]' : 'text-[var(--fg-2)]'}>, {testimonial.credentials}</span>
+            </figcaption>
+          </figure>
+        </Reveal>
+      </div>
+    </section>
   )
 }
 
@@ -1034,33 +996,33 @@ function Stories({ block, ground }: { block: Of<'stories'>; ground: string }) {
       <Reveal>
         <Title heading={block.headline} className="max-w-[24ch]" />
       </Reveal>
-      {block.stories.length === 1 && block.testimonial ? (
-        <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-14">
-          <Reveal className="lg:col-span-5">
-            <StoryCard story={lead} />
-          </Reveal>
-          <div className="lg:col-span-7">
-            <Testimonial audience={block.testimonial} compact />
+      {/* The grid reveals as one, so a tall card never leaves a hole while the
+          smaller ones beside it have already arrived. */}
+      <Reveal className="mt-12">
+        {block.stories.length === 1 && block.testimonial ? (
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:col-span-5">
+              <StoryCard story={lead} />
+            </div>
+            <div className="flex items-center lg:col-span-7">
+              <Quote audience={block.testimonial} />
+            </div>
           </div>
-        </div>
-      ) : block.stories.length === 1 ? (
-        <Reveal className="mt-12">
+        ) : block.stories.length === 1 ? (
           <StoryCard story={lead} wide />
-        </Reveal>
-      ) : (
-        <div className="mt-12 grid gap-6 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <StoryCard story={lead} tall />
-          </Reveal>
-          <div className="grid gap-6 lg:col-span-5">
-            {rest.map((story, i) => (
-              <Reveal key={story.org} delay={(i + 1) * 0.08}>
-                <StoryCard story={story} side />
-              </Reveal>
-            ))}
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <StoryCard story={lead} tall />
+            </div>
+            <div className="grid gap-6 lg:col-span-5">
+              {rest.map((story) => (
+                <StoryCard key={story.org} story={story} side />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Reveal>
     </Band>
   )
 }
@@ -1069,13 +1031,12 @@ function StoryCard({ story, wide = false, tall = false, side = false }: { story:
   return (
     <article
       className={cn(
-        'h-full overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)] shadow-[var(--shadow-xs)]',
+        'h-full overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]',
         wide && 'grid md:grid-cols-2',
-        side && 'grid grid-cols-[40%_1fr]',
-        !wide && !side && 'flex flex-col',
+        side ? 'flex flex-col sm:grid sm:grid-cols-[40%_1fr]' : !wide && 'flex flex-col',
       )}
     >
-      <div className={cn('relative', wide || side ? 'min-h-[13rem]' : tall ? 'aspect-[16/11]' : 'aspect-[16/10]')}>
+      <div className={cn('relative', wide ? 'min-h-[15rem]' : side ? 'aspect-[16/10] sm:aspect-auto sm:min-h-[13rem]' : tall ? 'aspect-[16/11]' : 'aspect-[16/10]')}>
         <img src={story.image} alt={story.imageAlt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       </div>
       <div className={cn('flex flex-1 flex-col gap-3', wide ? 'justify-center p-8 md:p-12' : side ? 'justify-center p-6' : 'p-8')}>
@@ -1087,7 +1048,7 @@ function StoryCard({ story, wide = false, tall = false, side = false }: { story:
             {story.intervention}
           </span>
         </div>
-        <h3 className={cn('leading-tight font-extrabold', wide || tall ? 'text-[length:clamp(1.5rem,2.4vw,2rem)]' : 'text-[length:var(--fs-xl)]')}>{story.org}</h3>
+        <h3 className={cn('leading-tight font-extrabold', wide || tall ? 'text-[length:var(--fs-2xl)]' : 'text-[length:var(--fs-xl)]')}>{story.org}</h3>
         <p className={cn('leading-relaxed text-[var(--fg-1)]', tall || wide ? 'text-[length:var(--fs-lg)]' : 'text-[length:var(--fs-base)]')}>{story.body}</p>
       </div>
     </article>
@@ -1096,36 +1057,31 @@ function StoryCard({ story, wide = false, tall = false, side = false }: { story:
 
 /* ------------------------------------------------------------ programs */
 
+/** The two programs in full, side by side under one rule. Their photographs are in the hero. */
 function Programs({ block, ground }: { block: Of<'programs'>; ground: string }) {
   return (
     <Band ground={ground}>
-      <ul className="grid gap-6 lg:grid-cols-2">
+      {block.opening && (
+        <Reveal className="max-w-[56rem]">
+          {block.opening.map((paragraph, i) => (
+            <p key={i} className="text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-[1.5] font-medium text-[var(--gk-ink)]">
+              {paragraph}
+            </p>
+          ))}
+        </Reveal>
+      )}
+      <Reveal className={cn('grid gap-12 md:grid-cols-2 md:gap-0', block.opening && 'mt-14')}>
         {block.cards.map((card, i) => (
-          <Reveal as="li" key={card.title} delay={i * 0.08} className="h-full">
-            <article className="card-lift group relative flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-sm)]">
-              <div className="relative aspect-[16/9] overflow-hidden">
-                <img
-                  src={card.photo.src}
-                  alt={card.photo.alt}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.03]"
-                />
-              </div>
-              <div className="flex flex-1 flex-col gap-4 p-8 md:p-10">
-                <p className="hand" style={{ color: HUES[i === 0 ? 0 : 1].ink }}>
-                  {card.eyebrow}
-                </p>
-                <h2 className="text-[length:clamp(1.625rem,2.6vw,2.25rem)] leading-tight font-extrabold">{card.title}</h2>
-                <p className="text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">{card.body}</p>
-                <div className="mt-auto pt-4">
-                  <CtaButton cta={card.cta} variant="primary" withArrow />
-                </div>
-              </div>
-            </article>
-          </Reveal>
+          <article key={card.title} className={cn('flex flex-col gap-4 border-t-2 border-[var(--gk-navy)] pt-8', i === 0 ? 'md:pr-12' : 'md:border-l md:border-l-[var(--hairline-strong)] md:pl-12')}>
+            <Label>{card.eyebrow}</Label>
+            <h2 className="text-[length:clamp(1.625rem,2.6vw,2.25rem)] leading-tight font-extrabold">{card.title}</h2>
+            <p className="max-w-[52ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-2)]">{card.body}</p>
+            <div className="mt-auto pt-4">
+              <CtaButton cta={card.cta} variant="primary" withArrow />
+            </div>
+          </article>
         ))}
-      </ul>
+      </Reveal>
     </Band>
   )
 }
@@ -1138,17 +1094,17 @@ function Compare({ block, ground }: { block: Of<'compare'>; ground: string }) {
       <Reveal>
         <Title heading={block.headline} className="max-w-[22ch]" />
       </Reveal>
-      <Reveal delay={0.08} className="mt-12 overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-sm)]">
+      <Reveal delay={0.08} className="mt-12">
         <table className="w-full border-collapse text-left">
           <caption className="sr-only">The two programs compared</caption>
           <thead>
             <tr className="hidden md:table-row">
-              <th scope="col" className="w-[22%] p-6" />
-              {block.columns.map((col, i) => (
-                <th key={col.title} scope="col" className="p-6 align-bottom" style={{ background: HUES[i].tint }}>
-                  <a href={col.to} className="group inline-flex items-center gap-2 text-[length:var(--fs-xl)] font-extrabold" style={{ color: HUES[i].ink }}>
+              <th scope="col" className="w-[18%] pb-5" />
+              {block.columns.map((col) => (
+                <th key={col.title} scope="col" className="pr-8 pb-5 align-bottom">
+                  <a href={col.to} className="group inline-flex items-center gap-2 text-[length:var(--fs-2xl)] font-extrabold text-[var(--gk-ink)]">
                     {col.title}
-                    <ArrowUpRight aria-hidden="true" className="size-5 transition-transform duration-[var(--dur-base)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowRight aria-hidden="true" className="size-5 text-[var(--gk-navy)] transition-transform duration-[var(--dur-base)] group-hover:translate-x-1" />
                   </a>
                 </th>
               ))}
@@ -1156,15 +1112,13 @@ function Compare({ block, ground }: { block: Of<'compare'>; ground: string }) {
           </thead>
           <tbody>
             {block.rows.map((row) => (
-              <tr key={row.label} className="flex flex-col border-t border-[var(--hairline)] md:table-row">
-                <th scope="row" className="p-6 pb-2 align-top text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)] md:pb-6">
-                  {row.label}
+              <tr key={row.label} className="flex flex-col border-t border-[var(--hairline-strong)] md:table-row">
+                <th scope="row" className="pt-6 pb-2 align-top md:py-6">
+                  <Label>{row.label}</Label>
                 </th>
                 {row.values.map((value, i) => (
-                  <td key={i} className="px-6 py-3 align-top text-[length:var(--fs-base)] leading-relaxed md:py-6">
-                    <span className="mb-1 block text-[length:var(--fs-xs)] font-bold md:hidden" style={{ color: HUES[i].ink }}>
-                      {block.columns[i].title}
-                    </span>
+                  <td key={i} className="py-2 pr-8 align-top text-[length:var(--fs-lg)] leading-relaxed md:py-6">
+                    <span className="mb-1 block text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)] md:hidden">{block.columns[i].title}</span>
                     {value}
                   </td>
                 ))}
@@ -1186,33 +1140,30 @@ function RelatedList({ block, ground }: { block: Of<'related'>; ground: string }
       <Reveal>
         <Title heading={block.headline} className="max-w-[22ch]" />
       </Reveal>
-      <ul className="mt-10 border-t border-[var(--hairline-strong)]">
-        {block.items.map((item, i) => {
-          const hue = HUES[i % HUES.length]
-          return (
-            <Reveal as="li" key={item.to} delay={i * 0.06}>
+      <Reveal className="mt-10">
+        <ul className="border-t border-[var(--hairline-strong)]">
+          {block.items.map((item) => (
+            <li key={item.to}>
               <a
                 href={item.to}
-                className="group grid items-start gap-3 border-b border-[var(--hairline-strong)] py-8 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)] md:grid-cols-[14rem_1fr_auto] md:gap-10 md:px-4 md:hover:bg-[var(--gk-white)]"
+                className="group flex items-start gap-6 border-b border-[var(--hairline-strong)] py-8 transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)] md:px-4 md:hover:bg-[var(--gk-white)]"
               >
-                <span className="hand" style={{ color: hue.ink }}>
-                  {item.label.toLowerCase()}
-                </span>
-                <span className="flex flex-col gap-2">
-                  <span className="text-[length:clamp(1.375rem,2.4vw,1.875rem)] leading-tight font-extrabold text-[var(--gk-ink)]">{item.title}</span>
+                <span className="flex flex-1 flex-col gap-2">
+                  <Label>{item.label}</Label>
+                  <span className="text-[length:var(--fs-2xl)] leading-tight font-extrabold text-balance text-[var(--gk-ink)]">{item.title}</span>
                   <span className="max-w-[64ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">{item.body}</span>
                 </span>
                 <span
-                  className="hidden size-12 place-items-center rounded-full border border-[var(--hairline-strong)] text-[var(--gk-navy)] transition-colors duration-[var(--dur-base)] group-hover:border-[var(--gk-navy)] group-hover:bg-[var(--gk-navy)] group-hover:text-white md:grid"
+                  className="mt-6 grid size-11 shrink-0 place-items-center rounded-[var(--r-btn)] border border-[var(--hairline-strong)] text-[var(--gk-navy)] transition-colors duration-[var(--dur-base)] group-hover:border-[var(--gk-navy)] group-hover:bg-[var(--gk-navy)] group-hover:text-white"
                   aria-hidden="true"
                 >
-                  <ArrowRight className="size-5" />
+                  <ArrowRight className="size-5 transition-transform duration-[var(--dur-base)] group-hover:translate-x-0.5" />
                 </span>
               </a>
-            </Reveal>
-          )
-        })}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </Band>
   )
 }
@@ -1236,17 +1187,30 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
 
   return (
     <div>
+      {block.opening && (
+        <section className={cn(LIGHT[tone % 2], 'relative pt-16 pb-10 md:pt-20')}>
+          <div className="shell">
+            <Reveal className="max-w-[56rem]">
+              {block.opening.map((paragraph, i) => (
+                <p key={i} className="text-[length:clamp(1.25rem,2.2vw,1.625rem)] leading-[1.5] font-medium text-[var(--gk-ink)]">
+                  {paragraph}
+                </p>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+      )}
       {/* Columns that pin inside this region clear the switch as well as the header. */}
-      <div className="[--pin-top:12rem]">
-        <div className="sticky top-20 z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)]/95 backdrop-blur-sm">
-          <div className="shell flex flex-wrap items-center gap-x-5 gap-y-3 py-4">
-            <p id={`${id}-prompt`} className="hand text-[var(--gk-navy)]">
-              {block.prompt.toLowerCase()}
+      <div className="[--pin-top:11rem]">
+        <div className="sticky top-20 z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)]">
+          <div className="shell flex items-center gap-x-5 py-3">
+            <p id={`${id}-prompt`} className="hidden text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] sm:block">
+              {block.prompt}
             </p>
             <div
               role="tablist"
               aria-labelledby={`${id}-prompt`}
-              className="inline-flex rounded-[var(--r-btn)] border border-[var(--hairline-strong)] bg-[var(--gk-white)] p-1 shadow-[var(--shadow-xs)]"
+              className="grid w-full grid-cols-2 rounded-[var(--r-btn)] border border-[var(--hairline-strong)] bg-[var(--gk-white)] p-1 sm:inline-grid sm:w-auto"
             >
               {block.options.map((o) => {
                 const selected = o.id === active
@@ -1271,8 +1235,12 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
             </div>
           </div>
         </div>
-        <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`}>
-          <Blocks key={option.id} blocks={body} startTone={tone} />
+        <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`} className="[&_h2]:scroll-mt-44">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={option.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <Blocks blocks={body} startTone={tone + (block.opening ? 1 : 0)} />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
       <Blocks key={`${option.id}-close`} blocks={close} />
@@ -1282,19 +1250,14 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
 
 /* ------------------------------------------------------------- closing */
 
-/** The homepage close, without its newsletter: one sentence, the buttons,
- *  and the mark assembling beside them. */
+/** The homepage close, without its newsletter: one sentence, the buttons, the mark. */
 function Closing({ block }: { block: Of<'closing'> }) {
   return (
-    <section
-      data-ground="navy"
-      className="ground-navy accent-yellow relative overflow-hidden py-16 md:py-20"
-      style={{ backgroundColor: 'var(--gk-navy)' }}
-    >
+    <section data-ground="navy" className="ground-navy accent-yellow relative overflow-hidden py-16 md:py-20" style={{ backgroundColor: 'var(--gk-navy)' }}>
       <div className="shell relative grid items-center gap-10 lg:grid-cols-12">
         <div className="lg:col-span-8">
           <Reveal delay={0.12}>
-            <Title heading={block.headline} className="max-w-[24ch]" />
+            <Title heading={block.headline} className="max-w-[26ch]" />
             <p className="lead mt-5 max-w-[52ch]">{block.body}</p>
           </Reveal>
           <Reveal delay={0.3}>
@@ -1304,11 +1267,11 @@ function Closing({ block }: { block: Of<'closing'> }) {
             </div>
           </Reveal>
         </div>
-        <div className="hidden lg:col-span-4 lg:flex lg:items-center lg:justify-center">
-          <MarkAssembly size={150} />
+        <div className="flex justify-start lg:col-span-4 lg:justify-center">
+          <MarkAssembly settled size={170} className="hidden lg:block" />
+          <MarkAssembly settled size={96} className="lg:hidden" />
         </div>
       </div>
     </section>
   )
 }
-

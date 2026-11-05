@@ -310,14 +310,14 @@ function DriftingPiece({
    ────────────────────────────────────────────────────────────────────────── */
 
 /* The mark's bounding box in its own units: ring on top, smile beneath. */
-const BOX_W = 282
-const BOX_H = 428
+export const BOX_W = 282
+export const BOX_H = 428
 
 /** Degrees each segment runs past its neighbour, to close the cap slivers. */
-const JOIN_OVERLAP = 5
+export const JOIN_OVERLAP = 5
 
-const RING = { cx: 141, cy: 141, r: 121.5, t: 39 }
-const SMILE = { cx: 142, cy: 283.8, r: 124.2, t: 39 }
+export const RING = { cx: 141, cy: 141, r: 121.5, t: 39 }
+export const SMILE = { cx: 142, cy: 283.8, r: 124.2, t: 39 }
 
 /** Ring centre as a percentage of the box — the origin every piece spins about. */
 const ORIGIN = `${(RING.cx / BOX_W) * 100}% ${(RING.cy / BOX_H) * 100}%`
@@ -327,7 +327,7 @@ const ORIGIN = `${(RING.cx / BOX_W) * 100}% ${(RING.cy / BOX_H) * 100}%`
  *
  * `start` and `sweep` are the visible extent, clockwise from twelve o'clock.
  */
-function arcDash(start: number, sweep: number, r: number, t: number) {
+export function arcDash(start: number, sweep: number, r: number, t: number) {
   const circumference = 2 * Math.PI * r
   // Half a stroke width, expressed as the angle it subtends at radius r.
   const cap = (t / 2 / r) * (180 / Math.PI)
@@ -343,7 +343,7 @@ function arcDash(start: number, sweep: number, r: number, t: number) {
   }
 }
 
-type Segment = {
+export type Segment = {
   /** Visible start, degrees clockwise from twelve. */
   start: number
   /** Visible sweep, degrees. */
@@ -359,7 +359,7 @@ type Segment = {
 
 /* Spans measured off the icon: 71.5, 68, 71, 77.5, 72 — they sum to 360, which
    is the point. There is no gap in the mark. */
-const SEGMENTS: Array<Segment> = [
+export const SEGMENTS: Array<Segment> = [
   { start: 324.5, sweep: 71.5, hue: 'var(--mark-yellow)', circle: RING, scatter: 150, spin: -120 },
   {
     start: 36,
@@ -397,14 +397,19 @@ const SEGMENTS: Array<Segment> = [
 export function MarkAssembly({
   size = 300,
   onDark = true,
+  settled = false,
   className,
 }: {
+  /** Draw the finished mark with no scroll assembly, for bands too short
+   *  for the assembly to resolve before they leave the screen. */
+  settled?: boolean
   /** Width of the mark. Height follows the real mark's proportions. */
   size?: number
   onDark?: boolean
   className?: string
 }) {
-  const reduced = useReducedMotion()
+  const reducedMotion = useReducedMotion()
+  const reduced = reducedMotion || settled
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
