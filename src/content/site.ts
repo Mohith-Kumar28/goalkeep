@@ -25,12 +25,32 @@ export type NavItem = {
   children?: Array<{ label: string; to: string }>
 }
 
-/* 21 Oct: the homepage launches alone, so the header jumps to its sections
-   - "whatever's there on the homepage so that if someone clicks they just go
-   to that homepage section". `/#…` so the links also work from other routes. */
+/* 21 Oct: the homepage's sections are anchors (`/#…`, so they also work
+   from other routes). November: Services and Programs open menus of their
+   own pages; "All services" keeps the old "What we do" jump. */
 export const nav: Array<NavItem> = [
   { label: 'Why we exist', to: '/#why-we-exist' },
-  { label: 'What we do', to: '/#what-we-do' },
+  {
+    label: 'Services',
+    to: '/#what-we-do',
+    children: [
+      { label: 'Impact and measurement strategy', to: '/services/impact-and-measurement-strategy' },
+      { label: 'Data systems and workflows', to: '/services/data-systems-and-workflows' },
+      { label: 'Dashboards and reporting', to: '/services/dashboards-and-reporting' },
+      { label: 'Data adoption and capacity-building', to: '/services/data-adoption-and-capacity-building' },
+      { label: 'All services', to: '/#what-we-do' },
+    ],
+  },
+  {
+    label: 'Programs',
+    to: '/programs',
+    children: [
+      { label: 'Kickstarter', to: '/programs/kickstarter' },
+      { label: 'Data Literacy Program', to: '/programs/data-literacy' },
+      { label: 'Data culture quiz', to: '/resources/data-quiz' },
+      { label: 'All programs', to: '/programs' },
+    ],
+  },
   { label: 'Who we do it for', to: '/#who-we-do-it-for' },
   { label: 'Our approach', to: '/#our-approach' },
   { label: 'Case studies', to: '/#case-studies' },

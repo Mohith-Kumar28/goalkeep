@@ -1,8 +1,9 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Menu, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ChevronDown, Menu, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
 import { contactHref, nav } from '@/content/site'
+import type { NavItem } from '@/content/site'
 import { cn } from '@/lib/utils'
 import { Wordmark } from './wordmark'
 
@@ -21,8 +22,10 @@ import { Wordmark } from './wordmark'
  * the white wordmark, it was white on white until the first scroll (23 Sep
  * doc, on the Partner with us page).
  *
- * 21 Oct: the links are the homepage's own sections, plain anchors rather
- * than routes, and "Partner with us" goes to the contact form.
+ * 21 Oct: the section links are plain anchors into the homepage, and
+ * "Partner with us" goes to the contact form. November: Services and Programs
+ * open menus of their pages, and below 1280px the whole nav moves into the
+ * menu button, since seven items no longer fit beside the wordmark.
  */
 export function SiteHeader() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
@@ -70,27 +73,19 @@ export function SiteHeader() {
           <Wordmark inverse={!scrolled} />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-6 lg:flex xl:gap-8">
-          {nav.map((item) => (
-            <a
-              key={item.to}
-              href={item.to}
-              className={cn(
-                'relative py-1 font-display text-[length:var(--fs-sm)] font-bold whitespace-nowrap xl:text-[length:var(--fs-base)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
-                // The underline grows from the left on hover. It is the one
-                // piece of chrome motion on the page.
-                'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-[3px] after:origin-left after:scale-x-0',
-                'after:bg-[var(--gk-yellow)] after:transition-transform after:duration-[var(--dur-base)] after:ease-[var(--ease-out)]',
-                'hover:after:scale-x-100 focus-visible:after:scale-x-100',
-                scrolled ? 'text-[var(--gk-ink)]' : 'text-white',
-              )}
-            >
-              {item.label}
-            </a>
-          ))}
+        <nav aria-label="Main" className="hidden items-center gap-6 xl:flex 2xl:gap-8">
+          {nav.map((item) =>
+            item.children ? (
+              <NavMenu key={item.label} item={item} scrolled={scrolled} />
+            ) : (
+              <a key={item.to} href={item.to} className={linkClass(scrolled)}>
+                {item.label}
+              </a>
+            ),
+          )}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <GkButton
             href={contactHref}
             variant={scrolled ? 'primary' : 'secondary'}
@@ -107,7 +102,7 @@ export function SiteHeader() {
           aria-controls="mobile-nav"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           className={cn(
-            'grid size-11 place-items-center lg:hidden',
+            'grid size-11 place-items-center xl:hidden',
             scrolled || menuOpen ? 'text-[var(--gk-ink)]' : 'text-white',
           )}
         >
@@ -134,19 +129,38 @@ export function SiteHeader() {
       {menuOpen && (
         <div
           id="mobile-nav"
-          className="fixed inset-x-0 bottom-0 top-20 z-50 overflow-y-auto bg-[var(--gk-cream)] lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-20 z-50 overflow-y-auto bg-[var(--gk-cream)] xl:hidden"
         >
           <nav aria-label="Main" className="shell flex flex-col py-6">
-            {nav.map((item) => (
-              <a
-                key={item.to}
-                href={item.to}
-                onClick={() => setMenuOpen(false)}
-                className="border-b border-[var(--hairline)] py-5 text-[length:var(--fs-xl)] font-bold text-[var(--gk-ink)]"
-              >
-                {item.label}
-              </a>
-            ))}
+            {nav.map((item) =>
+              item.children ? (
+                <div key={item.label} className="border-b border-[var(--hairline)] py-5">
+                  <p className="text-[length:var(--fs-xl)] font-bold text-[var(--gk-ink)]">{item.label}</p>
+                  <ul className="mt-3 flex flex-col">
+                    {item.children.map((child) => (
+                      <li key={child.to}>
+                        <a
+                          href={child.to}
+                          onClick={() => setMenuOpen(false)}
+                          className="block py-2 pl-4 text-[length:var(--fs-base)] font-semibold text-[var(--gk-ink)]"
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <a
+                  key={item.to}
+                  href={item.to}
+                  onClick={() => setMenuOpen(false)}
+                  className="border-b border-[var(--hairline)] py-5 text-[length:var(--fs-xl)] font-bold text-[var(--gk-ink)]"
+                >
+                  {item.label}
+                </a>
+              ),
+            )}
             <div className="pt-6">
               <GkButton
                 href={contactHref}
@@ -161,5 +175,97 @@ export function SiteHeader() {
         </div>
       )}
     </header>
+  )
+}
+
+const linkClass = (scrolled: boolean) =>
+  cn(
+    'relative py-1 font-display text-[length:var(--fs-sm)] font-bold whitespace-nowrap xl:text-[length:var(--fs-base)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
+    // The underline grows from the left on hover. It is the one piece of
+    // chrome motion on the page.
+    'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-[3px] after:origin-left after:scale-x-0',
+    'after:bg-[var(--gk-yellow)] after:transition-transform after:duration-[var(--dur-base)] after:ease-[var(--ease-out)]',
+    'hover:after:scale-x-100 focus-visible:after:scale-x-100',
+    scrolled ? 'text-[var(--gk-ink)]' : 'text-white',
+  )
+
+/**
+ * A nav item with a menu of pages. Opens on hover for a pointer and on
+ * click or Enter for everyone else; Escape, a click outside, or choosing a
+ * page closes it.
+ */
+function NavMenu({ item, scrolled }: { item: NavItem; scrolled: boolean }) {
+  const [open, setOpen] = useState(false)
+  const root = useRef<HTMLDivElement>(null)
+  /* Hover has already opened the menu by the time a mouse clicks, so a
+     mouse click keeps it open instead of toggling it shut. */
+  const mouseDown = useRef(false)
+  const id = `nav-menu-${item.label.toLowerCase()}`
+
+  useEffect(() => {
+    if (!open) return
+    const onPointer = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  return (
+    <div
+      ref={root}
+      className="relative"
+      onPointerEnter={(event) => event.pointerType === 'mouse' && setOpen(true)}
+      onPointerLeave={(event) => event.pointerType === 'mouse' && setOpen(false)}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onPointerDown={(event) => (mouseDown.current = event.pointerType === 'mouse')}
+        onClick={() => {
+          const keepOpen = mouseDown.current
+          mouseDown.current = false
+          setOpen((v) => keepOpen || !v)
+        }}
+        className={cn(linkClass(scrolled), 'inline-flex items-center gap-1')}
+      >
+        {item.label}
+        <ChevronDown
+          aria-hidden="true"
+          strokeWidth={2.25}
+          className={cn('size-4 transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)]', open && 'rotate-180')}
+        />
+      </button>
+      {/* The pt bridges the gap to the button so the pointer can cross it. */}
+      <div id={id} hidden={!open} className="absolute top-full left-1/2 z-50 -translate-x-1/2 pt-3">
+        <ul className="w-80 rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-2 shadow-[var(--shadow-md)]">
+          {item.children?.map((child, i, all) => {
+            const overview = i === all.length - 1
+            return (
+              <li key={child.to} className={cn(overview && 'mt-1 border-t border-[var(--hairline)] pt-1')}>
+                <a
+                  href={child.to}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    'block rounded-[var(--r-md)] px-4 py-2.5 text-[length:var(--fs-sm)] text-[var(--gk-ink)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-[var(--gk-cream-deep)] focus-visible:bg-[var(--gk-cream-deep)] focus-visible:outline-none',
+                    overview ? 'font-bold text-[var(--gk-navy)]' : 'font-semibold',
+                  )}
+                >
+                  {child.label}
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </div>
   )
 }
