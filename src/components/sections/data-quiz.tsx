@@ -1,13 +1,14 @@
 import { ArrowLeft, ArrowRight, Check, ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { CSSProperties, FormEvent } from 'react'
 import { detailOptions, domains, formatScore, likert, scoreQuiz, statementCount } from '@/content/quiz'
 import type { Answer, DomainId, QuizDetails, QuizScore } from '@/content/quiz'
 import { Annotate, Scribble } from '@/components/primitives/doodles'
 import { GkButton } from '@/components/primitives/gk-button'
-import { DomainArc, ScoredMark } from '@/components/primitives/scored-mark'
+import { DomainArc, ScoredMark, segmentHue } from '@/components/primitives/scored-mark'
 import { Field, inputClass } from '@/components/sections/contact'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 import { submitQuiz } from '@/server/forms'
 
@@ -54,7 +55,9 @@ const statements = domains.flatMap((domain, d) => domain.statements.map((text) =
 /* Disagree on the left, agree on the right: the direction a scale is read. */
 const scale = [...likert].reverse()
 
-export const DOMAIN_HUES: Record<DomainId, { arc: string; tint: string; ink: string; lift: string }> = {
+type Hue = { arc: string; tint: string; ink: string; lift: string }
+
+export const DOMAIN_HUES: Record<DomainId, Hue> = {
   data: { arc: 'var(--gk-blue)', tint: 'var(--gk-blue-tint)', ink: 'var(--gk-blue-deep)', lift: 'var(--gk-blue-lift)' },
   technology: { arc: 'var(--gk-teal)', tint: 'var(--gk-teal-tint)', ink: 'var(--gk-teal-ink)', lift: 'var(--gk-teal-lift)' },
   process: { arc: 'var(--gk-coral)', tint: 'var(--gk-coral-tint)', ink: 'var(--gk-coral-ink)', lift: 'var(--gk-coral-lift)' },
@@ -63,6 +66,8 @@ export const DOMAIN_HUES: Record<DomainId, { arc: string; tint: string; ink: str
 
 /** A score on the 1 to 5 scale as a share of the whole bar or arc. */
 const share = (average: number) => average / 5
+
+const EASE = [0.22, 1, 0.36, 1] as const
 
 const complete = (answers: Array<Answer | undefined>) => answers.filter((a): a is Answer => a !== undefined)
 
@@ -122,7 +127,12 @@ export function DataQuiz() {
 
   return (
     <div ref={top} id="quiz" className="scroll-mt-28">
-      <div className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:grid-cols-[18rem_1fr]">
+      {/* The details form is the tallest step; holding every step to its
+          height on desktop keeps the page below still from step to step.
+          `overflow-clip` rounds the corners without making the card a
+          scroll container, which would pin the review's sticky score to
+          the card instead of the window. */}
+      <div className="grid overflow-clip rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:min-h-[42rem] lg:grid-cols-[18rem_1fr]">
         <aside
           data-ground="navy"
           className={cn('ground-navy flex-col', stage.kind === 'details' ? 'hidden lg:flex' : 'flex')}
@@ -227,7 +237,7 @@ function Itinerary({
               className={cn(
                 'flex min-h-[3.25rem] items-center gap-3 border-b border-[var(--hairline-inverse)] py-3 text-[length:var(--fs-sm)] text-white transition-opacity duration-[var(--dur-base)] last:border-b-0',
                 current ? 'font-bold' : 'font-semibold',
-                leg.state === 'upcoming' && !listing && 'opacity-50',
+                leg.state === 'upcoming' && !listing && 'opacity-[0.55]',
               )}
             >
               <span aria-hidden="true" className="flex w-5 shrink-0 items-center justify-center">
@@ -260,7 +270,7 @@ function Itinerary({
       </ol>
       {listing && (
         <p className="mt-auto pt-8 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">
-          About three minutes. Nothing is scored until the last statement.
+          Nothing is scored until the last statement.
         </p>
       )}
     </div>
@@ -305,28 +315,50 @@ function ProgressStrip({ index, answers, className }: { index: number; answers: 
   )
 }
 
-/* The scores, drawn on the mark. Desktop puts the average inside the ring;
-   a phone has no column to spare, so the mark sits in a row beside it. On
-   the review the mark sticks to the top of its column, so the score is in
-   view while answers further down are changed. */
+/* The scores, drawn on the mark. Desktop puts the average inside the ring
+   and the level and the two scores that decide what to do under it; a phone
+   has no column to spare, so the mark sits in a row beside the average. On
+   the review the column sticks to the top, so the score stays in view while
+   answers further down are changed. */
 function ScoreAside({ score, sticky }: { score: QuizScore; sticky: boolean }) {
   const fills = Object.fromEntries(score.domains.map((d) => [d.id, share(d.average)])) as Record<DomainId, number>
+  const strongest = score.domains.reduce((high, d) => (d.average > high.average ? d : high))
+  const weakest = score.domains.find((d) => d.id === score.weakest.id) ?? strongest
+  const facts = [
+    { term: 'Strongest', domain: strongest },
+    { term: 'Start with', domain: weakest },
+  ]
   return (
     <>
-      <div className={cn('hidden justify-center px-8 py-10 lg:flex', sticky ? 'sticky top-28' : 'flex-1 items-center')}>
+      <div className={cn('hidden flex-col items-center px-8 pt-12 pb-10 lg:flex', sticky && 'sticky top-28')}>
         <ScoredMark size={176} fills={fills}>
           <div className="text-center">
             <p className="stat-figure text-[length:2.75rem] leading-none text-white">{formatScore(score.average)}</p>
             <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
           </div>
         </ScoredMark>
+        <p className="mt-6 text-[length:var(--fs-lg)] font-extrabold text-white">{score.level.label}</p>
+        <dl className="mt-8 w-full divide-y divide-[var(--hairline-inverse)] border-y border-[var(--hairline-inverse)]">
+          {facts.map(({ term, domain }) => (
+            <div key={term} className="flex items-center gap-3 py-3.5">
+              <DomainArc domain={domain.id} size={18} color={DOMAIN_HUES[domain.id].lift} />
+              <dt className="text-[length:var(--fs-sm)] font-semibold text-[var(--fg-inverse-2)]">{term}</dt>
+              <dd className="ml-auto text-[length:var(--fs-sm)] font-bold text-white tabular-nums">
+                {domain.title} {formatScore(domain.average)}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
       <div className="flex items-center gap-6 px-6 py-5 lg:hidden">
         <ScoredMark size={112} fills={fills} />
         <div>
           <p className="stat-figure text-[length:2.5rem] leading-none text-white">{formatScore(score.average)}</p>
           <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
-          <p className="mt-3 text-[length:var(--fs-sm)] font-semibold text-white">{score.level.label}</p>
+          <p className="mt-3 text-[length:var(--fs-sm)] font-bold text-white">{score.level.label}</p>
+          <p className="mt-1 text-[length:var(--fs-sm)] text-[var(--fg-inverse-2)]">
+            Strongest: {strongest.title} {formatScore(strongest.average)}
+          </p>
         </div>
       </div>
     </>
@@ -350,7 +382,7 @@ const labels: Record<keyof QuizDetails, string> = {
   budget: 'Organisation budget (optional)',
 }
 
-const quizInputClass = cn(inputClass, 'hover:border-[var(--gk-navy)]')
+const quizInputClass = cn(inputClass, 'py-3 hover:border-[var(--gk-navy)]')
 
 const stepHeadingClass = 'text-[length:clamp(1.5rem,2.6vw,2rem)] leading-tight font-medium text-[var(--gk-ink)]'
 
@@ -393,8 +425,14 @@ function DetailsStep({
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
       <div>
-        <h2 className={stepHeadingClass}>First, a little about you.</h2>
-        <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">So we can email you your results.</p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <h2 className={stepHeadingClass}>First, a little about you.</h2>
+          <span className="hand flex items-center gap-1.5 text-[length:var(--fs-hand-sm)] font-bold whitespace-nowrap text-[var(--gk-ink)]">
+            <Scribble name="arrow-curve" color="var(--gk-scribble)" weight={3} className="mt-1.5 h-6 w-5 rotate-90" />
+            takes about three minutes
+          </span>
+        </div>
+        <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-1)]">So we can email you your results.</p>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
         {text('name', { autoComplete: 'name' })}
@@ -404,7 +442,7 @@ function DetailsStep({
         {text('organization', { autoComplete: 'organization' })}
         {text('budget', { required: false, placeholder: 'e.g. INR 1 crore' })}
       </div>
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2">
         <Select id="region" value={details.region} options={detailOptions.region} onChange={set('region')} />
         <Select id="size" value={details.size} options={detailOptions.size} onChange={set('size')} />
         <Select id="sector" value={details.sector} options={detailOptions.sector} onChange={set('sector')} />
@@ -415,7 +453,7 @@ function DetailsStep({
         <GkButton type="submit" variant="primary" withArrow>
           Start the quiz
         </GkButton>
-        <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">Twelve statements come next, one at a time.</p>
+        <p className="text-[length:var(--fs-sm)] text-[var(--fg-1)]">Twelve statements come next, one at a time.</p>
       </div>
     </form>
   )
@@ -461,10 +499,85 @@ function Select({
   )
 }
 
+/* -------------------------------------------------------------- answer */
+
+/* One point on the agreement scale. The statements and the review use the
+   same tile, large and small, so the two screens read as one control: the
+   key number in the domain's ink, a tenth of the domain's hue on hover, and
+   once chosen the domain's tint with its arc drawn along the foot. */
+function AnswerTile({
+  name,
+  number,
+  label,
+  checked,
+  hue,
+  size,
+  onSelect,
+}: {
+  name: string
+  number: number
+  label: string
+  checked: boolean
+  hue: Hue
+  size: 'lg' | 'sm'
+  onSelect: () => void
+}) {
+  const reduced = useReducedMotion()
+  const large = size === 'lg'
+  return (
+    <label
+      title={large ? undefined : label}
+      className={cn(
+        'relative flex cursor-pointer overflow-hidden rounded-[var(--r-sm)] border transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
+        'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
+        large
+          ? 'min-h-14 items-center gap-4 px-4 pt-1 pb-2 sm:min-h-[5.5rem] sm:gap-1.5 sm:px-2 sm:pb-2.5 xl:gap-2.5 xl:px-3.5'
+          : 'size-11 items-center justify-center pb-1',
+        checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--tile-hover)]',
+      )}
+      style={{ '--tile-hover': `color-mix(in srgb, ${hue.arc} 10%, transparent)`, background: checked ? hue.tint : undefined } as CSSProperties}
+    >
+      <input type="radio" name={name} checked={checked} onChange={onSelect} aria-label={large ? undefined : label} className="sr-only" />
+      <span
+        aria-hidden="true"
+        className={cn('hand shrink-0 leading-none font-bold tabular-nums', large ? 'w-4 text-[length:2.125rem]' : 'text-[length:1.625rem]')}
+        style={{ color: hue.ink }}
+      >
+        {number}
+      </span>
+      {large && (
+        <span className="text-[length:var(--fs-sm)] leading-tight font-semibold text-[var(--gk-ink)] sm:text-[length:var(--fs-xs)] xl:text-[length:var(--fs-sm)]">
+          {label}
+        </span>
+      )}
+      {checked && (
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 100 10"
+          preserveAspectRatio="none"
+          className={cn('pointer-events-none absolute overflow-visible', large ? 'inset-x-3 bottom-1.5 h-2' : 'inset-x-2 bottom-1 h-1.5')}
+        >
+          <motion.path
+            d="M2 2Q50 12 98 2"
+            fill="none"
+            stroke={hue.arc}
+            strokeWidth={large ? 3.5 : 3}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            initial={reduced ? false : { pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.3, ease: EASE }}
+          />
+        </svg>
+      )}
+    </label>
+  )
+}
+
 /* ------------------------------------------------------------ question */
 
 const statementClass =
-  'max-w-[30ch] font-display text-[length:clamp(1.5rem,2.8vw,2.125rem)] leading-[1.25] font-medium tracking-[var(--tracking-display)] text-[var(--gk-ink)]'
+  'max-w-[30ch] font-display text-[length:clamp(1.5rem,3.2vw,2.75rem)] leading-[1.25] font-medium tracking-[var(--tracking-display)] text-[var(--gk-ink)]'
 
 function QuestionStep({
   index,
@@ -500,82 +613,71 @@ function QuestionStep({
   }, [onAnswer])
 
   return (
-    <div className="flex flex-1 flex-col" onPointerMove={() => setArmed(true)}>
-      <div className="flex items-center justify-between gap-4">
+    <div className="relative flex flex-1 flex-col" onPointerMove={() => setArmed(true)}>
+      {/* The domain's own segment, large and faint, off the card's corner. */}
+      <span data-ghost aria-hidden="true" className="pointer-events-none absolute -top-10 -right-10 hidden opacity-[0.07] sm:block">
+        <DomainArc domain={domain.id} size={160} color={hue.arc} />
+      </span>
+
+      <div className="flex items-baseline gap-4">
         <p className="hand hidden lg:block" style={{ color: hue.ink }}>
           {domain.title.toLowerCase()}
         </p>
-        <p className="ml-auto text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)] tabular-nums">
+        <p className="text-[length:var(--fs-sm)] font-bold text-[var(--fg-1)] tabular-nums">
           {index + 1} of {statementCount}
         </p>
       </div>
 
-      <div className="flex flex-1 flex-col justify-center py-8 lg:py-10">
+      <div className="flex flex-1 flex-col justify-center py-8">
         {/* Every statement is laid out invisibly in the same cell, so the
             block is as tall as the longest one at any width and nothing
-            below it moves between questions. */}
+            below it moves between questions. The visible one sits on the
+            block's foot, so it is always the same distance from the tiles. */}
         <div className="grid">
           {statements.map((s, i) => (
             <p key={i} aria-hidden="true" className={cn(statementClass, 'invisible col-start-1 row-start-1')}>
               {s.text}
             </p>
           ))}
-          <p id={statementId} className={cn(statementClass, 'col-start-1 row-start-1')}>
+          <p id={statementId} className={cn(statementClass, 'col-start-1 row-start-1 self-end')}>
             {statement.text}
           </p>
         </div>
 
+        <p className="mt-6 text-[length:var(--fs-sm)] text-[var(--fg-1)]">
+          Answer for your organisation as it is today.
+          <span className="hidden [@media(hover:hover)]:inline"> Keys 1 to 5 work too.</span>
+        </p>
+
         <div
           role="radiogroup"
           aria-labelledby={statementId}
-          className={cn('mt-8 grid gap-2 sm:grid-cols-5', !armed && '[@media(hover:hover)]:pointer-events-none')}
+          className={cn('mt-3 grid gap-2 sm:grid-cols-5', !armed && '[@media(hover:hover)]:pointer-events-none')}
         >
-          {scale.map((option, i) => {
-            const checked = value === option.value
-            return (
-              <label
-                key={`${index}-${option.value}`}
-                className={cn(
-                  'relative flex min-h-[3.25rem] cursor-pointer items-center justify-center overflow-hidden rounded-[var(--r-sm)] border px-3 py-2 text-center text-[length:var(--fs-sm)] leading-tight font-semibold text-[var(--gk-ink)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] sm:min-h-[4.5rem]',
-                  'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
-                  checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--gk-cream-deep)]',
-                )}
-                style={checked ? { background: hue.tint } : undefined}
-              >
-                <input
-                  type="radio"
-                  name={statementId}
-                  value={option.value}
-                  checked={checked}
-                  onChange={() => onAnswer(option.value)}
-                  className="sr-only"
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute top-1.5 left-2 hidden text-[11px] font-bold text-[var(--fg-2)] tabular-nums [@media(hover:hover)]:block"
-                >
-                  {i + 1}
-                </span>
-                <span className="text-balance">{option.label}</span>
-                {checked && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: hue.arc }} />}
-              </label>
-            )
-          })}
+          {scale.map((option, i) => (
+            <AnswerTile
+              key={`${index}-${option.value}`}
+              name={statementId}
+              number={i + 1}
+              label={option.label}
+              checked={value === option.value}
+              hue={hue}
+              size="lg"
+              onSelect={() => onAnswer(option.value)}
+            />
+          ))}
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4">
+      <div>
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
+          className="inline-flex min-h-11 items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
           Back
         </button>
-        <p className="hidden text-[length:var(--fs-sm)] text-[var(--fg-2)] sm:block">
-          Answer for your organisation as it is today. Keys 1 to 5 work too.
-        </p>
       </div>
     </div>
   )
@@ -588,6 +690,8 @@ const LEVEL_INKS = {
   developing: 'var(--gk-yellow-ink)',
   established: 'var(--gk-teal-ink)',
 }
+
+const linkClass = 'inline-flex min-h-11 items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline'
 
 function Results({
   score,
@@ -612,32 +716,37 @@ function Results({
         <strong className="font-extrabold">{score.level.label}.</strong> {score.level.reading}
       </h2>
 
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+      {/* Every column has the same rows, the note's included, so the
+          titles, figures and levels line up whichever column is lowest. */}
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
         {score.domains.map((d) => {
           const lowest = d.id === score.weakest.id
           const figure = <span className="stat-figure text-[length:2.25rem] text-[var(--gk-ink)]">{formatScore(d.average)}</span>
           return (
-            <div key={d.id} className="flex flex-col gap-1">
-              <DomainArc domain={d.id} size={44} fill={share(d.average)} track="var(--gk-cream-deep)" animate className="mb-2" />
-              <dt className="text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)]">
+            <div key={d.id} className="flex flex-col">
+              <span aria-hidden="true" className="flex h-8 items-start">
+                {lowest && (
+                  <span className="hand flex items-start gap-1 text-[length:var(--fs-hand-sm)] leading-none font-bold whitespace-nowrap text-[var(--gk-ink)]">
+                    start here
+                    <Scribble name="arrow-curve" color="var(--gk-scribble)" weight={3} className="mt-1 h-6 w-6 -scale-x-100" />
+                  </span>
+                )}
+              </span>
+              <DomainArc domain={d.id} size={56} fill={share(d.average)} track={`color-mix(in srgb, ${segmentHue(d.id)} 22%, transparent)`} animate />
+              <dt className="mt-3 text-[length:var(--fs-sm)] font-bold text-[var(--fg-1)]">
                 {d.title}
                 {lowest && <span className="sr-only"> (your lowest score)</span>}
               </dt>
-              <dd className="flex flex-wrap items-baseline gap-x-3">
+              <dd className="mt-1 flex h-12 items-center">
                 {lowest ? (
-                  <>
-                    <Annotate mark="circle" color="var(--gk-coral-ink)" inset="-24%">
-                      {figure}
-                    </Annotate>
-                    <span aria-hidden="true" className="hand text-[var(--gk-coral-ink)]">
-                      start here
-                    </span>
-                  </>
+                  <Annotate mark="circle" color="var(--gk-scribble)" inset="-24%">
+                    {figure}
+                  </Annotate>
                 ) : (
                   figure
                 )}
               </dd>
-              <dd className="text-[length:var(--fs-sm)] font-semibold" style={{ color: LEVEL_INKS[d.level.id] }}>
+              <dd className="mt-1 text-[length:var(--fs-sm)] font-semibold" style={{ color: LEVEL_INKS[d.level.id] }}>
                 {d.level.label}
               </dd>
             </div>
@@ -660,12 +769,12 @@ function Results({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <p role="status" className="flex items-center gap-2 text-[length:var(--fs-sm)] text-[var(--fg-2)]">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <p role="status" className="flex items-center gap-2 text-[length:var(--fs-sm)] text-[var(--fg-1)]">
           {submission.status === 'sending' && 'Sending a copy to your inbox…'}
           {submission.status === 'sent' && (
             <>
-              <Scribble name="check" color="var(--gk-teal)" weight={4} className="size-5 shrink-0" />
+              <Scribble name="check" color="var(--gk-scribble)" weight={4} className="size-5 shrink-0" />
               <span>
                 We’ve emailed these results to <strong className="text-[var(--gk-ink)]">{email}</strong>.
               </span>
@@ -681,15 +790,11 @@ function Results({
             </span>
           )}
         </p>
-        <span className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <button type="button" onClick={onReview} className="text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline">
+        <span className="flex flex-wrap items-center gap-x-6">
+          <button type="button" onClick={onReview} className={linkClass}>
             Review your answers
           </button>
-          <button
-            type="button"
-            onClick={onRestart}
-            className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
-          >
+          <button type="button" onClick={onRestart} className={linkClass}>
             Retake the quiz
             <ArrowRight aria-hidden="true" className="size-4" />
           </button>
@@ -712,21 +817,15 @@ function ReviewStep({
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-        <div>
-          <h2 className={stepHeadingClass}>Your answers.</h2>
-          <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
-            Change any of them and the scores update here. The copy we emailed you stays as it was.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
-        >
+      <div>
+        <button type="button" onClick={onBack} className={cn(linkClass, '-mt-3 mb-3')}>
           <ArrowLeft aria-hidden="true" className="size-4" />
           Back to results
         </button>
+        <h2 className={stepHeadingClass}>Your answers.</h2>
+        <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-1)]">
+          Change any of them and the scores update here. The copy we emailed you stays as it was.
+        </p>
       </div>
       {domains.map((domain, d) => {
         const hue = DOMAIN_HUES[domain.id]
@@ -768,42 +867,27 @@ function ReviewScale({
 }: {
   index: number
   value: Answer | undefined
-  hue: (typeof DOMAIN_HUES)[DomainId]
+  hue: Hue
   onChange: (value: Answer) => void
 }) {
   const chosen = likert.find((option) => option.value === value)
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <div role="radiogroup" aria-labelledby={`quiz-review-statement-${index}`} className="flex gap-1">
-        {scale.map((option, i) => {
-          const checked = value === option.value
-          return (
-            <label
-              key={option.value}
-              title={option.label}
-              className={cn(
-                'relative grid size-8 cursor-pointer place-items-center overflow-hidden rounded-[var(--r-sm)] border text-[12px] font-bold text-[var(--gk-ink)] tabular-nums transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
-                'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
-                checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--gk-cream-deep)]',
-              )}
-              style={checked ? { background: hue.tint } : undefined}
-            >
-              <input
-                type="radio"
-                name={`quiz-review-${index}`}
-                value={option.value}
-                checked={checked}
-                onChange={() => onChange(option.value)}
-                aria-label={option.label}
-                className="sr-only"
-              />
-              <span aria-hidden="true">{i + 1}</span>
-              {checked && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: hue.arc }} />}
-            </label>
-          )
-        })}
+      <div role="radiogroup" aria-labelledby={`quiz-review-statement-${index}`} className="flex gap-1.5">
+        {scale.map((option, i) => (
+          <AnswerTile
+            key={option.value}
+            name={`quiz-review-${index}`}
+            number={i + 1}
+            label={option.label}
+            checked={value === option.value}
+            hue={hue}
+            size="sm"
+            onSelect={() => onChange(option.value)}
+          />
+        ))}
       </div>
-      <span className="w-[9.5rem] text-[length:var(--fs-sm)] font-semibold text-[var(--fg-2)]">{chosen?.label}</span>
+      <span className="w-[9.5rem] text-[length:var(--fs-sm)] font-semibold text-[var(--fg-1)]">{chosen?.label}</span>
     </div>
   )
 }

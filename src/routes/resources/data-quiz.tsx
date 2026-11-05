@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { motion, useInView } from 'motion/react'
+import { useRef } from 'react'
 import { GkButton } from '@/components/primitives/gk-button'
-import { MarkAssembly } from '@/components/primitives/logo-shapes'
 import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 import { DomainArc, ScoredMark, markLabelStyle } from '@/components/primitives/scored-mark'
@@ -10,6 +11,7 @@ import { Credibility } from '@/components/sections/credibility'
 import { DOMAIN_HUES, DataQuiz } from '@/components/sections/data-quiz'
 import { domains } from '@/content/quiz'
 import type { DomainId } from '@/content/quiz'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 export const Route = createFileRoute('/resources/data-quiz')({
   head: () => ({
@@ -57,11 +59,13 @@ function DataQuizPage() {
             <p className="lead mt-6 max-w-[44ch]">
               Twelve statements across four parts of a data culture. About three minutes, and we’ll email your results to you.
             </p>
-            <div className="mt-9 flex items-center gap-10">
-              <GkButton href="#quiz" variant="accent" onDark withArrow>
+            {/* Below desktop the mark has no column of its own: on a phone it
+                stands centred over the button, on a tablet beside it. */}
+            <div className="mt-9 flex flex-col-reverse items-stretch gap-8 sm:flex-row sm:items-center sm:gap-12">
+              <GkButton href="#quiz" variant="accent" onDark withArrow className="justify-center">
                 Take the quiz
               </GkButton>
-              <ScoredMark fills={FULL} size={140} drawOnMount className="lg:hidden" />
+              <ScoredMark fills={FULL} size={128} drawOnMount className="self-center lg:hidden" />
             </div>
           </Reveal>
 
@@ -94,11 +98,11 @@ function DataQuizPage() {
 
       <section className="ground-cream band relative">
         <div className="shell">
-          <Reveal className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-8">
-            <h2 className="h2 max-w-[22ch] pb-1 lg:col-span-7">
+          <Reveal>
+            <h2 className="h2 max-w-[22ch] pb-1">
               Four parts, <em>and where each one leads.</em>
             </h2>
-            <p className="lead mt-5 max-w-[40ch] lg:col-span-5 lg:mt-0 lg:pb-2">
+            <p className="lead mt-5 max-w-[52ch]">
               Your lowest-scoring part is usually the best place to start. Each one maps to the work we do.
             </p>
           </Reveal>
@@ -107,11 +111,11 @@ function DataQuizPage() {
               {domains.map((d) => (
                 <li
                   key={d.id}
-                  className="grid grid-cols-[2.5rem_1fr] items-center gap-x-5 gap-y-2 py-6 md:grid-cols-[2.5rem_9rem_1fr_auto] md:gap-x-8"
+                  className="grid grid-cols-[4.5rem_1fr] items-center gap-x-5 gap-y-2 py-7 md:grid-cols-[4.5rem_11rem_1fr_auto] md:gap-x-8"
                 >
-                  <DomainArc domain={d.id} size={40} />
-                  <h3 className="text-[length:var(--fs-lg)] leading-tight font-bold text-[var(--gk-ink)]">{d.title}</h3>
-                  <p className="col-start-2 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)] md:col-start-auto">
+                  <DomainArc domain={d.id} size={72} className="row-span-3 self-start md:row-span-1 md:self-center" />
+                  <h3 className="text-[length:var(--fs-xl)] leading-tight font-bold text-[var(--gk-ink)]">{d.title}</h3>
+                  <p className="col-start-2 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)] md:col-start-auto">
                     {ABOUT[d.id]}
                   </p>
                   <a
@@ -152,10 +156,11 @@ function DataQuizPage() {
               </div>
             </Reveal>
           </div>
-          <div className="hidden lg:col-span-4 lg:flex lg:items-center lg:justify-center">
-            <MarkAssembly size={150} settleAt={0.8} />
+          <div className="flex justify-center lg:hidden">
+            <ScoredMark fills={FULL} size={104} drawOnView />
           </div>
         </div>
+        <ClosingArc />
       </section>
 
       <Contact aside={<QuizContactAside />} />
@@ -163,19 +168,53 @@ function DataQuizPage() {
   )
 }
 
+/*
+ * The closing band's one shape: a single large segment of the mark's ring,
+ * centred past the band's right edge so it runs off the edge with one round
+ * cap showing, drawn in from that cap when the band comes into view. The
+ * hero already has the whole mark; this is the mark's line, not the mark.
+ */
+function ClosingArc() {
+  const reduced = useReducedMotion()
+  const ref = useRef<SVGSVGElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.3 })
+  const thickness = 10
+  const start = 232
+  const sweep = 150
+  return (
+    <svg
+      ref={ref}
+      aria-hidden="true"
+      viewBox="0 0 100 100"
+      className="pointer-events-none absolute top-1/2 right-0 hidden size-[30rem] translate-x-[56%] -translate-y-1/2 overflow-visible lg:block"
+    >
+      <motion.circle
+        cx="50"
+        cy="50"
+        r={50 - thickness / 2}
+        fill="none"
+        stroke="var(--gk-yellow)"
+        strokeWidth={thickness}
+        strokeLinecap="round"
+        transform={`rotate(${start - 90} 50 50)`}
+        initial={false}
+        animate={{ pathLength: inView || reduced ? sweep / 360 : 0 }}
+        transition={reduced ? { duration: 0 } : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </svg>
+  )
+}
+
 /** The column beside the contact form: who reads the scores with you. */
 function QuizContactAside() {
   return (
     <div className="mt-10 hidden lg:block">
-      <p className="max-w-[36ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
-        Bring your scores. We read them with you and say what we would do first.
-      </p>
       <img
         src="/photos/group-team.webp"
         alt="The Goalkeep team with a partner organisation after a workshop"
         loading="lazy"
         decoding="async"
-        className="dissolve-rb mt-6 aspect-[4/3] w-full object-cover"
+        className="dissolve-rb aspect-[4/3] w-full object-cover"
       />
     </div>
   )

@@ -1,5 +1,5 @@
-import { motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { motion, useInView } from 'motion/react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { BOX_H, BOX_W, JOIN_OVERLAP, RING, SEGMENTS, arcDash } from '@/components/primitives/logo-shapes'
 import type { Segment } from '@/components/primitives/logo-shapes'
@@ -28,7 +28,15 @@ export const SEGMENT_OF: Record<DomainId, number> = {
   process: 4,
 }
 
-const STRUCTURE = [1, 5]
+/* The smile as the icon draws it: as wide as the ring, its caps rising to
+   just under the ring's foot. SEGMENTS[5] spans 115 degrees, which leaves
+   the smile narrower than the ring and hanging well below it; measured off
+   goalkeep-icon.png the caps sit 80 degrees either side of the foot. */
+const SMILE_SEGMENT: Segment = { ...SEGMENTS[5], start: 91, sweep: 178 }
+
+const STRUCTURE = [SEGMENTS[1], SMILE_SEGMENT]
+
+export const segmentHue = (domain: DomainId) => SEGMENTS[SEGMENT_OF[domain]].hue
 
 /* The order the quiz asks its domains, which is the order the hero draws them. */
 const DRAW_ORDER: Array<DomainId> = ['data', 'technology', 'process', 'strategy']
@@ -40,6 +48,7 @@ export function ScoredMark({
   onDark = true,
   size = 280,
   drawOnMount = false,
+  drawOnView = false,
   className,
   children,
 }: {
@@ -51,21 +60,26 @@ export function ScoredMark({
   /** Start empty and draw each domain in turn once mounted, half a second
    *  each, as a preview of the scoring. Reduced motion renders it full. */
   drawOnMount?: boolean
+  /** The same draw, started when the mark scrolls into view. */
+  drawOnView?: boolean
   className?: string
   /** Sits in the ring's hole. */
   children?: ReactNode
 }) {
   const reduced = useReducedMotion()
-  const [mounted, setMounted] = useState(!drawOnMount)
-  useEffect(() => setMounted(true), [])
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const [hydrated, setHydrated] = useState(!drawOnMount)
+  useEffect(() => setHydrated(true), [])
+  const mounted = drawOnView ? inView : hydrated
+  const staged = drawOnMount || drawOnView
   const track = onDark ? 'rgb(255 255 255 / 0.16)' : 'var(--gk-cream-deep)'
   const hole = RING.r - RING.t / 2
 
   return (
-    <div className={cn('relative', className)} style={{ width: size, height: (size / BOX_W) * BOX_H }}>
+    <div ref={ref} className={cn('relative', className)} style={{ width: size, height: (size / BOX_W) * BOX_H }}>
       <svg viewBox={`0 0 ${BOX_W} ${BOX_H}`} className="h-full w-full overflow-visible" aria-hidden="true">
-        {STRUCTURE.map((index) => {
-          const segment = SEGMENTS[index]
+        {STRUCTURE.map((segment, index) => {
           const { circle } = segment
           const { dash, circumference, rotate } = arcDash(segment.start, segment.sweep, circle.r, circle.t)
           return (
@@ -91,7 +105,7 @@ export function ScoredMark({
           const drawn = arcDash(segment.start, segment.sweep * fill, circle.r, circle.t)
           const transition = reduced
             ? { duration: 0 }
-            : drawOnMount
+            : staged
               ? { duration: 0.5, delay: order * 0.5, ease: EASE }
               : { duration: 0.7, ease: EASE }
           const shared = {
@@ -231,15 +245,20 @@ export function DomainArc({
   )
 }
 
+/* The two lower segments run down beside the smile's caps, so their labels
+   sit on the upper part of the segment, where the ring is clear of it. */
+const LABEL_AT: Partial<Record<DomainId, number>> = { data: 112, technology: 242 }
+
 /**
- * Where a domain's label sits around the mark: on the segment's mid-angle,
+ * Where a domain's label sits around the mark: on the segment's mid-angle
+ * (or the point `LABEL_AT` names),
  * `gap` units past the outer edge of the ring, with the side of the label
  * that faces the ring touching that point. The tilt follows the label's
  * position round the ring, so every label obeys one rule.
  */
 export function markLabelStyle(domain: DomainId, gap = 22): CSSProperties {
   const segment = SEGMENTS[SEGMENT_OF[domain]]
-  const mid = ((segment.start + segment.sweep / 2) * Math.PI) / 180
+  const mid = ((LABEL_AT[domain] ?? segment.start + segment.sweep / 2) * Math.PI) / 180
   const sin = Math.sin(mid)
   const cos = Math.cos(mid)
   const radius = RING.r + RING.t / 2 + gap
