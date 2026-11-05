@@ -4,7 +4,7 @@ import { GkButton } from '@/components/primitives/gk-button'
 import { MarkAssembly } from '@/components/primitives/logo-shapes'
 import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
-import { ScoredMark, markLabelStyle } from '@/components/primitives/scored-mark'
+import { DomainArc, ScoredMark, markLabelStyle } from '@/components/primitives/scored-mark'
 import { Contact } from '@/components/sections/contact'
 import { Credibility } from '@/components/sections/credibility'
 import { DOMAIN_HUES, DataQuiz } from '@/components/sections/data-quiz'
@@ -52,16 +52,17 @@ function DataQuizPage() {
             <p className="lead mt-6 max-w-[44ch]">
               Twelve statements across four parts of a data culture. About three minutes, and we’ll email your results to you.
             </p>
-            <div className="mt-9">
+            <div className="mt-9 flex items-center gap-10">
               <GkButton href="#quiz" variant="accent" onDark withArrow>
                 Take the quiz
               </GkButton>
+              <ScoredMark fills={FULL} size={140} drawOnMount className="lg:hidden" />
             </div>
           </Reveal>
 
           <Reveal delay={0.15} className="hidden lg:col-span-5 lg:flex lg:justify-center">
             <div className="relative mt-6">
-              <ScoredMark fills={FULL} size={248} />
+              <ScoredMark fills={FULL} size={248} drawOnMount />
               {domains.map((d) => (
                 <span
                   key={d.id}
@@ -77,7 +78,10 @@ function DataQuizPage() {
         </div>
       </section>
 
-      <section className="ground-cream-deep relative pb-20 md:pb-28">
+      {/* `flow-root` keeps the card's negative margin from collapsing through
+          the section, which would move the cream ground up over the navy
+          instead of letting the card overlap it. */}
+      <section className="ground-cream-deep relative flow-root pb-16">
         <div className="shell -mt-12 max-w-[76rem]">
           <DataQuiz />
         </div>
@@ -85,35 +89,35 @@ function DataQuizPage() {
 
       <section className="ground-cream band relative">
         <div className="shell">
-          <Reveal>
-            <h2 className="h2 max-w-[22ch] pb-1">
+          <Reveal className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-8">
+            <h2 className="h2 max-w-[22ch] pb-1 lg:col-span-7">
               Four parts, <em>and where each one leads.</em>
             </h2>
-            <p className="lead mt-5 max-w-[54ch]">
+            <p className="lead mt-5 max-w-[40ch] lg:col-span-5 lg:mt-0 lg:pb-2">
               Your lowest-scoring part is usually the best place to start. Each one maps to the work we do.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <ul className="mt-12 divide-y divide-[var(--hairline)] overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-sm)]">
-              {domains.map((d) => {
-                const hue = DOMAIN_HUES[d.id]
-                return (
-                  <li key={d.id} className="grid gap-3 px-6 py-6 md:grid-cols-[10rem_1fr_auto] md:items-center md:gap-8 md:px-8">
-                    <h3 className="flex items-center gap-3 text-[length:var(--fs-lg)] leading-tight font-extrabold text-[var(--gk-ink)]">
-                      <span aria-hidden="true" className="h-[3px] w-4 shrink-0 rounded-full" style={{ background: hue.arc }} />
-                      {d.title}
-                    </h3>
-                    <p className="text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">{ABOUT[d.id]}</p>
-                    <a
-                      href={d.next.to}
-                      className="group inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold whitespace-nowrap text-[var(--gk-navy)]"
-                    >
-                      {d.next.label}
-                      <ArrowRight aria-hidden="true" className="size-4 transition-transform duration-[var(--dur-base)] group-hover:translate-x-0.5" />
-                    </a>
-                  </li>
-                )
-              })}
+            <ul className="mt-12 divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
+              {domains.map((d) => (
+                <li
+                  key={d.id}
+                  className="grid grid-cols-[2.5rem_1fr] items-center gap-x-5 gap-y-2 py-6 md:grid-cols-[2.5rem_9rem_1fr_auto] md:gap-x-8"
+                >
+                  <DomainArc domain={d.id} size={40} />
+                  <h3 className="text-[length:var(--fs-lg)] leading-tight font-bold text-[var(--gk-ink)]">{d.title}</h3>
+                  <p className="col-start-2 text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)] md:col-start-auto">
+                    {ABOUT[d.id]}
+                  </p>
+                  <a
+                    href={d.next.to}
+                    className="group col-start-2 inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold whitespace-nowrap text-[var(--gk-navy)] md:col-start-auto"
+                  >
+                    {d.next.label}
+                    <ArrowRight aria-hidden="true" className="size-4 transition-transform duration-[var(--dur-base)] group-hover:translate-x-0.5" />
+                  </a>
+                </li>
+              ))}
             </ul>
           </Reveal>
         </div>
@@ -142,17 +146,32 @@ function DataQuizPage() {
                 </GkButton>
               </div>
             </Reveal>
-            <div className="mt-10 flex justify-center lg:hidden">
-              <MarkAssembly settled size={110} />
-            </div>
           </div>
           <div className="hidden lg:col-span-4 lg:flex lg:items-center lg:justify-center">
-            <MarkAssembly settled size={150} />
+            <MarkAssembly size={150} settleAt={0.8} />
           </div>
         </div>
       </section>
 
-      <Contact />
+      <Contact aside={<QuizContactAside />} />
     </>
+  )
+}
+
+/** The column beside the contact form: who reads the scores with you. */
+function QuizContactAside() {
+  return (
+    <div className="mt-10 hidden lg:block">
+      <p className="max-w-[36ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-2)]">
+        Bring your scores. We read them with you and say what we would do first.
+      </p>
+      <img
+        src="/photos/group-team.webp"
+        alt="The Goalkeep team with a partner organisation after a workshop"
+        loading="lazy"
+        decoding="async"
+        className="dissolve-rb mt-6 aspect-[4/3] w-full object-cover"
+      />
+    </div>
   )
 }

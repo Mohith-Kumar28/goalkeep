@@ -4,31 +4,36 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { detailOptions, domains, formatScore, likert, scoreQuiz, statementCount } from '@/content/quiz'
 import type { Answer, DomainId, QuizDetails, QuizScore } from '@/content/quiz'
-import { Scribble } from '@/components/primitives/doodles'
+import { Annotate, Scribble } from '@/components/primitives/doodles'
 import { GkButton } from '@/components/primitives/gk-button'
-import { ScoredMark } from '@/components/primitives/scored-mark'
+import { DomainArc, ScoredMark } from '@/components/primitives/scored-mark'
 import { Field, inputClass } from '@/components/sections/contact'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 import { submitQuiz } from '@/server/forms'
 
 /**
  * The data culture quiz.
  *
- * Three stages: a short form about the visitor, twelve statements one at a
- * time, and the results. The card's navy aside is the itinerary through
- * those stages: on the form it lists what is coming, on the statements it
- * turns into progress (three dots per domain), and on the results it draws
- * the mark to the scores. The mark itself appears only there and in the
- * page hero; everywhere else progress is dots, so the mark stays the mark.
+ * Four stages: a short form about the visitor, twelve statements one at a
+ * time, the results, and a review of the answers that can be changed. The
+ * card's navy aside is the itinerary through those stages: on the form it
+ * lists what is coming, on the statements it turns into progress (three dots
+ * per domain), and on the results and the review it draws the mark to the
+ * scores. The mark itself appears only there and in the page hero;
+ * everywhere else progress is dots, so the mark stays the mark.
  */
 
-type Delivery = 'sending' | 'sent' | 'saved' | 'error'
+type Stage = { kind: 'details' } | { kind: 'question'; index: number } | { kind: 'result' } | { kind: 'review' }
 
-type Stage =
-  | { kind: 'details' }
-  | { kind: 'question'; index: number }
-  | { kind: 'result'; score: QuizScore; delivery: Delivery; error?: string }
+/* One attempt is submitted once, when its twelfth statement is answered.
+   Answers changed in the review re-score on the page and never write a
+   second row; only a retake starts a new attempt. */
+type Submission =
+  | { status: 'none' }
+  | { status: 'sending' }
+  | { status: 'sent' }
+  | { status: 'saved' }
+  | { status: 'error'; error: string }
 
 const emptyDetails: QuizDetails = {
   name: '',
@@ -59,35 +64,38 @@ export const DOMAIN_HUES: Record<DomainId, { arc: string; tint: string; ink: str
 /** A score on the 1 to 5 scale as a share of the whole bar or arc. */
 const share = (average: number) => average / 5
 
+const complete = (answers: Array<Answer | undefined>) => answers.filter((a): a is Answer => a !== undefined)
+
 export function DataQuiz() {
   const [stage, setStage] = useState<Stage>({ kind: 'details' })
   const [details, setDetails] = useState<QuizDetails>(emptyDetails)
   const [answers, setAnswers] = useState<Array<Answer | undefined>>(() => Array(statementCount).fill(undefined))
+  const [submission, setSubmission] = useState<Submission>({ status: 'none' })
   const top = useRef<HTMLDivElement>(null)
+
+  const answered = complete(answers)
+  const score = answered.length === statementCount ? scoreQuiz(answered) : undefined
 
   const go = (next: Stage, scroll = true) => {
     setStage(next)
     if (scroll) top.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
   }
 
-  const send = async (complete: Array<Answer>, score: QuizScore) => {
-    go({ kind: 'result', score, delivery: 'sending' })
+  const send = async (all: Array<Answer>) => {
+    setSubmission({ status: 'sending' })
     try {
-      const result = await submitQuiz({ data: { ...details, answers: complete, website: '' } })
-      setStage(
-        result.ok
-          ? { kind: 'result', score, delivery: result.emailed ? 'sent' : 'saved' }
-          : { kind: 'result', score, delivery: 'error', error: result.error },
-      )
+      const result = await submitQuiz({ data: { ...details, answers: all, website: '' } })
+      setSubmission(result.ok ? { status: result.emailed ? 'sent' : 'saved' } : { status: 'error', error: result.error })
     } catch {
-      setStage({ kind: 'result', score, delivery: 'error', error: 'We couldn’t send your results just now.' })
+      setSubmission({ status: 'error', error: 'We couldn’t send your results just now.' })
     }
   }
 
   const finish = (all: Array<Answer | undefined>) => {
-    const complete = all.filter((a): a is Answer => a !== undefined)
-    if (complete.length !== statementCount) return
-    void send(complete, scoreQuiz(complete))
+    const done = complete(all)
+    if (done.length !== statementCount) return
+    go({ kind: 'result' })
+    if (submission.status === 'none') void send(done)
   }
 
   /* A short beat on the chosen answer before moving on, so the choice
@@ -108,37 +116,25 @@ export function DataQuiz() {
 
   const restart = () => {
     setAnswers(Array(statementCount).fill(undefined))
+    setSubmission({ status: 'none' })
     go({ kind: 'question', index: 0 })
   }
 
   return (
-    <div ref={top} id="quiz" className="scroll-mt-20">
-      <div className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:grid-cols-[17rem_1fr]">
+    <div ref={top} id="quiz" className="scroll-mt-28">
+      <div className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] shadow-[var(--shadow-md)] lg:grid-cols-[18rem_1fr]">
         <aside
           data-ground="navy"
-          className={cn(
-            'ground-navy flex-col',
-            stage.kind === 'details' && 'hidden lg:flex',
-            stage.kind === 'question' && 'flex',
-            stage.kind === 'result' && 'flex items-center justify-center px-8 py-10',
-          )}
+          className={cn('ground-navy flex-col', stage.kind === 'details' ? 'hidden lg:flex' : 'flex')}
           style={{ backgroundColor: 'var(--gk-navy-deep)' }}
         >
-          {stage.kind === 'result' ? (
-            <ScoredMark
-              size={176}
-              fills={Object.fromEntries(stage.score.domains.map((d) => [d.id, share(d.average)])) as Record<DomainId, number>}
-            >
-              <div className="text-center">
-                <p className="stat-figure text-[length:2.75rem] leading-none text-white">{formatScore(stage.score.average)}</p>
-                <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
-              </div>
-            </ScoredMark>
-          ) : (
+          {stage.kind === 'details' || stage.kind === 'question' ? (
             <>
               <Itinerary stage={stage} answers={answers} className="hidden lg:flex" />
               {stage.kind === 'question' && <ProgressStrip index={stage.index} answers={answers} className="lg:hidden" />}
             </>
+          ) : (
+            score && <ScoreAside score={score} sticky={stage.kind === 'review'} />
           )}
         </aside>
 
@@ -163,13 +159,21 @@ export function DataQuiz() {
                   onBack={() => go(stage.index === 0 ? { kind: 'details' } : { kind: 'question', index: stage.index - 1 }, false)}
                 />
               )}
-              {stage.kind === 'result' && (
+              {stage.kind === 'result' && score && (
                 <Results
-                  stage={stage}
+                  score={score}
+                  submission={submission}
                   email={details.email}
-                  onRetry={() => finish(answers)}
-                  onReview={() => go({ kind: 'question', index: 0 })}
+                  onRetry={() => void send(answered)}
+                  onReview={() => go({ kind: 'review' })}
                   onRestart={restart}
+                />
+              )}
+              {stage.kind === 'review' && (
+                <ReviewStep
+                  answers={answers}
+                  onChange={(index, value) => setAnswers(answers.map((a, i) => (i === index ? value : a)))}
+                  onBack={() => go({ kind: 'result' })}
                 />
               )}
             </motion.div>
@@ -188,7 +192,7 @@ type Leg =
   | { id: DomainId; title: string; state: 'done' | 'current' | 'upcoming'; dots: Array<Dot> }
 
 /** The route through the quiz, with where the visitor is on it. */
-function legs(stage: Exclude<Stage, { kind: 'result' }>, answers: Array<Answer | undefined>): Array<Leg> {
+function legs(stage: Extract<Stage, { kind: 'details' | 'question' }>, answers: Array<Answer | undefined>): Array<Leg> {
   const current = stage.kind === 'question' ? stage.index : -1
   return [
     { id: 'about', title: 'About you', state: stage.kind === 'details' ? 'current' : 'done' },
@@ -207,50 +211,55 @@ function Itinerary({
   answers,
   className,
 }: {
-  stage: Exclude<Stage, { kind: 'result' }>
+  stage: Extract<Stage, { kind: 'details' | 'question' }>
   answers: Array<Answer | undefined>
   className?: string
 }) {
   const listing = stage.kind === 'details'
   return (
-    <div className={cn('flex-col items-stretch px-8 py-10', className)}>
+    <div className={cn('flex-1 flex-col items-stretch px-7 py-10', className)}>
       <ol className="flex flex-col">
-        {legs(stage, answers).map((leg) => (
-          <li
-            key={leg.id}
-            className={cn(
-              'flex min-h-[3.25rem] items-center gap-3 border-b border-[var(--hairline-inverse)] py-3 text-[length:var(--fs-sm)] text-white transition-opacity duration-[var(--dur-base)] last:border-b-0',
-              leg.state === 'current' ? 'font-bold' : 'font-semibold',
-              leg.state === 'upcoming' && !listing && 'opacity-60',
-              leg.state === 'done' && 'opacity-60',
-            )}
-          >
-            {'dots' in leg ? (
-              <span aria-hidden="true" className="h-[3px] w-3.5 shrink-0 rounded-full" style={{ background: DOMAIN_HUES[leg.id].lift }} />
-            ) : (
-              <span aria-hidden="true" className="h-[3px] w-3.5 shrink-0 rounded-full bg-white/70" />
-            )}
-            <span className="whitespace-nowrap">{leg.title}</span>
-            <span className="ml-auto flex items-center">
-              {leg.state === 'done' && !('dots' in leg) && <Check aria-hidden="true" strokeWidth={2.5} className="size-3.5" />}
-              {leg.id === 'about' && leg.state === 'current' && (
-                <span className="hand -mt-1 flex items-center gap-1.5 text-[length:var(--fs-hand-sm)] font-bold whitespace-nowrap text-[var(--gk-yellow)]">
-                  <Scribble name="arrow-curve" color="var(--gk-yellow)" weight={2.5} className="mt-1.5 h-6 w-5 rotate-90" />
-                  you’re here
-                </span>
+        {legs(stage, answers).map((leg) => {
+          const current = leg.state === 'current'
+          return (
+            <li
+              key={leg.id}
+              className={cn(
+                'flex min-h-[3.25rem] items-center gap-3 border-b border-[var(--hairline-inverse)] py-3 text-[length:var(--fs-sm)] text-white transition-opacity duration-[var(--dur-base)] last:border-b-0',
+                current ? 'font-bold' : 'font-semibold',
+                leg.state === 'upcoming' && !listing && 'opacity-50',
               )}
-              {'dots' in leg &&
-                (listing ? (
-                  <span className="font-semibold text-[var(--fg-inverse-2)]">3 statements</span>
+            >
+              <span aria-hidden="true" className="flex w-5 shrink-0 items-center justify-center">
+                {'dots' in leg ? (
+                  <DomainArc domain={leg.id} size={current ? 20 : 15} color={DOMAIN_HUES[leg.id].lift} />
                 ) : (
-                  <Dots dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} />
-                ))}
-            </span>
-          </li>
-        ))}
+                  <span className={cn('rounded-full bg-white/70', current ? 'h-[3px] w-4' : 'h-[2px] w-3')} />
+                )}
+              </span>
+              <span className="whitespace-nowrap">{leg.title}</span>
+              <span className="ml-auto flex items-center">
+                {leg.state === 'done' && <Check aria-hidden="true" strokeWidth={2.5} className="size-3.5" />}
+                {leg.id === 'about' && current && (
+                  <span className="hand -mt-1 flex items-center gap-1.5 text-[length:var(--fs-hand-sm)] font-bold whitespace-nowrap text-[var(--gk-yellow)]">
+                    <Scribble name="arrow-curve" color="var(--gk-yellow)" weight={2.5} className="mt-1.5 h-6 w-5 rotate-90" />
+                    you’re here
+                  </span>
+                )}
+                {'dots' in leg &&
+                  leg.state !== 'done' &&
+                  (listing ? (
+                    <span className="text-[length:var(--fs-xs)] font-semibold text-[var(--fg-inverse-2)]">3 statements</span>
+                  ) : (
+                    <Dots dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} />
+                  ))}
+              </span>
+            </li>
+          )
+        })}
       </ol>
       {listing && (
-        <p className="mt-6 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">
+        <p className="mt-auto pt-8 text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-inverse-2)]">
           About three minutes. Nothing is scored until the last statement.
         </p>
       )}
@@ -258,16 +267,19 @@ function Itinerary({
   )
 }
 
-function Dots({ dots, hue }: { dots: Array<Dot>; hue: string }) {
+/* The desktop itinerary has room for a ring round the current dot; the
+   phone strip packs its dots closer and marks the current one by outline. */
+function Dots({ dots, hue, tight = false }: { dots: Array<Dot>; hue: string; tight?: boolean }) {
   return (
-    <span className="flex items-center gap-2">
+    <span className={cn('flex items-center', tight ? 'gap-[5px]' : 'gap-2')}>
       {dots.map((dot, i) => (
         <span
           key={i}
           aria-hidden="true"
           className={cn(
-            'size-2 rounded-full transition-colors duration-[var(--dur-base)]',
-            dot.current && 'ring-2 ring-white ring-offset-2 ring-offset-[var(--gk-navy-deep)]',
+            'rounded-full transition-colors duration-[var(--dur-base)]',
+            tight ? 'size-2.5' : 'size-2',
+            dot.current && (tight ? 'outline outline-1 outline-offset-1 outline-white' : 'ring-2 ring-white ring-offset-2 ring-offset-[var(--gk-navy-deep)]'),
           )}
           style={{ background: dot.filled ? hue : 'rgb(255 255 255 / 0.28)' }}
         />
@@ -284,12 +296,40 @@ function ProgressStrip({ index, answers, className }: { index: number; answers: 
       <span className="hand text-[length:var(--fs-hand-sm)]" style={{ color: DOMAIN_HUES[domain.id].lift }}>
         {domain.title.toLowerCase()}
       </span>
-      <span className="flex items-center gap-3">
+      <span className="flex items-center gap-3.5">
         {legs({ kind: 'question', index }, answers).map(
-          (leg) => 'dots' in leg && <Dots key={leg.id} dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} />,
+          (leg) => 'dots' in leg && <Dots key={leg.id} dots={leg.dots} hue={DOMAIN_HUES[leg.id].lift} tight />,
         )}
       </span>
     </div>
+  )
+}
+
+/* The scores, drawn on the mark. Desktop puts the average inside the ring;
+   a phone has no column to spare, so the mark sits in a row beside it. On
+   the review the mark sticks to the top of its column, so the score is in
+   view while answers further down are changed. */
+function ScoreAside({ score, sticky }: { score: QuizScore; sticky: boolean }) {
+  const fills = Object.fromEntries(score.domains.map((d) => [d.id, share(d.average)])) as Record<DomainId, number>
+  return (
+    <>
+      <div className={cn('hidden justify-center px-8 py-10 lg:flex', sticky ? 'sticky top-28' : 'flex-1 items-center')}>
+        <ScoredMark size={176} fills={fills}>
+          <div className="text-center">
+            <p className="stat-figure text-[length:2.75rem] leading-none text-white">{formatScore(score.average)}</p>
+            <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
+          </div>
+        </ScoredMark>
+      </div>
+      <div className="flex items-center gap-6 px-6 py-5 lg:hidden">
+        <ScoredMark size={112} fills={fills} />
+        <div>
+          <p className="stat-figure text-[length:2.5rem] leading-none text-white">{formatScore(score.average)}</p>
+          <p className="mt-1 text-[length:var(--fs-xs)] font-bold text-[var(--fg-inverse-2)]">out of 5</p>
+          <p className="mt-3 text-[length:var(--fs-sm)] font-semibold text-white">{score.level.label}</p>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -312,6 +352,8 @@ const labels: Record<keyof QuizDetails, string> = {
 
 const quizInputClass = cn(inputClass, 'hover:border-[var(--gk-navy)]')
 
+const stepHeadingClass = 'text-[length:clamp(1.5rem,2.6vw,2rem)] leading-tight font-medium text-[var(--gk-ink)]'
+
 function DetailsStep({
   details,
   onChange,
@@ -328,11 +370,8 @@ function DetailsStep({
     onNext()
   }
 
-  const text = (
-    key: keyof QuizDetails,
-    props: { type?: string; autoComplete?: string; required?: boolean; wide?: boolean; placeholder?: string } = {},
-  ) => (
-    <Field label={labels[key]} htmlFor={`quiz-${key}`} wide={props.wide}>
+  const text = (key: keyof QuizDetails, props: { type?: string; autoComplete?: string; required?: boolean; placeholder?: string } = {}) => (
+    <Field label={labels[key]} htmlFor={`quiz-${key}`}>
       <input
         id={`quiz-${key}`}
         type={props.type ?? 'text'}
@@ -347,23 +386,32 @@ function DetailsStep({
     </Field>
   )
 
+  const others = [details.sector === 'Other' && 'sectorOther', details.role === 'Other' && 'roleOther'].filter(
+    (key): key is 'sectorOther' | 'roleOther' => key !== false,
+  )
+
   return (
-    <form onSubmit={submit} className="grid gap-5 md:grid-cols-2">
-      <div className="md:col-span-2">
-        <h2 className="text-[length:clamp(1.5rem,2.6vw,2rem)] leading-tight font-extrabold">First, a little about you.</h2>
+    <form onSubmit={submit} className="flex flex-col gap-5">
+      <div>
+        <h2 className={stepHeadingClass}>First, a little about you.</h2>
         <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">So we can email you your results.</p>
       </div>
-      {text('name', { autoComplete: 'name' })}
-      {text('email', { type: 'email', autoComplete: 'email' })}
-      {text('organization', { autoComplete: 'organization', wide: true })}
-      <Select id="region" value={details.region} options={detailOptions.region} onChange={set('region')} />
-      <Select id="size" value={details.size} options={detailOptions.size} onChange={set('size')} />
-      <Select id="sector" value={details.sector} options={detailOptions.sector} onChange={set('sector')} />
-      <Select id="role" value={details.role} options={detailOptions.role} onChange={set('role')} />
-      {details.sector === 'Other' && text('sectorOther', { wide: details.role !== 'Other' })}
-      {details.role === 'Other' && text('roleOther', { wide: details.sector !== 'Other' })}
-      {text('budget', { required: false, wide: true, placeholder: 'e.g. INR 1 crore' })}
-      <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3 md:col-span-2">
+      <div className="grid gap-5 sm:grid-cols-2">
+        {text('name', { autoComplete: 'name' })}
+        {text('email', { type: 'email', autoComplete: 'email' })}
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        {text('organization', { autoComplete: 'organization' })}
+        {text('budget', { required: false, placeholder: 'e.g. INR 1 crore' })}
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <Select id="region" value={details.region} options={detailOptions.region} onChange={set('region')} />
+        <Select id="size" value={details.size} options={detailOptions.size} onChange={set('size')} />
+        <Select id="sector" value={details.sector} options={detailOptions.sector} onChange={set('sector')} />
+        <Select id="role" value={details.role} options={detailOptions.role} onChange={set('role')} />
+      </div>
+      {others.length > 0 && <div className="grid gap-5 sm:grid-cols-2">{others.map((key) => text(key))}</div>}
+      <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3">
         <GkButton type="submit" variant="primary" withArrow>
           Start the quiz
         </GkButton>
@@ -415,6 +463,9 @@ function Select({
 
 /* ------------------------------------------------------------ question */
 
+const statementClass =
+  'max-w-[30ch] font-display text-[length:clamp(1.5rem,2.8vw,2.125rem)] leading-[1.25] font-medium tracking-[var(--tracking-display)] text-[var(--gk-ink)]'
+
 function QuestionStep({
   index,
   value,
@@ -451,21 +502,28 @@ function QuestionStep({
   return (
     <div className="flex flex-1 flex-col" onPointerMove={() => setArmed(true)}>
       <div className="flex items-center justify-between gap-4">
-        <p className="hand" style={{ color: hue.ink }}>
+        <p className="hand hidden lg:block" style={{ color: hue.ink }}>
           {domain.title.toLowerCase()}
         </p>
-        <p className="text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)] tabular-nums">
+        <p className="ml-auto text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)] tabular-nums">
           {index + 1} of {statementCount}
         </p>
       </div>
 
       <div className="flex flex-1 flex-col justify-center py-8 lg:py-10">
-        <p
-          id={statementId}
-          className="max-w-[30ch] text-[length:clamp(1.5rem,3vw,2.375rem)] leading-[1.2] font-extrabold tracking-[-0.01em] text-[var(--gk-ink)]"
-        >
-          {statement.text}
-        </p>
+        {/* Every statement is laid out invisibly in the same cell, so the
+            block is as tall as the longest one at any width and nothing
+            below it moves between questions. */}
+        <div className="grid">
+          {statements.map((s, i) => (
+            <p key={i} aria-hidden="true" className={cn(statementClass, 'invisible col-start-1 row-start-1')}>
+              {s.text}
+            </p>
+          ))}
+          <p id={statementId} className={cn(statementClass, 'col-start-1 row-start-1')}>
+            {statement.text}
+          </p>
+        </div>
 
         <div
           role="radiogroup"
@@ -478,12 +536,11 @@ function QuestionStep({
               <label
                 key={`${index}-${option.value}`}
                 className={cn(
-                  'relative flex min-h-[3.25rem] cursor-pointer items-center gap-2 rounded-[var(--r-sm)] border px-3 py-2 text-[length:var(--fs-sm)] leading-tight font-semibold transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] sm:min-h-[4.5rem]',
+                  'relative flex min-h-[3.25rem] cursor-pointer items-center justify-center overflow-hidden rounded-[var(--r-sm)] border px-3 py-2 text-center text-[length:var(--fs-sm)] leading-tight font-semibold text-[var(--gk-ink)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] sm:min-h-[4.5rem]',
                   'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
-                  checked
-                    ? 'border-[var(--gk-navy)] bg-[var(--gk-navy)] text-white'
-                    : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:bg-[var(--gk-cream-deep)]',
+                  checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--gk-cream-deep)]',
                 )}
+                style={checked ? { background: hue.tint } : undefined}
               >
                 <input
                   type="radio"
@@ -493,16 +550,14 @@ function QuestionStep({
                   onChange={() => onAnswer(option.value)}
                   className="sr-only"
                 />
-                <kbd
+                <span
                   aria-hidden="true"
-                  className={cn(
-                    'hidden size-5 shrink-0 place-items-center rounded-[3px] border font-sans text-[11px] font-bold tabular-nums xl:[@media(hover:hover)]:grid',
-                    checked ? 'border-white/40 text-white/80' : 'border-[var(--hairline-strong)] text-[var(--fg-2)]',
-                  )}
+                  className="absolute top-1.5 left-2 hidden text-[11px] font-bold text-[var(--fg-2)] tabular-nums [@media(hover:hover)]:block"
                 >
                   {i + 1}
-                </kbd>
-                <span className="flex-1 text-center text-balance">{option.label}</span>
+                </span>
+                <span className="text-balance">{option.label}</span>
+                {checked && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: hue.arc }} />}
               </label>
             )
           })}
@@ -535,20 +590,20 @@ const LEVEL_INKS = {
 }
 
 function Results({
-  stage,
+  score,
+  submission,
   email,
   onRetry,
   onReview,
   onRestart,
 }: {
-  stage: Extract<Stage, { kind: 'result' }>
+  score: QuizScore
+  submission: Submission
   email: string
   onRetry: () => void
   onReview: () => void
   onRestart: () => void
 }) {
-  const reduced = useReducedMotion()
-  const { score } = stage
   const weakest = DOMAIN_HUES[score.weakest.id]
 
   return (
@@ -557,30 +612,31 @@ function Results({
         <strong className="font-extrabold">{score.level.label}.</strong> {score.level.reading}
       </h2>
 
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-10 pt-4 sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
         {score.domains.map((d) => {
-          const hue = DOMAIN_HUES[d.id]
           const lowest = d.id === score.weakest.id
+          const figure = <span className="stat-figure text-[length:2.25rem] text-[var(--gk-ink)]">{formatScore(d.average)}</span>
           return (
-            <div key={d.id} className="relative flex flex-col gap-1">
-              {lowest && (
-                <span className="hand pointer-events-none absolute -top-9 left-0 text-[var(--gk-coral-ink)]" aria-hidden="true">
-                  start here
-                </span>
-              )}
-              <motion.span
-                aria-hidden="true"
-                className="mb-2 block h-1 rounded-full"
-                style={{ background: hue.arc }}
-                initial={{ width: 0 }}
-                animate={{ width: `${share(d.average) * 100}%` }}
-                transition={reduced ? { duration: 0 } : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              />
+            <div key={d.id} className="flex flex-col gap-1">
+              <DomainArc domain={d.id} size={44} fill={share(d.average)} track="var(--gk-cream-deep)" animate className="mb-2" />
               <dt className="text-[length:var(--fs-sm)] font-bold text-[var(--fg-2)]">
                 {d.title}
                 {lowest && <span className="sr-only"> (your lowest score)</span>}
               </dt>
-              <dd className="stat-figure text-[length:2.25rem] text-[var(--gk-ink)]">{formatScore(d.average)}</dd>
+              <dd className="flex flex-wrap items-baseline gap-x-3">
+                {lowest ? (
+                  <>
+                    <Annotate mark="circle" color="var(--gk-coral-ink)" inset="-24%">
+                      {figure}
+                    </Annotate>
+                    <span aria-hidden="true" className="hand text-[var(--gk-coral-ink)]">
+                      start here
+                    </span>
+                  </>
+                ) : (
+                  figure
+                )}
+              </dd>
               <dd className="text-[length:var(--fs-sm)] font-semibold" style={{ color: LEVEL_INKS[d.level.id] }}>
                 {d.level.label}
               </dd>
@@ -589,7 +645,7 @@ function Results({
         })}
       </dl>
 
-      <div className="rounded-[var(--r-lg)] p-6 md:p-8" style={{ background: weakest.tint }}>
+      <div className="-mx-6 px-6 py-8 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10" style={{ background: weakest.tint }}>
         <p className="max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed">
           Your lowest score is in <strong>{score.weakest.title}</strong>. That is usually the best place to start, and it is what our work on{' '}
           {score.weakest.next.label.toLowerCase()} is for.
@@ -604,10 +660,10 @@ function Results({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-[var(--hairline)] pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <p role="status" className="flex items-center gap-2 text-[length:var(--fs-sm)] text-[var(--fg-2)]">
-          {stage.delivery === 'sending' && 'Sending a copy to your inbox…'}
-          {stage.delivery === 'sent' && (
+          {submission.status === 'sending' && 'Sending a copy to your inbox…'}
+          {submission.status === 'sent' && (
             <>
               <Scribble name="check" color="var(--gk-teal)" weight={4} className="size-5 shrink-0" />
               <span>
@@ -615,10 +671,10 @@ function Results({
               </span>
             </>
           )}
-          {stage.delivery === 'saved' && 'Your results are saved, but we couldn’t email a copy just now. Keep this page open or take a screenshot.'}
-          {stage.delivery === 'error' && (
+          {submission.status === 'saved' && 'Your results are saved, but we couldn’t email a copy just now. Keep this page open or take a screenshot.'}
+          {submission.status === 'error' && (
             <span className="text-[var(--gk-coral-ink)]">
-              {stage.error}{' '}
+              {submission.error}{' '}
               <button type="button" onClick={onRetry} className="font-bold underline">
                 Try again
               </button>
@@ -639,6 +695,115 @@ function Results({
           </button>
         </span>
       </div>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------- review */
+
+function ReviewStep({
+  answers,
+  onChange,
+  onBack,
+}: {
+  answers: Array<Answer | undefined>
+  onChange: (index: number, value: Answer) => void
+  onBack: () => void
+}) {
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+        <div>
+          <h2 className={stepHeadingClass}>Your answers.</h2>
+          <p className="mt-2 max-w-[52ch] text-[length:var(--fs-base)] text-[var(--fg-2)]">
+            Change any of them and the scores update here. The copy we emailed you stays as it was.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-2 text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] hover:underline"
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to results
+        </button>
+      </div>
+      {domains.map((domain, d) => {
+        const hue = DOMAIN_HUES[domain.id]
+        return (
+          <section key={domain.id} aria-labelledby={`quiz-review-${domain.id}`}>
+            <h3
+              id={`quiz-review-${domain.id}`}
+              className="flex items-center gap-3 text-[length:var(--fs-sm)] font-bold"
+              style={{ color: hue.ink }}
+            >
+              <DomainArc domain={domain.id} size={16} />
+              {domain.title}
+            </h3>
+            <ol className="mt-3 divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
+              {statements.map(
+                (s, i) =>
+                  s.domain === d && (
+                    <li key={i} className="grid gap-3 py-4 xl:grid-cols-[1fr_auto] xl:items-center xl:gap-8">
+                      <p id={`quiz-review-statement-${i}`} className="text-[length:var(--fs-base)] leading-snug text-[var(--gk-ink)]">
+                        {s.text}
+                      </p>
+                      <ReviewScale index={i} value={answers[i]} hue={hue} onChange={(v) => onChange(i, v)} />
+                    </li>
+                  ),
+              )}
+            </ol>
+          </section>
+        )
+      })}
+    </div>
+  )
+}
+
+function ReviewScale({
+  index,
+  value,
+  hue,
+  onChange,
+}: {
+  index: number
+  value: Answer | undefined
+  hue: (typeof DOMAIN_HUES)[DomainId]
+  onChange: (value: Answer) => void
+}) {
+  const chosen = likert.find((option) => option.value === value)
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div role="radiogroup" aria-labelledby={`quiz-review-statement-${index}`} className="flex gap-1">
+        {scale.map((option, i) => {
+          const checked = value === option.value
+          return (
+            <label
+              key={option.value}
+              title={option.label}
+              className={cn(
+                'relative grid size-8 cursor-pointer place-items-center overflow-hidden rounded-[var(--r-sm)] border text-[12px] font-bold text-[var(--gk-ink)] tabular-nums transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]',
+                'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--gk-navy)]',
+                checked ? 'border-transparent' : 'border-[var(--hairline-strong)] bg-[var(--gk-white)] hover:bg-[var(--gk-cream-deep)]',
+              )}
+              style={checked ? { background: hue.tint } : undefined}
+            >
+              <input
+                type="radio"
+                name={`quiz-review-${index}`}
+                value={option.value}
+                checked={checked}
+                onChange={() => onChange(option.value)}
+                aria-label={option.label}
+                className="sr-only"
+              />
+              <span aria-hidden="true">{i + 1}</span>
+              {checked && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: hue.arc }} />}
+            </label>
+          )
+        })}
+      </div>
+      <span className="w-[9.5rem] text-[length:var(--fs-sm)] font-semibold text-[var(--fg-2)]">{chosen?.label}</span>
     </div>
   )
 }

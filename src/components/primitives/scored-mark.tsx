@@ -1,6 +1,8 @@
 import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
-import { BOX_H, BOX_W, RING, SEGMENTS, arcDash } from '@/components/primitives/logo-shapes'
+import { BOX_H, BOX_W, JOIN_OVERLAP, RING, SEGMENTS, arcDash } from '@/components/primitives/logo-shapes'
+import type { Segment } from '@/components/primitives/logo-shapes'
 import type { DomainId } from '@/content/quiz'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
@@ -28,10 +30,16 @@ export const SEGMENT_OF: Record<DomainId, number> = {
 
 const STRUCTURE = [1, 5]
 
+/* The order the quiz asks its domains, which is the order the hero draws them. */
+const DRAW_ORDER: Array<DomainId> = ['data', 'technology', 'process', 'strategy']
+
+const EASE = [0.22, 1, 0.36, 1] as const
+
 export function ScoredMark({
   fills,
   onDark = true,
   size = 280,
+  drawOnMount = false,
   className,
   children,
 }: {
@@ -40,13 +48,17 @@ export function ScoredMark({
   onDark?: boolean
   /** Width in px. Height follows the mark's own proportions. */
   size?: number
+  /** Start empty and draw each domain in turn once mounted, half a second
+   *  each, as a preview of the scoring. Reduced motion renders it full. */
+  drawOnMount?: boolean
   className?: string
   /** Sits in the ring's hole. */
   children?: ReactNode
 }) {
   const reduced = useReducedMotion()
+  const [mounted, setMounted] = useState(!drawOnMount)
+  useEffect(() => setMounted(true), [])
   const track = onDark ? 'rgb(255 255 255 / 0.16)' : 'var(--gk-cream-deep)'
-  const transition = reduced ? { duration: 0 } : { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }
   const hole = RING.r - RING.t / 2
 
   return (
@@ -71,12 +83,17 @@ export function ScoredMark({
             />
           )
         })}
-        {(Object.keys(SEGMENT_OF) as Array<DomainId>).map((domain) => {
+        {DRAW_ORDER.map((domain, order) => {
           const segment = SEGMENTS[SEGMENT_OF[domain]]
           const { circle } = segment
           const full = arcDash(segment.start, segment.sweep, circle.r, circle.t)
-          const fill = Math.min(Math.max(fills[domain], 0), 1)
+          const fill = mounted ? Math.min(Math.max(fills[domain], 0), 1) : 0
           const drawn = arcDash(segment.start, segment.sweep * fill, circle.r, circle.t)
+          const transition = reduced
+            ? { duration: 0 }
+            : drawOnMount
+              ? { duration: 0.5, delay: order * 0.5, ease: EASE }
+              : { duration: 0.7, ease: EASE }
           const shared = {
             cx: circle.cx,
             cy: circle.cy,
@@ -114,6 +131,103 @@ export function ScoredMark({
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * The box one segment occupies in the mark's own units, round caps and the
+ * join overlap included, so a segment can be shown on its own without the
+ * rest of the ring around it.
+ */
+function segmentBox(segment: Segment) {
+  const { circle } = segment
+  const half = circle.t / 2
+  const from = segment.start - JOIN_OVERLAP / 2
+  const to = segment.start + segment.sweep + JOIN_OVERLAP / 2
+  const at = (deg: number, radius: number) => {
+    const a = (deg * Math.PI) / 180
+    return { x: circle.cx + radius * Math.sin(a), y: circle.cy - radius * Math.cos(a) }
+  }
+  const points = []
+  for (let deg = from; deg <= to; deg += 1) points.push(at(deg, circle.r - half), at(deg, circle.r + half))
+  for (const deg of [from, to]) {
+    const cap = at(deg, circle.r)
+    points.push({ x: cap.x - half, y: cap.y - half }, { x: cap.x + half, y: cap.y + half })
+  }
+  const xs = points.map((p) => p.x)
+  const ys = points.map((p) => p.y)
+  const x = Math.min(...xs)
+  const y = Math.min(...ys)
+  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y }
+}
+
+const BOXES = Object.fromEntries(
+  (Object.keys(SEGMENT_OF) as Array<DomainId>).map((domain) => [domain, segmentBox(SEGMENTS[SEGMENT_OF[domain]])]),
+) as Record<DomainId, ReturnType<typeof segmentBox>>
+
+/**
+ * One domain's segment on its own, at the same geometry the whole mark uses,
+ * fitted into a square. With `fill` below 1 it is drawn to that share of its
+ * length over a `track` of the full segment, the way the scored mark does.
+ */
+export function DomainArc({
+  domain,
+  size = 16,
+  fill = 1,
+  color,
+  track,
+  animate = false,
+  className,
+  style,
+}: {
+  domain: DomainId
+  /** Width and height of the square it is fitted into, in px. */
+  size?: number
+  /** 0..1 of the segment's length. */
+  fill?: number
+  /** Defaults to the segment's own colour in the mark. */
+  color?: string
+  /** Colour of the full segment under a partial fill. */
+  track?: string
+  /** Draw the fill from nothing when it first renders. */
+  animate?: boolean
+  className?: string
+  style?: CSSProperties
+}) {
+  const reduced = useReducedMotion()
+  const segment = SEGMENTS[SEGMENT_OF[domain]]
+  const { circle } = segment
+  const box = BOXES[domain]
+  const full = arcDash(segment.start, segment.sweep, circle.r, circle.t)
+  const clamped = Math.min(Math.max(fill, 0), 1)
+  const drawn = arcDash(segment.start, segment.sweep * clamped, circle.r, circle.t)
+  const shared = {
+    cx: circle.cx,
+    cy: circle.cy,
+    r: circle.r,
+    fill: 'none',
+    strokeWidth: circle.t,
+    strokeLinecap: 'round' as const,
+    transform: `rotate(${full.rotate} ${circle.cx} ${circle.cy})`,
+  }
+
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`}
+      preserveAspectRatio="xMidYMid meet"
+      className={cn('shrink-0 overflow-visible', className)}
+      style={{ width: size, height: size, ...style }}
+    >
+      {track && <circle {...shared} stroke={track} strokeDasharray={`${full.dash} ${full.circumference}`} />}
+      <motion.circle
+        {...shared}
+        stroke={color ?? segment.hue}
+        initial={animate && !reduced ? { pathLength: 0 } : false}
+        animate={{ pathLength: drawn.dash / full.circumference }}
+        transition={reduced ? { duration: 0 } : { duration: 0.7, ease: EASE }}
+      />
+    </svg>
   )
 }
 
