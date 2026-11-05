@@ -82,6 +82,8 @@ export type Block =
   | {
       kind: 'checklist'
       headline: Heading
+      /** A sentence under the heading: what the service is, before whether it fits. */
+      intro?: string
       items: Array<string>
       /** The DLP's recommended pair of nominees, beside the checklist. */
       aside?: { intro: string; people: Array<string>; outro: string }
@@ -135,6 +137,7 @@ export type Block =
   | { kind: 'faq'; headline: Heading; items: Array<{ question: string; answer: string }> }
   | {
       kind: 'programs'
+      headline?: Heading
       opening?: Array<string>
       cards: Array<{
         eyebrow: string
@@ -155,7 +158,6 @@ export type Block =
   | { kind: 'related'; headline: Heading; items: Array<Related> }
   | {
       kind: 'audienceSwitch'
-      opening?: Array<string>
       prompt: string
       /** `short` is the label on a phone, where the full one wraps. */
       options: Array<{ id: string; label: string; short?: string; blocks: Array<Block> }>

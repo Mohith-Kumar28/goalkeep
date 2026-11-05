@@ -54,6 +54,7 @@ export const programsPage: Page = {
     },
     {
       kind: 'programs',
+      headline: { lead: 'Two programs,', em: 'one foundation each.' },
       opening: [
         'Whether your organisation is building its first reliable data system or strengthening data confidence across its workforce, our programs combine technical expertise, practical learning and sustained adoption support. We also partner with funders and intermediaries to run either program across their portfolios or cohorts.',
       ],
@@ -100,6 +101,7 @@ export const programsPage: Page = {
       headline: { lead: 'Not sure which program', em: 'fits you?' },
       body: 'Tell us where your organisation is today, and we will suggest the right place to start.',
       primary: { label: 'Talk to us', to: toContact },
+      secondary: { label: 'Take the data culture quiz', to: '/resources/data-quiz' },
     },
   ],
 }
@@ -157,7 +159,7 @@ export const kickstarterPage: Page = {
       steps: [
         {
           title: 'Understand',
-          photo: { src: '/photos/hero-03-circle.webp', alt: 'A floor-circle working session with a programme team' },
+          photo: { src: '/photos/aud-early-2.webp', alt: 'A partner team around a meeting-room table during a working session' },
           visual: 'understand',
           lead: 'We begin with your programme, people and decisions, not with technology.',
           body: [
@@ -166,7 +168,7 @@ export const kickstarterPage: Page = {
         },
         {
           title: 'Design',
-          photo: { src: '/photos/phase-design-a.webp', alt: 'Affinity mapping on coloured boards during a design workshop' },
+          photo: { src: '/photos/phase-design-b.webp', alt: 'Indicators and workflows mapped out on boards during a design session' },
           visual: 'design',
           lead: 'We translate the priority questions into a practical system design.',
           body: [

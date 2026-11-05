@@ -125,8 +125,8 @@ export const servicePages: Array<Page & { slug: string }> = [
         lead: 'As organisations grow, their data infrastructure often grows one tracker at a time. Information becomes spread across spreadsheets, forms, databases and dashboards. Teams repeat data entry, spend hours consolidating reports and depend on a small number of people to locate or interpret essential information.',
         primary: workWithUs,
         secondary: { label: 'Explore Kickstarter', to: '/programs/kickstarter' },
-        highlight: 'grows one tracker at a time',
-        photo: { src: '/photos/phase-build-a.webp', alt: 'A Goalkeep team member building a data system on a laptop' },
+        highlight: 'one tracker at a time',
+        photo: { src: '/photos/hero-04-pair.webp', alt: 'Two Goalkeep facilitators reviewing a data system on a tablet' },
       },
       {
         kind: 'checklist',
@@ -202,13 +202,11 @@ export const servicePages: Array<Page & { slug: string }> = [
         headline: { lead: 'Build dashboards that answer real questions,', em: 'not simply display available data.' },
         lead: 'Many dashboards fail because they begin with the data that happens to be available. The result may contain dozens of charts but still leave programme teams, leaders and funders unable to answer the questions that matter.',
         highlight: 'happens to be available',
+        primary: workWithUs,
         photo: { src: '/photos/case-dashboard.webp', alt: 'A programme dashboard open on a laptop' },
       },
       {
         kind: 'audienceSwitch',
-        opening: [
-          'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
-        ],
         prompt: 'I’m working with',
         options: [
           {
@@ -219,6 +217,7 @@ export const servicePages: Array<Page & { slug: string }> = [
               {
                 kind: 'checklist',
                 headline: { lead: 'This service can', em: 'help when' },
+                intro: 'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
                 items: [
                   'Dashboards or reports exist, but people rarely use them.',
                   'Leadership, programme teams, MEL staff and funders need different levels of information.',
@@ -266,6 +265,7 @@ export const servicePages: Array<Page & { slug: string }> = [
               {
                 kind: 'checklist',
                 headline: { lead: 'This service can', em: 'help when' },
+                intro: 'Goalkeep designs dashboards and reporting views for both funding organisations and nonprofits as part of a wider measurement and data-systems engagement. We first establish what people need to understand, decide and do; then ensure the definitions, data sources and pipelines underneath the dashboard can support those questions reliably.',
                 items: [
                   'Grant, milestone and results information is spread across reports, spreadsheets, emails and individual portfolio managers.',
                   'Grantees use different indicators and definitions, so building a portfolio view means repeated clarification.',

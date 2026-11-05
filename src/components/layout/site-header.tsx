@@ -30,7 +30,12 @@ import { Wordmark } from './wordmark'
 export function SiteHeader() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const [pastThreshold, setScrolled] = useState(false)
-  const scrolled = pastThreshold || pathname !== '/'
+  /* Pages that open on a navy hero pulled up under the header, as the
+     homepage does: the header floats transparent on them until the scroll
+     threshold, like the homepage's. Everything else opens on cream. */
+  const navyTop =
+    pathname === '/' || pathname.startsWith('/programs') || pathname.startsWith('/services/') || pathname === '/resources/data-quiz'
+  const scrolled = pastThreshold || !navyTop
   const [menuOpen, setMenuOpen] = useState(false)
   const [progress, setProgress] = useState(0)
 
