@@ -1,6 +1,9 @@
 import { createServerFn } from "@tanstack/react-start"
 import { contact } from "@/content/homepage"
+import { detailOptions, likert, scoreQuiz, statementCount } from "@/content/quiz"
+import type { Answer, QuizDetails } from "@/content/quiz"
 import { contactEmail } from "./contact-email"
+import { quizEmail } from "./quiz-email"
 
 /**
  * The homepage's two forms. Both write to the `goalkeep-site` D1 database
@@ -84,23 +87,32 @@ type MailEnv = {
   CONTACT_EMAIL_TO?: string
 }
 
-/**
- * Emails a new enquiry to everyone in CONTACT_EMAIL_TO (comma-separated) via
- * Resend. Replying to the email replies to the person who wrote in.
- */
-async function notifyContact(
-  env: MailEnv,
-  data: Omit<ContactInput, "website">
-) {
-  const to = (env.CONTACT_EMAIL_TO ?? "")
+/** Everyone in CONTACT_EMAIL_TO (comma-separated). */
+function teamAddresses(env: MailEnv) {
+  return (env.CONTACT_EMAIL_TO ?? "")
     .split(",")
     .map((address) => address.trim())
     .filter(Boolean)
-  if (!env.RESEND_API_KEY || !env.CONTACT_EMAIL_FROM || to.length === 0) {
+}
+
+type Mail = {
+  to: Array<string>
+  reply_to?: string
+  subject: string
+  html: string
+  text: string
+}
+
+/**
+ * Sends one email through Resend. Best effort: whatever prompted it is
+ * already stored, so a mail failure is logged and never fails the form.
+ */
+async function sendMail(env: MailEnv, label: string, mail: Mail): Promise<boolean> {
+  if (!env.RESEND_API_KEY || !env.CONTACT_EMAIL_FROM || mail.to.length === 0) {
     console.error(
-      "contact email skipped: RESEND_API_KEY, CONTACT_EMAIL_FROM or CONTACT_EMAIL_TO is not set"
+      `${label} email skipped: RESEND_API_KEY, CONTACT_EMAIL_FROM or a recipient is not set`
     )
-    return
+    return false
   }
 
   try {
@@ -110,22 +122,28 @@ async function notifyContact(
         Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from: env.CONTACT_EMAIL_FROM,
-        to,
-        reply_to: data.email,
-        ...contactEmail(data),
-      }),
+      body: JSON.stringify({ from: env.CONTACT_EMAIL_FROM, ...mail }),
       signal: AbortSignal.timeout(5000),
     })
     if (!response.ok) {
       console.error(
-        `contact email failed: ${response.status} ${await response.text()}`
+        `${label} email failed: ${response.status} ${await response.text()}`
       )
     }
+    return response.ok
   } catch (error) {
-    console.error("contact email failed:", error)
+    console.error(`${label} email failed:`, error)
+    return false
   }
+}
+
+/** Replying to the email replies to the person who wrote in. */
+async function notifyContact(env: MailEnv, data: Omit<ContactInput, "website">) {
+  await sendMail(env, "contact", {
+    to: teamAddresses(env),
+    reply_to: data.email,
+    ...contactEmail(data),
+  })
 }
 
 /* Goalkeep's existing Mailchimp audience - the same list the sign-up form on
@@ -162,4 +180,102 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
     }
 
     return { ok: true }
+  })
+
+/** The row is stored either way; `emailed` says whether the copy went out. */
+export type QuizResult = { ok: true; emailed: boolean } | { ok: false; error: string }
+
+export type QuizInput = QuizDetails & {
+  answers: Array<number>
+  website: string
+}
+
+const LIKERT_VALUES: ReadonlyArray<number> = likert.map((option) => option.value)
+
+const isAnswer = (value: unknown): value is Answer =>
+  typeof value === "number" && LIKERT_VALUES.includes(value)
+
+/**
+ * A completed data culture quiz. The score is recomputed here from the raw
+ * answers, so what is stored and emailed never depends on the browser's
+ * arithmetic.
+ */
+export const submitQuiz = createServerFn({ method: "POST" })
+  .validator((input: QuizInput) => ({
+    name: text(input.name, 120),
+    email: text(input.email, 200).toLowerCase(),
+    organization: text(input.organization, 200),
+    region: text(input.region, 80),
+    sector: text(input.sector, 80),
+    sectorOther: text(input.sectorOther, 120),
+    role: text(input.role, 80),
+    roleOther: text(input.roleOther, 120),
+    size: text(input.size, 40),
+    budget: text(input.budget, 120),
+    answers: Array.isArray(input.answers) ? input.answers.slice(0, statementCount) : [],
+    website: text(input.website, 200),
+  }))
+  .handler(async ({ data }): Promise<QuizResult> => {
+    if (data.website) return { ok: true, emailed: true }
+    if (!data.name) return { ok: false, error: "Please tell us your name." }
+    if (!EMAIL.test(data.email))
+      return { ok: false, error: "Please enter a valid email address." }
+    if (!data.organization)
+      return { ok: false, error: "Please tell us your organisation’s name." }
+    if (!detailOptions.region.includes(data.region))
+      return { ok: false, error: "Please choose your region." }
+    if (!detailOptions.sector.includes(data.sector))
+      return { ok: false, error: "Please choose your sector." }
+    if (data.sector === "Other" && !data.sectorOther)
+      return { ok: false, error: "Please tell us your sector." }
+    if (!detailOptions.role.includes(data.role))
+      return { ok: false, error: "Please choose your role." }
+    if (data.role === "Other" && !data.roleOther)
+      return { ok: false, error: "Please tell us your role." }
+    if (!detailOptions.size.includes(data.size))
+      return { ok: false, error: "Please choose your organisation’s size." }
+    const answers = data.answers.filter(isAnswer)
+    if (answers.length !== statementCount)
+      return { ok: false, error: "Please answer every statement." }
+
+    const score = scoreQuiz(answers)
+    const byDomain = Object.fromEntries(
+      score.domains.map((d) => [d.id, d.average])
+    )
+    const sector = data.sector === "Other" ? `Other: ${data.sectorOther}` : data.sector
+    const role = data.role === "Other" ? `Other: ${data.roleOther}` : data.role
+
+    const { env } = await import("cloudflare:workers")
+    const { getRequestHeader } = await import("@tanstack/react-start/server")
+    const userAgent = text(getRequestHeader("user-agent"), 300) || null
+
+    await env.DB.prepare(
+      "INSERT INTO quiz_responses (name, email, organization, region, sector, role, size, budget, answers, score_data, score_technology, score_process, score_strategy, score_overall, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    )
+      .bind(
+        data.name,
+        data.email,
+        data.organization,
+        data.region,
+        sector,
+        role,
+        data.size,
+        data.budget || null,
+        JSON.stringify(answers),
+        byDomain.data,
+        byDomain.technology,
+        byDomain.process,
+        byDomain.strategy,
+        score.average,
+        userAgent
+      )
+      .run()
+
+    const emailed = await sendMail(env, "quiz", {
+      to: [data.email],
+      reply_to: teamAddresses(env)[0],
+      ...quizEmail(data.name, data.organization, score),
+    })
+
+    return { ok: true, emailed }
   })
