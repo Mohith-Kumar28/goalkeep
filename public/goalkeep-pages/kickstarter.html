@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kickstarter 2.0 | Goalkeep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap">
+<style>
+body{margin:0;background:#FCFCFD}
+a{color:#2F4D9F}a:hover{color:#1E3266}
+.gk *{box-sizing:border-box}
+.gk em{font-style:italic;font-weight:800}
+.shell{max-width:1320px;margin:0 auto;padding-left:64px;padding-right:64px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#2F4D9F;margin:0 0 16px}
+.eyebrow::before{content:"";width:24px;height:2px;background:currentColor;display:block}
+.on-navy .eyebrow{color:#EAC452}
+.eyebrow.gold-ink{color:#7D5E0C}
+.h2{font-size:42px;font-weight:400;line-height:1.16;letter-spacing:-0.02em;margin:0;text-wrap:balance;max-width:24ch}
+.h3{font-size:32px;font-weight:400;line-height:1.2;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:700;padding:11px 20px;border-radius:4px;text-decoration:none;border:1px solid transparent;min-height:44px;cursor:pointer;transition:background-color 240ms cubic-bezier(0.22,1,0.36,1),border-color 240ms,color 240ms}
+.btn svg{transition:transform 240ms cubic-bezier(0.22,1,0.36,1)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-accent{background:#EAC452;color:#1E3266}.btn-accent:hover{background:#CFA72F;color:#1E3266}
+.on-navy .btn-accent:hover{background:#FFFFFF}
+.btn-sec-navy{background:transparent;color:#FFFFFF;border-color:rgba(255,255,255,0.6)}.btn-sec-navy:hover{color:#FFFFFF;border-color:#FFFFFF}
+.btn-primary{background:#2F4A92;color:#FFFFFF}.btn-maroon{background:#9C452A;color:#FFFFFF}.btn-maroon:hover{background:#7A3420;color:#FFFFFF}.btn-primary:hover{background:#1E3266;color:#FFFFFF}
+.tlink{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:#2F4D9F;text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px;transition:gap 140ms}
+.tlink:hover{gap:12px;color:#1E3266}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.86);text-decoration:none;font-size:15px;font-weight:600;padding:12px 0;min-height:44px}
+.nav-link:hover,.nav-link.is-active{color:#FFFFFF}
+.nav-link.is-active{box-shadow:inset 0 -2px 0 #EAC452}
+.dd{display:none;position:absolute;top:100%;left:-24px;width:400px;background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 16px 40px rgba(20,19,26,0.18);padding:8px;z-index:30}
+.nav-item:hover .dd,.nav-item:focus-within .dd{display:block}
+.dd a{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:8px;text-decoration:none;color:#14131A}
+.dd a:hover{background:#F1F4FA;color:#14131A}
+.dd .sw{width:10px;height:10px;border-radius:2px;margin-top:6px;flex:none}
+.dd .t{font-size:15px;font-weight:700;display:block}
+.dd .d{font-size:13px;color:rgba(20,19,26,0.72);display:block;margin-top:2px;line-height:1.45}
+.surface{background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 1px 2px rgba(20,19,26,0.06)}
+.lift{transition:transform 240ms cubic-bezier(0.22,1,0.36,1),box-shadow 240ms,border-color 240ms}
+.lift:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(20,19,26,0.12);border-color:#D3D7E2}
+.marker{background:linear-gradient(100deg,#F7DB63 0%,#FCF0A5 5%,#FCF0A5 95%,#F7DB63 100%);padding:0 5px;margin:0 -2px;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:2px}
+.note{display:flex;flex-direction:column;gap:14px;text-align:left;width:100%;padding:22px 22px 20px;font-family:inherit;font-size:16px;line-height:1.5;color:#14131A;cursor:pointer;border:none;transition:transform 320ms cubic-bezier(0.22,1,0.36,1),box-shadow 320ms,background-color 320ms}
+.note:hover{box-shadow:0 18px 36px rgba(125,94,12,0.22) !important}
+.note:focus-visible{outline:3px solid #3F63C8;outline-offset:3px}
+.deliv{display:flex;align-items:center;gap:16px;width:100%;text-align:left;font-family:inherit;font-size:17px;line-height:1.45;color:#14131A;padding:16px 18px;border:none;border-radius:10px;cursor:pointer;transition:background-color 240ms}
+.deliv:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign{position:relative;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;padding:28px 30px 30px;background:transparent;border:none;font-family:inherit;font-size:19px;line-height:1.5;color:#14131A;cursor:pointer;border-radius:12px;transition:background-color 240ms}
+.sign:hover{background:#FBF3DF}
+.sign:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign .loop{position:absolute;inset:-6px -10px;width:calc(100% + 20px);height:calc(100% + 12px);pointer-events:none;overflow:visible}
+.field{font-family:inherit;font-size:17px;font-weight:400;padding:11px 14px;border:1px solid #D3D7E2;border-radius:8px;color:#14131A;background:#FFFFFF;min-height:44px}
+.field:focus{outline:3px solid rgba(63,99,200,0.35);border-color:#3F63C8}
+.slide-in{animation:slidein 420ms cubic-bezier(0.22,1,0.36,1)}
+@keyframes slidein{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide-in{animation:none}}
+.step{display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;font-family:inherit;cursor:pointer;padding:6px 4px;color:#14131A;position:relative;z-index:1}
+.step:focus-visible{outline:3px solid #3F63C8;outline-offset:3px;border-radius:8px}
+.step-dot{width:56px;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background-color 320ms,color 320ms,box-shadow 320ms,transform 320ms cubic-bezier(0.22,1,0.36,1)}
+.step:hover .step-dot{transform:translateY(-2px)}
+.glance-item{display:flex;gap:14px;align-items:flex-start;padding:22px 24px}
+.story{display:flex;flex-direction:column;overflow:hidden;text-decoration:none;color:#14131A}
+@media (max-width:1100px){.steps-row{grid-template-columns:repeat(2,minmax(0,1fr)) !important;row-gap:16px}.steps-line{display:none}.panel{grid-template-columns:minmax(0,1fr) !important}.glance{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
+@media (max-width:760px){.glance,.stories,.outcomes,.change{grid-template-columns:minmax(0,1fr) !important}.change-arrow{transform:rotate(90deg)}}
+.pair-cap{position:absolute;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;padding:6px 10px;border-radius:4px;background:#FFFFFF;color:#14131A;box-shadow:0 4px 14px rgba(20,19,26,0.14)}
+.chat{background:#F1F4FA;border-radius:20px;padding:0 0 22px;box-shadow:0 24px 56px rgba(20,19,26,0.10);overflow:hidden}
+.msg{opacity:0;transform:translateY(14px) scale(0.98)}
+.msg.in{animation:msgin 560ms cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes msgin{to{opacity:1;transform:none}}
+.bubble{background:#FFFFFF;border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:16px;line-height:1.45;box-shadow:0 1px 2px rgba(20,19,26,0.06);max-width:440px}
+.ring-arc{cursor:pointer;transition:stroke-width 420ms cubic-bezier(0.22,1,0.36,1),stroke 320ms,opacity 320ms}
+.acc{display:block;width:100%;text-align:left;background:transparent;border:none;font-family:inherit;color:#14131A;cursor:pointer;padding:16px 20px;border-radius:12px}
+.acc:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.msg{opacity:1;transform:none}.msg.in{animation:none}}
+@media (max-width:1100px){.how-grid{grid-template-columns:minmax(0,1fr) !important}.pair{margin-bottom:40px}}
+.cloud{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;row-gap:16px;align-items:center;padding:6px 0 18px;margin-left:-24px}
+.cloud .cb:nth-child(odd){justify-self:start}
+.cloud .cb:nth-child(even){justify-self:end}
+@media (max-width:760px){.cloud{grid-template-columns:minmax(0,1fr);margin-left:0}.cloud .cb{justify-self:stretch !important}}
+.cb{position:relative;border:1.5px solid #E5E7EE;border-radius:18px;padding:12px 16px;font-family:inherit;line-height:1.35;text-align:left;cursor:pointer;transition:background-color 420ms,color 420ms,border-color 420ms,box-shadow 420ms,transform 520ms cubic-bezier(0.22,1,0.36,1)}
+.cb:focus-visible{outline:3px solid #3F63C8;outline-offset:3px}
+.cb-tail{position:absolute;bottom:-7px;width:13px;height:13px;border-right:1.5px solid;border-bottom:1.5px solid;transform:rotate(45deg);border-radius:0 0 3px 0;transition:background-color 420ms,border-color 420ms}
+.cb-left .cb-tail{left:24px}
+.cb-right .cb-tail{right:24px}
+.stage-tab{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid #E5E7EE;border-radius:12px;font-family:inherit;cursor:pointer;text-align:left;min-height:60px;transition:background-color 320ms,border-color 320ms,box-shadow 320ms}
+.stage-tab:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+@media (max-width:760px){.cb{transform:none !important;margin-top:0 !important;max-width:none !important}.stage-tabs{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
+.photo{width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;position:relative}
+@media (max-width:1439px){.gutter-arc{display:none}}
+@media (max-width:1100px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr)) !important}.split,.alt,.alt-rev{grid-template-columns:minmax(0,1fr) !important}.alt-rev .alt-img{order:-1}.hero-split{grid-template-columns:minmax(0,1fr) !important}}
+.tile svg{display:block}
+@media (max-width:760px){.br-d{display:none}.shell{padding-left:16px;padding-right:16px}.h2{font-size:28px}.h3{font-size:26px}.h1{font-size:36px !important}.grid3,.grid2,.notes{grid-template-columns:minmax(0,1fr) !important}.navlinks{display:none !important}.band{padding-top:48px !important;padding-bottom:48px !important}.arc{display:none}.hero-img{margin:0 -16px}.case-split{grid-template-columns:minmax(0,1fr) !important}.note{transform:none !important;margin-top:0 !important}.deliv-split{grid-template-columns:minmax(0,1fr) !important}.ruler-wrap{overflow-x:auto}}
+</style>
+<style>
+/* Goalkeep mark: its six pieces fly in and assemble as the closing banner scrolls into view (same geometry and timing as the homepage close). */
+.gk-mark{position:absolute;left:50%;top:50%;width:150px;height:227.7px;margin:-113.8px 0 0 -75.0px;pointer-events:none;transition:opacity .3s ease,visibility .3s}
+.gk-mark>div{position:absolute;inset:0;transform-origin:50% 32.94%}
+.gk-mark svg{display:block;width:100%;height:100%}
+#contact:has(.slide-in) .gk-mark{opacity:0;visibility:hidden}
+@media (max-width:1100px){.gk-mark{position:relative;left:auto;top:auto;margin:0 auto;width:120px;height:182.1px}#contact:has(.slide-in) .gk-mark{display:none}}
+</style>
+</head>
+<body>
+<template id="dc-tpl">
+
+<div class="gk" style="overflow-x: clip; font-family: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; color: #14131A; background: #FCFCFD; font-size: 17px; line-height: 1.65">
+
+<!-- ============ NAV ============ -->
+<header class="on-navy" style="background: #2F4A92; position: relative; z-index: 20">
+  <div class="shell" style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-top: 14px; padding-bottom: 14px">
+    <a href="https://goalkeep.org/" aria-label="Goalkeep home" style="display: inline-flex; align-items: center">
+      <img src="images/d6f20c273a7e4a63cb92d0ebfc07523e.webp" alt="Goalkeep" style="height: 36px; width: auto; display: block">
+    </a>
+    <nav aria-label="Main" class="navlinks" style="display: flex; align-items: center; gap: 32px">
+      <a class="nav-link" href="#">About us</a>
+      <div class="nav-item">
+        <a class="nav-link" href="#" aria-haspopup="true">What we do
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="impact-and-measurement-strategy.html"><span><span class="t">Impact and measurement strategy</span><span class="d">Turn your Theory of Change into a usable framework</span></span></a>
+          <a href="data-systems-and-workflows.html"><span><span class="t">Data systems and workflows</span><span class="d">An integrated system that scales with you</span></span></a>
+          <a href="dashboards-and-reporting.html"><span><span class="t">Dashboards and reporting</span><span class="d">Use your data to make better decisions</span></span></a>
+          <a href="data-adoption-and-capacity-building.html"><span><span class="t">Data adoption and capacity-building</span><span class="d">Build a data-confident workforce</span></span></a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link is-active" href="#" aria-haspopup="true">Programs
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="kickstarter.html" style="background: #FBF3DF"><span><span class="t">Kickstarter Program</span><span class="d">A data backbone for early-stage nonprofits</span></span></a>
+          <a href="data-literacy-program.html"><span><span class="t">Data Literacy Program</span><span class="d">Scale data best practices within your teams</span></span></a>
+        </div>
+      </div>
+      <a class="nav-link" href="#">Case studies</a>
+      <a class="nav-link" href="#">Resources</a>
+    </nav>
+    <a class="btn" href="#contact" style="background: #FFFFFF; color: #2F4A92">Partner with us</a>
+  </div>
+</header>
+
+<!-- ============ HERO (copy + photo card) ============ -->
+<section class="on-navy" style="background: #2F4A92; color: #FFFFFF; position: relative; overflow: hidden">
+  <div class="shell hero-split" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,520px); gap: 40px; align-items: center; padding-top: 44px; padding-bottom: 60px">
+    <div>
+      <h1 class="h1" style="font-size: 52px; font-weight: 500; line-height: 1.08; letter-spacing: -0.02em; margin: 0">Build the data backbone<br class="br-d"> <em>your organisation<br class="br-d"> needs to grow.</em></h1>
+      <p style="font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch; margin: 20px 0 0">Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits that want to move from scattered information and manual reporting to a simple, integrated data system their teams can use.</p>
+      <p style="margin: 24px 0 0"><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; padding: 6px 12px; border-radius: 4px; background: rgba(255,255,255,0.12); color: #FFFFFF"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Kickstarter 2.0 · next cohort begins January 2027</span></p>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px">
+        <a class="btn btn-accent" href="#contact" onClick="{{openForm}}">Apply for Kickstarter 2.0 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+        <a class="btn btn-sec-navy" href="#contact" onClick="{{openForm}}">Partner with us to support a cohort</a>
+      </div>
+    </div>
+    <div>
+      <div role="region" aria-roledescription="carousel" aria-label="Photos from Goalkeep engagements" style="position: relative; border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 18px 40px rgba(20,19,26,0.28)">
+        <div style="display: flex; height: 100%; transform: translateX({{slideX}}); transition: transform 700ms cubic-bezier(0.22,1,0.36,1)">
+          <img src="images/d9f25a2c090890697a8d9bf1806f663d.webp" alt="A Goalkeep working session on the floor of a partner office" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/3c1c275e978a7bbdbc2b4a398c8494ac.webp" alt="A partner team around a meeting-room table during a working session" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/46fd758db6cd80183d9d4f676d744baa.webp" alt="Two partner team members working through data on a laptop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/d7e0a2f562f148853d7f839e7a34590d.webp" alt="Goalkeep with a partner team after a workshop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px">
+        <div style="display: flex; gap: 8px; align-items: center">
+          <sc-for list="{{dots}}" as="d" hint-placeholder-count="4">
+            <button type="button" aria-label="{{d.label}}" aria-current="{{d.current}}" onClick="{{d.go}}" style="width: 28px; height: 28px; border: none; background: transparent; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center"><span style="display: block; height: 4px; border-radius: 2px; width: {{d.w}}; background: {{d.bg}}; transition: width 240ms, background-color 240ms"></span></button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <button type="button" aria-label="Previous photo" onClick="{{prevSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+          <button type="button" aria-label="Next photo" onClick="{{nextSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AT A GLANCE ============ -->
+<section style="background: #FFFFFF; border-bottom: 1px solid #E5E7EE">
+  <div class="shell glance" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+    <div class="glance-item" style="">
+      <span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: #FBF3DF; color: #7D5E0C; display: flex; align-items: center; justify-content: center; flex: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"></path><path d="M12 20v-8"></path><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6z"></path><path d="M12 14c0-3-2-5-6-5 0 3 2 5 6 5z"></path></svg></span>
+      <span><span style="display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: rgb(125, 94, 12)">Who it’s for</span><span style="display: block; font-size: 16px; line-height: 1.45; margin-top: 4px; color: rgb(20, 19, 26)">Early-stage nonprofits ready to move beyond messy spreadsheets</span></span>
+    </div>
+    <div class="glance-item" style="border-left: 1px solid #E5E7EE">
+      <span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: #EAEFF9; color: #2F4D9F; display: flex; align-items: center; justify-content: center; flex: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></span>
+      <span><span style="display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: rgb(47, 77, 159)">Next cohort</span><span style="display: block; font-size: 16px; line-height: 1.45; margin-top: 4px; color: rgb(20, 19, 26)">Begins January 2027. Applications are now open!</span></span>
+    </div>
+    <div class="glance-item" style="border-left: 1px solid #E5E7EE">
+      <span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: #E7F2F0; color: #176059; display: flex; align-items: center; justify-content: center; flex: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path><path d="M7 12l3-3 3 2 4-4"></path></svg></span>
+      <span><span style="display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #176059">What you build</span><span style="display: block; font-size: 16px; line-height: 1.45; margin-top: 4px; color: #14131A">A custom, integrated data system shaped around your programme</span></span>
+    </div>
+    <div class="glance-item" style="border-left: 1px solid #E5E7EE">
+      <span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: #FBEEE9; color: #9C452A; display: flex; align-items: center; justify-content: center; flex: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a5 5 0 0 1 6.4-.6l.4.3a5 5 0 0 0 3.2.9"></path><path d="m21 3 1 11h-2"></path><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path><path d="M3 4h8"></path></svg></span>
+      <span><span style="display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #9C452A">For funders</span><span style="display: block; font-size: 16px; line-height: 1.45; margin-top: 4px; color: #14131A">Support a cohort for organisations in your portfolio</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY KICKSTARTER EXISTS: the work vs the paperwork ============ -->
+<section class="band" style="background: #F7F5EF; padding-top: 72px; padding-bottom: 80px">
+  <div class="shell split" style="display: grid; grid-template-columns: minmax(0,5fr) minmax(0,6fr); gap: 64px; align-items: center">
+    <div>
+      <p class="eyebrow" style="color: #7D5E0C">why kickstarter exists</p>
+      <h2 class="h2">Measuring impact should not depend on <em>the size of your organisation.</em></h2>
+      <p style="margin: 24px 0 0; max-width: 50ch">Early-stage nonprofits are often creating meaningful change long before they have the systems needed to demonstrate it. Programme information is spread across spreadsheets, forms, messages and individual team members, and important patterns are noticed late.</p>
+      <p style="margin: 16px 0 0; max-width: 50ch">Kickstarter helps you build a foundation for data-driven decision making early, before fragmented processes become expensive, complicated systems.</p>
+    </div>
+    <div class="pair" style="position: relative; padding-bottom: 120px">
+      <div style="position: relative; margin-left: 12%">
+        <img src="images/c7fa18945afc05080e35a4e989719575.webp" alt="A programme session running in a village classroom" style="width: 100%; height: 400px; object-fit: cover; display: block; border-radius: 16px; box-shadow: 0 18px 44px rgba(20,19,26,0.14)">
+        <span class="pair-cap" style="top: 18px; right: 18px">Vanavil Trust</span>
+      </div>
+      <div style="position: absolute; left: 0; bottom: 0; width: 52%; z-index: 2">
+        <img src="images/46fd758db6cd80183d9d4f676d744baa.webp" alt="Two partner team members working through data on a laptop" style="width: 100%; height: 230px; object-fit: cover; display: block; border-radius: 14px; border: 6px solid #F7F5EF; box-shadow: 0 18px 40px rgba(20,19,26,0.20)">
+        <span class="pair-cap" style="left: 18px; bottom: -14px">Apni Shala Foundation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIT: speech-bubble cloud ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 64px; padding-bottom: 64px">
+  <div class="shell split" style="display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr); gap: 48px; align-items: center">
+    <div class="cloud" role="group" aria-label="Things early-stage nonprofit teams often say about their data">
+        <button type="button" class="cb cb-left" aria-pressed="{{b0.pressed}}" onMouseEnter="{{b0.pick}}" onClick="{{b0.pick}}" style="max-width: 260px; font-size: 16px; margin-top: 0px; background: {{b0.bg}}; color: {{b0.fg}}; border-color: {{b0.border}}; box-shadow: {{b0.shadow}}; transform: rotate(-2deg) scale({{b0.scale}}); font-weight: {{b0.weight}}">
+          Which is the updated student attendance sheet? I can see three versions.
+          <span aria-hidden="true" class="cb-tail" style="background: {{b0.bg}}; border-color: {{b0.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-right" aria-pressed="{{b1.pressed}}" onMouseEnter="{{b1.pick}}" onClick="{{b1.pick}}" style="max-width: 300px; font-size: 15px; margin-top: 8px; background: {{b1.bg}}; color: {{b1.fg}}; border-color: {{b1.border}}; box-shadow: {{b1.shadow}}; transform: rotate(1.5deg) scale({{b1.scale}}); font-weight: {{b1.weight}}">
+          Can someone double-check the Jan to March data again for the quarterly funder report?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b1.bg}}; border-color: {{b1.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b2.pressed}}" onMouseEnter="{{b2.pick}}" onClick="{{b2.pick}}" style="max-width: 320px; font-size: 14px; margin-top: -4px; background: {{b2.bg}}; color: {{b2.fg}}; border-color: {{b2.border}}; box-shadow: {{b2.shadow}}; transform: rotate(-1deg) scale({{b2.scale}}); font-weight: {{b2.weight}}">
+          We collect over 40 data fields for every child, but which ones actually help us track their progress?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b2.bg}}; border-color: {{b2.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b3.pressed}}" onMouseEnter="{{b3.pick}}" onClick="{{b3.pick}}" style="max-width: 290px; font-size: 15px; margin-top: 10px; background: {{b3.bg}}; color: {{b3.fg}}; border-color: {{b3.border}}; box-shadow: {{b3.shadow}}; transform: rotate(2deg) scale({{b3.scale}}); font-weight: {{b3.weight}}">
+          Only Rishi knew how to operate the dashboard. Now that he’s left, how do we manage this?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b3.bg}}; border-color: {{b3.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-right" aria-pressed="{{b4.pressed}}" onMouseEnter="{{b4.pick}}" onClick="{{b4.pick}}" style="max-width: 330px; font-size: 14px; margin-top: -6px; background: {{b4.bg}}; color: {{b4.fg}}; border-color: {{b4.border}}; box-shadow: {{b4.shadow}}; transform: rotate(-1.5deg) scale({{b4.scale}}); font-weight: {{b4.weight}}">
+          Did anyone realize that the blood donation camp turnout has been dropping for 6 months straight? I only just realized.
+          <span aria-hidden="true" class="cb-tail" style="background: {{b4.bg}}; border-color: {{b4.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b5.pressed}}" onMouseEnter="{{b5.pick}}" onClick="{{b5.pick}}" style="max-width: 270px; font-size: 15px; margin-top: 4px; background: {{b5.bg}}; color: {{b5.fg}}; border-color: {{b5.border}}; box-shadow: {{b5.shadow}}; transform: rotate(1deg) scale({{b5.scale}}); font-weight: {{b5.weight}}">
+          Has anyone incorporated last year’s data insights into their lesson planning for this year?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b5.bg}}; border-color: {{b5.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b6.pressed}}" onMouseEnter="{{b6.pick}}" onClick="{{b6.pick}}" style="max-width: 320px; font-size: 14px; margin-top: -8px; background: {{b6.bg}}; color: {{b6.fg}}; border-color: {{b6.border}}; box-shadow: {{b6.shadow}}; transform: rotate(-2.5deg) scale({{b6.scale}}); font-weight: {{b6.weight}}">
+          It’s frustrating how we spend more time cleaning Excel sheets than using the data to get learnings and insights.
+          <span aria-hidden="true" class="cb-tail" style="background: {{b6.bg}}; border-color: {{b6.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-right" aria-pressed="{{b7.pressed}}" onMouseEnter="{{b7.pick}}" onClick="{{b7.pick}}" style="max-width: 320px; font-size: 14px; margin-top: 4px; background: {{b7.bg}}; color: {{b7.fg}}; border-color: {{b7.border}}; box-shadow: {{b7.shadow}}; transform: rotate(1.5deg) scale({{b7.scale}}); font-weight: {{b7.weight}}">
+          Which of our livelihood programs have the highest success rate? I’m having a hard time reading the data on this.
+          <span aria-hidden="true" class="cb-tail" style="background: {{b7.bg}}; border-color: {{b7.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b8.pressed}}" onMouseEnter="{{b8.pick}}" onClick="{{b8.pick}}" style="max-width: 280px; font-size: 15px; margin-top: 8px; background: {{b8.bg}}; color: {{b8.fg}}; border-color: {{b8.border}}; box-shadow: {{b8.shadow}}; transform: rotate(0.5deg) scale({{b8.scale}}); font-weight: {{b8.weight}}">
+          Are we effectively tracking parameters for mental health progress in the children’s program?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b8.bg}}; border-color: {{b8.border}}"></span>
+        </button>
+        <button type="button" class="cb cb-left" aria-pressed="{{b9.pressed}}" onMouseEnter="{{b9.pick}}" onClick="{{b9.pick}}" style="max-width: 250px; font-size: 16px; margin-top: -2px; background: {{b9.bg}}; color: {{b9.fg}}; border-color: {{b9.border}}; box-shadow: {{b9.shadow}}; transform: rotate(-1.5deg) scale({{b9.scale}}); font-weight: {{b9.weight}}">
+          We built a full data dashboard last year. Has anyone even opened it since?
+          <span aria-hidden="true" class="cb-tail" style="background: {{b9.bg}}; border-color: {{b9.border}}"></span>
+        </button>
+    </div>
+    <div>
+      <h2 class="h2">Kickstarter may be right for you <em>if any of these sound familiar.</em></h2>
+      <p style="margin: 20px 0 0; max-width: 40ch">Each one is a sign your programme has outgrown its spreadsheets, and that your team needs a more robust system that reflects how you work and actually helps you use what data you collect.</p>
+      <p style="margin: 16px 0 0; max-width: 40ch">Kickstarter gives you more than just a dashboard. It helps build a decision infrastructure within your organization.</p>
+      <div style="margin-top: 32px"><a class="btn btn-primary" href="#contact" onClick="{{openForm}}">Apply for Kickstarter 2.0 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW THE PROGRAM WORKS: stage tabs + scenes ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 64px; padding-bottom: 72px; border-top: 1px solid #E5E7EE">
+  <div class="shell">
+    <p class="eyebrow">how the program works</p>
+    <h2 class="h2">Four stages, <em>one connected system.</em></h2>
+    <div class="stage-tabs" role="tablist" aria-label="Program stages" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 32px">
+        <button type="button" class="stage-tab" role="tab" aria-selected="{{t0.sel}}" onClick="{{st0.pick}}" style="background: {{t0.bg}}; border-color: {{t0.border}}; box-shadow: {{t0.shadow}}">
+          <span aria-hidden="true" style="width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; background: {{t0.numBg}}; color: {{t0.numFg}}; flex: none; transition: background-color 320ms, color 320ms">1</span>
+          <span style="font-size: 18px; font-weight: 800; color: #14131A">Understand</span>
+        </button>
+        <button type="button" class="stage-tab" role="tab" aria-selected="{{t1.sel}}" onClick="{{st1.pick}}" style="background: {{t1.bg}}; border-color: {{t1.border}}; box-shadow: {{t1.shadow}}">
+          <span aria-hidden="true" style="width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; background: {{t1.numBg}}; color: {{t1.numFg}}; flex: none; transition: background-color 320ms, color 320ms">2</span>
+          <span style="font-size: 18px; font-weight: 800; color: #14131A">Design</span>
+        </button>
+        <button type="button" class="stage-tab" role="tab" aria-selected="{{t2.sel}}" onClick="{{st2.pick}}" style="background: {{t2.bg}}; border-color: {{t2.border}}; box-shadow: {{t2.shadow}}">
+          <span aria-hidden="true" style="width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; background: {{t2.numBg}}; color: {{t2.numFg}}; flex: none; transition: background-color 320ms, color 320ms">3</span>
+          <span style="font-size: 18px; font-weight: 800; color: #14131A">Build</span>
+        </button>
+        <button type="button" class="stage-tab" role="tab" aria-selected="{{t3.sel}}" onClick="{{st3.pick}}" style="background: {{t3.bg}}; border-color: {{t3.border}}; box-shadow: {{t3.shadow}}">
+          <span aria-hidden="true" style="width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; background: {{t3.numBg}}; color: {{t3.numFg}}; flex: none; transition: background-color 320ms, color 320ms">4</span>
+          <span style="font-size: 18px; font-weight: 800; color: #14131A">Adopt</span>
+        </button>
+    </div>
+    <div aria-hidden="true" style="height: 4px; background: #F1F4FA; border-radius: 2px; margin: 14px 0 36px; overflow: hidden"><div style="height: 100%; width: {{progressW}}; background: {{progressC}}; border-radius: 2px; transition: width 520ms cubic-bezier(0.22,1,0.36,1), background-color 320ms"></div></div>
+      <sc-if value="{{show0}}" hint-placeholder-val="{{ true }}">
+        <div class="panel slide-in" role="tabpanel" style="display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 48px; align-items: center">
+          <div><svg role="img" aria-label="Illustration: a board of the questions a programme team needs its data to answer, with one priority question picked" width="100%" viewBox="0 0 560 400" style="display: block; border-radius: 20px; background: #FBF3DF"><defs><filter id="cs" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#14131A" flood-opacity="0.10"></feDropShadow></filter></defs><rect x="28" y="40" width="504" height="320" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><text x="52" y="80" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#7D5E0C">WHAT DO WE NEED OUR DATA TO ANSWER?</text><path d="M 52 94 H 508" stroke="#E5E7EE" stroke-width="1.5"></path><g transform="rotate(-3 120 178)"><rect x="50" y="118" width="146" height="120" rx="6" fill="#FCF0A5" stroke="#EAC452" stroke-width="1.5" filter="url(#cs)"></rect><text x="64" y="152" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">Which children are</text><text x="64" y="170" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">falling behind?</text><rect x="64" y="192" width="90" height="6" rx="4" fill="#F7DB63"></rect><rect x="64" y="206" width="64" height="6" rx="4" fill="#F7DB63"></rect></g><g transform="rotate(2 278 168)"><rect x="208" y="108" width="146" height="120" rx="6" fill="#FFFFFF" stroke="#E5E7EE" stroke-width="1.5" filter="url(#cs)"></rect><text x="222" y="142" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">Where are volunteers</text><text x="222" y="160" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">needed next month?</text><rect x="222" y="182" width="90" height="6" rx="4" fill="#E5E7EE"></rect><rect x="222" y="196" width="64" height="6" rx="4" fill="#E5E7EE"></rect></g><g transform="rotate(-2 436 180)"><rect x="366" y="120" width="146" height="120" rx="6" fill="#FFFFFF" stroke="#E5E7EE" stroke-width="1.5" filter="url(#cs)"></rect><text x="380" y="154" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">What should funders</text><text x="380" y="172" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">see each quarter?</text><rect x="380" y="194" width="90" height="6" rx="4" fill="#E5E7EE"></rect><rect x="380" y="208" width="64" height="6" rx="4" fill="#E5E7EE"></rect></g><circle cx="190" cy="122" r="15" fill="#2F4A92"></circle><path d="M 183 122 l 5 5 l 9 -10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M 52 280 H 508" stroke="#E5E7EE" stroke-width="1.5"></path><text x="52" y="308" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#7D5E0C">PRIORITY QUESTION</text><text x="52" y="332" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="15" font-weight="700" fill="#14131A">Which children are falling behind, and how early can we tell?</text></svg></div>
+          <div>
+            <p style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #7D5E0C">Stage 1 of 4</p>
+            <h3 class="h3" style="margin-top: 8px">Understand</h3>
+            <p style="margin: 12px 0 0; font-size: 19px; line-height: 1.5; font-style: italic; color: #7D5E0C">We begin with your programme, people and decisions, not with technology.</p>
+            <p style="margin: 14px 0 0; max-width: 52ch">We work with leadership, programme, and field team members to understand how the programme operates, how information currently moves and where the greatest friction lies. Together, we identify the questions the system must answer and the decisions those answers should support.</p>
+            <p style="margin: 24px 0 0"><button type="button" class="tlink" onClick="{{st1.pick}}" style="background: none; border-top: none; border-left: none; border-right: none; cursor: pointer; font-family: inherit; color: #2F4D9F">Next: Design <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></p>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{show1}}" hint-placeholder-val="{{ false }}">
+        <div class="panel slide-in" role="tabpanel" style="display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 48px; align-items: center">
+          <div><svg role="img" aria-label="Illustration: prototypes of a data-entry form and an insight view, with an analysis note on what the data shows about student learning" width="100%" viewBox="0 0 560 400" style="display: block; border-radius: 20px; background: #EAEFF9"><defs><filter id="cs" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#14131A" flood-opacity="0.10"></feDropShadow></filter></defs><rect x="36" y="36" width="200" height="328" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><text x="56" y="68" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#2F4D9F">DATA ENTRY</text><text x="56" y="96" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="rgba(20,19,26,0.72)">Child name</text><rect x="56" y="104" width="160" height="30" rx="6" fill="#FFFFFF" stroke="#8FA8E8" stroke-width="1.5" stroke-dasharray="5 4"></rect><text x="56" y="162" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="rgba(20,19,26,0.72)">Attendance today</text><rect x="56" y="170" width="160" height="30" rx="6" fill="#FFFFFF" stroke="#8FA8E8" stroke-width="1.5" stroke-dasharray="5 4"></rect><text x="56" y="228" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="rgba(20,19,26,0.72)">Learning level</text><rect x="56" y="236" width="160" height="30" rx="6" fill="#FFFFFF" stroke="#8FA8E8" stroke-width="1.5" stroke-dasharray="5 4"></rect><rect x="56" y="306" width="88" height="30" rx="6" fill="#3F63C8"></rect><text x="100" y="326" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">Save</text><rect x="272" y="36" width="252" height="206" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><text x="292" y="68" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#2F4D9F">INSIGHT VIEW</text><rect x="292" y="84" width="66" height="46" rx="8" fill="#EAEFF9"></rect><rect x="302" y="96" width="34" height="7" rx="4" fill="#8FA8E8"></rect><rect x="302" y="110" width="44" height="10" rx="4" fill="#3F63C8"></rect><rect x="368" y="84" width="66" height="46" rx="8" fill="#EAEFF9"></rect><rect x="378" y="96" width="34" height="7" rx="4" fill="#8FA8E8"></rect><rect x="378" y="110" width="44" height="10" rx="4" fill="#3F63C8"></rect><rect x="444" y="84" width="66" height="46" rx="8" fill="#EAEFF9"></rect><rect x="454" y="96" width="34" height="7" rx="4" fill="#8FA8E8"></rect><rect x="454" y="110" width="44" height="10" rx="4" fill="#3F63C8"></rect><rect x="298" y="182" width="22" height="44" rx="4" fill="#8FA8E8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><rect x="334" y="160" width="22" height="66" rx="4" fill="#8FA8E8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><rect x="370" y="190" width="22" height="36" rx="4" fill="#8FA8E8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><rect x="406" y="142" width="22" height="84" rx="4" fill="#3F63C8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><rect x="442" y="170" width="22" height="56" rx="4" fill="#8FA8E8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><rect x="478" y="152" width="22" height="74" rx="4" fill="#8FA8E8" stroke="#3F63C8" stroke-width="1" stroke-dasharray="3 3"></rect><path d="M 238 190 C 254 190, 256 150, 270 150" fill="none" stroke="#2F4A92" stroke-width="2" stroke-dasharray="4 4"></path><circle cx="270" cy="150" r="4" fill="#2F4A92"></circle><rect x="272" y="262" width="252" height="102" rx="14" fill="#FFFFFF" filter="url(#cs)"></rect><rect x="288" y="280" width="30" height="30" rx="8" fill="#EAEFF9"></rect><path d="M 303 286 a 7 7 0 0 0 -4 12.7 v 3.3 h 8 v -3.3 a 7 7 0 0 0 -4 -12.7 z M 300 305 h 6" fill="none" stroke="#2F4D9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><text x="328" y="300" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#2F4D9F">ANALYSIS</text><text x="288" y="330" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="400" fill="#14131A">The data shows us that student</text><text x="288" y="349" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="400" fill="#14131A">learning levels most increased when…</text><path d="M 381 182 C 378 156, 386 140, 400 136" fill="none" stroke="#F6D83A" stroke-width="4" stroke-linecap="round"></path><path d="M 391 130 L 401 136 L 392 144" fill="none" stroke="#F6D83A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+          <div>
+            <p style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #2F4D9F">Stage 2 of 4</p>
+            <h3 class="h3" style="margin-top: 8px">Design</h3>
+            <p style="margin: 12px 0 0; font-size: 19px; line-height: 1.5; font-style: italic; color: #2F4D9F">We translate the priority questions into a practical systems design.</p>
+            <p style="margin: 14px 0 0; max-width: 52ch">This includes refining the most important indicators, mapping data sources, designing the data model and creating interactive prototypes of the data-entry and insight experience. Your team reviews the proposed workflows before the full system is built.</p>
+            <p style="margin: 24px 0 0"><button type="button" class="tlink" onClick="{{st2.pick}}" style="background: none; border-top: none; border-left: none; border-right: none; cursor: pointer; font-family: inherit; color: #176059">Next: Build <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></p>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{show2}}" hint-placeholder-val="{{ false }}">
+        <div class="panel slide-in" role="tabpanel" style="display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 48px; align-items: center">
+          <div><svg role="img" aria-label="Illustration: a finished, connected data system with a navigation sidebar, summary tiles and an attendance chart" width="100%" viewBox="0 0 560 400" style="display: block; border-radius: 20px; background: #E7F2F0"><defs><filter id="cs" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#14131A" flood-opacity="0.10"></feDropShadow></filter></defs><g transform="translate(0 22)"><rect x="28" y="28" width="504" height="300" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><path d="M 28 40 a 12 12 0 0 1 12 -12 h 480 a 12 12 0 0 1 12 12 v 22 h -504 z" fill="#2F4A92"></path><circle cx="48" cy="45" r="5" fill="#EE9D90"></circle><circle cx="64" cy="45" r="5" fill="#EAC452"></circle><circle cx="80" cy="45" r="5" fill="#79C2B4"></circle><text x="280" y="50" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="rgba(255,255,255,0.8)">your-programme.goalkeep</text><path d="M 28 62 H 148 V 328 H 44 a 16 16 0 0 1 -16 -16 Z" fill="#E7F2F0"></path><rect x="38" y="76" width="100" height="26" rx="6" fill="#FFFFFF"></rect><circle cx="52" cy="89" r="4" fill="#2F9C8F"></circle><text x="64" y="93" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#14131A">Overview</text><circle cx="52" cy="123" r="4" fill="#5FC9BA"></circle><text x="64" y="127" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="600" fill="rgba(20,19,26,0.72)">Participants</text><circle cx="52" cy="157" r="4" fill="#5FC9BA"></circle><text x="64" y="161" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="600" fill="rgba(20,19,26,0.72)">Attendance</text><circle cx="52" cy="191" r="4" fill="#5FC9BA"></circle><text x="64" y="195" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="600" fill="rgba(20,19,26,0.72)">Learning</text><circle cx="52" cy="225" r="4" fill="#5FC9BA"></circle><text x="64" y="229" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="600" fill="rgba(20,19,26,0.72)">Reports</text><rect x="168" y="80" width="108" height="64" rx="10" fill="#FFFFFF" stroke="#E5E7EE"></rect><text x="180" y="100" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="700" fill="rgba(20,19,26,0.72)">Participants</text><rect x="180" y="112" width="56" height="14" rx="4" fill="#3F63C8"></rect><rect x="240" y="116" width="24" height="6" rx="4" fill="#8FA8E8"></rect><rect x="288" y="80" width="108" height="64" rx="10" fill="#FFFFFF" stroke="#E5E7EE"></rect><text x="300" y="100" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="700" fill="rgba(20,19,26,0.72)">Attendance</text><rect x="300" y="112" width="56" height="14" rx="4" fill="#2F9C8F"></rect><rect x="360" y="116" width="24" height="6" rx="4" fill="#5FC9BA"></rect><rect x="408" y="80" width="108" height="64" rx="10" fill="#FFFFFF" stroke="#E5E7EE"></rect><text x="420" y="100" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="700" fill="rgba(20,19,26,0.72)">Learning level</text><rect x="420" y="112" width="56" height="14" rx="4" fill="#EAC452"></rect><rect x="480" y="116" width="24" height="6" rx="4" fill="#F7DB63"></rect><rect x="168" y="160" width="348" height="150" rx="10" fill="#FFFFFF" stroke="#E5E7EE"></rect><text x="182" y="182" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#14131A">Attendance by month</text><path d="M 182 214 H 504" stroke="#F1F4FA" stroke-width="1"></path><path d="M 182 244 H 504" stroke="#F1F4FA" stroke-width="1"></path><path d="M 182 274 H 504" stroke="#F1F4FA" stroke-width="1"></path><path d="M 190 280 L 232 262 L 274 270 L 316 244 L 358 250 L 400 226 L 442 232 L 484 206 L 484 296 L 190 296 Z" fill="#E7F2F0"></path><path d="M 190 280 L 232 262 L 274 270 L 316 244 L 358 250 L 400 226 L 442 232 L 484 206" fill="none" stroke="#2F9C8F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="484" cy="206" r="6" fill="#2F9C8F" stroke="#FFFFFF" stroke-width="2.5"></circle></g></svg></div>
+          <div>
+            <p style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #176059">Stage 3 of 4</p>
+            <h3 class="h3" style="margin-top: 8px">Build</h3>
+            <p style="margin: 12px 0 0; font-size: 19px; line-height: 1.5; font-style: italic; color: #176059">We build an integrated, customised system for entering, managing and using programme data.</p>
+            <p style="margin: 14px 0 0; max-width: 52ch">We favour an open-source core, using technologies such as PostgreSQL or Supabase where appropriate, with tools for version control and hosting, chosen around your needs, budget, security requirements and ability to maintain it. With our AI-integrated build, you receive your working dashboard in 6–8 weeks, so that most of the time in the remaining 6 months can be spent on edits, iterations, testing, and ensuring your team actually uses the dashboard.</p>
+            <p style="margin: 24px 0 0"><button type="button" class="tlink" onClick="{{st3.pick}}" style="background: none; border-top: none; border-left: none; border-right: none; cursor: pointer; font-family: inherit; color: #9C452A">Next: Adopt <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></p>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{show3}}" hint-placeholder-val="{{ false }}">
+        <div class="panel slide-in" role="tabpanel" style="display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 48px; align-items: center">
+          <div><svg role="img" aria-label="Illustration: more of the team using the dashboard each week, and a programme lead going from overwhelmed by spreadsheets to trusting what the dashboard shows" width="100%" viewBox="0 0 560 400" style="display: block; border-radius: 20px; background: #FBEEE9"><defs><filter id="cs" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#14131A" flood-opacity="0.10"></feDropShadow></filter></defs><rect x="28" y="28" width="504" height="222" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><text x="48" y="58" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="14" font-weight="800" fill="#14131A">Team using the dashboard</text><text x="48" y="78" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="600" fill="rgba(20,19,26,0.6)">Weekly active users</text><path d="M 48 120 H 512" stroke="#F1F4FA" stroke-width="1"></path><path d="M 48 160 H 512" stroke="#F1F4FA" stroke-width="1"></path><path d="M 48 200 H 512" stroke="#F1F4FA" stroke-width="1"></path><path d="M 64 222 C 120 220, 150 215, 172 212 S 250 202, 280 196 S 350 180, 380 166 S 440 132, 470 104 L 470 232 L 64 232 Z" fill="#FBEEE9"></path><path d="M 64 222 C 120 220, 150 215, 172 212 S 250 202, 280 196 S 350 180, 380 166 S 440 132, 470 104" fill="none" stroke="#E07A5F" stroke-width="4" stroke-linecap="round"></path><circle cx="470" cy="104" r="6" fill="#E07A5F" stroke="#FFFFFF" stroke-width="2.5"></circle><circle cx="64.0" cy="198" r="10.5" fill="#EAEFF9" stroke="#FFFFFF" stroke-width="3"></circle><text x="64.0" y="202.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#2F4D9F">LD</text><circle cx="161.5" cy="188" r="10.5" fill="#EAEFF9" stroke="#FFFFFF" stroke-width="3"></circle><text x="161.5" y="192.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#2F4D9F">LD</text><circle cx="182.5" cy="188" r="10.5" fill="#E7F2F0" stroke="#FFFFFF" stroke-width="3"></circle><text x="182.5" y="192.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#176059">PR</text><circle cx="259.0" cy="172" r="10.5" fill="#EAEFF9" stroke="#FFFFFF" stroke-width="3"></circle><text x="259.0" y="176.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#2F4D9F">LD</text><circle cx="280.0" cy="172" r="10.5" fill="#E7F2F0" stroke="#FFFFFF" stroke-width="3"></circle><text x="280.0" y="176.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#176059">PR</text><circle cx="301.0" cy="172" r="10.5" fill="#FBEEE9" stroke="#FFFFFF" stroke-width="3"></circle><text x="301.0" y="176.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#9C452A">FD</text><circle cx="438.5" cy="80" r="10.5" fill="#EAEFF9" stroke="#FFFFFF" stroke-width="3"></circle><text x="438.5" y="84.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#2F4D9F">LD</text><circle cx="459.5" cy="80" r="10.5" fill="#E7F2F0" stroke="#FFFFFF" stroke-width="3"></circle><text x="459.5" y="84.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#176059">PR</text><circle cx="480.5" cy="80" r="10.5" fill="#FBEEE9" stroke="#FFFFFF" stroke-width="3"></circle><text x="480.5" y="84.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#9C452A">FD</text><circle cx="501.5" cy="80" r="10.5" fill="#FBF3DF" stroke="#FFFFFF" stroke-width="3"></circle><text x="501.5" y="84.5" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="800" fill="#7D5E0C">ME</text><rect x="28" y="266" width="222" height="114" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><text x="48" y="296" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="rgba(20,19,26,0.6)">BEFORE</text><rect x="150" y="282" width="84" height="22" rx="11" fill="#F1F4FA"></rect><text x="192" y="297" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="rgba(20,19,26,0.72)">Overwhelmed</text><text x="48" y="334" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="700" fill="rgba(20,19,26,0.72)">“So many sheets. I don’t</text><text x="48" y="354" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="700" fill="rgba(20,19,26,0.72)">know which numbers to trust.”</text><path d="M 256 320 C 272 308, 290 308, 304 320" fill="none" stroke="#F6D83A" stroke-width="5" stroke-linecap="round"></path><path d="M 294 310 l 11 10 l -14 4" fill="none" stroke="#F6D83A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><rect x="310" y="266" width="222" height="114" rx="16" fill="#FFFFFF" filter="url(#cs)"></rect><rect x="310" y="266" width="222" height="114" rx="16" fill="none" stroke="#E07A5F" stroke-width="2"></rect><text x="330" y="296" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#9C452A">AFTER</text><rect x="418" y="282" width="98" height="22" rx="11" fill="#FBEEE9"></rect><text x="467" y="297" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="800" fill="#9C452A">Trusts the data</text><text x="330" y="318" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">“The dashboard shows that our</text><text x="330" y="334" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">after-school study sessions</text><text x="330" y="350" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">increased student class</text><text x="330" y="366" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="12.5" font-weight="700" fill="#14131A">participation by 22%”</text></svg></div>
+          <div>
+            <p style="margin: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: #9C452A">Stage 4 of 4</p>
+            <h3 class="h3" style="margin-top: 8px">Adopt</h3>
+            <p style="margin: 12px 0 0; font-size: 19px; line-height: 1.5; font-style: italic; color: #9C452A">We spend months conducting workshops, meetings, and trainings to help your teams use the system we built.</p>
+            <p style="margin: 14px 0 0; max-width: 52ch">We train team members, run facilitated data reviews and help you build routines for using information in programme and leadership conversations. Documentation, maintenance support and a structured handover mean ownership moves to your organisation, so that you are not reliant on any external third-party for your data needs over the long-term.</p>
+            <p style="margin: 24px 0 0"><a class="btn btn-maroon" href="#contact" onClick="{{openForm}}">Apply for Kickstarter 2.0 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></p>
+          </div>
+        </div>
+      </sc-if>
+  </div>
+</section>
+
+<!-- ============ WHAT CHANGES (navy) ============ -->
+<section class="on-navy band" style="background: #2F4A92; color: #FFFFFF; padding-top: 64px; padding-bottom: 72px; position: relative; overflow: hidden">
+  <div class="shell">
+    <p class="eyebrow">what changes after kickstarter</p>
+    <div class="change" style="display: grid; grid-template-columns: minmax(0,1fr) 80px minmax(0,1fr); align-items: center; gap: 8px; margin-top: 24px">
+      <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16); border-radius: 16px 16px 16px 4px; padding: 28px 32px">
+        <p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.76)">Before, the question is often</p>
+        <p style="margin: 12px 0 0; font-size: 28px; line-height: 1.25; letter-spacing: -0.012em; color: rgba(255,255,255,0.86)">“Where is the information, and who can put it together?”</p>
+      </div>
+      <div class="change-arrow" aria-hidden="true" style="display: flex; justify-content: center"><svg width="64" height="32" viewBox="0 0 64 32"><path d="M 4 18 Q 30 6 56 16" fill="none" stroke="#F6D83A" stroke-width="5" stroke-linecap="round"></path><path d="M 46 7 L 58 16 L 46 25" fill="none" stroke="#F6D83A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+      <div style="background: #FFFFFF; color: #14131A; border-radius: 16px 16px 4px 16px; padding: 28px 32px; box-shadow: 0 18px 40px rgba(20,19,26,0.28)">
+        <p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #7D5E0C">After, the conversation moves to</p>
+        <p style="margin: 12px 0 0; font-size: 28px; line-height: 1.25; letter-spacing: -0.012em">“What is the information telling us, and <em>what should we do next?</em>”</p>
+      </div>
+    </div>
+    <p style="margin: 48px 0 0; font-size: 19px; font-weight: 700">A well-used Kickstarter system can help your organisation:</p>
+    <ul class="outcomes" style="list-style: none; padding: 0; margin: 20px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 40px">
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Reduce the time spent consolidating data and preparing reports.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Identify programme gaps and participant needs earlier.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Give programme teams greater ownership of information.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Make reviews more focused and action-oriented.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Communicate progress and impact more confidently.</span></li>
+      <li style="display: flex; gap: 12px; align-items: flex-start; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.92)"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style="flex: none; margin-top: 2px"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#F6D83A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Build a stronger foundation for organisational growth and funding.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PROOF: case stories ============ -->
+<section id="case" class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 64px">
+  <div class="shell">
+    <h2 class="h2" style="max-width: none">See what organisations have done <em>with a<br class="br-d"> stronger data foundation.</em></h2>
+    <div class="grid3 stories" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 36px">
+      <a class="surface lift story" href="#">
+        <img src="images/8625ca604ea24fa43d1fd299a4c5afea.webp" alt="Two Baithak Foundation team members smiling during a session" style="width: 100%; height: 220px; object-fit: cover; display: block">
+        <span style="display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 26px; flex: 1">
+          <span style="display: flex; flex-wrap: wrap; gap: 8px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBEEE9; color: #9C452A">Arts</span><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBF3DF; color: #7D5E0C">Kickstarter cohort 1</span></span>
+          <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Baithak Foundation</span>
+          <span style="font-size: 16px; line-height: 1.55">Using a more accessible data system in programme and funder conversations.</span>
+          <span class="tlink" style="margin-top: auto; align-self: flex-start">Read the case study <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+        </span>
+      </a>
+      <a class="surface lift story" href="#">
+        <div role="img" aria-label="Photo placeholder" style="height: 220px; background: #FBF3DF; display: flex; align-items: flex-end; padding: 16px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #7D5E0C">photo awaiting approval</span></div>
+        <span style="display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 26px; flex: 1">
+          <span style="display: flex; flex-wrap: wrap; gap: 8px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #EAEFF9; color: #2F4D9F">Education</span><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBF3DF; color: #7D5E0C">Kickstarter cohort 1</span></span>
+          <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Vanavil Trust</span>
+          <span style="font-size: 16px; line-height: 1.55">Using timely information to identify and re-engage children who had dropped out.</span>
+          <span style="margin-top: auto; font-size: 15px; font-weight: 700; color: #7D5E0C">Full case study coming soon</span>
+        </span>
+      </a>
+      <a class="surface lift story" href="#">
+        <img src="images/64c1c9c5b1e6936ba238b50ada299bd3.webp" alt="The Apni Shala Foundation team standing together in their office" style="width: 100%; height: 220px; object-fit: cover; display: block">
+        <span style="display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 26px; flex: 1">
+          <span style="display: flex; flex-wrap: wrap; gap: 8px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #E7F2F0; color: #176059">Education</span><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBF3DF; color: #7D5E0C">Kickstarter cohort 1</span></span>
+          <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Apni Shala Foundation</span>
+          <span style="font-size: 16px; line-height: 1.55">Using a priority learning metric to identify student needs earlier and plan interventions.</span>
+          <span class="tlink" style="margin-top: auto; align-self: flex-start">Read the case study <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA with slide-in form ============ -->
+<section id="contact" class="on-navy band" style="background: #2F4A92; color: #FFFFFF; padding-top: 64px; padding-bottom: 64px; position: relative; overflow: hidden">
+  <div class="shell split" style="position: relative; display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 64px; align-items: center; min-height: 340px">
+    <div>
+      <h2 class="h2" style="max-width: 22ch">Ready to turn messy data into <em>a system you can actually get insights from?</em></h2>
+      <p style="margin: 24px 0 0; font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch">Build a system that helps your team see what matters, act earlier and communicate your impact with confidence.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 36px">
+        <button type="button" class="btn btn-accent" onClick="{{openForm}}" aria-expanded="{{formExpanded}}">Apply for the next cohort <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+        <button type="button" class="btn btn-sec-navy" onClick="{{openForm}}">Speak to us about funding a cohort</button>
+      </div>
+    </div>
+    <div style="position: relative">
+      <div class="gk-mark" aria-hidden="true"><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#E8E724" stroke-width="39" stroke-linecap="round" stroke-dasharray="123.22 763.41" transform="rotate(241.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="115.80 763.41" transform="rotate(-47.304 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#526EB5" stroke-width="39" stroke-linecap="round" stroke-dasharray="122.16 763.41" transform="rotate(20.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#79C2B4" stroke-width="39" stroke-linecap="round" stroke-dasharray="135.95 763.41" transform="rotate(91.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#EE9D90" stroke-width="39" stroke-linecap="round" stroke-dasharray="124.28 763.41" transform="rotate(169.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="142" cy="283.8" r="124.2" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="221.99 780.37" transform="rotate(38.796 142 283.8)"></circle></svg></div></div>
+      <sc-if value="{{formOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="surface slide-in" style="padding: 36px; color: #14131A; border-radius: 16px; box-shadow: 0 24px 56px rgba(20,19,26,0.28); position: relative">
+          <button type="button" aria-label="Close form" onClick="{{closeForm}}" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: none; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #14131A"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+          <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{ true }}">
+            <form style="display: flex; flex-direction: column; gap: 18px; margin: 0">
+              <p style="margin: 0 0 4px; font-size: 22px; font-weight: 700; line-height: 1.28">Tell us a little about you.</p>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Name<input type="text" name="name" autocomplete="name" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Email<input type="email" name="email" autocomplete="email" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Organisation name<input type="text" name="org" autocomplete="organization" class="field"></label>
+              <button type="button" class="btn btn-primary" onClick="{{submitForm}}" style="align-self: flex-start; margin-top: 6px">Submit <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+            </form>
+          </sc-if>
+          <sc-if value="{{submitted}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 24px 0">
+              <svg aria-hidden="true" width="44" height="44" viewBox="0 0 28 28"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#EAC452" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <p style="margin: 12px 0 0; font-size: 22px; font-weight: 700">Thank you.</p>
+              <p style="margin: 8px 0 0; color: rgba(20,19,26,0.72)">We'll be in touch shortly.</p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPLORE MORE ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 56px">
+  <div class="shell">
+    <h2 class="h2">Not quite the right fit? <em>Explore more.</em></h2>
+    <div class="grid2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 32px">
+      <a class="lift" href="data-literacy-program.html" style="background: #E7F2F0; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data Literacy Program</span>
+        <span style="font-size: 15px; line-height: 1.6">Build a data-confident workforce from within. A cohort-based, train-the-trainer program that equips organisational and MEL leaders to strengthen data literacy across their teams.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #176059">Explore the program <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+      <a class="lift" href="data-systems-and-workflows.html" style="background: #EAEFF9; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data systems and workflows</span>
+        <span style="font-size: 15px; line-height: 1.6">Past the early stage? We design and build custom data systems for growing organisations, shaped around your programmes, roles and workflows.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #2F4D9F">Explore the service <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background: #FFFFFF; border-top: 1px solid #E5E7EE; padding-top: 32px; padding-bottom: 32px">
+  <div class="shell" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <img src="images/52bbd9a37c2166bb5e61a6ecbb2c4c15.webp" alt="Goalkeep" style="height: 32px; width: auto; display: block; align-self: flex-start">
+      <p style="margin: 0; font-size: 15px; color: rgba(20,19,26,0.72); max-width: 44ch">Goalkeep helps organizations measure, communicate, and deepen their impact with confidence.</p>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: rgba(20,19,26,0.72)">© 2026 Goalkeep</p>
+  </div>
+</footer>
+
+</div>
+</template>
+<div id="dc-root"></div>
+<script>
+/* dc-lite: a tiny standalone renderer for the Goalkeep page templates.
+   Reads markup from <template id="dc-tpl">, fills {{bindings}}, handles <sc-if>, <sc-for>
+   and onClick / onMouseEnter handlers, and re-renders on setState. No dependencies. */
+(function () {
+  var RE = /\{\{([^}]+)\}\}/g;
+  function lookup(scopes, path) {
+    path = path.trim();
+    var parts = path.split('.');
+    var obj;
+    for (var i = scopes.length - 1; i >= 0; i--) {
+      if (scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i], parts[0])) { obj = scopes[i]; break; }
+    }
+    if (!obj) return undefined;
+    var v = obj;
+    for (var k = 0; k < parts.length; k++) { if (v == null) return undefined; v = v[parts[k]]; }
+    return v;
+  }
+  function interp(str, scopes) {
+    return str.replace(RE, function (m, p) { var v = lookup(scopes, p); return v == null ? '' : String(v); });
+  }
+  function exprOf(attr) { var m = /\{\{([^}]+)\}\}/.exec(attr || ''); return m ? m[1] : ''; }
+
+  function compileNodes(nodes, updaters) {
+    for (var i = 0; i < nodes.length; i++) compileNode(nodes[i], updaters);
+  }
+  function compileNode(node, updaters) {
+    if (node.nodeType === 3) {
+      if (node.nodeValue.indexOf('{{') !== -1) {
+        var tpl = node.nodeValue;
+        updaters.push(function (scopes) { var t = interp(tpl, scopes); if (node.nodeValue !== t) node.nodeValue = t; });
+      }
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    var tag = node.tagName.toLowerCase();
+    if (tag === 'sc-if' || tag === 'sc-for') { compileBlock(node, tag, updaters); return; }
+    var attrs = Array.prototype.slice.call(node.attributes);
+    attrs.forEach(function (a) {
+      var name = a.name, val = a.value;
+      if (name.indexOf('hint-placeholder') === 0) { node.removeAttribute(name); return; }
+      if (val.indexOf('{{') === -1) return;
+      if (/^on[a-z]+$/i.test(name)) {
+        node.removeAttribute(name);
+        var evt = name.slice(2).toLowerCase();
+        var path = exprOf(val);
+        var current = { scopes: [] };
+        node.addEventListener(evt, function (e) { var fn = lookup(current.scopes, path); if (typeof fn === 'function') fn(e); });
+        updaters.push(function (scopes) { current.scopes = scopes; });
+        return;
+      }
+      node.setAttribute(name, '');
+      updaters.push(function (scopes) { var t = interp(val, scopes); if (node.getAttribute(name) !== t) node.setAttribute(name, t); });
+    });
+    compileNodes(Array.prototype.slice.call(node.childNodes), updaters);
+  }
+  function compileBlock(el, tag, updaters) {
+    var anchor = document.createComment(tag);
+    el.parentNode.replaceChild(anchor, el);
+    var frag = document.createDocumentFragment();
+    while (el.firstChild) frag.appendChild(el.firstChild);
+    function instantiate() {
+      var clone = frag.cloneNode(true);
+      var nodes = Array.prototype.slice.call(clone.childNodes);
+      var ups = [];
+      var holder = document.createElement('div');
+      holder.appendChild(clone);
+      compileNodes(Array.prototype.slice.call(holder.childNodes), ups);
+      nodes = Array.prototype.slice.call(holder.childNodes);
+      return { nodes: nodes, ups: ups };
+    }
+    if (tag === 'sc-if') {
+      var expr = exprOf(el.getAttribute('value'));
+      var inst = null;
+      updaters.push(function (scopes) {
+        var on = !!lookup(scopes, expr);
+        if (on && !inst) {
+          inst = instantiate();
+          inst.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+        } else if (!on && inst) {
+          inst.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+          inst = null;
+        }
+        if (inst) inst.ups.forEach(function (u) { u(scopes); });
+      });
+    } else {
+      var listExpr = exprOf(el.getAttribute('list'));
+      var as = el.getAttribute('as') || 'item';
+      var items = [];
+      updaters.push(function (scopes) {
+        var list = lookup(scopes, listExpr) || [];
+        if (list.length !== items.length) {
+          items.forEach(function (it) { it.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
+          items = [];
+          for (var i = 0; i < list.length; i++) {
+            var it = instantiate();
+            it.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+            items.push(it);
+          }
+        }
+        items.forEach(function (it, i) {
+          var s = {}; s[as] = list[i];
+          var sc = scopes.concat([s]);
+          it.ups.forEach(function (u) { u(sc); });
+        });
+      });
+    }
+  }
+
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (patch) {
+    this.state = Object.assign({}, this.state || {}, typeof patch === 'function' ? patch(this.state) : patch);
+    if (this.__render) this.__render();
+  };
+  DCLogic.prototype.renderVals = function () { return {}; };
+  window.DCLogic = DCLogic;
+
+  window.DCMount = function (Component, props) {
+    var tpl = document.getElementById('dc-tpl');
+    var root = document.getElementById('dc-root');
+    root.appendChild(tpl.content.cloneNode(true));
+    var updaters = [];
+    compileNodes(Array.prototype.slice.call(root.childNodes), updaters);
+    var comp = new Component(props || {});
+    if (!comp.state) comp.state = {};
+    var queued = false;
+    function render() {
+      queued = false;
+      var vals = comp.renderVals() || {};
+      updaters.forEach(function (u) { u([vals]); });
+    }
+    comp.__render = function () { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(render); } };
+    render();
+    if (comp.componentDidMount) comp.componentDidMount();
+    window.addEventListener('pagehide', function () { if (comp.componentWillUnmount) comp.componentWillUnmount(); });
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { formOpen: false, submitted: false, slide: 0, step: 0, lit: 0 };
+  }
+  componentDidMount() {
+    this._timer = setInterval(() => {
+      const cur = (this.state && this.state.slide) || 0;
+      this.setState({ slide: (cur + 1) % 4 });
+    }, 5000);
+    this._stepTimer = setInterval(() => {
+      const cur = (this.state && this.state.step) || 0;
+      this.setState({ step: (cur + 1) % 4 });
+    }, 8000);
+    this._litTimer = setInterval(() => {
+      const cur = (this.state && this.state.lit) || 0;
+      this.setState({ lit: (cur + 1) % 10 });
+    }, 1900);
+  }
+  componentWillUnmount() {
+    if (this._timer) clearInterval(this._timer);
+    if (this._stepTimer) clearInterval(this._stepTimer);
+    if (this._litTimer) clearInterval(this._litTimer);
+  }
+  goSlide(n) {
+    if (this._timer) clearInterval(this._timer);
+    this._timer = null;
+    this.setState({ slide: (n + 4) % 4 });
+  }
+  goLit(n) {
+    if (this._litTimer) clearInterval(this._litTimer);
+    this._litTimer = null;
+    if (((this.state && this.state.lit) || 0) !== n) this.setState({ lit: n });
+  }
+  goStep(n) {
+    if (this._stepTimer) clearInterval(this._stepTimer);
+    this._stepTimer = null;
+    if (((this.state && this.state.step) || 0) !== n) this.setState({ step: n });
+  }
+  renderVals() {
+    const st = this.state || {};
+    const slide = st.slide || 0;
+    const step = st.step || 0;
+    const dots = [0, 1, 2, 3].map((n) => ({
+      label: 'Show photo ' + (n + 1) + ' of 4',
+      current: n === slide ? 'true' : 'false',
+      w: n === slide ? '24px' : '10px',
+      bg: n === slide ? '#EAC452' : 'rgba(255,255,255,0.5)',
+      go: () => this.goSlide(n)
+    }));
+    const names = ['Understand', 'Design', 'Build', 'Adopt'];
+    const base = ['#EAC452', '#3F63C8', '#2F9C8F', '#E07A5F'];
+    const tints = ['#FBF3DF', '#EAEFF9', '#E7F2F0', '#FBEEE9'];
+    const lift = ['#F7DB63', '#8FA8E8', '#5FC9BA', '#F0A58C'];
+    const out = {};
+    for (let k = 0; k < 4; k++) {
+      const on = k === step;
+      const done = k < step;
+      out['t' + k] = {
+        sel: on ? 'true' : 'false',
+        bg: on ? tints[k] : '#FFFFFF',
+        border: on ? base[k] : '#E5E7EE',
+        shadow: on ? '0 10px 24px rgba(20,19,26,0.08)' : 'none',
+        numBg: on || done ? base[k] : '#F1F4FA',
+        numFg: on || done ? '#FFFFFF' : 'rgba(20,19,26,0.6)'
+      };
+      out['st' + k] = { pick: () => this.goStep(k) };
+      out['show' + k] = on;
+    }
+    const lit = st.lit || 0;
+    const bTint = ['#FBF3DF', '#EAEFF9', '#E7F2F0', '#FBEEE9', '#EAEFF9', '#FBF3DF', '#FBEEE9', '#E7F2F0', '#FBF3DF', '#EAEFF9'];
+    const bInk = ['#7D5E0C', '#2F4D9F', '#176059', '#9C452A', '#2F4D9F', '#7D5E0C', '#9C452A', '#176059', '#7D5E0C', '#2F4D9F'];
+    const bBase = ['#EAC452', '#3F63C8', '#2F9C8F', '#E07A5F', '#3F63C8', '#EAC452', '#E07A5F', '#2F9C8F', '#EAC452', '#3F63C8'];
+    const bShadow = ['rgba(125,94,12,0.24)', 'rgba(47,77,159,0.24)', 'rgba(23,96,89,0.24)', 'rgba(156,69,42,0.24)', 'rgba(47,77,159,0.24)', 'rgba(125,94,12,0.24)', 'rgba(156,69,42,0.24)', 'rgba(23,96,89,0.24)', 'rgba(125,94,12,0.24)', 'rgba(47,77,159,0.24)'];
+    for (let k = 0; k < 10; k++) {
+      const on = k === lit;
+      out['b' + k] = {
+        pressed: on ? 'true' : 'false',
+        bg: on ? bTint[k] : '#FFFFFF',
+        fg: on ? '#14131A' : 'rgba(20,19,26,0.62)',
+        border: on ? bBase[k] : '#E5E7EE',
+        shadow: on ? '0 14px 28px ' + bShadow[k] : '0 2px 6px rgba(20,19,26,0.05)',
+        scale: on ? '1.06' : '1',
+        weight: on ? '700' : '400',
+        pick: () => this.goLit(k)
+      };
+    }
+    const formOpen = !!st.formOpen;
+    const submitted = !!st.submitted;
+    return Object.assign(out, {
+      slideX: (-slide * 100) + '%',
+      dots: dots,
+      prevSlide: () => this.goSlide(slide - 1),
+      nextSlide: () => this.goSlide(slide + 1),
+      activeName: names[step],
+      progressW: ((step + 1) * 25) + '%',
+      progressC: base[step],
+      activeNum: step + 1,
+      formOpen: formOpen,
+      formExpanded: formOpen ? 'true' : 'false',
+      submitted: submitted,
+      notSubmitted: !submitted,
+      openForm: () => { if (!(this.state && this.state.formOpen)) this.setState({ formOpen: true, submitted: false }); },
+      closeForm: () => this.setState({ formOpen: false, submitted: false }),
+      submitForm: () => this.setState({ submitted: true })
+    });
+  }
+}
+DCMount(Component, {});
+</script>
+<script>
+/* Scroll-linked assembly of the Goalkeep mark in the closing banner. Each piece owns an
+   overlapping slice of the scroll so they land one at a time. Reduced motion: drawn finished. */
+(function () {
+  var P = [[0.65,-150.00,-120],[110.88,-40.36,140],[105.21,123.19,-95],[-73.34,109.75,128],[-138.46,-46.33,-145],[0.00,175.00,105]], SCALE = 0.53191, SETTLE = 0.6;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var queued = false;
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function update() {
+    queued = false;
+    var mark = document.querySelector('#contact .gk-mark');
+    if (!mark) return;
+    var kids = mark.children, i;
+    if (reduce && reduce.matches) {
+      for (i = 0; i < kids.length; i++) { kids[i].style.transform = ''; kids[i].style.opacity = ''; }
+      return;
+    }
+    var r = mark.getBoundingClientRect(), vh = window.innerHeight;
+    if (!r.height) return;
+    var endTop = SETTLE * vh - r.height / 2;
+    var p = clamp((vh - r.top) / (vh - endTop));
+    for (i = 0; i < kids.length && i < P.length; i++) {
+      var t = clamp((p - i * 0.088) / 0.38), k = 1 - t, s = P[i];
+      var o = t < 0.22 ? t / 0.22 * 0.75 : t < 0.55 ? 0.75 + (t - 0.22) / 0.33 * 0.25 : 1;
+      kids[i].style.transform = 'translate(' + (s[0] * SCALE * k).toFixed(2) + 'px,' + (s[1] * SCALE * k).toFixed(2) + 'px) rotate(' + (s[2] * k).toFixed(2) + 'deg)';
+      kids[i].style.opacity = o.toFixed(3);
+    }
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  if (reduce && reduce.addEventListener) reduce.addEventListener('change', queue);
+  addEventListener('load', queue);
+  queue();
+})();
+</script>
+</body>
+</html>

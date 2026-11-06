@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboards and reporting | Goalkeep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap">
+<style>
+body{margin:0;background:#FCFCFD}
+a{color:#2F4D9F}a:hover{color:#1E3266}
+.gk *{box-sizing:border-box}
+.gk em{font-style:italic;font-weight:800}
+.shell{max-width:1320px;margin:0 auto;padding-left:64px;padding-right:64px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#2F4D9F;margin:0 0 16px}
+.eyebrow::before{content:"";width:24px;height:2px;background:currentColor;display:block}
+.on-navy .eyebrow{color:#EAC452}
+.eyebrow.gold-ink{color:#7D5E0C}
+.h2{font-size:42px;font-weight:400;line-height:1.16;letter-spacing:-0.02em;margin:0;text-wrap:balance;max-width:24ch}
+.h3{font-size:32px;font-weight:400;line-height:1.2;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:700;padding:11px 20px;border-radius:4px;text-decoration:none;border:1px solid transparent;min-height:44px;cursor:pointer;transition:background-color 240ms cubic-bezier(0.22,1,0.36,1),border-color 240ms,color 240ms}
+.btn svg{transition:transform 240ms cubic-bezier(0.22,1,0.36,1)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-accent{background:#EAC452;color:#1E3266}.btn-accent:hover{background:#CFA72F;color:#1E3266}
+.on-navy .btn-accent:hover{background:#FFFFFF}
+.btn-sec-navy{background:transparent;color:#FFFFFF;border-color:rgba(255,255,255,0.6)}.btn-sec-navy:hover{color:#FFFFFF;border-color:#FFFFFF}
+.btn-primary{background:#2F4A92;color:#FFFFFF}.btn-primary:hover{background:#1E3266;color:#FFFFFF}
+.tlink{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:#2F4D9F;text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px;transition:gap 140ms}
+.tlink:hover{gap:12px;color:#1E3266}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.86);text-decoration:none;font-size:15px;font-weight:600;padding:12px 0;min-height:44px}
+.nav-link:hover,.nav-link.is-active{color:#FFFFFF}
+.nav-link.is-active{box-shadow:inset 0 -2px 0 #EAC452}
+.dd{display:none;position:absolute;top:100%;left:-24px;width:400px;background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 16px 40px rgba(20,19,26,0.18);padding:8px;z-index:30}
+.nav-item:hover .dd,.nav-item:focus-within .dd{display:block}
+.dd a{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:8px;text-decoration:none;color:#14131A}
+.dd a:hover{background:#F1F4FA;color:#14131A}
+.dd .sw{width:10px;height:10px;border-radius:2px;margin-top:6px;flex:none}
+.dd .t{font-size:15px;font-weight:700;display:block}
+.dd .d{font-size:13px;color:rgba(20,19,26,0.72);display:block;margin-top:2px;line-height:1.45}
+.surface{background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 1px 2px rgba(20,19,26,0.06)}
+.lift{transition:transform 240ms cubic-bezier(0.22,1,0.36,1),box-shadow 240ms,border-color 240ms}
+.lift:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(20,19,26,0.12);border-color:#D3D7E2}
+.marker{background:linear-gradient(100deg,#F7DB63 0%,#FCF0A5 5%,#FCF0A5 95%,#F7DB63 100%);padding:0 5px;margin:0 -2px;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:2px}
+.note{display:flex;flex-direction:column;gap:14px;text-align:left;width:100%;padding:22px 22px 20px;font-family:inherit;font-size:16px;line-height:1.5;color:#14131A;cursor:pointer;border:none;transition:transform 320ms cubic-bezier(0.22,1,0.36,1),box-shadow 320ms,background-color 320ms}
+.note:hover{box-shadow:0 18px 36px rgba(125,94,12,0.22) !important}
+.note:focus-visible{outline:3px solid #3F63C8;outline-offset:3px}
+.deliv{display:flex;align-items:center;gap:16px;width:100%;text-align:left;font-family:inherit;font-size:17px;line-height:1.45;color:#14131A;padding:16px 18px;border:none;border-radius:10px;cursor:pointer;transition:background-color 240ms}
+.deliv:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign{position:relative;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;padding:28px 30px 30px;background:transparent;border:none;font-family:inherit;font-size:19px;line-height:1.5;color:#14131A;cursor:pointer;border-radius:12px;transition:background-color 240ms}
+.sign:hover{background:#FBF3DF}
+.sign:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign .loop{position:absolute;inset:-6px -10px;width:calc(100% + 20px);height:calc(100% + 12px);pointer-events:none;overflow:visible}
+.field{font-family:inherit;font-size:17px;font-weight:400;padding:11px 14px;border:1px solid #D3D7E2;border-radius:8px;color:#14131A;background:#FFFFFF;min-height:44px}
+.field:focus{outline:3px solid rgba(63,99,200,0.35);border-color:#3F63C8}
+.slide-in{animation:slidein 420ms cubic-bezier(0.22,1,0.36,1)}
+@keyframes slidein{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide-in{animation:none}}
+.aud-switch{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:#EAEFF9;border-radius:12px;padding:4px;width:min(760px,100%)}
+.aud-thumb{position:absolute;top:4px;left:4px;width:calc(50% - 4px);height:calc(100% - 8px);background:#FFFFFF;border-radius:9px;box-shadow:0 2px 8px rgba(47,77,159,0.18),0 0 0 2px #3F63C8;transition:transform 360ms cubic-bezier(0.22,1,0.36,1)}
+.aud-opt{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 16px 8px 8px;min-height:56px;border:none;background:transparent;font-family:inherit;cursor:pointer;border-radius:9px;transition:color 240ms}
+.aud-opt:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.aud-ico{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;transition:background-color 240ms,color 240ms}
+@media (max-width:760px){.aud-switch{min-width:0;width:100%}.aud-bar .btn{display:none}}
+.fork{display:flex;flex-direction:column;align-items:stretch;text-align:left;width:100%;padding:28px;border-radius:16px;font-family:inherit;color:#14131A;cursor:pointer;transition:background-color 240ms,border-color 240ms,box-shadow 240ms,transform 240ms cubic-bezier(0.22,1,0.36,1)}
+.fork:hover{transform:translateY(-3px)}
+.fork:focus-visible,.aud-seg:focus-visible{outline:3px solid #3F63C8;outline-offset:3px}
+.aud-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:5px 10px;border-radius:4px;background:#FBEEE9;color:#9C452A}
+.aud-tag-navy{background:rgba(255,255,255,0.12);color:#FFFFFF}
+.ban-blue{background:#2F4D9F !important}
+.ban-teal{background:#237A70 !important}
+.ban-coral{background:#C8613F !important}
+.ban-gold{background:#CFA72F !important}
+.logo-ink{display:none !important}
+.ban-teal .hero-lead,.ban-blue .hero-lead,.ban-gold .hero-lead,.ban-coral .hero-lead{color:#FFFFFF !important}
+.ban-ink{color:#14131A !important}
+.ban-ink .logo-white{display:none !important}
+.ban-ink .logo-ink{display:block !important}
+.ban-ink .nav-link{color:rgba(20,19,26,0.8)}
+.ban-ink .nav-link:hover,.ban-ink .nav-link.is-active{color:#14131A}
+.ban-ink .nav-link.is-active{box-shadow:inset 0 -2px 0 #14131A}
+.ban-ink .hero-lead{color:#14131A !important}
+.ban-ink .btn-sec-navy{color:#14131A;border-color:rgba(20,19,26,0.6)}
+.ban-ink .btn-sec-navy:hover{color:#14131A;border-color:#14131A}
+.ban-ink button[aria-label$="photo"]{color:#14131A !important;border-color:rgba(20,19,26,0.45) !important}
+.ban-ink .seg-wrap{border-color:rgba(20,19,26,0.4) !important}
+.ban-gold .btn-accent{background:#2F4A92;color:#FFFFFF}
+.ban-gold .btn-accent:hover{background:#1E3266;color:#FFFFFF}
+.ban-coral .btn-accent{background:#FFFFFF;color:#9C452A}
+.ban-coral .btn-accent:hover{background:#FBEEE9;color:#9C452A}
+.alt .alt-img .photo{object-position:right center}.alt-rev .alt-img .photo{object-position:left center}
+.photo{width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;position:relative}
+@media (max-width:1439px){.gutter-arc{display:none}}
+@media (max-width:1100px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr)) !important}.split,.alt,.alt-rev{grid-template-columns:minmax(0,1fr) !important}.alt-rev .alt-img{order:-1}.hero-split{grid-template-columns:minmax(0,1fr) !important}}
+.tile svg{display:block}
+@media (max-width:760px){.br-d{display:none}.shell{padding-left:16px;padding-right:16px}.h2{font-size:28px}.h3{font-size:26px}.h1{font-size:36px !important}.grid3,.grid2,.notes{grid-template-columns:minmax(0,1fr) !important}.navlinks{display:none !important}.band{padding-top:48px !important;padding-bottom:48px !important}.arc{display:none}.hero-img{margin:0 -16px}.case-split{grid-template-columns:minmax(0,1fr) !important}.note{transform:none !important;margin-top:0 !important}.deliv-split{grid-template-columns:minmax(0,1fr) !important}.ruler-wrap{overflow-x:auto}}
+</style>
+<style>
+/* Goalkeep mark: its six pieces fly in and assemble as the closing banner scrolls into view (same geometry and timing as the homepage close). */
+.gk-mark{position:absolute;left:50%;top:50%;width:150px;height:227.7px;margin:-113.8px 0 0 -75.0px;pointer-events:none;transition:opacity .3s ease,visibility .3s}
+.gk-mark>div{position:absolute;inset:0;transform-origin:50% 32.94%}
+.gk-mark svg{display:block;width:100%;height:100%}
+#contact:has(.slide-in) .gk-mark{opacity:0;visibility:hidden}
+@media (max-width:1100px){.gk-mark{position:relative;left:auto;top:auto;margin:0 auto;width:120px;height:182.1px}#contact:has(.slide-in) .gk-mark{display:none}}
+</style>
+</head>
+<body>
+<template id="dc-tpl">
+
+<div class="gk" style="overflow-x: clip; font-family: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; color: #14131A; background: #FCFCFD; font-size: 17px; line-height: 1.65">
+
+<!-- ============ NAV ============ -->
+<header class="on-navy {{bannerCls}}" style="background: #2F4A92; position: relative; z-index: 20">
+  <div class="shell" style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-top: 14px; padding-bottom: 14px">
+    <a href="https://goalkeep.org/" aria-label="Goalkeep home" style="display: inline-flex; align-items: center">
+      <img class="logo-white" src="images/d6f20c273a7e4a63cb92d0ebfc07523e.webp" alt="Goalkeep" style="height: 36px; width: auto; display: block"><img class="logo-ink" src="images/52bbd9a37c2166bb5e61a6ecbb2c4c15.webp" alt="Goalkeep" style="height: 36px; width: auto">
+    </a>
+    <nav aria-label="Main" class="navlinks" style="display: flex; align-items: center; gap: 32px">
+      <a class="nav-link" href="#">About us</a>
+      <div class="nav-item">
+        <a class="nav-link is-active" href="#" aria-haspopup="true">What we do
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="impact-and-measurement-strategy.html"><span><span class="t">Impact and measurement strategy</span><span class="d">Turn your Theory of Change into a usable framework</span></span></a>
+          <a href="data-systems-and-workflows.html"><span><span class="t">Data systems and workflows</span><span class="d">An integrated system that scales with you</span></span></a>
+          <a href="dashboards-and-reporting.html" style="background: #FBEEE9"><span><span class="t">Dashboards and reporting</span><span class="d">Use your data to make better decisions</span></span></a>
+          <a href="data-adoption-and-capacity-building.html"><span><span class="t">Data adoption and capacity-building</span><span class="d">Build a data-confident workforce</span></span></a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="#" aria-haspopup="true">Programs
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="kickstarter.html"><span><span class="t">Kickstarter Program</span><span class="d">A data backbone for early-stage nonprofits</span></span></a>
+          <a href="data-literacy-program.html"><span><span class="t">Data Literacy Program</span><span class="d">Scale data best practices within your teams</span></span></a>
+        </div>
+      </div>
+      <a class="nav-link" href="#">Case studies</a>
+      <a class="nav-link" href="#">Resources</a>
+    </nav>
+    <a class="btn" href="#contact" style="background: #FFFFFF; color: #2F4A92">Partner with us</a>
+  </div>
+</header>
+
+<!-- ============ HERO (copy + photo card) ============ -->
+<section class="on-navy {{bannerCls}}" style="background: #2F4A92; color: #FFFFFF; position: relative; overflow: hidden">
+  <div class="shell hero-split" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,520px); gap: 40px; align-items: center; padding-top: 44px; padding-bottom: 60px">
+    <div>
+      <h1 class="h1" style="font-size: 52px; font-weight: 500; line-height: 1.08; letter-spacing: -0.02em; margin: 0">Dashboards that enable<br class="br-d"> better decisions, <em>not just<br class="br-d"> display data.</em></h1>
+      <p class="hero-lead" style="font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch; margin: 20px 0 0">We design dashboards and reporting views for both nonprofits and funders. We start with what questions you want your data to answer for you, and then build out a system that effectively showcases that.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px">
+        <a class="btn btn-accent" href="#contact" onClick="{{openForm}}">Work with us <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+        <a class="btn btn-sec-navy" href="#case">See a case study</a>
+      </div>
+    </div>
+    <div>
+      <div role="region" aria-roledescription="carousel" aria-label="Photos from Goalkeep engagements" style="position: relative; border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 18px 40px rgba(20,19,26,0.28)">
+        <div style="display: flex; height: 100%; transform: translateX({{slideX}}); transition: transform 700ms cubic-bezier(0.22,1,0.36,1)">
+          <img src="images/6616bb19d578b4407abaff9cbb89cc4b.webp" alt="A participant presenting during a data literacy session" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/d7e0a2f562f148853d7f839e7a34590d.webp" alt="Goalkeep with a partner team after a workshop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/a0ab5315386fbadd8443b0eaa8ffab2d.webp" alt="Affinity mapping on coloured boards during a Goalkeep design workshop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+          <img src="images/46fd758db6cd80183d9d4f676d744baa.webp" alt="Two partner team members working through data on a laptop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block">
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px">
+        <div style="display: flex; gap: 8px; align-items: center">
+          <sc-for list="{{dots}}" as="d" hint-placeholder-count="4">
+            <button type="button" aria-label="{{d.label}}" aria-current="{{d.current}}" onClick="{{d.go}}" style="width: 28px; height: 28px; border: none; background: transparent; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center"><span style="display: block; height: 4px; border-radius: 2px; width: {{d.w}}; background: {{d.bg}}; transition: width 240ms, background-color 240ms"></span></button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <button type="button" aria-label="Previous photo" onClick="{{prevSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+          <button type="button" aria-label="Next photo" onClick="{{nextSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STICKY AUDIENCE SWITCH ============ -->
+<div style="position: sticky; top: 0; z-index: 25; background: rgba(255,255,255,0.97); border-bottom: 1px solid #E5E7EE; box-shadow: 0 8px 22px rgba(20,19,26,0.07)">
+  <div class="shell aud-bar" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 28px; padding-top: 12px; padding-bottom: 12px">
+    <div role="radiogroup" aria-label="Show this page for" class="aud-switch">
+      <span aria-hidden="true" class="aud-thumb" style="transform: translateX({{thumbX}})"></span>
+          <button type="button" class="aud-opt" role="radio" aria-checked="{{audNp.pressed}}" onClick="{{audNp.pick}}" style="color: {{barNp.fg}}">
+            <span aria-hidden="true" class="aud-ico" style="background: {{barNp.iconBg}}; color: {{barNp.iconFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V8l7-5 7 5v13"></path><path d="M9 21v-6h6v6"></path></svg></span>
+            <span style="display: flex; flex-direction: column; text-align: left; line-height: 1.25"><span style="font-size: 16px; font-weight: 800">Nonprofits</span><span style="font-size: 13px; font-weight: 600; opacity: 0.8">running programmes</span></span>
+          </button>
+          <button type="button" class="aud-opt" role="radio" aria-checked="{{audFn.pressed}}" onClick="{{audFn.pick}}" style="color: {{barFn.fg}}">
+            <span aria-hidden="true" class="aud-ico" style="background: {{barFn.iconBg}}; color: {{barFn.iconFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.6 0 1.3-1.3 2.2-3 2.2-1.4 0-2.5-.6-3.1-1.6"></path><path d="M12 6v2M12 16v2"></path></svg></span>
+            <span style="display: flex; flex-direction: column; text-align: left; line-height: 1.25"><span style="font-size: 16px; font-weight: 800">Funders</span><span style="font-size: 13px; font-weight: 600; opacity: 0.8">supporting a portfolio</span></span>
+          </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SIX SIGNS: sticky-note self-check ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 64px; position: relative; z-index: 2">
+  <svg class="arc gutter-arc" aria-hidden="true" width="286" height="286" viewBox="0 0 286 286" style="position: absolute; left: -163px; bottom: -143px; pointer-events: none">
+    <circle cx="143" cy="143" r="126" fill="none" stroke="#E07A5F" stroke-width="34"></circle>
+  </svg>
+  <div class="shell split" style="position: relative; display: grid; grid-template-columns: minmax(0,5fr) minmax(0,7fr); gap: 48px; align-items: center">
+    <div>
+      <p style="margin: 0 0 14px"><span class="aud-tag"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>{{audTag}}</span></p><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><h2 class="h2">Six signs your dashboards <em>might not be doing their job.</em></h2></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><h2 class="h2">Six signs your portfolio reporting <em>needs strengthening.</em></h2></sc-if>
+      <p style="margin: 16px 0 0; max-width: 40ch">Tap the ones that seem relatable to you.</p>
+      <div style="height: 64px; display: flex; align-items: flex-end; visibility: {{ctaVis}}">
+        <a class="btn btn-primary" href="#contact" onClick="{{openForm}}">Talk to us about these <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </div>
+      <div style="margin-top: 40px">
+        <div>
+          <p style="margin: 0; font-size: 19px; font-weight: 700; line-height: 1.35; max-width: 24ch">{{verdictTitle}}</p>
+          <p style="margin: 6px 0 0; font-size: 15px; line-height: 1.5; color: rgba(20,19,26,0.72); max-width: 30ch">{{verdictBody}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="notes" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 8px 0">
+      <button type="button" class="note" aria-pressed="{{s0.pressed}}" onClick="{{s0.toggle}}" style="background: {{s0.bg}}; border-radius: {{s0.radius}}; transform: {{s0.transform}}; margin-top: {{s0.offset}}; box-shadow: {{s0.shadow}}; border: 1.5px solid {{s0.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s0.iconBg}}; color: {{s0.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7c2 0 3.8.7 5.2 1.6"></path><path d="M22 12s-3.5 7-10 7c-2 0-3.8-.7-5.2-1.6"></path><path d="m3 3 18 18"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"></path></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s0.weight}}">{{s0.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s1.pressed}}" onClick="{{s1.toggle}}" style="background: {{s1.bg}}; border-radius: {{s1.radius}}; transform: {{s1.transform}}; margin-top: {{s1.offset}}; box-shadow: {{s1.shadow}}; border: 1.5px solid {{s1.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s1.iconBg}}; color: {{s1.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21a7 7 0 0 1 14 0"></path><path d="M17 4a4 4 0 0 1 0 8"></path><path d="M22 21a6 6 0 0 0-4-5.6"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 14.9C20.2 16.4 19.9 18.3 18.5 19.5c-1.4 1.1-3.4 1-4.6-.3L12 17.3l-1.9 1.9c-1.2 1.3-3.2 1.4-4.6.3-1.4-1.2-1.7-3.1-.9-4.6L6 13l-1.4-1.4C3.3 10.3 3.2 8.3 4.3 6.9c1.2-1.4 3.1-1.7 4.6-.9L10.3 7.4 12 5.7"></path><circle cx="16.5" cy="7.5" r="2.5"></circle></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s1.weight}}">{{s1.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s2.pressed}}" onClick="{{s2.toggle}}" style="background: {{s2.bg}}; border-radius: {{s2.radius}}; transform: {{s2.transform}}; margin-top: {{s2.offset}}; box-shadow: {{s2.shadow}}; border: 1.5px solid {{s2.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s2.iconBg}}; color: {{s2.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2"></path><path d="M10 22v-4h4v4"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s2.weight}}">{{s2.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s3.pressed}}" onClick="{{s3.toggle}}" style="background: {{s3.bg}}; border-radius: {{s3.radius}}; transform: {{s3.transform}}; margin-top: {{s3.offset}}; box-shadow: {{s3.shadow}}; border: 1.5px solid {{s3.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s3.iconBg}}; color: {{s3.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"></path></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s3.weight}}">{{s3.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s4.pressed}}" onClick="{{s4.toggle}}" style="background: {{s4.bg}}; border-radius: {{s4.radius}}; transform: {{s4.transform}}; margin-top: {{s4.offset}}; box-shadow: {{s4.shadow}}; border: 1.5px solid {{s4.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s4.iconBg}}; color: {{s4.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 0 1 0 10h-2"></path><path d="M8 12h2"></path><path d="M14 12h2"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s4.weight}}">{{s4.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s5.pressed}}" onClick="{{s5.toggle}}" style="background: {{s5.bg}}; border-radius: {{s5.radius}}; transform: {{s5.transform}}; margin-top: {{s5.offset}}; box-shadow: {{s5.shadow}}; border: 1.5px solid {{s5.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s5.iconBg}}; color: {{s5.iconFg}}; transition: background-color 320ms, color 320ms"><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 15-6v14L3 13z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg></sc-if><sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></sc-if></span>
+        </span>
+        <span style="font-weight: {{s5.weight}}">{{s5.text}}</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR APPROACH: alternating (light tint) ============ -->
+<section class="band" style="background: #FBEEE9; padding-top: 56px; padding-bottom: 56px; position: relative; z-index: 1">
+  <div class="shell">
+    <p class="eyebrow" style="color: #9C452A">our approach</p>
+    <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 24px">
+      <div class="alt" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div>
+          <h3 class="h3">We start with the questions, <em>not the charts.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">Many dashboards fail because they begin with whatever data happens to be available. We begin with what leadership, programme teams, MEL staff or funders need to understand, decide and do, and design every view around those questions.</p>
+        </div>
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/bd7d6d0349cff3dd797ec319912bbbf5.webp" alt="A Goalkeep team member talking through a framework in a working session">
+        </div>
+      </div>
+      <div class="alt alt-rev" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/277f6c1beb347d5810cdc7e70a59ad56.webp" alt="A dashboard open on a laptop during a working session">
+        </div>
+        <div>
+          <h3 class="h3">We fix the foundations <em>underneath the dashboard.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">A dashboard is only as trustworthy as the definitions, data sources and pipelines behind it. If the measurement framework or underlying data system is not reliable, we address those foundations as part of the engagement.</p>
+        </div>
+      </div>
+      <div class="alt" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div>
+          <h3 class="h3">We build for each role, <em>then help people use it.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">Every role gets the dashboard view they need, with useful filters and drill-downs, and recurring reports are automated or simplified. We teach you how to onboard the people who will use the dashboard in the future and set up data-review routines that connect insight to action.</p>
+        </div>
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/aba7e84d5587ede519db33fd05ffa819.webp" alt="A facilitator presenting a dashboard on screen to a partner team">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT YOU LEAVE WITH: illustrated grid ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 64px">
+  <div class="shell">
+    <p style="margin: 0 0 14px; text-align: center"><span class="aud-tag"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>{{audTag}}</span></p>
+    <h2 class="h2" style="margin: 0 auto; text-align: center; max-width: 28ch">What you leave with <em>at the end of our engagement.</em></h2>
+<sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}">
+    <div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 40px; row-gap: 40px; margin-top: 40px">
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: three dashboard views, each for a different role" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="40" y="62" width="92" height="76" rx="6" fill="#F7D9CE"></rect><rect x="40" y="62" width="92" height="12" rx="6" fill="#2F4A92"></rect><rect x="40" y="68" width="92" height="6" fill="#2F4A92"></rect><rect x="50" y="108" width="12" height="22" rx="2" fill="#E07A5F"></rect><rect x="68" y="96" width="12" height="34" rx="2" fill="#2F4A92"></rect><rect x="86" y="114" width="12" height="16" rx="2" fill="#F0A58C"></rect><rect x="104" y="88" width="12" height="42" rx="2" fill="#E07A5F"></rect><rect x="148" y="50" width="92" height="100" rx="6" fill="#F7D9CE"></rect><rect x="148" y="50" width="92" height="12" rx="6" fill="#2F4A92"></rect><rect x="148" y="56" width="92" height="6" fill="#2F4A92"></rect><circle cx="194" cy="104" r="26" fill="none" stroke="#F0A58C" stroke-width="12"></circle><path d="M 194 78 A 26 26 0 0 1 218 112" fill="none" stroke="#E07A5F" stroke-width="12"></path><rect x="256" y="62" width="92" height="76" rx="6" fill="#F7D9CE"></rect><rect x="256" y="62" width="92" height="12" rx="6" fill="#2F4A92"></rect><rect x="256" y="68" width="92" height="6" fill="#2F4A92"></rect><path d="M 266 124 L 286 104 L 304 112 L 336 86" fill="none" stroke="#E07A5F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="86" cy="160" r="10" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="86" cy="157.5" r="3.3000000000000003" fill="#2F4A92"></circle><path d="M 80.5 166.2 a 5.5 4.5 0 0 1 11.0 0" fill="#2F4A92"></path><circle cx="194" cy="168" r="10" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="194" cy="165.5" r="3.3000000000000003" fill="#2F4A92"></circle><path d="M 188.5 174.2 a 5.5 4.5 0 0 1 11.0 0" fill="#2F4A92"></path><circle cx="302" cy="160" r="10" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="302" cy="157.5" r="3.3000000000000003" fill="#2F4A92"></circle><path d="M 296.5 166.2 a 5.5 4.5 0 0 1 11.0 0" fill="#2F4A92"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Role-specific dashboards and reporting views</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a filter funnel with programme, location and time chips" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><path d="M 46 56 H 166 L 122 108 V 150 L 92 166 V 108 Z" fill="#FFFFFF" stroke="#2F4A92" stroke-width="4" stroke-linejoin="round"></path><circle cx="78" cy="74" r="6" fill="#3F63C8"></circle><circle cx="106" cy="70" r="6" fill="#2F4A92"></circle><circle cx="132" cy="76" r="6" fill="#8FA8E8"></circle><rect x="200" y="52" width="86" height="24" rx="4" fill="#3F63C8"></rect><text x="243.0" y="68" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">PROGRAMME</text><rect x="292" y="52" width="62" height="24" rx="4" fill="#D6E0F5"></rect><text x="323.0" y="68" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">STATE</text><rect x="200" y="84" width="70" height="24" rx="4" fill="#D6E0F5"></rect><text x="235.0" y="100" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">GROUP</text><rect x="276" y="84" width="78" height="24" rx="4" fill="#3F63C8"></rect><text x="315.0" y="100" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">QUARTER</text><rect x="200" y="116" width="64" height="24" rx="4" fill="#D6E0F5"></rect><text x="232.0" y="132" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">YEAR</text><rect x="270" y="116" width="84" height="24" rx="4" fill="#D6E0F5"></rect><text x="312.0" y="132" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">LOCATION</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Useful filters by programme, location, group or time period</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a calendar and a report refreshing automatically" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="60" y="54" width="110" height="104" rx="8" fill="#F6E4B0"></rect><rect x="60" y="54" width="110" height="24" rx="8" fill="#2F4A92"></rect><rect x="60" y="68" width="110" height="10" fill="#2F4A92"></rect><rect x="72" y="88" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="96" y="88" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="120" y="88" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="144" y="88" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="72" y="110" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="96" y="110" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="120" y="110" width="16" height="14" rx="3" fill="#EAC452"></rect><rect x="144" y="110" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="72" y="132" width="16" height="14" rx="3" fill="#EAC452"></rect><rect x="96" y="132" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="120" y="132" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="144" y="132" width="16" height="14" rx="3" fill="#FBF3DF"></rect><rect x="214" y="58" width="96" height="112" rx="6" fill="#F6E4B0"></rect><rect x="228" y="78" width="60" height="6" rx="3" fill="#F7DB63"></rect><rect x="228" y="92" width="48" height="6" rx="3" fill="#F7DB63"></rect><rect x="228" y="106" width="66" height="6" rx="3" fill="#F7DB63"></rect><rect x="228" y="124" width="12" height="30" rx="2" fill="#EAC452"></rect><rect x="246" y="134" width="12" height="20" rx="2" fill="#2F4A92"></rect><rect x="264" y="116" width="12" height="38" rx="2" fill="#EAC452"></rect><path d="M 316 96 a 28 28 0 1 1 -8 -20" fill="none" stroke="#2F4A92" stroke-width="5" stroke-linecap="round"></path><path d="M 300 70 l 10 6 l -4 11" fill="none" stroke="#2F4A92" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Automated or simplified recurring reports</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a facilitator walking a team through a dashboard" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="120" y="44" width="180" height="110" rx="6" fill="#D6E0F5"></rect><rect x="120" y="44" width="180" height="12" rx="6" fill="#2F4A92"></rect><rect x="120" y="50" width="180" height="6" fill="#2F4A92"></rect><path d="M 140 132 L 170 104 L 196 116 L 240 76" fill="none" stroke="#3F63C8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="240" cy="76" r="6" fill="#2F4A92"></circle><circle cx="78" cy="120" r="22" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="78" cy="114.5" r="7.260000000000001" fill="#2F4A92"></circle><path d="M 65.9 133.64 a 12.100000000000001 9.9 0 0 1 24.200000000000003 0" fill="#2F4A92"></path><path d="M 100 112 L 150 100" stroke="#2F4A92" stroke-width="4" stroke-linecap="round"></path><circle cx="160" cy="182" r="12" fill="#EAEFF9" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="160" cy="179.0" r="3.96" fill="#2F4A92"></circle><path d="M 153.4 189.44 a 6.6000000000000005 5.4 0 0 1 13.200000000000001 0" fill="#2F4A92"></path><circle cx="210" cy="182" r="12" fill="#EAEFF9" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="210" cy="179.0" r="3.96" fill="#2F4A92"></circle><path d="M 203.4 189.44 a 6.6000000000000005 5.4 0 0 1 13.200000000000001 0" fill="#2F4A92"></path><circle cx="260" cy="182" r="12" fill="#EAEFF9" stroke="#2F4A92" stroke-width="2.5"></circle><circle cx="260" cy="179.0" r="3.96" fill="#2F4A92"></circle><path d="M 253.4 189.44 a 6.6000000000000005 5.4 0 0 1 13.200000000000001 0" fill="#2F4A92"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Onboarding and training for the people who use the dashboard</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a review checklist leading to a target" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="62" y="44" width="130" height="128" rx="8" fill="#F6E4B0"></rect><rect x="98" y="36" width="58" height="16" rx="4" fill="#2F4A92"></rect><rect x="80" y="70" width="16" height="16" rx="3" fill="#EAC452" stroke="#2F4A92" stroke-width="2.5"></rect><rect x="106" y="75" width="66" height="6" rx="3" fill="#F7DB63"></rect><rect x="80" y="98" width="16" height="16" rx="3" fill="#EAC452" stroke="#2F4A92" stroke-width="2.5"></rect><rect x="106" y="103" width="52" height="6" rx="3" fill="#F7DB63"></rect><rect x="80" y="126" width="16" height="16" rx="3" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></rect><rect x="106" y="131" width="60" height="6" rx="3" fill="#F7DB63"></rect><path d="M 206 108 H 252" stroke="#2F4A92" stroke-width="4" stroke-linecap="round"></path><path d="M 246 98 l 10 10 l -10 10" fill="none" stroke="#2F4A92" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="298" cy="108" r="36" fill="#F6E4B0"></circle><circle cx="298" cy="108" r="24" fill="none" stroke="#EAC452" stroke-width="8"></circle><circle cx="298" cy="108" r="8" fill="#2F4A92"></circle></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Data-review templates and routines that connect insight to action</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a user guide with a support wrench" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="76" y="52" width="104" height="116" rx="6" fill="#F7D9CE"></rect><rect x="76" y="52" width="18" height="116" rx="4" fill="#E07A5F"></rect><rect x="106" y="74" width="60" height="6" rx="3" fill="#F0A58C"></rect><rect x="106" y="90" width="50" height="6" rx="3" fill="#F0A58C"></rect><rect x="106" y="106" width="56" height="6" rx="3" fill="#F0A58C"></rect><rect x="106" y="122" width="44" height="6" rx="3" fill="#F0A58C"></rect><rect x="106" y="138" width="52" height="6" rx="3" fill="#F0A58C"></rect><path d="M 254 76 a 22 22 0 0 0 -28 28 l -26 26 a 8 8 0 0 0 12 12 l 26 -26 a 22 22 0 0 0 28 -28 l -14 14 l -12 -2 l -2 -12 z" fill="#2F4A92"></path><circle cx="300" cy="150" r="16" fill="#E07A5F"></circle><path d="M 293 150 l 5 5 l 9 -10" fill="none" stroke="#F7D9CE" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Documentation, maintenance support and a structured handover</p>
+      </div>
+    </div>
+</sc-if>
+<sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}">
+    <div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 40px; row-gap: 40px; margin-top: 40px">
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: funding priorities linked to grantee outcomes" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="150" y="38" width="80" height="34" rx="6" fill="#2F4A92"></rect><text x="190" y="59" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#FFFFFF">PRIORITIES</text><path d="M 190 72 C 190 104, 70 104, 70 126" fill="none" stroke="#2F4A92" stroke-width="2.5"></path><path d="M 190 72 C 190 104, 150 104, 150 126" fill="none" stroke="#2F4A92" stroke-width="2.5"></path><path d="M 190 72 C 190 104, 230 104, 230 126" fill="none" stroke="#2F4A92" stroke-width="2.5"></path><path d="M 190 72 C 190 104, 310 104, 310 126" fill="none" stroke="#2F4A92" stroke-width="2.5"></path><rect x="40" y="126" width="60" height="34" rx="6" fill="#F7D9CE"></rect><circle cx="56" cy="143" r="6" fill="#E07A5F"></circle><rect x="66" y="140" width="24" height="6" rx="3" fill="#F0A58C"></rect><rect x="120" y="126" width="60" height="34" rx="6" fill="#F7D9CE"></rect><circle cx="136" cy="143" r="6" fill="#F0A58C"></circle><rect x="146" y="140" width="24" height="6" rx="3" fill="#F0A58C"></rect><rect x="200" y="126" width="60" height="34" rx="6" fill="#F7D9CE"></rect><circle cx="216" cy="143" r="6" fill="#E07A5F"></circle><rect x="226" y="140" width="24" height="6" rx="3" fill="#F0A58C"></rect><rect x="280" y="126" width="60" height="34" rx="6" fill="#F7D9CE"></rect><circle cx="296" cy="143" r="6" fill="#F0A58C"></circle><rect x="306" y="140" width="24" height="6" rx="3" fill="#F0A58C"></rect><text x="190" y="192" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">GRANTEE OUTCOMES</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A portfolio measurement framework linked to your funding priorities</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: three definition cards sharing one highlighted term" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><g transform="rotate(-6 100 110)"><rect x="50" y="70" width="100" height="80" rx="6" fill="#D6E0F5"></rect><rect x="62" y="84" width="46" height="8" rx="3" fill="#8FA8E8"></rect><rect x="62" y="100" width="76" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="62" y="112" width="64" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="62" y="124" width="70" height="5" rx="2.5" fill="#8FA8E8"></rect></g><g transform="rotate(0 190 96)"><rect x="140" y="56" width="100" height="80" rx="6" fill="#D6E0F5"></rect><rect x="152" y="70" width="46" height="8" rx="3" fill="#2F4A92"></rect><rect x="152" y="86" width="76" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="152" y="98" width="64" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="152" y="110" width="70" height="5" rx="2.5" fill="#8FA8E8"></rect></g><g transform="rotate(6 280 110)"><rect x="230" y="70" width="100" height="80" rx="6" fill="#D6E0F5"></rect><rect x="242" y="84" width="46" height="8" rx="3" fill="#8FA8E8"></rect><rect x="242" y="100" width="76" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="242" y="112" width="64" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="242" y="124" width="70" height="5" rx="2.5" fill="#8FA8E8"></rect></g><rect x="152" y="112" width="76" height="12" rx="2" fill="#3F63C8" opacity="0.45"></rect><text x="190" y="176" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">SHARED DEFINITION</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Clear indicator definitions that allow for evaluation between grantees</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a record of grants, milestones, support and outcomes over time" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="44" y="44" width="292" height="138" rx="8" fill="#F6E4B0"></rect><text x="58" y="68" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">GRANT</text><path d="M 128 64 H 320" stroke="#FBF3DF" stroke-width="2"></path><text x="58" y="98" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">MILESTONE</text><path d="M 128 94 H 320" stroke="#FBF3DF" stroke-width="2"></path><text x="58" y="128" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">SUPPORT</text><path d="M 128 124 H 320" stroke="#FBF3DF" stroke-width="2"></path><text x="58" y="158" text-anchor="start" font-family="Nunito Sans, sans-serif" font-size="9" font-weight="800" fill="#2F4A92">OUTCOME</text><path d="M 128 154 H 320" stroke="#FBF3DF" stroke-width="2"></path><circle cx="150" cy="64" r="7" fill="#EAC452"></circle><circle cx="230" cy="64" r="7" fill="#2F4A92"></circle><circle cx="186" cy="94" r="7" fill="#EAC452"></circle><circle cx="276" cy="94" r="7" fill="#EAC452"></circle><circle cx="210" cy="124" r="7" fill="#EAC452"></circle><circle cx="296" cy="124" r="7" fill="#2F4A92"></circle><circle cx="250" cy="154" r="7" fill="#EAC452"></circle><circle cx="306" cy="154" r="7" fill="#EAC452"></circle><path d="M 150 64 L 186 94 L 210 124 L 250 154" fill="none" stroke="#2F4A92" stroke-width="2" stroke-dasharray="3 5"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A structured record of grants, milestones, support provided and outcomes generated</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a portfolio chart zooming into individual grantees" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="40" y="46" width="150" height="118" rx="6" fill="#D6E0F5"></rect><rect x="40" y="46" width="150" height="12" rx="6" fill="#2F4A92"></rect><rect x="40" y="52" width="150" height="6" fill="#2F4A92"></rect><rect x="56" y="120" width="16" height="30" rx="2" fill="#8FA8E8"></rect><rect x="80" y="104" width="16" height="46" rx="2" fill="#8FA8E8"></rect><rect x="104" y="112" width="16" height="38" rx="2" fill="#8FA8E8"></rect><rect x="128" y="80" width="16" height="70" rx="2" fill="#3F63C8"></rect><rect x="152" y="98" width="16" height="52" rx="2" fill="#8FA8E8"></rect><path d="M 140 80 C 190 70, 200 60, 226 56" fill="none" stroke="#2F4A92" stroke-width="2.5" stroke-dasharray="4 5"></path><circle cx="140" cy="80" r="16" fill="none" stroke="#2F4A92" stroke-width="3"></circle><rect x="230" y="40" width="110" height="34" rx="6" fill="#D6E0F5"></rect><circle cx="248" cy="57" r="8" fill="#3F63C8"></circle><rect x="264" y="49" width="60" height="6" rx="3" fill="#2F4A92"></rect><rect x="264" y="61" width="40" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="230" y="82" width="110" height="34" rx="6" fill="#D6E0F5"></rect><circle cx="248" cy="99" r="8" fill="#8FA8E8"></circle><rect x="264" y="91" width="60" height="6" rx="3" fill="#2F4A92"></rect><rect x="264" y="103" width="40" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="230" y="124" width="110" height="34" rx="6" fill="#D6E0F5"></rect><circle cx="248" cy="141" r="8" fill="#8FA8E8"></circle><rect x="264" y="133" width="60" height="6" rx="3" fill="#2F4A92"></rect><rect x="264" y="145" width="40" height="5" rx="2.5" fill="#8FA8E8"></rect></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Portfolio dashboards that drill down from the aggregate to each grantee</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a balance weighing evidence for a decision" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><path d="M 190 46 V 170" stroke="#2F4A92" stroke-width="6" stroke-linecap="round"></path><path d="M 150 170 H 230" stroke="#2F4A92" stroke-width="6" stroke-linecap="round"></path><path d="M 100 76 L 280 64" stroke="#2F4A92" stroke-width="5" stroke-linecap="round"></path><circle cx="190" cy="70" r="8" fill="#EAC452"></circle><path d="M 100 76 L 74 126 M 100 76 L 126 126" stroke="#2F4A92" stroke-width="2"></path><path d="M 66 126 a 34 14 0 0 0 68 0 z" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></path><path d="M 280 64 L 254 114 M 280 64 L 306 114" stroke="#2F4A92" stroke-width="2"></path><path d="M 246 114 a 34 14 0 0 0 68 0 z" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2.5"></path><rect x="88" y="106" width="24" height="18" rx="3" fill="#EAC452"></rect><rect x="262" y="96" width="16" height="16" rx="3" fill="#F7DB63"></rect><rect x="282" y="100" width="16" height="12" rx="3" fill="#EAC452"></rect></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Decision-ready information for reviews, renewals and resource allocation</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a funder connected to rising grantee results" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><circle cx="86" cy="104" r="34" fill="#2F4A92"></circle><text x="86" y="108" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#FFFFFF">FUNDER</text><path d="M 120 104 C 160 104, 160 150.0, 192 150.0" fill="none" stroke="#E07A5F" stroke-width="3" stroke-linecap="round"></path><path d="M 120 104 C 160 104, 160 139.0, 232 139.0" fill="none" stroke="#E07A5F" stroke-width="3" stroke-linecap="round"></path><path d="M 120 104 C 160 104, 160 128.0, 272 128.0" fill="none" stroke="#E07A5F" stroke-width="3" stroke-linecap="round"></path><path d="M 120 104 C 160 104, 160 117.0, 312 117.0" fill="none" stroke="#E07A5F" stroke-width="3" stroke-linecap="round"></path><rect x="194" y="130" width="24" height="40" rx="3" fill="#F0A58C"></rect><rect x="234" y="108" width="24" height="62" rx="3" fill="#F0A58C"></rect><rect x="274" y="86" width="24" height="84" rx="3" fill="#F0A58C"></rect><rect x="314" y="64" width="24" height="106" rx="3" fill="#E07A5F"></rect><path d="M 196 170 H 340" stroke="#2F4A92" stroke-width="2.5" stroke-linecap="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A clearer account of how you have contributed to grantee progress</p>
+      </div>
+    </div>
+</sc-if>
+  </div>
+</section>
+
+<!-- ============ TIMELINE RANGE ============ -->
+<section class="band" style="background: #FBEEE9; padding-top: 56px; padding-bottom: 64px">
+  <div class="shell">
+    <p class="eyebrow" style="color: #9C452A">indicative duration</p>
+    <h2 class="h2">Typically <em>four to eight weeks.</em></h2>
+    <p style="margin: 16px 0 0; max-width: 60ch">For dashboard design, build and testing within a wider measurement or data-systems engagement, depending on how ready the underlying data is and the number of user groups and views. An agreed maintenance and adoption period follows.</p>
+    <div class="ruler-wrap" style="margin-top: 28px">
+      <div style="min-width: 640px; position: relative">
+        <div style="position: relative; padding-top: 72px; margin-bottom: 8px">
+          <div style="position: absolute; left: calc(3 / 10 * 100%); width: calc(5 / 10 * 100%); top: 0px; text-align: center">
+            <span style="display: inline-block; font-size: 15px; font-weight: 800; color: #9C452A">most engagements land here</span>
+            <svg aria-hidden="true" width="100%" height="26" viewBox="0 0 300 26" preserveAspectRatio="none" style="display: block; margin-top: 8px"><path d="M 4 22 Q 6 8 30 10 L 140 10 Q 150 10 150 2 Q 150 10 160 10 L 270 10 Q 294 8 296 22" fill="none" stroke="#14131A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path></svg>
+          </div>
+          <div style="position: relative; height: 44px; background: #FFFFFF; border-radius: 22px; box-shadow: inset 0 0 0 1px #E5E7EE">
+            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: calc(3 / 10 * 100%); background: #D3D7E2; border-radius: 22px 0 0 22px; opacity: 0.6"></div>
+            <div style="position: absolute; left: calc(3 / 10 * 100%); width: calc(5 / 10 * 100%); top: 0; bottom: 0; background: #E07A5F; border-radius: 6px"></div>
+            
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); margin-top: 12px"><span style="font-size: 13px; font-weight: 600; color: rgba(20,19,26,0.6); text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 1</span><span style="font-size: 13px; font-weight: 600; color: rgba(20,19,26,0.6); text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 2</span><span style="font-size: 13px; font-weight: 600; color: rgba(20,19,26,0.6); text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 3</span><span style="font-size: 13px; font-weight: 800; color: #9C452A; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 4</span><span style="font-size: 13px; font-weight: 800; color: #9C452A; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 5</span><span style="font-size: 13px; font-weight: 800; color: #9C452A; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 6</span><span style="font-size: 13px; font-weight: 800; color: #9C452A; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 7</span><span style="font-size: 13px; font-weight: 800; color: #9C452A; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 8</span><span style="font-size: 13px; font-weight: 600; color: rgba(20,19,26,0.6); text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 9</span><span style="font-size: 13px; font-weight: 600; color: rgba(20,19,26,0.6); text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk 10</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDY ============ -->
+<section id="case" class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 56px">
+  <div class="shell">
+    <p style="margin: 0 0 18px"><span class="aud-tag"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>{{audTag}}</span></p>
+<sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}">
+    <article class="surface lift case-split" style="overflow: hidden; display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr)">
+      <div role="img" aria-label="Photo placeholder" style="min-height: 380px; height: 100%; background: #FBEEE9; display: flex; align-items: flex-end; padding: 20px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #9C452A">photo awaiting approval</span></div>
+      <div style="padding: 40px; display: flex; flex-direction: column">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBF3DF; color: #7D5E0C">Education</span><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBEEE9; color: #9C452A">Case study in progress</span></div>
+        <h3 style="margin: 22px 0 0; font-size: 36px; font-weight: 700; line-height: 1.16; letter-spacing: -0.012em">Vanavil Trust</h3>
+        <p style="margin: 14px 0 0; font-size: 19px; line-height: 1.6">Using timely information to identify and re-engage children who had dropped out.</p>
+        <p style="margin: auto 0 0; padding-top: 28px; font-size: 15px; font-weight: 700; color: #9C452A">Full case study coming soon</p>
+      </div>
+    </article>
+</sc-if>
+<sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}">
+    <article class="surface lift case-split" style="overflow: hidden; display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr)">
+      <div role="img" aria-label="Photo placeholder" style="min-height: 380px; height: 100%; background: #FBEEE9; display: flex; align-items: flex-end; padding: 20px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #9C452A">photo awaiting approval</span></div>
+      <div style="padding: 40px; display: flex; flex-direction: column">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #EAEFF9; color: #2F4D9F">Funder</span><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBEEE9; color: #9C452A">Case study in progress</span></div>
+        <h3 style="margin: 22px 0 0; font-size: 36px; font-weight: 700; line-height: 1.16; letter-spacing: -0.012em">BAT</h3>
+        <p style="margin: 14px 0 0; font-size: 19px; line-height: 1.6">Portfolio reporting case study to be added.</p>
+        <figure style="margin: 24px 0 0; padding: 0">
+          <blockquote style="margin: 0; font-size: 17px; line-height: 1.6; font-style: italic"><span aria-hidden="true" style="font-size: 40px; line-height: 0; font-weight: 800; font-style: normal; color: #E07A5F; vertical-align: -14px; margin-right: 4px">&#8220;</span>Most organizations need to shift their focus to learning rather than just monitoring. That’s the biggest change for us, and we hope to see that shift in the rest of the social sector as well.”</blockquote>
+          <figcaption style="display: flex; align-items: center; gap: 12px; margin-top: 16px"><img src="images/7d0c74b9e4b95e5d1d0d2b09698df14e.webp" alt="Rutuja Chaphekar" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; display: block"><span style="font-size: 15px"><strong>Rutuja Chaphekar</strong> · Forbes Marshall</span></figcaption>
+        </figure>
+        <p style="margin: auto 0 0; padding-top: 28px; font-size: 15px; font-weight: 700; color: #9C452A">Full case study coming soon</p>
+      </div>
+    </article>
+</sc-if>
+  </div>
+</section>
+
+<!-- ============ CTA with slide-in form ============ -->
+<section id="contact" class="on-navy band" style="background: #2F4A92; color: #FFFFFF; padding-top: 64px; padding-bottom: 64px; position: relative; overflow: hidden">
+  <div class="shell split" style="position: relative; display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 64px; align-items: center; min-height: 340px">
+    <div>
+      <p style="margin: 0 0 16px"><span class="aud-tag aud-tag-navy">{{audTag}}</span></p><sc-if value="{{isNp}}" hint-placeholder-val="{{ true }}"><h2 class="h2" style="max-width: 20ch">Ready to turn your data <em>into answers your team can act on?</em></h2>
+      <p style="margin: 24px 0 0; font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch">Design dashboards and reporting systems that are intuitive, insightful and easy to work with.</p></sc-if>
+      <sc-if value="{{isFn}}" hint-placeholder-val="{{ false }}"><h2 class="h2" style="max-width: 20ch">Ready to communicate portfolio-wide impact <em>with clarity?</em></h2>
+      <p style="margin: 24px 0 0; font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch">Design dashboards that make it easy to track progress and impact across your portfolio.</p></sc-if>
+      <div style="margin-top: 36px">
+        <button type="button" class="btn btn-accent" onClick="{{openForm}}" aria-expanded="{{formExpanded}}">Work with us <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+      </div>
+    </div>
+    <div style="position: relative">
+      <div class="gk-mark" aria-hidden="true"><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#E8E724" stroke-width="39" stroke-linecap="round" stroke-dasharray="123.22 763.41" transform="rotate(241.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="115.80 763.41" transform="rotate(-47.304 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#526EB5" stroke-width="39" stroke-linecap="round" stroke-dasharray="122.16 763.41" transform="rotate(20.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#79C2B4" stroke-width="39" stroke-linecap="round" stroke-dasharray="135.95 763.41" transform="rotate(91.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#EE9D90" stroke-width="39" stroke-linecap="round" stroke-dasharray="124.28 763.41" transform="rotate(169.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="142" cy="283.8" r="124.2" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="221.99 780.37" transform="rotate(38.796 142 283.8)"></circle></svg></div></div>
+      <sc-if value="{{formOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="surface slide-in" style="padding: 36px; color: #14131A; border-radius: 16px; box-shadow: 0 24px 56px rgba(20,19,26,0.28); position: relative">
+          <button type="button" aria-label="Close form" onClick="{{closeForm}}" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: none; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #14131A"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+          <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{ true }}">
+            <form style="display: flex; flex-direction: column; gap: 18px; margin: 0">
+              <p style="margin: 0 0 4px; font-size: 22px; font-weight: 700; line-height: 1.28">Tell us a little about you.</p>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Name<input type="text" name="name" autocomplete="name" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Email<input type="email" name="email" autocomplete="email" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Organisation name<input type="text" name="org" autocomplete="organization" class="field"></label>
+              <button type="button" class="btn btn-primary" onClick="{{submitForm}}" style="align-self: flex-start; margin-top: 6px">Submit <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+            </form>
+          </sc-if>
+          <sc-if value="{{submitted}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 24px 0">
+              <svg aria-hidden="true" width="44" height="44" viewBox="0 0 28 28"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#EAC452" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <p style="margin: 12px 0 0; font-size: 22px; font-weight: 700">Thank you.</p>
+              <p style="margin: 8px 0 0; color: rgba(20,19,26,0.72)">We'll be in touch shortly.</p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OTHER SERVICES ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 56px">
+  <div class="shell">
+    <h2 class="h2">Explore our <em>other services.</em></h2>
+    <div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 32px">
+      <a class="lift" href="impact-and-measurement-strategy.html" style="background: #FBF3DF; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Impact and measurement strategy</span>
+        <span style="font-size: 15px; line-height: 1.6">Turn your Theory of Change into a measurement framework your organisation can use. We clarify the outcomes that matter, the questions your data needs to answer, and put in place the strategy you need to make that happen.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #7D5E0C">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+      <a class="lift" href="data-systems-and-workflows.html" style="background: #EAEFF9; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data systems and workflows</span>
+        <span style="font-size: 15px; line-height: 1.6">Build an integrated data system that is easier to use today and strong enough to grow with you. We bring data entry, analysis and insight into one connected system, shaped around your programmes, roles and workflows.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #2F4D9F">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+      <a class="lift" href="data-adoption-and-capacity-building.html" style="background: #E7F2F0; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data adoption and capacity-building</span>
+        <span style="font-size: 15px; line-height: 1.6">Build a data-confident workforce across your organisation. We conduct trainings and capacity building workshops that impart practical, role-specific learning. The primary goal is to get people to integrate data in their everyday work, so that it becomes a habit rather than a one-off event.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #176059">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background: #FFFFFF; border-top: 1px solid #E5E7EE; padding-top: 32px; padding-bottom: 32px">
+  <div class="shell" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <img src="images/52bbd9a37c2166bb5e61a6ecbb2c4c15.webp" alt="Goalkeep" style="height: 32px; width: auto; display: block; align-self: flex-start">
+      <p style="margin: 0; font-size: 15px; color: rgba(20,19,26,0.72); max-width: 44ch">Goalkeep helps organizations measure, communicate, and deepen their impact with confidence.</p>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: rgba(20,19,26,0.72)">© 2026 Goalkeep</p>
+  </div>
+</footer>
+
+</div>
+</template>
+<div id="dc-root"></div>
+<script>
+/* dc-lite: a tiny standalone renderer for the Goalkeep page templates.
+   Reads markup from <template id="dc-tpl">, fills {{bindings}}, handles <sc-if>, <sc-for>
+   and onClick / onMouseEnter handlers, and re-renders on setState. No dependencies. */
+(function () {
+  var RE = /\{\{([^}]+)\}\}/g;
+  function lookup(scopes, path) {
+    path = path.trim();
+    var parts = path.split('.');
+    var obj;
+    for (var i = scopes.length - 1; i >= 0; i--) {
+      if (scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i], parts[0])) { obj = scopes[i]; break; }
+    }
+    if (!obj) return undefined;
+    var v = obj;
+    for (var k = 0; k < parts.length; k++) { if (v == null) return undefined; v = v[parts[k]]; }
+    return v;
+  }
+  function interp(str, scopes) {
+    return str.replace(RE, function (m, p) { var v = lookup(scopes, p); return v == null ? '' : String(v); });
+  }
+  function exprOf(attr) { var m = /\{\{([^}]+)\}\}/.exec(attr || ''); return m ? m[1] : ''; }
+
+  function compileNodes(nodes, updaters) {
+    for (var i = 0; i < nodes.length; i++) compileNode(nodes[i], updaters);
+  }
+  function compileNode(node, updaters) {
+    if (node.nodeType === 3) {
+      if (node.nodeValue.indexOf('{{') !== -1) {
+        var tpl = node.nodeValue;
+        updaters.push(function (scopes) { var t = interp(tpl, scopes); if (node.nodeValue !== t) node.nodeValue = t; });
+      }
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    var tag = node.tagName.toLowerCase();
+    if (tag === 'sc-if' || tag === 'sc-for') { compileBlock(node, tag, updaters); return; }
+    var attrs = Array.prototype.slice.call(node.attributes);
+    attrs.forEach(function (a) {
+      var name = a.name, val = a.value;
+      if (name.indexOf('hint-placeholder') === 0) { node.removeAttribute(name); return; }
+      if (val.indexOf('{{') === -1) return;
+      if (/^on[a-z]+$/i.test(name)) {
+        node.removeAttribute(name);
+        var evt = name.slice(2).toLowerCase();
+        var path = exprOf(val);
+        var current = { scopes: [] };
+        node.addEventListener(evt, function (e) { var fn = lookup(current.scopes, path); if (typeof fn === 'function') fn(e); });
+        updaters.push(function (scopes) { current.scopes = scopes; });
+        return;
+      }
+      node.setAttribute(name, '');
+      updaters.push(function (scopes) { var t = interp(val, scopes); if (node.getAttribute(name) !== t) node.setAttribute(name, t); });
+    });
+    compileNodes(Array.prototype.slice.call(node.childNodes), updaters);
+  }
+  function compileBlock(el, tag, updaters) {
+    var anchor = document.createComment(tag);
+    el.parentNode.replaceChild(anchor, el);
+    var frag = document.createDocumentFragment();
+    while (el.firstChild) frag.appendChild(el.firstChild);
+    function instantiate() {
+      var clone = frag.cloneNode(true);
+      var nodes = Array.prototype.slice.call(clone.childNodes);
+      var ups = [];
+      var holder = document.createElement('div');
+      holder.appendChild(clone);
+      compileNodes(Array.prototype.slice.call(holder.childNodes), ups);
+      nodes = Array.prototype.slice.call(holder.childNodes);
+      return { nodes: nodes, ups: ups };
+    }
+    if (tag === 'sc-if') {
+      var expr = exprOf(el.getAttribute('value'));
+      var inst = null;
+      updaters.push(function (scopes) {
+        var on = !!lookup(scopes, expr);
+        if (on && !inst) {
+          inst = instantiate();
+          inst.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+        } else if (!on && inst) {
+          inst.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+          inst = null;
+        }
+        if (inst) inst.ups.forEach(function (u) { u(scopes); });
+      });
+    } else {
+      var listExpr = exprOf(el.getAttribute('list'));
+      var as = el.getAttribute('as') || 'item';
+      var items = [];
+      updaters.push(function (scopes) {
+        var list = lookup(scopes, listExpr) || [];
+        if (list.length !== items.length) {
+          items.forEach(function (it) { it.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
+          items = [];
+          for (var i = 0; i < list.length; i++) {
+            var it = instantiate();
+            it.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+            items.push(it);
+          }
+        }
+        items.forEach(function (it, i) {
+          var s = {}; s[as] = list[i];
+          var sc = scopes.concat([s]);
+          it.ups.forEach(function (u) { u(sc); });
+        });
+      });
+    }
+  }
+
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (patch) {
+    this.state = Object.assign({}, this.state || {}, typeof patch === 'function' ? patch(this.state) : patch);
+    if (this.__render) this.__render();
+  };
+  DCLogic.prototype.renderVals = function () { return {}; };
+  window.DCLogic = DCLogic;
+
+  window.DCMount = function (Component, props) {
+    var tpl = document.getElementById('dc-tpl');
+    var root = document.getElementById('dc-root');
+    root.appendChild(tpl.content.cloneNode(true));
+    var updaters = [];
+    compileNodes(Array.prototype.slice.call(root.childNodes), updaters);
+    var comp = new Component(props || {});
+    if (!comp.state) comp.state = {};
+    var queued = false;
+    function render() {
+      queued = false;
+      var vals = comp.renderVals() || {};
+      updaters.forEach(function (u) { u([vals]); });
+    }
+    comp.__render = function () { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(render); } };
+    render();
+    if (comp.componentDidMount) comp.componentDidMount();
+    window.addEventListener('pagehide', function () { if (comp.componentWillUnmount) comp.componentWillUnmount(); });
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { checked: [], formOpen: false, submitted: false, slide: 0, aud: 'np' };
+  }
+  componentDidMount() {
+    this._timer = setInterval(() => {
+      const cur = (this.state && this.state.slide) || 0;
+      this.setState({ slide: (cur + 1) % 4 });
+    }, 5000);
+  }
+  componentWillUnmount() {
+    if (this._timer) clearInterval(this._timer);
+  }
+  goSlide(n) {
+    if (this._timer) clearInterval(this._timer);
+    this._timer = null;
+    this.setState({ slide: (n + 4) % 4 });
+  }
+  renderVals() {
+    const st = this.state || {};
+    const slide = st.slide || 0;
+    const dots = [0, 1, 2, 3].map((n) => ({
+      label: 'Show photo ' + (n + 1) + ' of 4',
+      current: n === slide ? 'true' : 'false',
+      w: n === slide ? '24px' : '10px',
+      bg: (this.props.banner ?? 'theme') !== 'navy' ? (n === slide ? '#FFFFFF' : 'rgba(255,255,255,0.5)') : (n === slide ? '#EAC452' : 'rgba(255,255,255,0.5)'),
+      go: () => this.goSlide(n)
+    }));
+    const checked = st.checked || [];
+    const textsNp = [
+      'Dashboards or reports exist, but people rarely use them.',
+      'Leadership, programme teams, MEL staff and funders need different levels of information.',
+      'Leadership lacks a reliable organisation-wide view, while programme teams depend on MEL for routine answers.',
+      'Reports take too long to prepare and still raise repeated questions about definitions or accuracy.',
+      'Numbers are displayed without a clear link to the decisions or actions they should inform.',
+      'The organisation finds it difficult to communicate progress and impact clearly.'
+    ];
+    const textsFn = [
+      'Information around grant applications is spread across reports, spreadsheets, and e-mails.',
+      'Grantees use different indicators and definitions, so building a consolidated portfolio evaluation system is a struggle.',
+      'Leadership and boards need a portfolio overview that keeps the context of individual organisations.',
+      'Non-financial support, such as capacity building and introductions, goes untracked alongside the grant.',
+      'Risks and opportunities for support surface too late to inform reviews, renewals or resource allocation.',
+      'You have evidence across your portfolio but find it hard to tell a clear, credible impact story.'
+    ];
+    const aud = st.aud || 'np';
+    const texts = aud === 'fn' ? textsFn : textsNp;
+                const iconTints = ['#FBEEE9', '#EAEFF9', '#FBF3DF', '#E7F2F0', '#FBEEE9', '#EAEFF9'];
+    const iconInks = ['#9C452A', '#2F4D9F', '#7D5E0C', '#176059', '#9C452A', '#2F4D9F'];
+    const baseOf = { '#FBF3DF': '#EAC452', '#EAEFF9': '#3F63C8', '#E7F2F0': '#2F9C8F', '#FBEEE9': '#E07A5F' };
+    const onFills = ['#F0A58C', '#8FA8E8', '#F7DB63', '#5FC9BA', '#F0A58C', '#8FA8E8'];
+    const onIcons = ['#9C452A', '#2F4D9F', '#7D5E0C', '#176059', '#9C452A', '#2F4D9F'];
+    const onShadows = ['rgba(156,69,42,0.24)', 'rgba(47,77,159,0.24)', 'rgba(125,94,12,0.24)', 'rgba(23,96,89,0.24)', 'rgba(156,69,42,0.24)', 'rgba(47,77,159,0.24)'];
+    const out = {};
+    texts.forEach((text, i) => {
+      const on = checked.indexOf(i) !== -1;
+      out['s' + i] = {
+        text: text,
+        on: on,
+        pressed: on ? 'true' : 'false',
+        bg: on ? iconTints[i] : '#FFFFFF',
+        border: on ? (baseOf[iconTints[i]] || '#E5E7EE') : '#E5E7EE',
+        radius: '14px',
+        transform: on ? 'translateY(-4px) scale(1.02)' : 'none',
+        offset: '0px',
+        shadow: on ? '0 16px 32px ' + onShadows[i] : '0 1px 2px rgba(20,19,26,0.06), 0 8px 22px rgba(20,19,26,0.08)',
+        iconBg: on ? onIcons[i] : iconTints[i],
+        iconFg: on ? '#FFFFFF' : iconInks[i],
+        weight: on ? '700' : '400',
+        toggle: () => {
+          const cur = (this.state && this.state.checked) || [];
+          const next = cur.indexOf(i) !== -1 ? cur.filter((x) => x !== i) : cur.concat([i]);
+          this.setState({ checked: next });
+        }
+      };
+    });
+
+    const count = checked.length;
+    const ringColors = ['#FBEEE9', '#FBF3DF', '#EAEFF9', '#E7F2F0', '#2F4A92', '#EAC452'];
+    const ringEdges = ['#E07A5F', '#EAC452', '#3F63C8', '#2F9C8F', '#2F4A92', '#EAC452'];
+    for (let k = 0; k < 6; k++) {
+      out['g' + k] = { color: ringColors[k], edge: ringEdges[k], off: k < count ? '0' : '100' };
+    }
+
+    let verdictTitle = 'Nothing tapped yet.';
+    let verdictBody = 'Tap any note that rings true for you.';
+    if (count >= 1 && count <= 2) { verdictTitle = 'Worth a conversation.'; verdictBody = 'Small gaps in reporting tend to widen if left unchecked.'; }
+    if (count >= 3) { verdictTitle = 'Your reporting needs serious attention.'; verdictBody = 'This is exactly what we’re here to fix. Let’s connect.'; }
+
+    const weeks = [];
+    for (let n = 1; n <= 10; n++) {
+      const inRange = n >= 7 && n <= 8;
+      weeks.push({ n: n, weight: inRange ? '800' : '600', color: inRange ? '#7D5E0C' : 'rgba(20,19,26,0.6)' });
+    }
+
+    const formOpen = !!st.formOpen;
+    const submitted = !!st.submitted;
+    const setAud = (a) => { if (((this.state && this.state.aud) || 'np') !== a) this.setState({ aud: a, checked: [] }); };
+    const segOn = { bg: '#FFFFFF', fg: '#2F4A92' };
+    const segOff = { bg: 'transparent', fg: '#FFFFFF' };
+    const isFnView = aud === 'fn';
+    const forkOn = { bg: '#FFFFFF', border: '#E07A5F', shadow: '0 14px 32px rgba(156,69,42,0.16)', iconBg: '#E07A5F', iconFg: '#FFFFFF', dot: '#E07A5F', pressed: 'true' };
+    const forkOff = { bg: 'rgba(255,255,255,0.55)', border: 'rgba(156,69,42,0.18)', shadow: 'none', iconBg: '#FFFFFF', iconFg: '#9C452A', dot: 'transparent', pressed: 'false' };
+    const barOn = { fg: '#2F4A92', iconBg: '#2F4A92', iconFg: '#FFFFFF' };
+    const barOff = { fg: '#2F4D9F', iconBg: 'rgba(255,255,255,0.75)', iconFg: '#2F4D9F' };
+    const themed = (this.props.banner ?? 'theme') !== 'navy';
+    return Object.assign(out, {
+      bannerCls: themed ? 'ban-coral' : '',
+      forkNp: Object.assign({ pick: () => setAud('np') }, isFnView ? forkOff : forkOn),
+      forkFn: Object.assign({ pick: () => setAud('fn') }, isFnView ? forkOn : forkOff),
+      thumbX: isFnView ? '100%' : '0%',
+      barNp: isFnView ? barOff : barOn,
+      barFn: isFnView ? barOn : barOff,
+      audTag: isFnView ? 'For funders' : 'For nonprofits',
+      isNp: aud !== 'fn',
+      isFn: aud === 'fn',
+      audNp: Object.assign({ pressed: aud !== 'fn' ? 'true' : 'false', pick: () => setAud('np') }, aud !== 'fn' ? segOn : segOff),
+      audFn: Object.assign({ pressed: aud === 'fn' ? 'true' : 'false', pick: () => setAud('fn') }, aud === 'fn' ? segOn : segOff),
+      slideX: (-slide * 100) + '%',
+      dots: dots,
+      prevSlide: () => this.goSlide(slide - 1),
+      nextSlide: () => this.goSlide(slide + 1),
+      count: count,
+      verdictTitle: verdictTitle,
+      verdictBody: verdictBody,
+      ctaVis: count >= 2 ? 'visible' : 'hidden',
+      weeks: weeks,
+      formOpen: formOpen,
+      formExpanded: formOpen ? 'true' : 'false',
+      submitted: submitted,
+      notSubmitted: !submitted,
+      openForm: () => { if (!(this.state && this.state.formOpen)) this.setState({ formOpen: true, submitted: false }); },
+      closeForm: () => this.setState({ formOpen: false, submitted: false }),
+      submitForm: () => this.setState({ submitted: true })
+    });
+  }
+}
+DCMount(Component, {"banner": "theme"});
+</script>
+<script>
+/* Scroll-linked assembly of the Goalkeep mark in the closing banner. Each piece owns an
+   overlapping slice of the scroll so they land one at a time. Reduced motion: drawn finished. */
+(function () {
+  var P = [[0.65,-150.00,-120],[110.88,-40.36,140],[105.21,123.19,-95],[-73.34,109.75,128],[-138.46,-46.33,-145],[0.00,175.00,105]], SCALE = 0.53191, SETTLE = 0.6;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var queued = false;
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function update() {
+    queued = false;
+    var mark = document.querySelector('#contact .gk-mark');
+    if (!mark) return;
+    var kids = mark.children, i;
+    if (reduce && reduce.matches) {
+      for (i = 0; i < kids.length; i++) { kids[i].style.transform = ''; kids[i].style.opacity = ''; }
+      return;
+    }
+    var r = mark.getBoundingClientRect(), vh = window.innerHeight;
+    if (!r.height) return;
+    var endTop = SETTLE * vh - r.height / 2;
+    var p = clamp((vh - r.top) / (vh - endTop));
+    for (i = 0; i < kids.length && i < P.length; i++) {
+      var t = clamp((p - i * 0.088) / 0.38), k = 1 - t, s = P[i];
+      var o = t < 0.22 ? t / 0.22 * 0.75 : t < 0.55 ? 0.75 + (t - 0.22) / 0.33 * 0.25 : 1;
+      kids[i].style.transform = 'translate(' + (s[0] * SCALE * k).toFixed(2) + 'px,' + (s[1] * SCALE * k).toFixed(2) + 'px) rotate(' + (s[2] * k).toFixed(2) + 'deg)';
+      kids[i].style.opacity = o.toFixed(3);
+    }
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  if (reduce && reduce.addEventListener) reduce.addEventListener('change', queue);
+  addEventListener('load', queue);
+  queue();
+})();
+</script>
+</body>
+</html>

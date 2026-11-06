@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impact and measurement strategy | Goalkeep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap">
+<style>
+body{margin:0;background:#FCFCFD}
+a{color:#2F4D9F}a:hover{color:#1E3266}
+.gk *{box-sizing:border-box}
+.gk em{font-style:italic;font-weight:800}
+.shell{max-width:1320px;margin:0 auto;padding-left:64px;padding-right:64px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#2F4D9F;margin:0 0 16px}
+.eyebrow::before{content:"";width:24px;height:2px;background:currentColor;display:block}
+.on-navy .eyebrow{color:#EAC452}
+.eyebrow.gold-ink{color:#7D5E0C}
+.h2{font-size:42px;font-weight:400;line-height:1.16;letter-spacing:-0.02em;margin:0;text-wrap:balance;max-width:24ch}
+.h3{font-size:32px;font-weight:400;line-height:1.2;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:15px;font-weight:700;padding:11px 20px;border-radius:4px;text-decoration:none;border:1px solid transparent;min-height:44px;cursor:pointer;transition:background-color 240ms cubic-bezier(0.22,1,0.36,1),border-color 240ms,color 240ms}
+.btn svg{transition:transform 240ms cubic-bezier(0.22,1,0.36,1)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-accent{background:#EAC452;color:#1E3266}.btn-accent:hover{background:#CFA72F;color:#1E3266}
+.on-navy .btn-accent:hover{background:#FFFFFF}
+.btn-sec-navy{background:transparent;color:#FFFFFF;border-color:rgba(255,255,255,0.6)}.btn-sec-navy:hover{color:#FFFFFF;border-color:#FFFFFF}
+.btn-primary{background:#2F4A92;color:#FFFFFF}.btn-primary:hover{background:#1E3266;color:#FFFFFF}
+.tlink{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:#2F4D9F;text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px;transition:gap 140ms}
+.tlink:hover{gap:12px;color:#1E3266}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.86);text-decoration:none;font-size:15px;font-weight:600;padding:12px 0;min-height:44px}
+.nav-link:hover,.nav-link.is-active{color:#FFFFFF}
+.nav-link.is-active{box-shadow:inset 0 -2px 0 #EAC452}
+.dd{display:none;position:absolute;top:100%;left:-24px;width:400px;background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 16px 40px rgba(20,19,26,0.18);padding:8px;z-index:30}
+.nav-item:hover .dd,.nav-item:focus-within .dd{display:block}
+.dd a{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:8px;text-decoration:none;color:#14131A}
+.dd a:hover{background:#F1F4FA;color:#14131A}
+.dd .sw{width:10px;height:10px;border-radius:2px;margin-top:6px;flex:none}
+.dd .t{font-size:15px;font-weight:700;display:block}
+.dd .d{font-size:13px;color:rgba(20,19,26,0.72);display:block;margin-top:2px;line-height:1.45}
+.surface{background:#FFFFFF;border:1px solid #E5E7EE;border-radius:12px;box-shadow:0 1px 2px rgba(20,19,26,0.06)}
+.lift{transition:transform 240ms cubic-bezier(0.22,1,0.36,1),box-shadow 240ms,border-color 240ms}
+.lift:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(20,19,26,0.12);border-color:#D3D7E2}
+.marker{background:linear-gradient(100deg,#F7DB63 0%,#FCF0A5 5%,#FCF0A5 95%,#F7DB63 100%);padding:0 5px;margin:0 -2px;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:2px}
+.note{display:flex;flex-direction:column;gap:14px;text-align:left;width:100%;padding:22px 22px 20px;font-family:inherit;font-size:16px;line-height:1.5;color:#14131A;cursor:pointer;border:none;transition:transform 320ms cubic-bezier(0.22,1,0.36,1),box-shadow 320ms,background-color 320ms}
+.note:hover{box-shadow:0 18px 36px rgba(125,94,12,0.22) !important}
+.note:focus-visible{outline:3px solid #3F63C8;outline-offset:3px}
+.deliv{display:flex;align-items:center;gap:16px;width:100%;text-align:left;font-family:inherit;font-size:17px;line-height:1.45;color:#14131A;padding:16px 18px;border:none;border-radius:10px;cursor:pointer;transition:background-color 240ms}
+.deliv:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign{position:relative;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;padding:28px 30px 30px;background:transparent;border:none;font-family:inherit;font-size:19px;line-height:1.5;color:#14131A;cursor:pointer;border-radius:12px;transition:background-color 240ms}
+.sign:hover{background:#FBF3DF}
+.sign:focus-visible{outline:3px solid #3F63C8;outline-offset:2px}
+.sign .loop{position:absolute;inset:-6px -10px;width:calc(100% + 20px);height:calc(100% + 12px);pointer-events:none;overflow:visible}
+.field{font-family:inherit;font-size:17px;font-weight:400;padding:11px 14px;border:1px solid #D3D7E2;border-radius:8px;color:#14131A;background:#FFFFFF;min-height:44px}
+.field:focus{outline:3px solid rgba(63,99,200,0.35);border-color:#3F63C8}
+.slide-in{animation:slidein 420ms cubic-bezier(0.22,1,0.36,1)}
+@keyframes slidein{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide-in{animation:none}}
+.ban-blue{background:#2F4D9F !important}
+.ban-teal{background:#237A70 !important}
+.ban-coral{background:#C8613F !important}
+.ban-gold{background:#A67C0E !important}
+.logo-ink{display:none !important}
+.ban-teal .hero-lead,.ban-blue .hero-lead,.ban-gold .hero-lead,.ban-coral .hero-lead{color:#FFFFFF !important}
+.ban-ink{color:#14131A !important}
+.ban-ink .logo-white{display:none !important}
+.ban-ink .logo-ink{display:block !important}
+.ban-ink .nav-link{color:rgba(20,19,26,0.8)}
+.ban-ink .nav-link:hover,.ban-ink .nav-link.is-active{color:#14131A}
+.ban-ink .nav-link.is-active{box-shadow:inset 0 -2px 0 #14131A}
+.ban-ink .hero-lead{color:#14131A !important}
+.ban-ink .btn-sec-navy{color:#14131A;border-color:rgba(20,19,26,0.6)}
+.ban-ink .btn-sec-navy:hover{color:#14131A;border-color:#14131A}
+.ban-ink button[aria-label$="photo"]{color:#14131A !important;border-color:rgba(20,19,26,0.45) !important}
+.ban-ink .seg-wrap{border-color:rgba(20,19,26,0.4) !important}
+.ban-gold .btn-accent{background:#FBF6E9;color:#1E3266}
+.ban-gold .btn-accent:hover{background:#FFFFFF;color:#1E3266}
+.ban-coral .btn-accent{background:#FFFFFF;color:#9C452A}
+.ban-coral .btn-accent:hover{background:#FBEEE9;color:#9C452A}
+.alt .alt-img .photo{object-position:right center}.alt-rev .alt-img .photo{object-position:left center}
+.photo{width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;position:relative}
+@media (max-width:1439px){.gutter-arc{display:none}}
+@media (max-width:1100px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr)) !important}.split,.alt,.alt-rev{grid-template-columns:minmax(0,1fr) !important}.alt-rev .alt-img{order:-1}.hero-split{grid-template-columns:minmax(0,1fr) !important}}
+.tile svg{display:block}
+@media (max-width:760px){.br-d{display:none}.shell{padding-left:16px;padding-right:16px}.h2{font-size:28px}.h3{font-size:26px}.h1{font-size:36px !important}.grid3,.grid2,.notes{grid-template-columns:minmax(0,1fr) !important}.navlinks{display:none !important}.band{padding-top:48px !important;padding-bottom:48px !important}.arc{display:none}.hero-img{margin:0 -16px}.case-split{grid-template-columns:minmax(0,1fr) !important}.note{transform:none !important;margin-top:0 !important}.deliv-split{grid-template-columns:minmax(0,1fr) !important}.ruler-wrap{overflow-x:auto}}
+</style>
+<style>
+/* Goalkeep mark: its six pieces fly in and assemble as the closing banner scrolls into view (same geometry and timing as the homepage close). */
+.gk-mark{position:absolute;left:50%;top:50%;width:150px;height:227.7px;margin:-113.8px 0 0 -75.0px;pointer-events:none;transition:opacity .3s ease,visibility .3s}
+.gk-mark>div{position:absolute;inset:0;transform-origin:50% 32.94%}
+.gk-mark svg{display:block;width:100%;height:100%}
+#contact:has(.slide-in) .gk-mark{opacity:0;visibility:hidden}
+@media (max-width:1100px){.gk-mark{position:relative;left:auto;top:auto;margin:0 auto;width:120px;height:182.1px}#contact:has(.slide-in) .gk-mark{display:none}}
+</style>
+</head>
+<body>
+<template id="dc-tpl">
+
+<div class="gk" style="overflow-x: clip; font-family: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; color: #14131A; background: #FCFCFD; font-size: 17px; line-height: 1.65">
+
+<!-- ============ NAV ============ -->
+<header class="on-navy {{bannerCls}}" style="background: #2F4A92; position: relative; z-index: 20">
+  <div class="shell" style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-top: 14px; padding-bottom: 14px">
+    <a href="https://goalkeep.org/" aria-label="Goalkeep home" style="display: inline-flex; align-items: center">
+      <img class="logo-white" src="images/d6f20c273a7e4a63cb92d0ebfc07523e.webp" alt="Goalkeep" style="height: 36px; width: auto; display: block"><img class="logo-ink" src="images/52bbd9a37c2166bb5e61a6ecbb2c4c15.webp" alt="Goalkeep" style="height: 36px; width: auto">
+    </a>
+    <nav aria-label="Main" class="navlinks" style="display: flex; align-items: center; gap: 32px">
+      <a class="nav-link" href="#">About us</a>
+      <div class="nav-item">
+        <a class="nav-link is-active" href="#" aria-haspopup="true">What we do
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="impact-and-measurement-strategy.html" style="background: #FBF3DF"><span><span class="t">Impact and measurement strategy</span><span class="d">Turn your Theory of Change into a usable framework</span></span></a>
+          <a href="data-systems-and-workflows.html"><span><span class="t">Data systems and workflows</span><span class="d">An integrated system that scales with you</span></span></a>
+          <a href="dashboards-and-reporting.html"><span><span class="t">Dashboards and reporting</span><span class="d">Use your data to make better decisions</span></span></a>
+          <a href="data-adoption-and-capacity-building.html"><span><span class="t">Data adoption and capacity-building</span><span class="d">Build a data-confident workforce</span></span></a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="#" aria-haspopup="true">Programs
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="dd" style="width: 360px">
+          <a href="kickstarter.html"><span><span class="t">Kickstarter Program</span><span class="d">A data backbone for early-stage nonprofits</span></span></a>
+          <a href="data-literacy-program.html"><span><span class="t">Data Literacy Program</span><span class="d">Scale data best practices within your teams</span></span></a>
+        </div>
+      </div>
+      <a class="nav-link" href="#">Case studies</a>
+      <a class="nav-link" href="#">Resources</a>
+    </nav>
+    <a class="btn" href="#contact" style="background: #FFFFFF; color: #2F4A92">Partner with us</a>
+  </div>
+</header>
+
+<!-- ============ HERO (copy + photo card) ============ -->
+<section class="on-navy {{bannerCls}}" style="background: #2F4A92; color: #FFFFFF; position: relative; overflow: hidden">
+  <div class="shell hero-split" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,520px); gap: 40px; align-items: center; padding-top: 44px; padding-bottom: 60px">
+    <div>
+      <h1 class="h1" style="font-size: 52px; font-weight: 500; line-height: 1.08; letter-spacing: -0.02em; margin: 0; color: #ffffff">Give your Theory of<br class="br-d"> Change <em>a robust<br class="br-d"> measurement framework.</em></h1>
+      <p class="hero-lead" style="font-size: 19px; line-height: 1.6; color: #ffffff; max-width: 50ch; margin: 20px 0 0">We work with programme, MEL and leadership teams to clarify the outcomes that matter, the questions your data needs to answer, and the evidence required to answer them.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px">
+        <a class="btn btn-accent" href="#contact" onClick="{{openForm}}">Work with us <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+        <a class="btn btn-sec-navy" href="#case">Read Peepul case study</a>
+      </div>
+    </div>
+    <div>
+      <div role="region" aria-roledescription="carousel" aria-label="Photos from Goalkeep engagements" style="position: relative; border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 18px 40px rgba(20,19,26,0.28)">
+        <div style="display: flex; height: 100%; transform: translateX({{slideX}}); transition: transform 700ms cubic-bezier(0.22,1,0.36,1)">
+          <img src="images/d9f25a2c090890697a8d9bf1806f663d.webp" alt="A Goalkeep working session on the floor of a partner office" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 45% 50%; display: block">
+          <img src="images/d7e0a2f562f148853d7f839e7a34590d.webp" alt="Goalkeep with a partner team after a workshop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block">
+          <img src="images/bd7d6d0349cff3dd797ec319912bbbf5.webp" alt="A Goalkeep team member talking through a framework in a working session" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block">
+          <img src="images/46fd758db6cd80183d9d4f676d744baa.webp" alt="Two partner team members working through data on a laptop" style="flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block">
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px">
+        <div style="display: flex; gap: 8px; align-items: center">
+          <sc-for list="{{dots}}" as="d" hint-placeholder-count="4">
+            <button type="button" aria-label="{{d.label}}" aria-current="{{d.current}}" onClick="{{d.go}}" style="width: 28px; height: 28px; border: none; background: transparent; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center"><span style="display: block; height: 4px; border-radius: 2px; width: {{d.w}}; background: {{d.bg}}; transition: width 240ms, background-color 240ms"></span></button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <button type="button" aria-label="Previous photo" onClick="{{prevSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+          <button type="button" aria-label="Next photo" onClick="{{nextSlide}}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SIX SIGNS: sticky-note self-check ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 64px; position: relative; z-index: 2">
+  <svg class="arc gutter-arc" aria-hidden="true" width="286" height="286" viewBox="0 0 286 286" style="position: absolute; left: -163px; bottom: -143px; pointer-events: none">
+    <circle cx="143" cy="143" r="126" fill="none" stroke="#EAC452" stroke-width="34"></circle>
+  </svg>
+  <div class="shell split" style="position: relative; display: grid; grid-template-columns: minmax(0,5fr) minmax(0,7fr); gap: 48px; align-items: center">
+    <div>
+      <h2 class="h2">Six signs your MEL capabilities <em>might have fallen behind.</em></h2>
+      <p style="margin: 16px 0 0; max-width: 40ch">Tap the ones that seem relatable to you.</p>
+      <div style="height: 64px; display: flex; align-items: flex-end; visibility: {{ctaVis}}">
+        <a class="btn btn-primary" href="#contact" onClick="{{openForm}}">Talk to us about these <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </div>
+      <div style="margin-top: 40px">
+        <div>
+          <p style="margin: 0; font-size: 19px; font-weight: 700; line-height: 1.35; max-width: 24ch">{{verdictTitle}}</p>
+          <p style="margin: 6px 0 0; font-size: 15px; line-height: 1.5; color: rgba(20,19,26,0.72); max-width: 30ch">{{verdictBody}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="notes" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 8px 0">
+      <button type="button" class="note" aria-pressed="{{s0.pressed}}" onClick="{{s0.toggle}}" style="background: {{s0.bg}}; border-radius: {{s0.radius}}; transform: {{s0.transform}}; margin-top: {{s0.offset}}; box-shadow: {{s0.shadow}}; border: 1.5px solid {{s0.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s0.iconBg}}; color: {{s0.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.1 6.3 8.9 3.6a2 2 0 0 0-1.8 0l-4 2A2 2 0 0 0 2 7.4v12.2a1 1 0 0 0 1.4.9l3.7-1.9a2 2 0 0 1 1.8 0l5.2 2.7a2 2 0 0 0 1.8 0l4-2a2 2 0 0 0 1.1-1.8V5.3a1 1 0 0 0-1.4-.9l-3.7 1.9a2 2 0 0 1-1.8 0z"></path><path d="M15 6.8v14"></path><path d="M9 3.2v14"></path></svg></span>
+        </span>
+        <span style="font-weight: {{s0.weight}}">{{s0.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s1.pressed}}" onClick="{{s1.toggle}}" style="background: {{s1.bg}}; border-radius: {{s1.radius}}; transform: {{s1.transform}}; margin-top: {{s1.offset}}; box-shadow: {{s1.shadow}}; border: 1.5px solid {{s1.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s1.iconBg}}; color: {{s1.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"></path><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"></path></svg></span>
+        </span>
+        <span style="font-weight: {{s1.weight}}">{{s1.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s2.pressed}}" onClick="{{s2.toggle}}" style="background: {{s2.bg}}; border-radius: {{s2.radius}}; transform: {{s2.transform}}; margin-top: {{s2.offset}}; box-shadow: {{s2.shadow}}; border: 1.5px solid {{s2.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s2.iconBg}}; color: {{s2.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 14.9C20.2 16.4 19.9 18.3 18.5 19.5c-1.4 1.1-3.4 1-4.6-.3L12 17.3l-1.9 1.9c-1.2 1.3-3.2 1.4-4.6.3-1.4-1.2-1.7-3.1-.9-4.6L6 13l-1.4-1.4C3.3 10.3 3.2 8.3 4.3 6.9c1.2-1.4 3.1-1.7 4.6-.9L10.3 7.4 12 5.7"></path><circle cx="16.5" cy="7.5" r="2.5"></circle></svg></span>
+        </span>
+        <span style="font-weight: {{s2.weight}}">{{s2.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s3.pressed}}" onClick="{{s3.toggle}}" style="background: {{s3.bg}}; border-radius: {{s3.radius}}; transform: {{s3.transform}}; margin-top: {{s3.offset}}; box-shadow: {{s3.shadow}}; border: 1.5px solid {{s3.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s3.iconBg}}; color: {{s3.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></span>
+        </span>
+        <span style="font-weight: {{s3.weight}}">{{s3.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s4.pressed}}" onClick="{{s4.toggle}}" style="background: {{s4.bg}}; border-radius: {{s4.radius}}; transform: {{s4.transform}}; margin-top: {{s4.offset}}; box-shadow: {{s4.shadow}}; border: 1.5px solid {{s4.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s4.iconBg}}; color: {{s4.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg></span>
+        </span>
+        <span style="font-weight: {{s4.weight}}">{{s4.text}}</span>
+      </button>
+      <button type="button" class="note" aria-pressed="{{s5.pressed}}" onClick="{{s5.toggle}}" style="background: {{s5.bg}}; border-radius: {{s5.radius}}; transform: {{s5.transform}}; margin-top: {{s5.offset}}; box-shadow: {{s5.shadow}}; border: 1.5px solid {{s5.border}}">
+        <span style="display: flex; justify-content: space-between; align-items: center; height: 36px">
+          <span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: {{s5.iconBg}}; color: {{s5.iconFg}}; transition: background-color 320ms, color 320ms"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M9 12h6" stroke-dasharray="2 3"></path><path d="M9 16h6" stroke-dasharray="2 3"></path></svg></span>
+        </span>
+        <span style="font-weight: {{s5.weight}}">{{s5.text}}</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR APPROACH: alternating (light yellow) ============ -->
+<section class="band" style="background: #FBF3DF; padding-top: 56px; padding-bottom: 56px; position: relative; z-index: 1">
+  <div class="shell">
+    <p class="eyebrow gold-ink">our approach</p>
+    <div style="display: flex; flex-direction: column; gap: 48px; margin-top: 24px">
+      <!-- row 1: text left, image right -->
+      <div class="alt" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div>
+          <h3 class="h3">Your Theory of Change is our starting point, <em>always.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">Before we talk about indicators, tools or dashboards, we sit with your Theory of Change and ask whether it still describes the work your teams do today. Programmes tend to evolve quickly at times, and indicators and measurement frameworks are often left behind in the priority list of things to do. We come in to make sure your systems accurately still reflect your Theory of Change.</p>
+        </div>
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/a0ab5315386fbadd8443b0eaa8ffab2d.webp" alt="Affinity mapping on coloured boards during a Goalkeep design workshop">
+        </div>
+      </div>
+
+      <!-- row 2: image left, text right -->
+      <div class="alt alt-rev" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/b486c3eb3f423bef62339909ee5771af.webp" alt="Goalkeep in conversation with a partner's programme and leadership team">
+        </div>
+        <div>
+          <h3 class="h3">Then we learn how your teams <em>actually work with data.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">We spend time with the people closest to the work, from leadership to programme and field teams, to understand how each one collects data, defines success and reports outcomes. We visit field offices where we can, because for our work, we need to understand how and why data travels through each level in the organization. This shows us where definitions overlap, where they have drifted apart, and what has stood in the way of alignment before.</p>
+        </div>
+      </div>
+
+      <!-- row 3: text left, image right -->
+      <div class="alt" style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 64px; align-items: center">
+        <div>
+          <h3 class="h3">We pin down the key questions, <em>then map what to measure.</em></h3>
+          <p style="margin: 20px 0 0; max-width: 48ch">With leadership and programme teams, we identify the key questions your data needs to answer, from day-to-day programme decisions to conversations with funders. We then map each question to a focused set of indicators, with clear definitions, data sources and collection methods, so you measure what you need and nothing more.</p>
+        </div>
+        <div class="alt-img" style="position: relative; height: 340px">
+          <img class="photo" src="images/8628737d5b65d03af1f3ceab6f28466f.webp" alt="A Goalkeep facilitator leading a session on which questions are high priority">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT YOU LEAVE WITH: illustrated grid ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 64px">
+  <div class="shell">
+    <h2 class="h2" style="margin: 0 auto; text-align: center; max-width: 28ch">What you leave with <em>at the end of our engagement.</em></h2>
+    <div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 40px; row-gap: 40px; margin-top: 40px">
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a Theory of Change flow from inputs to impact" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="30" y="85" width="62" height="40" rx="6" fill="#F6E4B0"></rect><rect x="116" y="85" width="62" height="40" rx="6" fill="#F6E4B0"></rect><rect x="202" y="85" width="62" height="40" rx="6" fill="#EAC452"></rect><rect x="288" y="81" width="66" height="48" rx="6" fill="#2F4A92"></rect><path d="M 92 105 H 112 M 178 105 H 198 M 264 105 H 284" stroke="#2F4A92" stroke-width="2.5" stroke-linecap="round"></path><rect x="42" y="101" width="38" height="6" rx="3" fill="#EAC452" opacity="0.5"></rect><rect x="128" y="101" width="38" height="6" rx="3" fill="#EAC452" opacity="0.5"></rect><rect x="214" y="101" width="38" height="6" rx="3" fill="#F6E4B0"></rect><rect x="300" y="101" width="42" height="6" rx="3" fill="#F6E4B0"></rect><text x="61" y="150" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">INPUTS</text><text x="147" y="150" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">OUTPUTS</text><text x="233" y="150" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">OUTCOMES</text><text x="321" y="150" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">IMPACT</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A refined programme-level or organisation-level Theory of Change</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: an indicator framework table with one priority row highlighted" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="70" y="40" width="240" height="132" rx="8" fill="#D6E0F5"></rect><rect x="70" y="40" width="240" height="26" rx="8" fill="#2F4A92"></rect><rect x="70" y="56" width="240" height="10" fill="#2F4A92"></rect><rect x="72" y="88" width="236" height="22" fill="#8FA8E8" opacity="0.35"></rect><path d="M 70 110 H 310 M 70 132 H 310 M 70 152 H 310 M 170 66 V 172 M 240 66 V 172" stroke="#8FA8E8" stroke-width="1.2" opacity="0.5"></path><rect x="84" y="97" width="70" height="5" rx="2.5" fill="#2F4A92"></rect><rect x="84" y="119" width="52" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="84" y="140" width="64" height="5" rx="2.5" fill="#8FA8E8"></rect><rect x="84" y="160" width="44" height="5" rx="2.5" fill="#8FA8E8"></rect><circle cx="205" cy="99" r="5" fill="#3F63C8"></circle><circle cx="205" cy="121" r="5" fill="#8FA8E8"></circle><circle cx="205" cy="142" r="5" fill="#8FA8E8"></circle><path d="M 318 92 l 10 10 l 22 -26" fill="none" stroke="#3F63C8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A prioritised outcome and indicator framework</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: sliders for method, sampling and frequency" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><path d="M 80 70 H 300 M 80 105 H 300 M 80 140 H 300" stroke="#CBE6E1" stroke-width="10" stroke-linecap="round"></path><path d="M 80 70 H 220 M 80 105 H 140 M 80 140 H 260" stroke="#2F9C8F" stroke-width="10" stroke-linecap="round"></path><circle cx="220" cy="70" r="12" fill="#FFFFFF" stroke="#2F4A92" stroke-width="4"></circle><circle cx="140" cy="105" r="12" fill="#FFFFFF" stroke="#2F4A92" stroke-width="4"></circle><circle cx="260" cy="140" r="12" fill="#FFFFFF" stroke="#2F4A92" stroke-width="4"></circle><text x="80" y="54" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">METHOD</text><text x="80" y="89" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">SAMPLING</text><text x="80" y="124" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="800" fill="#2F4A92">FREQUENCY</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">Guidance on data methods, sampling, frequency and disaggregation</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a magnifying glass over bar charts" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><rect x="110" y="120" width="24" height="40" rx="3" fill="#3F63C8" opacity="0.55"></rect><rect x="144" y="92" width="24" height="68" rx="3" fill="#3F63C8"></rect><rect x="178" y="108" width="24" height="52" rx="3" fill="#3F63C8" opacity="0.55"></rect><rect x="212" y="76" width="24" height="84" rx="3" fill="#2F4D9F"></rect><path d="M 100 162 H 250" stroke="#2F4A92" stroke-width="2" stroke-linecap="round"></path><circle cx="190" cy="96" r="42" fill="#D6E0F5" fill-opacity="0.55" stroke="#2F4A92" stroke-width="7"></circle><path d="M 220 126 L 258 164" stroke="#2F4A92" stroke-width="11" stroke-linecap="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A diagnostic assessment of current tools and legacy data</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a learning cycle of collect, review, report and decide" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><path d="M 190 52 A 52 52 0 0 1 242 104" fill="none" stroke="#2F4A92" stroke-width="10" stroke-linecap="round"></path><path d="M 242 104 A 52 52 0 0 1 190 156" fill="none" stroke="#EAC452" stroke-width="10" stroke-linecap="round"></path><path d="M 190 156 A 52 52 0 0 1 138 104" fill="none" stroke="#2F9C8F" stroke-width="10" stroke-linecap="round"></path><path d="M 138 104 A 52 52 0 0 1 190 52" fill="none" stroke="#E07A5F" stroke-width="10" stroke-linecap="round"></path><text x="190" y="109" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="800" fill="#14131A">LEARN</text><text x="262" y="72" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="#2F4D9F">review</text><text x="262" y="146" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="#7D5E0C">report</text><text x="80" y="146" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="#176059">decide</text><text x="84" y="72" font-family="Nunito Sans, sans-serif" font-size="12" font-weight="700" fill="#9C452A">collect</text></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A reporting framework for communicating learnings and insights</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px">
+        <div class="tile" style="width: 100%; max-width: 340px; border-radius: 16px; overflow: hidden;">
+          <svg role="img" aria-label="Illustration: a winding roadmap with owned milestones leading to a finish flag" width="100%" height="168" viewBox="0 0 380 210" style="display: block"><path d="M 40 182 C 110 182, 90 120, 170 120 S 250 60, 318 58" fill="none" stroke="#F6E4B0" stroke-width="22" stroke-linecap="round"></path><path d="M 40 182 C 110 182, 90 120, 170 120 S 250 60, 318 58" fill="none" stroke="#EAC452" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 9"></path><path d="M 78 176 c -9 -12 -14 -18 -14 -25 a 14 14 0 0 1 28 0 c 0 7 -5 13 -14 25 z" fill="#2F4A92"></path><circle cx="78" cy="151" r="5" fill="#F6E4B0"></circle><circle cx="102" cy="140" r="9" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2"></circle><circle cx="102" cy="138" r="3" fill="#2F4A92"></circle><path d="M 97 146 a 5 4 0 0 1 10 0" fill="#2F4A92"></path><path d="M 170 114 c -9 -12 -14 -18 -14 -25 a 14 14 0 0 1 28 0 c 0 7 -5 13 -14 25 z" fill="#2F4A92"></path><circle cx="170" cy="89" r="5" fill="#F6E4B0"></circle><circle cx="194" cy="78" r="9" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2"></circle><circle cx="194" cy="76" r="3" fill="#2F4A92"></circle><path d="M 189 84 a 5 4 0 0 1 10 0" fill="#2F4A92"></path><path d="M 256 76 c -9 -12 -14 -18 -14 -25 a 14 14 0 0 1 28 0 c 0 7 -5 13 -14 25 z" fill="#2F4A92"></path><circle cx="256" cy="51" r="5" fill="#F6E4B0"></circle><circle cx="280" cy="40" r="9" fill="#FFFFFF" stroke="#2F4A92" stroke-width="2"></circle><circle cx="280" cy="38" r="3" fill="#2F4A92"></circle><path d="M 275 46 a 5 4 0 0 1 10 0" fill="#2F4A92"></path><path d="M 330 58 V 14" stroke="#2F4A92" stroke-width="4" stroke-linecap="round"></path><path d="M 332 15 L 362 24 L 332 34 Z" fill="#EAC452" stroke="#CFA72F" stroke-width="2" stroke-linejoin="round"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.45; max-width: 340px; text-wrap: balance">A phased roadmap with clear ownership and next steps</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIMELINE RANGE ============ -->
+<section class="band" style="background: #FBF3DF; padding-top: 56px; padding-bottom: 64px">
+  <div class="shell">
+    <p class="eyebrow gold-ink">indicative duration</p>
+    <h2 class="h2">Typically <em>six to eight weeks.</em></h2>
+    <p style="margin: 16px 0 0; max-width: 58ch">Depending on the number of programs in scope, the stakeholder groups involved, and the maturity of your existing framework.</p>
+
+    <div class="ruler-wrap" style="margin-top: 28px">
+      <div style="min-width: 640px; position: relative; padding-top: 64px">
+        <div style="position: absolute; left: calc(6 / 10 * 100%); width: calc(2 / 10 * 100%); top: 0; text-align: center">
+          <span style="display: inline-block; font-size: 15px; font-weight: 800; color: #7D5E0C">most engagements land here</span>
+          <svg aria-hidden="true" width="100%" height="26" viewBox="0 0 300 26" preserveAspectRatio="none" style="display: block; margin-top: 8px"><path d="M 4 22 Q 6 8 30 10 L 140 10 Q 150 10 150 2 Q 150 10 160 10 L 270 10 Q 294 8 296 22" fill="none" stroke="#14131A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path></svg>
+        </div>
+        <div style="position: relative; height: 44px; background: #FFFFFF; border-radius: 22px; box-shadow: inset 0 0 0 1px #E5E7EE">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: calc(6 / 10 * 100%); background: #D3D7E2; border-radius: 22px 0 0 22px; opacity: 0.6"></div>
+          <div style="position: absolute; left: calc(6 / 10 * 100%); width: calc(2 / 10 * 100%); top: 0; bottom: 0; background: #EAC452; border-radius: 6px"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); margin-top: 12px">
+          <sc-for list="{{weeks}}" as="w" hint-placeholder-count="10">
+            <span style="font-size: 13px; font-weight: {{w.weight}}; color: {{w.color}}; text-align: right; padding-right: 4px; border-right: 1px solid #D3D7E2">wk {{w.n}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDY ============ -->
+<section id="case" class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 56px">
+  <div class="shell">
+    <article class="surface lift case-split" style="overflow: hidden; display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr)">
+      <img src="images/adf7e6efd567e8191c6319f6ce9ebe1f.webp" alt="Peepul and Goalkeep team members working through a dashboard around a table" style="width: 100%; height: 100%; min-height: 380px; object-fit: cover; display: block">
+      <div style="padding: 44px; display: flex; flex-direction: column">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #FBF3DF; color: #7D5E0C">Education</span>
+          <span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: #E7F2F0; color: #176059">Designing organizational impact framework</span>
+        </div>
+        <h3 style="margin: 24px 0 0; font-size: 36px; font-weight: 700; line-height: 1.16; letter-spacing: -0.012em">Peepul</h3>
+        <p style="margin: 16px 0 0; font-size: 19px; line-height: 1.6">Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.</p>
+        <p style="margin: auto 0 0; padding-top: 32px"><a class="tlink" href="#">Read the case study <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ CTA with slide-in form ============ -->
+<section id="contact" class="on-navy band" style="background: #2F4A92; color: #FFFFFF; padding-top: 64px; padding-bottom: 64px; position: relative; overflow: hidden">
+  <div class="shell split" style="position: relative; display: grid; grid-template-columns: minmax(0,6fr) minmax(0,5fr); gap: 64px; align-items: center; min-height: 340px">
+    <div>
+      <h2 class="h2" style="max-width: 20ch">Are you ready to build <em>a measurement framework your team can use?</em></h2>
+      <p style="margin: 24px 0 0; font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.86); max-width: 50ch">We work with you to measure what matters, map your organisation's ToC to key indicators, and create a data strategy for your organisation that is both practical and effective.</p>
+      <div style="margin-top: 36px">
+        <button type="button" class="btn btn-accent" onClick="{{openForm}}" aria-expanded="{{formExpanded}}">Work with us <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+      </div>
+    </div>
+    <div style="position: relative">
+      <div class="gk-mark" aria-hidden="true"><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#E8E724" stroke-width="39" stroke-linecap="round" stroke-dasharray="123.22 763.41" transform="rotate(241.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="115.80 763.41" transform="rotate(-47.304 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#526EB5" stroke-width="39" stroke-linecap="round" stroke-dasharray="122.16 763.41" transform="rotate(20.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#79C2B4" stroke-width="39" stroke-linecap="round" stroke-dasharray="135.95 763.41" transform="rotate(91.696 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="141" cy="141" r="121.5" fill="none" stroke="#EE9D90" stroke-width="39" stroke-linecap="round" stroke-dasharray="124.28 763.41" transform="rotate(169.196 141 141)"></circle></svg></div><div><svg viewBox="0 0 282 428" aria-hidden="true"><circle cx="142" cy="283.8" r="124.2" fill="none" stroke="#FFFFFF" stroke-width="39" stroke-linecap="round" stroke-dasharray="221.99 780.37" transform="rotate(38.796 142 283.8)"></circle></svg></div></div>
+      <sc-if value="{{formOpen}}" hint-placeholder-val="{{ false }}">
+        <div class="surface slide-in" style="padding: 36px; color: #14131A; border-radius: 16px; box-shadow: 0 24px 56px rgba(20,19,26,0.28); position: relative">
+          <button type="button" aria-label="Close form" onClick="{{closeForm}}" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: none; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #14131A"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+          <sc-if value="{{notSubmitted}}" hint-placeholder-val="{{ true }}">
+            <form style="display: flex; flex-direction: column; gap: 18px; margin: 0">
+              <p style="margin: 0 0 4px; font-size: 22px; font-weight: 700; line-height: 1.28">Tell us a little about you.</p>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Name<input type="text" name="name" autocomplete="name" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Email<input type="email" name="email" autocomplete="email" class="field"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 700">Organisation name<input type="text" name="org" autocomplete="organization" class="field"></label>
+              <button type="button" class="btn btn-primary" onClick="{{submitForm}}" style="align-self: flex-start; margin-top: 6px">Submit <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+            </form>
+          </sc-if>
+          <sc-if value="{{submitted}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 24px 0">
+              <svg aria-hidden="true" width="44" height="44" viewBox="0 0 28 28"><path d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5" fill="none" stroke="#EAC452" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <p style="margin: 12px 0 0; font-size: 22px; font-weight: 700">Thank you.</p>
+              <p style="margin: 8px 0 0; color: rgba(20,19,26,0.72)">We'll be in touch shortly.</p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OTHER SERVICES ============ -->
+<section class="band" style="background: #FFFFFF; padding-top: 56px; padding-bottom: 56px">
+  <div class="shell">
+    <h2 class="h2">Explore our <em>other services.</em></h2>
+    <div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 32px">
+      <a class="lift" href="data-systems-and-workflows.html" style="background: #EAEFF9; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data systems and workflows</span>
+        <span style="font-size: 15px; line-height: 1.6">Build an integrated data system that is easier to use today and strong enough to grow with you. We bring data entry, analysis and insight into one connected system, shaped around your programmes, roles and workflows.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+      <a class="lift" href="dashboards-and-reporting.html" style="background: #FBEEE9; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Dashboards and reporting</span>
+        <span style="font-size: 15px; line-height: 1.6">Build dashboards that answer real questions, not simply display available data. We start with what questions you want your data to answer for you, and then build out a system that effectively showcases that.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #9C452A">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+      <a class="lift" href="data-adoption-and-capacity-building.html" style="background: #E7F2F0; border-radius: 12px; padding: 32px; text-decoration: none; color: #14131A; display: flex; flex-direction: column; gap: 12px; border: 1px solid transparent">
+        <span style="font-size: 22px; font-weight: 700; line-height: 1.28">Data adoption and capacity-building</span>
+        <span style="font-size: 15px; line-height: 1.6">Build a data-confident workforce across your organisation. We conduct trainings and capacity building workshops that impart practical, role-specific learning. The primary goal is to get people to integrate data in their everyday work, so that it becomes a habit rather than a one-off event.</span>
+        <span class="tlink" style="margin-top: 8px; align-self: flex-start; color: #176059">Explore <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background: #FFFFFF; border-top: 1px solid #E5E7EE; padding-top: 32px; padding-bottom: 32px">
+  <div class="shell" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <img src="images/52bbd9a37c2166bb5e61a6ecbb2c4c15.webp" alt="Goalkeep" style="height: 32px; width: auto; display: block; align-self: flex-start">
+      <p style="margin: 0; font-size: 15px; color: rgba(20,19,26,0.72); max-width: 44ch">Goalkeep helps organizations measure, communicate, and deepen their impact with confidence.</p>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: rgba(20,19,26,0.72)">© 2026 Goalkeep</p>
+  </div>
+</footer>
+
+</div>
+</template>
+<div id="dc-root"></div>
+<script>
+/* dc-lite: a tiny standalone renderer for the Goalkeep page templates.
+   Reads markup from <template id="dc-tpl">, fills {{bindings}}, handles <sc-if>, <sc-for>
+   and onClick / onMouseEnter handlers, and re-renders on setState. No dependencies. */
+(function () {
+  var RE = /\{\{([^}]+)\}\}/g;
+  function lookup(scopes, path) {
+    path = path.trim();
+    var parts = path.split('.');
+    var obj;
+    for (var i = scopes.length - 1; i >= 0; i--) {
+      if (scopes[i] && Object.prototype.hasOwnProperty.call(scopes[i], parts[0])) { obj = scopes[i]; break; }
+    }
+    if (!obj) return undefined;
+    var v = obj;
+    for (var k = 0; k < parts.length; k++) { if (v == null) return undefined; v = v[parts[k]]; }
+    return v;
+  }
+  function interp(str, scopes) {
+    return str.replace(RE, function (m, p) { var v = lookup(scopes, p); return v == null ? '' : String(v); });
+  }
+  function exprOf(attr) { var m = /\{\{([^}]+)\}\}/.exec(attr || ''); return m ? m[1] : ''; }
+
+  function compileNodes(nodes, updaters) {
+    for (var i = 0; i < nodes.length; i++) compileNode(nodes[i], updaters);
+  }
+  function compileNode(node, updaters) {
+    if (node.nodeType === 3) {
+      if (node.nodeValue.indexOf('{{') !== -1) {
+        var tpl = node.nodeValue;
+        updaters.push(function (scopes) { var t = interp(tpl, scopes); if (node.nodeValue !== t) node.nodeValue = t; });
+      }
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    var tag = node.tagName.toLowerCase();
+    if (tag === 'sc-if' || tag === 'sc-for') { compileBlock(node, tag, updaters); return; }
+    var attrs = Array.prototype.slice.call(node.attributes);
+    attrs.forEach(function (a) {
+      var name = a.name, val = a.value;
+      if (name.indexOf('hint-placeholder') === 0) { node.removeAttribute(name); return; }
+      if (val.indexOf('{{') === -1) return;
+      if (/^on[a-z]+$/i.test(name)) {
+        node.removeAttribute(name);
+        var evt = name.slice(2).toLowerCase();
+        var path = exprOf(val);
+        var current = { scopes: [] };
+        node.addEventListener(evt, function (e) { var fn = lookup(current.scopes, path); if (typeof fn === 'function') fn(e); });
+        updaters.push(function (scopes) { current.scopes = scopes; });
+        return;
+      }
+      node.setAttribute(name, '');
+      updaters.push(function (scopes) { var t = interp(val, scopes); if (node.getAttribute(name) !== t) node.setAttribute(name, t); });
+    });
+    compileNodes(Array.prototype.slice.call(node.childNodes), updaters);
+  }
+  function compileBlock(el, tag, updaters) {
+    var anchor = document.createComment(tag);
+    el.parentNode.replaceChild(anchor, el);
+    var frag = document.createDocumentFragment();
+    while (el.firstChild) frag.appendChild(el.firstChild);
+    function instantiate() {
+      var clone = frag.cloneNode(true);
+      var nodes = Array.prototype.slice.call(clone.childNodes);
+      var ups = [];
+      var holder = document.createElement('div');
+      holder.appendChild(clone);
+      compileNodes(Array.prototype.slice.call(holder.childNodes), ups);
+      nodes = Array.prototype.slice.call(holder.childNodes);
+      return { nodes: nodes, ups: ups };
+    }
+    if (tag === 'sc-if') {
+      var expr = exprOf(el.getAttribute('value'));
+      var inst = null;
+      updaters.push(function (scopes) {
+        var on = !!lookup(scopes, expr);
+        if (on && !inst) {
+          inst = instantiate();
+          inst.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+        } else if (!on && inst) {
+          inst.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+          inst = null;
+        }
+        if (inst) inst.ups.forEach(function (u) { u(scopes); });
+      });
+    } else {
+      var listExpr = exprOf(el.getAttribute('list'));
+      var as = el.getAttribute('as') || 'item';
+      var items = [];
+      updaters.push(function (scopes) {
+        var list = lookup(scopes, listExpr) || [];
+        if (list.length !== items.length) {
+          items.forEach(function (it) { it.nodes.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
+          items = [];
+          for (var i = 0; i < list.length; i++) {
+            var it = instantiate();
+            it.nodes.forEach(function (n) { anchor.parentNode.insertBefore(n, anchor); });
+            items.push(it);
+          }
+        }
+        items.forEach(function (it, i) {
+          var s = {}; s[as] = list[i];
+          var sc = scopes.concat([s]);
+          it.ups.forEach(function (u) { u(sc); });
+        });
+      });
+    }
+  }
+
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (patch) {
+    this.state = Object.assign({}, this.state || {}, typeof patch === 'function' ? patch(this.state) : patch);
+    if (this.__render) this.__render();
+  };
+  DCLogic.prototype.renderVals = function () { return {}; };
+  window.DCLogic = DCLogic;
+
+  window.DCMount = function (Component, props) {
+    var tpl = document.getElementById('dc-tpl');
+    var root = document.getElementById('dc-root');
+    root.appendChild(tpl.content.cloneNode(true));
+    var updaters = [];
+    compileNodes(Array.prototype.slice.call(root.childNodes), updaters);
+    var comp = new Component(props || {});
+    if (!comp.state) comp.state = {};
+    var queued = false;
+    function render() {
+      queued = false;
+      var vals = comp.renderVals() || {};
+      updaters.forEach(function (u) { u([vals]); });
+    }
+    comp.__render = function () { if (!queued) { queued = true; (window.requestAnimationFrame || setTimeout)(render); } };
+    render();
+    if (comp.componentDidMount) comp.componentDidMount();
+    window.addEventListener('pagehide', function () { if (comp.componentWillUnmount) comp.componentWillUnmount(); });
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { checked: [], formOpen: false, submitted: false, slide: 0 };
+  }
+  componentDidMount() {
+    this._timer = setInterval(() => {
+      const cur = (this.state && this.state.slide) || 0;
+      this.setState({ slide: (cur + 1) % 4 });
+    }, 5000);
+  }
+  componentWillUnmount() {
+    if (this._timer) clearInterval(this._timer);
+  }
+  goSlide(n) {
+    if (this._timer) clearInterval(this._timer);
+    this._timer = null;
+    this.setState({ slide: (n + 4) % 4 });
+  }
+  renderVals() {
+    const st = this.state || {};
+    const slide = st.slide || 0;
+    const dots = [0, 1, 2, 3].map((n) => ({
+      label: 'Show photo ' + (n + 1) + ' of 4',
+      current: n === slide ? 'true' : 'false',
+      w: n === slide ? '24px' : '10px',
+      bg: (this.props.banner ?? 'theme') !== 'navy' ? (n === slide ? '#FFFFFF' : 'rgba(255,255,255,0.5)') : (n === slide ? '#EAC452' : 'rgba(255,255,255,0.5)'),
+      go: () => this.goSlide(n)
+    }));
+    const checked = st.checked || [];
+    const texts = [
+      'Your Theory of Change no longer reflects how your programmes have evolved.',
+      'Different programmes or teams use different definitions, indicators or methods for similar outcomes.',
+      'You collect considerable data but have a hard time getting a coherent organisation-wide picture of impact.',
+      'Measurement is driven mainly by reporting requirements rather than programme decisions and learning.',
+      'Leadership, teams or funders need stronger and more consistent evidence of progress.',
+      'A measurement framework exists on paper but has not been operationalised in everyday work.'
+    ];
+                const iconTints = ['#FBF3DF', '#EAEFF9', '#E7F2F0', '#FBEEE9', '#EAEFF9', '#FBF3DF'];
+    const iconInks = ['#7D5E0C', '#2F4D9F', '#176059', '#9C452A', '#2F4D9F', '#7D5E0C'];
+    const baseOf = { '#FBF3DF': '#EAC452', '#EAEFF9': '#3F63C8', '#E7F2F0': '#2F9C8F', '#FBEEE9': '#E07A5F' };
+    const onFills = ['#F7DB63', '#8FA8E8', '#5FC9BA', '#F0A58C', '#8FA8E8', '#F7DB63'];
+    const onIcons = ['#7D5E0C', '#2F4D9F', '#176059', '#9C452A', '#2F4D9F', '#7D5E0C'];
+    const onShadows = ['rgba(125,94,12,0.24)', 'rgba(47,77,159,0.24)', 'rgba(23,96,89,0.24)', 'rgba(156,69,42,0.24)', 'rgba(47,77,159,0.24)', 'rgba(125,94,12,0.24)'];
+    const out = {};
+    texts.forEach((text, i) => {
+      const on = checked.indexOf(i) !== -1;
+      out['s' + i] = {
+        text: text,
+        on: on,
+        pressed: on ? 'true' : 'false',
+        bg: on ? iconTints[i] : '#FFFFFF',
+        border: on ? (baseOf[iconTints[i]] || '#E5E7EE') : '#E5E7EE',
+        radius: '14px',
+        transform: on ? 'translateY(-4px) scale(1.02)' : 'none',
+        offset: '0px',
+        shadow: on ? '0 16px 32px ' + onShadows[i] : '0 1px 2px rgba(20,19,26,0.06), 0 8px 22px rgba(20,19,26,0.08)',
+        iconBg: on ? onIcons[i] : iconTints[i],
+        iconFg: on ? '#FFFFFF' : iconInks[i],
+        weight: on ? '700' : '400',
+        toggle: () => {
+          const cur = (this.state && this.state.checked) || [];
+          const next = cur.indexOf(i) !== -1 ? cur.filter((x) => x !== i) : cur.concat([i]);
+          this.setState({ checked: next });
+        }
+      };
+    });
+
+    const count = checked.length;
+    const ringColors = ['#FBEEE9', '#FBF3DF', '#EAEFF9', '#E7F2F0', '#2F4A92', '#EAC452'];
+    const ringEdges = ['#E07A5F', '#EAC452', '#3F63C8', '#2F9C8F', '#2F4A92', '#EAC452'];
+    for (let k = 0; k < 6; k++) {
+      out['g' + k] = { color: ringColors[k], edge: ringEdges[k], off: k < count ? '0' : '100' };
+    }
+
+    let verdictTitle = 'Nothing tapped yet.';
+    let verdictBody = 'Tap any note that rings true for you.';
+    if (count >= 1 && count <= 2) { verdictTitle = 'Worth a conversation.'; verdictBody = 'Small gaps in measurement tend to widen if left unchecked.'; }
+    if (count >= 3) { verdictTitle = 'Your framework needs serious attention.'; verdictBody = 'This is exactly what we’re here to fix. Let’s connect.'; }
+
+    const weeks = [];
+    for (let n = 1; n <= 10; n++) {
+      const inRange = n >= 7 && n <= 8;
+      weeks.push({ n: n, weight: inRange ? '800' : '600', color: inRange ? '#7D5E0C' : 'rgba(20,19,26,0.6)' });
+    }
+
+    const formOpen = !!st.formOpen;
+    const submitted = !!st.submitted;
+    const themed = (this.props.banner ?? 'theme') !== 'navy';
+    return Object.assign(out, {
+      bannerCls: themed ? 'ban-gold' : '',
+      slideX: (-slide * 100) + '%',
+      dots: dots,
+      prevSlide: () => this.goSlide(slide - 1),
+      nextSlide: () => this.goSlide(slide + 1),
+      count: count,
+      verdictTitle: verdictTitle,
+      verdictBody: verdictBody,
+      ctaVis: count >= 2 ? 'visible' : 'hidden',
+      weeks: weeks,
+      formOpen: formOpen,
+      formExpanded: formOpen ? 'true' : 'false',
+      submitted: submitted,
+      notSubmitted: !submitted,
+      openForm: () => { if (!(this.state && this.state.formOpen)) this.setState({ formOpen: true, submitted: false }); },
+      closeForm: () => this.setState({ formOpen: false, submitted: false }),
+      submitForm: () => this.setState({ submitted: true })
+    });
+  }
+}
+DCMount(Component, {"banner": "theme"});
+</script>
+<script>
+/* Scroll-linked assembly of the Goalkeep mark in the closing banner. Each piece owns an
+   overlapping slice of the scroll so they land one at a time. Reduced motion: drawn finished. */
+(function () {
+  var P = [[0.65,-150.00,-120],[110.88,-40.36,140],[105.21,123.19,-95],[-73.34,109.75,128],[-138.46,-46.33,-145],[0.00,175.00,105]], SCALE = 0.53191, SETTLE = 0.6;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var queued = false;
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function update() {
+    queued = false;
+    var mark = document.querySelector('#contact .gk-mark');
+    if (!mark) return;
+    var kids = mark.children, i;
+    if (reduce && reduce.matches) {
+      for (i = 0; i < kids.length; i++) { kids[i].style.transform = ''; kids[i].style.opacity = ''; }
+      return;
+    }
+    var r = mark.getBoundingClientRect(), vh = window.innerHeight;
+    if (!r.height) return;
+    var endTop = SETTLE * vh - r.height / 2;
+    var p = clamp((vh - r.top) / (vh - endTop));
+    for (i = 0; i < kids.length && i < P.length; i++) {
+      var t = clamp((p - i * 0.088) / 0.38), k = 1 - t, s = P[i];
+      var o = t < 0.22 ? t / 0.22 * 0.75 : t < 0.55 ? 0.75 + (t - 0.22) / 0.33 * 0.25 : 1;
+      kids[i].style.transform = 'translate(' + (s[0] * SCALE * k).toFixed(2) + 'px,' + (s[1] * SCALE * k).toFixed(2) + 'px) rotate(' + (s[2] * k).toFixed(2) + 'deg)';
+      kids[i].style.opacity = o.toFixed(3);
+    }
+  }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  if (reduce && reduce.addEventListener) reduce.addEventListener('change', queue);
+  addEventListener('load', queue);
+  queue();
+})();
+</script>
+</body>
+</html>
