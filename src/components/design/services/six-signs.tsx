@@ -34,7 +34,7 @@ export function SixSignsSection({ signs, heading, items, tone, checked, onToggle
         viewBox="0 0 286 286"
         style={{ position: 'absolute', left: -163, bottom: -143, pointerEvents: 'none' }}
       >
-        <circle cx="143" cy="143" r="126" fill="none" stroke="#EAC452" strokeWidth="34" />
+        <circle cx="143" cy="143" r="126" fill="none" stroke={toneAccents[tone].base} strokeWidth="34" />
       </svg>
       <div
         className="dc-shell dc-split"
