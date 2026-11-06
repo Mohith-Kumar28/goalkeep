@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PageView } from '@/components/pages/page-blocks'
-import { kickstarterPage } from '@/content/programs'
+import { KickstarterPage } from '@/components/design/kickstarter/page'
+import { kickstarter } from '@/content/design/kickstarter'
 
 export const Route = createFileRoute('/programs/kickstarter')({
   head: () => ({
-    meta: [{ title: kickstarterPage.title }, { name: 'description', content: kickstarterPage.description }],
+    meta: [{ title: kickstarter.meta.title }, { name: 'description', content: kickstarter.meta.description }],
   }),
-  component: () => <PageView page={kickstarterPage} />,
+  component: KickstarterPage,
 })
