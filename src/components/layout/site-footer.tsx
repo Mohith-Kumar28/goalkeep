@@ -1,28 +1,26 @@
-import { Link } from '@tanstack/react-router'
+import { SiteLink } from '@/components/design/site-link'
 import { site } from '@/content/site'
-import { Wordmark } from './wordmark'
 
-/**
- * One thin line: the wordmark and tagline, then the copyright.
- *
- * 21 Oct: "the footer can just be… this thing that's there on the left… on
- * one thin line" while the homepage is the only page live. The three link
- * columns (`footerGroups` in site.ts) come back when the other pages do.
- *
- * The closing band and the contact form sit above, so the footer stays cream
- * and quiet - the receipt underneath the ending, not part of it.
- */
 export function SiteFooter() {
   return (
-    <footer className="ground-cream-deep border-t border-[var(--hairline)]">
-      <div className="shell flex flex-col gap-3 py-6 md:flex-row md:items-center md:justify-between md:gap-8">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
-          <Link to="/" aria-label="Goalkeep, home" className="shrink-0 self-start md:self-auto">
-            <Wordmark />
-          </Link>
-          <p className="text-[length:var(--fs-sm)] text-[var(--fg-2)]">{site.tagline}</p>
+    <footer className="dc-footer">
+      <div
+        className="dc-shell"
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 24 }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <SiteLink href="/" aria-label="Goalkeep home" style={{ alignSelf: 'flex-start' }}>
+            <img
+              src="/wordmark-ink.webp"
+              alt="Goalkeep"
+              width={673}
+              height={160}
+              style={{ height: 32, width: 'auto', display: 'block' }}
+            />
+          </SiteLink>
+          <p style={{ margin: 0, fontSize: 15, color: 'rgba(20,19,26,0.72)', maxWidth: '44ch' }}>{site.tagline}</p>
         </div>
-        <p className="shrink-0 text-[length:var(--fs-sm)] text-[var(--fg-2)]">
+        <p style={{ margin: 0, fontSize: 13, color: 'rgba(20,19,26,0.72)' }}>
           © {new Date().getFullYear()} Goalkeep
         </p>
       </div>

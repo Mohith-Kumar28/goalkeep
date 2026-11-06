@@ -391,11 +391,9 @@ function BandArc({
  */
 function Hero({ block }: { block: Of<'hero'> }) {
   return (
-    /* Pulled up under the sticky header, as the homepage hero is, so the
-       header floats transparent on the navy. 82px is the header plus its rule. */
     <section
       data-ground="navy"
-      className="ground-navy accent-yellow relative -mt-[82px] overflow-hidden pt-[82px] lg:pt-0"
+      className="ground-navy accent-yellow relative overflow-hidden"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
       {block.photo && !block.links && (
@@ -410,7 +408,7 @@ function Hero({ block }: { block: Of<'hero'> }) {
         </div>
       )}
 
-      <div className={cn('shell relative pt-8 pb-16 lg:pt-[calc(82px+5.5rem)] lg:pb-32', block.links && 'grid items-center gap-12 lg:grid-cols-12')}>
+      <div className={cn('shell relative pt-8 pb-16 lg:pt-24 lg:pb-32', block.links && 'grid items-center gap-12 lg:grid-cols-12')}>
         <Reveal className={block.links ? 'lg:col-span-6' : 'lg:max-w-[55%]'}>
           <p className="eyebrow mb-5">{block.eyebrow}</p>
           <Title heading={block.headline} as="h1" className="max-w-[24ch]" />
@@ -1553,7 +1551,7 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
         {/* Pinned on desktop only: on a phone it would hold a sixth of the screen. */}
         <motion.div
           style={{ opacity: switchOpacity }}
-          className="z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)] lg:sticky lg:top-[82px]"
+          className="z-30 border-y border-[var(--hairline)] bg-[var(--gk-cream)] shadow-[var(--shadow-xs)] lg:sticky lg:top-0"
         >
           <div className="shell flex items-center gap-x-5 py-2">
             <p id={`${id}-prompt`} className="hidden text-[length:var(--fs-sm)] font-bold text-[var(--gk-navy)] sm:block">
@@ -1591,7 +1589,7 @@ function AudienceSwitch({ block, tone }: { block: Of<'audienceSwitch'>; tone: nu
             </div>
           </div>
         </motion.div>
-        <div ref={panel} role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`} className="scroll-mt-[82px] lg:scroll-mt-[151px] [&_h2]:scroll-mt-44">
+        <div ref={panel} role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${option.id}`} className="scroll-mt-4 lg:scroll-mt-[69px] [&_h2]:scroll-mt-44">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={option.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
               <Blocks blocks={body} startTone={tone} />

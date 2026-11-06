@@ -19,44 +19,97 @@ export const site = {
   url: 'https://goalkeep.net',
 }
 
+/** Page colours of the services and programs pages. The values live in design.css, keyed by `data-theme`. */
+export type PageTheme = 'navy' | 'blue' | 'teal' | 'coral' | 'gold' | 'sun'
+
+export type NavChild = {
+  label: string
+  description: string
+  to: string
+  /** The header colour while this page is open. */
+  theme: PageTheme
+  /** The tint behind this entry in the menu while its page is open. */
+  tint: string
+}
+
 export type NavItem = {
   label: string
   to: string
-  children?: Array<{ label: string; to: string }>
+  children?: Array<NavChild>
 }
 
-/* 21 Oct: the homepage's sections are anchors (`/#…`, so they also work
-   from other routes). November: Services and Programs open menus of their
-   own pages; "All services" keeps the old "What we do" jump. */
+/* The links are anchors into the homepage (`/#…`) so they also work from
+   other routes. Resources goes to the blog index, the only resources page
+   that is live; the data culture quiz stays out until it launches. */
 export const nav: Array<NavItem> = [
-  { label: 'Why we exist', to: '/#why-we-exist' },
+  { label: 'About us', to: '/#why-we-exist' },
   {
-    label: 'Services',
+    label: 'What we do',
     to: '/#what-we-do',
     children: [
-      { label: 'Impact and measurement strategy', to: '/services/impact-and-measurement-strategy' },
-      { label: 'Data systems and workflows', to: '/services/data-systems-and-workflows' },
-      { label: 'Dashboards and reporting', to: '/services/dashboards-and-reporting' },
-      { label: 'Data adoption and capacity-building', to: '/services/data-adoption-and-capacity-building' },
-      { label: 'All services', to: '/#what-we-do' },
+      {
+        label: 'Impact and measurement strategy',
+        description: 'Turn your Theory of Change into a usable framework',
+        to: '/services/impact-and-measurement-strategy',
+        theme: 'gold',
+        tint: '#FBF3DF',
+      },
+      {
+        label: 'Data systems and workflows',
+        description: 'An integrated system that scales with you',
+        to: '/services/data-systems-and-workflows',
+        theme: 'blue',
+        tint: '#EAEFF9',
+      },
+      {
+        label: 'Dashboards and reporting',
+        description: 'Use your data to make better decisions',
+        to: '/services/dashboards-and-reporting',
+        theme: 'coral',
+        tint: '#FBEEE9',
+      },
+      {
+        label: 'Data adoption and capacity-building',
+        description: 'Build a data-confident workforce',
+        to: '/services/data-adoption-and-capacity-building',
+        theme: 'teal',
+        tint: '#E7F2F0',
+      },
     ],
   },
   {
     label: 'Programs',
     to: '/programs',
     children: [
-      { label: 'Kickstarter', to: '/programs/kickstarter' },
-      { label: 'Data Literacy Program', to: '/programs/data-literacy' },
-      // Hidden until the quiz is ready to launch.
-      // { label: 'Data culture quiz', to: '/resources/data-quiz' },
-      { label: 'All programs', to: '/programs' },
+      {
+        label: 'Kickstarter Program',
+        description: 'A data backbone for early-stage nonprofits',
+        to: '/programs/kickstarter',
+        theme: 'navy',
+        tint: '#FBF3DF',
+      },
+      {
+        label: 'Data Literacy Program',
+        description: 'Scale data best practices within your teams',
+        to: '/programs/data-literacy',
+        theme: 'navy',
+        tint: '#E7F2F0',
+      },
     ],
   },
-  { label: 'Who we do it for', to: '/#who-we-do-it-for' },
-  { label: 'Our approach', to: '/#our-approach' },
   { label: 'Case studies', to: '/#case-studies' },
-  { label: 'FAQs', to: '/#faqs' },
+  { label: 'Resources', to: '/resources/blog' },
 ]
+
+/** The menu entry for a page, if it has one. */
+export function navChildFor(pathname: string): NavChild | undefined {
+  const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname
+  return nav.flatMap((item) => item.children ?? []).find((child) => child.to === path)
+}
+
+export function themeForPath(pathname: string): PageTheme {
+  return navChildFor(pathname)?.theme ?? 'navy'
+}
 
 export const contactHref = '/#contact'
 

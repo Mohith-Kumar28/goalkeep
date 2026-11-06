@@ -140,7 +140,7 @@ export function DataQuiz() {
             stage.kind === 'details' ? 'hidden lg:flex' : 'flex',
             /* On a phone the review's score row pins under the header, so the
                score stays in view while answers further down change. */
-            stage.kind === 'review' && 'max-lg:sticky max-lg:top-[82px] max-lg:z-20',
+            stage.kind === 'review' && 'max-lg:sticky max-lg:top-0 max-lg:z-20',
           )}
           style={{ backgroundColor: 'var(--gk-navy-deep)' }}
         >

@@ -67,10 +67,7 @@ export function Hero() {
   return (
     <section
       data-ground="navy"
-      /* Pulled up under the sticky header so the navy runs to the top of the
-         viewport and the header floats on it. 82px is the header's h-20 plus
-         its 2px progress rule. */
-      className="ground-navy relative isolate -mt-[82px] overflow-hidden accent-yellow"
+      className="ground-navy relative isolate overflow-hidden accent-yellow"
       style={{ backgroundColor: "var(--gk-navy)" }}
     >
       {/* Fragments of the mark, tonal rather than coloured - the hero is the
@@ -81,7 +78,7 @@ export function Hero() {
       {/* "This banner should not cover the entire above-the-fold screen" -
           the padding is sized so the partner heading clears 900px. 23 Oct:
           tightened again - "reduce the height of the hero section a bit". */}
-      <div className="shell relative z-10 grid items-center gap-12 pt-[calc(82px+2rem)] pb-12 md:pt-[calc(82px+2.25rem)] md:pb-12 lg:grid-cols-12 lg:gap-12">
+      <div className="shell relative z-10 grid items-center gap-12 pt-8 pb-12 md:pt-9 md:pb-12 lg:grid-cols-12 lg:gap-12">
         <div className="min-w-0 lg:col-span-7">
           <h1
             className="display max-w-[22ch] text-white"

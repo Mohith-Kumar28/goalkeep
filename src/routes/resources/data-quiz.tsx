@@ -37,10 +37,9 @@ const ABOUT: Record<DomainId, string> = {
 function DataQuizPage() {
   return (
     <>
-      {/* Pulled up under the sticky header, as the homepage hero is. */}
       <section
         data-ground="navy"
-        className="ground-navy accent-yellow relative -mt-[82px] pt-[82px]"
+        className="ground-navy accent-yellow relative"
         style={{ backgroundColor: 'var(--gk-navy)' }}
       >
         <div className="shell relative grid items-center gap-12 pt-12 pb-24 md:pt-16 lg:grid-cols-12 lg:pb-28">
