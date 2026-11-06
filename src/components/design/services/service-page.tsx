@@ -75,22 +75,20 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
         tone={tone}
         audienceTag={tag}
       />
-      <div className="dc-svc-contact">
-        <ContactBand
-          eyebrow={
-            tag && (
-              <p style={{ margin: '0 0 16px' }}>
-                <AudienceTag tone={tone} onNavy>
-                  {tag}
-                </AudienceTag>
-              </p>
-            )
-          }
-          heading={<Rich html={contact.heading} />}
-          body={contact.body}
-          ctas={content.contact.ctas.map((label) => ({ label }))}
-        />
-      </div>
+      <ContactBand
+        eyebrow={
+          tag && (
+            <p style={{ margin: '0 0 16px' }}>
+              <AudienceTag tone={tone} onNavy>
+                {tag}
+              </AudienceTag>
+            </p>
+          )
+        }
+        heading={<Rich html={contact.heading} />}
+        body={contact.body}
+        ctas={content.contact.ctas.map((label) => ({ label }))}
+      />
       <ExploreServices heading={content.explore.heading} cards={content.explore.cards} />
     </DesignPage>
   )

@@ -370,4 +370,3 @@ export const servicePages: Array<Page & { slug: string }> = [
   },
 ]
 
-export const servicePage = (slug: string) => servicePages.find((page) => page.slug === slug)

@@ -164,6 +164,9 @@
     border-color 240ms,
     color 240ms;
 }
+button.dc-btn {
+  line-height: normal;
+}
 .dc-btn svg {
   transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -441,6 +444,11 @@
     overflow-x: auto;
   }
 }
+@media (max-width: 1100px) {
+  .dc-glance {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
 @media (max-width: 760px) {
   .dc-glance,
   .dc-stories,
@@ -450,11 +458,6 @@
   }
   .dc-change-arrow {
     transform: rotate(90deg);
-  }
-}
-@media (max-width: 1100px) {
-  .dc-glance {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 @media (max-width: 1439px) {
@@ -602,7 +605,6 @@
   .dc-mark-slot {
     position: relative;
     inset: auto;
-    margin-top: 8px;
   }
   .dc-mark-lg {
     display: none;

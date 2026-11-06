@@ -388,8 +388,3 @@
   }
 }
 
-@media (max-width: 760px) {
-  .dc-glance {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-}
