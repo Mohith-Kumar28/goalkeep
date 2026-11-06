@@ -12,14 +12,17 @@ export function CaseStudySection({
   quote,
   tone,
   audienceTag,
+  roomy = false,
 }: {
   card: CaseCard
   quote?: CaseQuote
   tone: Tone
   audienceTag?: string
+  roomy?: boolean
 }) {
+  const gap = roomy ? { padding: 44, title: 24, body: 16, link: 32 } : { padding: 40, title: 22, body: 14, link: 28 }
   const content = (
-    <div style={{ padding: 40, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ padding: gap.padding, display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
         {card.tags.map((tag) => (
           <span
@@ -37,10 +40,10 @@ export function CaseStudySection({
           </span>
         ))}
       </div>
-      <h3 style={{ margin: '22px 0 0', fontSize: 36, fontWeight: 700, lineHeight: 1.16, letterSpacing: '-0.012em' }}>
+      <h3 style={{ margin: `${gap.title}px 0 0`, fontSize: 36, fontWeight: 700, lineHeight: 1.16, letterSpacing: '-0.012em' }}>
         {card.title}
       </h3>
-      <p style={{ margin: '14px 0 0', fontSize: 19, lineHeight: 1.6 }}>{card.body}</p>
+      <p style={{ margin: `${gap.body}px 0 0`, fontSize: 19, lineHeight: 1.6 }}>{card.body}</p>
       {quote && (
         <figure style={{ margin: '24px 0 0', padding: 0 }}>
           <blockquote style={{ margin: 0, fontSize: 17, lineHeight: 1.6, fontStyle: 'italic' }}>
@@ -75,8 +78,8 @@ export function CaseStudySection({
       <p
         style={
           card.kind === 'live'
-            ? { margin: 'auto 0 0', paddingTop: 28 }
-            : { margin: 'auto 0 0', paddingTop: 28, fontSize: 15, fontWeight: 700, color: tones[card.tone].ink }
+            ? { margin: 'auto 0 0', paddingTop: gap.link }
+            : { margin: 'auto 0 0', paddingTop: gap.link, fontSize: 15, fontWeight: 700, color: tones[card.tone].ink }
         }
       >
         {card.kind === 'live' ? (

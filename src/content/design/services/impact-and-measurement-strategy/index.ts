@@ -76,6 +76,7 @@ export const content: ServicePageContent = {
     body: "Depending on the number of programs in scope, the stakeholder groups involved, and the maturity of your existing framework.",
     ticks: weekTicks(10),
     spans: [{ from: 6, to: 8, caption: "most engagements land here" }],
+    compact: true,
   },
   caseStudy: {
     kind: 'live',
@@ -88,6 +89,7 @@ export const content: ServicePageContent = {
       { label: "Designing organizational impact framework", tone: 'teal' },
     ],
   },
+  caseRoomy: true,
   contact: {
     heading: "Are you ready to build <em>a measurement framework your team can use?</em>",
     body: "We work with you to measure what matters, map your organisation's ToC to key indicators, and create a data strategy for your organisation that is both practical and effective.",

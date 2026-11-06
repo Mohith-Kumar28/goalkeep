@@ -42,7 +42,7 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
             </Cta>
           </>
         }
-        actionsMarginTop={28}
+        actionsMarginTop={hero.tightActions ? 24 : 28}
       />
       {audiences && (
         <AudienceSwitch
@@ -71,23 +71,26 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
       <CaseStudySection
         card={view?.caseStudy ?? content.caseStudy}
         quote={view ? view.caseQuote : content.caseQuote}
+        roomy={content.caseRoomy}
         tone={tone}
         audienceTag={tag}
       />
-      <ContactBand
-        eyebrow={
-          tag && (
-            <p style={{ margin: '0 0 16px' }}>
-              <AudienceTag tone={tone} onNavy>
-                {tag}
-              </AudienceTag>
-            </p>
-          )
-        }
-        heading={<Rich html={contact.heading} />}
-        body={contact.body}
-        ctas={content.contact.ctas.map((label) => ({ label }))}
-      />
+      <div className="dc-svc-contact">
+        <ContactBand
+          eyebrow={
+            tag && (
+              <p style={{ margin: '0 0 16px' }}>
+                <AudienceTag tone={tone} onNavy>
+                  {tag}
+                </AudienceTag>
+              </p>
+            )
+          }
+          heading={<Rich html={contact.heading} />}
+          body={contact.body}
+          ctas={content.contact.ctas.map((label) => ({ label }))}
+        />
+      </div>
       <ExploreServices heading={content.explore.heading} cards={content.explore.cards} />
     </DesignPage>
   )

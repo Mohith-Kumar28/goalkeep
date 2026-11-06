@@ -96,6 +96,8 @@ export type Duration = {
   /** One label per ruler cell, e.g. `weekTicks(10)` or `['4 hours', '1 day']`. */
   ticks: Array<string>
   spans: Array<RulerSpan>
+  /** The single-bar ruler of the impact page: 64px of headroom and no gap under the bar. */
+  compact?: boolean
 }
 
 export const weekTicks = (weeks: number): Array<string> => Array.from({ length: weeks }, (_, i) => `wk ${i + 1}`)
@@ -115,6 +117,8 @@ export type ServicePageContent = {
     primary: string
     secondary: { label: string; href: string }
     photos: Array<HeroPhoto>
+    /** The dashboards page sits its buttons 24px under the lead, the others 28px. */
+    tightActions?: boolean
   }
   audiences?: Audiences
   signs: SixSigns
@@ -123,6 +127,8 @@ export type ServicePageContent = {
   duration: Duration
   caseStudy: CaseCard
   caseQuote?: CaseQuote
+  /** The impact page's roomier case study text column: 44px padding and looser gaps. */
+  caseRoomy?: boolean
   contact: { heading: Html; body: string; ctas: Array<string> }
   explore: { heading: Html; cards: Array<ExploreCard> }
 }

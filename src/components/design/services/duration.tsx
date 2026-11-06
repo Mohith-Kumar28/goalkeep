@@ -12,12 +12,12 @@ const pct = (from: number, to: number, cells: number) => ({
   width: `calc(${to - from} / ${cells} * 100%)`,
 })
 
-function RulerRow({ span, cells, tone }: { span: RulerSpan; cells: number; tone: Tone }) {
+function RulerRow({ span, cells, tone, compact }: { span: RulerSpan; cells: number; tone: Tone; compact: boolean }) {
   const ink = tones[tone].ink
   const { base, hatch } = toneAccents[tone]
   const range = pct(span.from, span.to, cells)
   return (
-    <div style={{ position: 'relative', paddingTop: 72, marginBottom: 8 }}>
+    <div style={{ position: 'relative', paddingTop: compact ? 64 : 72, marginBottom: compact ? 0 : 8 }}>
       {span.label && <p style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 700 }}>{span.label}</p>}
       <div style={{ position: 'absolute', ...range, top: span.label ? 26 : 0, textAlign: 'center' }}>
         <span style={{ display: 'inline-block', fontSize: 15, fontWeight: 800, color: ink }}>{span.caption}</span>
@@ -110,7 +110,7 @@ export function DurationSection({ duration, tone }: { duration: Duration; tone: 
         <div className="dc-ruler-wrap" style={{ marginTop: 28 }}>
           <div style={{ minWidth: 640, position: 'relative' }}>
             {duration.spans.map((span) => (
-              <RulerRow key={span.caption} span={span} cells={cells} tone={tone} />
+              <RulerRow key={span.caption} span={span} cells={cells} tone={tone} compact={duration.compact ?? false} />
             ))}
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cells}, minmax(0, 1fr))`, marginTop: 12 }}>
               {duration.ticks.map((tick, i) => (

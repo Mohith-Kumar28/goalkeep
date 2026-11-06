@@ -40,6 +40,7 @@ export const content: ServicePageContent = {
     lead: "We design dashboards and reporting views for both nonprofits and funders. We start with what questions you want your data to answer for you, and then build out a system that effectively showcases that.",
     primary: "Work with us",
     secondary: { label: "See a case study", href: "#case" },
+    tightActions: true,
     photos: [
       {
         src: "/design/6616bb19d578b4407abaff9cbb89cc4b.webp",
