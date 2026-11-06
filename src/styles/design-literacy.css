@@ -1,0 +1,395 @@
+.dc-glance-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 22px 24px;
+}
+.dc-glance-item + .dc-glance-item {
+  border-left: 1px solid #e5e7ee;
+}
+.dc-yes {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e7f2f0;
+  color: #176059;
+  border: 1px solid #2f9c8f;
+}
+.dc-pair-cap {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #14131a;
+  box-shadow: 0 4px 14px rgba(20, 19, 26, 0.14);
+}
+.dc-portrait {
+  width: 132px;
+  height: 132px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  border: 5px solid #ffffff;
+  box-shadow: 0 10px 26px rgba(20, 19, 26, 0.16);
+}
+
+.dc-flow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 320px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #176059;
+  background: #ffffff;
+  border: 1.5px solid #2f9c8f;
+  border-radius: 999px;
+  padding: 10px 22px 10px 10px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(23, 96, 89, 0.16);
+  transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms,
+    background-color 240ms,
+    color 240ms;
+}
+.dc-flow-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(23, 96, 89, 0.22);
+  background: #2f9c8f;
+  color: #ffffff;
+}
+.dc-flow-btn:focus-visible,
+.dc-chk:focus-visible,
+.dc-stage-tab:focus-visible,
+.dc-faq-q:focus-visible {
+  outline: 3px solid #3f63c8;
+  outline-offset: 3px;
+}
+.dc-flow-btn-ic {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2f9c8f;
+  color: #ffffff;
+  transition:
+    background-color 240ms,
+    color 240ms;
+}
+.dc-flow-btn:hover .dc-flow-btn-ic {
+  background: #ffffff;
+  color: #2f9c8f;
+}
+.dc-flow-btn-ic::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 999px;
+  border: 2px solid #2f9c8f;
+  opacity: 0;
+  animation: dc-flowring 2.2s ease-out infinite;
+}
+@keyframes dc-flowring {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+.dc-slide-up {
+  animation: dc-slideup 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes dc-slideup {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.dc-flow-top,
+.dc-flow-fan {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+.dc-flow-node,
+.dc-flow-dot {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.dc-flow-on .dc-flow-top {
+  animation: dc-flowdraw 900ms cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+.dc-flow-on .dc-flow-node {
+  animation: dc-flowpop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) 880ms forwards;
+}
+.dc-flow-on .dc-flow-fan {
+  animation: dc-flowdraw 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.dc-flow-on .dc-flow-dot {
+  animation: dc-flowdot 520ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes dc-flowdraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dc-flowpop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes dc-flowdot {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-flow-top,
+  .dc-flow-fan {
+    stroke-dashoffset: 0;
+  }
+  .dc-flow-node,
+  .dc-flow-dot {
+    opacity: 1;
+  }
+  .dc-flow-on .dc-flow-top,
+  .dc-flow-on .dc-flow-fan,
+  .dc-flow-on .dc-flow-node,
+  .dc-flow-on .dc-flow-dot,
+  .dc-flow-btn-ic::after,
+  .dc-slide-up {
+    animation: none;
+  }
+}
+
+.dc-chk {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1.45;
+  padding: 13px 16px;
+  border: 1.5px solid #e5e7ee;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #ffffff;
+  color: rgba(20, 19, 26, 0.72);
+  transition:
+    background-color 420ms,
+    border-color 420ms,
+    box-shadow 420ms,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 420ms;
+}
+.dc-chk[aria-pressed="true"] {
+  background: var(--tint);
+  border-color: var(--base);
+  box-shadow: 0 12px 26px var(--shadow);
+  color: #14131a;
+  transform: translateX(8px);
+}
+.dc-chk-label {
+  font-weight: 400;
+}
+.dc-chk[aria-pressed="true"] .dc-chk-label {
+  font-weight: 700;
+}
+.dc-chk-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid #d3d7e2;
+  color: #d3d7e2;
+  transition:
+    background-color 420ms,
+    border-color 420ms;
+}
+.dc-chk[aria-pressed="true"] .dc-chk-dot {
+  background: var(--base);
+  border-color: var(--base);
+  color: #ffffff;
+}
+
+.dc-stage-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #e5e7ee;
+  border-radius: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  min-height: 60px;
+  background: #ffffff;
+  transition:
+    background-color 320ms,
+    border-color 320ms,
+    box-shadow 320ms;
+}
+.dc-stage-tab[aria-selected="true"] {
+  background: var(--tint);
+  border-color: var(--base);
+  box-shadow: 0 10px 24px rgba(20, 19, 26, 0.08);
+}
+.dc-stage-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  background: #f1f4fa;
+  color: rgba(20, 19, 26, 0.6);
+  flex: none;
+  transition:
+    background-color 320ms,
+    color 320ms;
+}
+.dc-stage-tab[aria-selected="true"] .dc-stage-num,
+.dc-stage-tab[data-done="true"] .dc-stage-num {
+  background: var(--base);
+  color: #ffffff;
+}
+.dc-skill-progress {
+  height: 100%;
+  border-radius: 2px;
+  transition:
+    width 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 320ms;
+}
+
+.dc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 28px 30px;
+}
+.dc-mosaic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+}
+.dc-faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #14131a;
+  cursor: pointer;
+  padding: 20px 0;
+}
+.dc-faq-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e7f2f0;
+  color: #176059;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 240ms;
+}
+.dc-faq-q[aria-expanded="true"] .dc-faq-icon {
+  background: #2f9c8f;
+  color: #ffffff;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 1100px) {
+  .dc-who,
+  .dc-ai-grid,
+  .dc-evid,
+  .dc-faq-grid,
+  .dc-panel {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .dc-skill-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  .dc-pair {
+    margin-bottom: 40px;
+  }
+}
+@media (max-width: 760px) {
+  .dc-ai-steps,
+  .dc-stats,
+  .dc-chg,
+  .dc-strip {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .dc-skill-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 761px) {
+  .dc-literacy-explore > .dc-band {
+    padding-top: 44px !important;
+    padding-bottom: 48px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .dc-glance {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
