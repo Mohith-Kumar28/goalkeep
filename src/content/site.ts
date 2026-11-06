@@ -47,7 +47,8 @@ export const nav: Array<NavItem> = [
     children: [
       { label: 'Kickstarter', to: '/programs/kickstarter' },
       { label: 'Data Literacy Program', to: '/programs/data-literacy' },
-      { label: 'Data culture quiz', to: '/resources/data-quiz' },
+      // Hidden until the quiz is ready to launch.
+      // { label: 'Data culture quiz', to: '/resources/data-quiz' },
       { label: 'All programs', to: '/programs' },
     ],
   },
