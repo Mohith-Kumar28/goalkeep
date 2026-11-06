@@ -1,10 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PageView } from '@/components/pages/page-blocks'
-import { dataLiteracyPage } from '@/content/programs'
+import { LiteracyPage } from '@/components/design/literacy/literacy-page'
+import { literacyContent } from '@/content/design/literacy'
 
 export const Route = createFileRoute('/programs/data-literacy')({
   head: () => ({
-    meta: [{ title: dataLiteracyPage.title }, { name: 'description', content: dataLiteracyPage.description }],
+    meta: [
+      { title: literacyContent.meta.title },
+      { name: 'description', content: literacyContent.meta.description },
+    ],
   }),
-  component: () => <PageView page={dataLiteracyPage} />,
+  component: LiteracyPage,
 })
