@@ -19,6 +19,11 @@ export type ServiceSlug =
 
 export type Verdict = { title: string; body: string }
 
+/** One sticky note: its text and the 20px stroke icon, a full
+ *  `<svg width="20" height="20" viewBox="0 0 24 24" ...>` imported with `?raw`.
+ *  The template cycles tints from the page tone. */
+export type Sign = { text: string; icon: Svg }
+
 /** The six-signs sticky notes. Verdicts are picked by how many notes are
  *  tapped: none, one or two, three or more. */
 export type SixSigns = {
@@ -26,30 +31,76 @@ export type SixSigns = {
   prompt: string
   cta: string
   verdicts: { none: Verdict; few: Verdict; many: Verdict }
-  signs: Array<string>
+  signs: Array<Sign>
 }
 
-/** Dashboards only: a sticky nonprofit/funder switch that swaps the signs and
- *  clears what was tapped. */
-export type AudienceSigns = {
-  nonprofit: { label: string; sub: string; tag: string; signs: Array<string> }
-  funder: { label: string; sub: string; tag: string; signs: Array<string> }
+export type CaseQuote = {
+  text: string
+  name: string
+  org: string
+  avatar: { src: string; alt: string }
 }
 
-export type ApproachRow = { heading: Html; body: Html; photo: HeroPhoto }
+/** One audience of a page that has a sticky nonprofit/funder switch. Switching
+ *  clears the tapped notes. The page-level fields are the nonprofit view; the
+ *  optional fields here replace them when this audience is chosen. */
+export type AudienceView = {
+  label: string
+  sub: string
+  /** The pill above the signs, deliverables, case study and contact heading. */
+  tag: string
+  signs?: { heading: Html; items: Array<Sign> }
+  deliverables?: Array<Deliverable>
+  caseStudy?: CaseCard
+  caseQuote?: CaseQuote
+  contact?: { heading: Html; body: string }
+}
+
+export type Audiences = { nonprofit: AudienceView; funder: AudienceView }
+
+export type ApproachAction =
+  /** A primary button that opens the contact form with its label as the intent. */
+  | { kind: 'form'; label: string }
+  /** A text link with an arrow, in the page tone's ink. */
+  | { kind: 'link'; label: string; href: string }
+
+export type ApproachRow = {
+  heading: Html
+  body: Html
+  photo: HeroPhoto
+  /** A text link on its own line under the body. */
+  link?: { label: string; href: string }
+  /** Buttons and links in one row under the body. */
+  actions?: Array<ApproachAction>
+}
 
 export type Deliverable = { label: string; illustration: Svg }
+
+/** A bar on the duration ruler, over `from`..`to` of the ticks (0-based, `to`
+ *  exclusive). Ticks inside any span are emphasised. */
+export type RulerSpan = {
+  from: number
+  to: number
+  /** The bracketed caption above the bar. */
+  caption: string
+  /** A bold row title above the bar, for rulers with more than one. */
+  label?: string
+  /** A caption for the hatched stripe that runs from `to` to the last tick. */
+  trail?: string
+}
 
 export type Duration = {
   eyebrow: string
   heading: Html
   body: string
-  /** Inclusive week range that is highlighted on the ruler. */
-  range: [number, number]
-  /** Weeks drawn on the ruler, 1..n. */
-  weeks: number
-  note: string
+  /** One label per ruler cell, e.g. `weekTicks(10)` or `['4 hours', '1 day']`. */
+  ticks: Array<string>
+  spans: Array<RulerSpan>
 }
+
+export const weekTicks = (weeks: number): Array<string> => Array.from({ length: weeks }, (_, i) => `wk ${i + 1}`)
+
+export type Deliverables = { heading: Html; items: Array<Deliverable> }
 
 export type ServicePageContent = {
   slug: ServiceSlug
@@ -65,12 +116,13 @@ export type ServicePageContent = {
     secondary: { label: string; href: string }
     photos: Array<HeroPhoto>
   }
-  audiences?: AudienceSigns
+  audiences?: Audiences
   signs: SixSigns
   approach: { eyebrow: string; rows: Array<ApproachRow> }
-  deliverables: { heading: Html; items: Array<Deliverable> }
+  deliverables: Deliverables
   duration: Duration
   caseStudy: CaseCard
+  caseQuote?: CaseQuote
   contact: { heading: Html; body: string; ctas: Array<string> }
   explore: { heading: Html; cards: Array<ExploreCard> }
 }

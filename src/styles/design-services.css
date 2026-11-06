@@ -1,0 +1,99 @@
+/* Services page template (the export's .aud-* and .alt rules, renamed). */
+.dc-alt .dc-alt-img .dc-photo {
+  object-position: right center;
+}
+.dc-alt-rev .dc-alt-img .dc-photo {
+  object-position: left center;
+}
+
+.dc-aud-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid #e5e7ee;
+  box-shadow: 0 8px 22px rgba(20, 19, 26, 0.07);
+}
+.dc-aud-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 28px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.dc-aud-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: #eaeff9;
+  border-radius: 12px;
+  padding: 4px;
+  width: min(760px, 100%);
+}
+.dc-aud-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: #ffffff;
+  border-radius: 9px;
+  box-shadow:
+    0 2px 8px rgba(47, 77, 159, 0.18),
+    0 0 0 2px #3f63c8;
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dc-aud-opt {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  min-height: 56px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 9px;
+  transition: color 240ms;
+}
+.dc-aud-opt:focus-visible {
+  outline: 3px solid #3f63c8;
+  outline-offset: 2px;
+}
+.dc-aud-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  transition:
+    background-color 240ms,
+    color 240ms;
+}
+.dc-aud-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+@media (max-width: 760px) {
+  .dc-aud-switch {
+    min-width: 0;
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-aud-thumb {
+    transition: none;
+  }
+}
