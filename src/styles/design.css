@@ -823,8 +823,11 @@ button.dc-btn {
   }
 }
 @media (max-width: 520px) {
+  .dc-header-bar {
+    gap: 8px;
+  }
   .dc-header-bar > .dc-partner {
-    display: none;
+    margin-left: auto;
   }
 }
 @media (min-width: 961px) {
