@@ -228,12 +228,9 @@ function PhaseRow({
 
       <div
         className={cn(
-          'relative grid md:grid-cols-12 md:items-stretch',
-          /* Open and closed heights are fixed so that one open row plus two
-             closed ones always sums to the same total - content-height rows
-             made the section resize under the pointer. Both came down on 28
-             Sep ("tighter, less empty space"). */
-          active ? 'md:min-h-[22rem]' : 'md:min-h-[12rem]',
+          /* Every row holds the open height, so hovering only swaps the
+             image's animation and never shifts the layout. */
+          'relative grid md:min-h-[22rem] md:grid-cols-12 md:items-stretch',
         )}
       >
         <div
