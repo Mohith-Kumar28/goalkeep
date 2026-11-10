@@ -38,7 +38,7 @@ export function WhatWeDo() {
       className="ground-cream band accent-blue relative scroll-mt-24"
       aria-labelledby="wwd-heading"
     >
-      <div className="shell grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div className="shell grid gap-6 md:gap-10 lg:grid-cols-12 lg:gap-12">
         <Reveal className="lg:col-span-4">
           <div className="lg:sticky lg:top-32">
             <p className="eyebrow mb-4">{whatWeDo.eyebrow}</p>
@@ -48,16 +48,23 @@ export function WhatWeDo() {
           </div>
         </Reveal>
 
-        <ul className="grid gap-4 sm:grid-cols-2 md:gap-5 lg:col-span-8">
+        {/* 10 Nov: on phones the four cards are one swipe row, the same as
+            the case studies, instead of a stack two thousand pixels tall. */}
+        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 md:gap-5 lg:col-span-8">
           {services.map((service, index) => {
             const theme = CARD_THEMES[index % CARD_THEMES.length]
             const page = servicePages.find((p) => p.contactService === service.title)
             return (
-              <Reveal as="li" key={service.title} delay={index * 0.08} className="h-full">
+              <Reveal
+                as="li"
+                key={service.title}
+                delay={index * 0.08}
+                className="h-full w-[85%] shrink-0 snap-center sm:w-auto"
+              >
                 <Link
                   to="/services/$slug"
                   params={{ slug: page?.slug ?? '' }}
-                  className="card-lift group flex h-full flex-col rounded-[var(--r-lg)] p-7 text-[var(--gk-ink)] md:p-8"
+                  className="card-lift group flex h-full flex-col rounded-[var(--r-lg)] p-6 text-[var(--gk-ink)] md:p-8"
                   style={{ background: theme.ground }}
                 >
                   <p
@@ -66,10 +73,10 @@ export function WhatWeDo() {
                   >
                     {String(index + 1).padStart(2, '0')} / {service.label}
                   </p>
-                  <h3 className="mt-4 text-[length:clamp(1.375rem,2.2vw,1.75rem)] leading-tight font-extrabold">
+                  <h3 className="mt-3 text-[length:clamp(1.25rem,2.2vw,1.75rem)] leading-tight font-extrabold md:mt-4">
                     {service.title}
                   </h3>
-                  <p className="mt-4 text-[length:var(--fs-base)] leading-relaxed">
+                  <p className="mt-3 text-[length:var(--fs-sm)] leading-relaxed md:mt-4 md:text-[length:var(--fs-base)]">
                     {service.body}
                   </p>
                   <span

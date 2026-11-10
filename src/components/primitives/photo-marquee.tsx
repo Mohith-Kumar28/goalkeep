@@ -58,8 +58,8 @@ export function PhotoMarquee({
             key={`${photo.src}-${index}`}
             aria-hidden={index >= base.length}
             className={cn(
-              "relative w-[78vw] shrink-0 overflow-hidden rounded-[var(--r-lg)] sm:w-[22rem]",
-              compact ? "md:w-[24rem]" : "md:w-[26rem] lg:w-[28rem]"
+              "relative shrink-0 overflow-hidden rounded-[var(--r-lg)] sm:w-[22rem]",
+              compact ? "w-[60vw] md:w-[24rem]" : "w-[78vw] md:w-[26rem] lg:w-[28rem]"
             )}
           >
             <img

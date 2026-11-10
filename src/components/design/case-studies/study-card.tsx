@@ -28,7 +28,8 @@ export function StudyCard({ study, wide = false }: { study: CaseStudy; wide?: bo
           </span>
         </span>
         <span className="dc-cs-card-title">{card.title}</span>
-        <span className="dc-cs-card-summary">{card.summary}</span>
+        <span className="dc-cs-card-summary dc-cs-sum-desktop">{card.summary}</span>
+        {card.mobileSummary && <span className="dc-cs-card-summary dc-cs-sum-mobile">{card.mobileSummary}</span>}
         <span className="dc-tlink" style={{ marginTop: 'auto', paddingTop: 6, alignSelf: 'flex-start' }}>
           Read case study <ArrowIcon />
         </span>
@@ -50,7 +51,7 @@ export function StatFigure({
 }) {
   return (
     <>
-      <span style={{ fontSize: size, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', color: '#EAC452' }}>
+      <span style={{ fontSize: size, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
         {value}
       </span>
       <span

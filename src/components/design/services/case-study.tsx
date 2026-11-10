@@ -3,6 +3,8 @@ import type { CaseQuote } from '@/content/design/service-page'
 import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { ArrowIcon } from '../icons'
+import { ClampText } from '../../primitives/clamp-text'
+import { Reveal } from '../../primitives/reveal'
 import { SiteLink } from '../site-link'
 import { AudienceTag } from './audience-tag'
 import { toneAccents } from './service-tones'
@@ -20,9 +22,12 @@ export function CaseStudySection({
   audienceTag?: string
   roomy?: boolean
 }) {
-  const gap = roomy ? { padding: 44, title: 24, body: 16, link: 32 } : { padding: 40, title: 22, body: 14, link: 28 }
+  const gap = roomy ? { padding: 36, title: 20, body: 14, link: 28 } : { padding: 32, title: 18, body: 12, link: 24 }
   const content = (
-    <div className="dc-case-body" style={{ padding: gap.padding, display: 'flex', flexDirection: 'column' }}>
+    <div
+      className="dc-case-body"
+      style={{ padding: gap.padding, display: 'flex', flexDirection: 'column', ['--case-body-gap' as string]: `${gap.body}px` }}
+    >
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
         {card.tags.map((tag) => (
           <span
@@ -40,12 +45,12 @@ export function CaseStudySection({
           </span>
         ))}
       </div>
-      <h3 style={{ margin: `${gap.title}px 0 0`, fontSize: 36, fontWeight: 700, lineHeight: 1.16, letterSpacing: '-0.012em' }}>
+      <h3 className="dc-case-title" style={{ margin: `${gap.title}px 0 0` }}>
         {card.title}
       </h3>
-      <p style={{ margin: `${gap.body}px 0 0`, fontSize: 19, lineHeight: 1.6 }}>{card.body}</p>
+      <ClampText className="dc-case-text">{card.body}</ClampText>
       {quote && (
-        <figure style={{ margin: '24px 0 0', padding: 0 }}>
+        <figure style={{ margin: '20px 0 0', padding: 0 }}>
           <blockquote style={{ margin: 0, fontSize: 17, lineHeight: 1.6, fontStyle: 'italic' }}>
             <span
               aria-hidden="true"
@@ -94,8 +99,8 @@ export function CaseStudySection({
   )
 
   return (
-    <section id="case" className="dc-band" style={{ background: '#FFFFFF', paddingTop: 56, paddingBottom: 56 }}>
-      <div className="dc-shell">
+    <section id="case" className="dc-band dc-svc-band" style={{ background: '#FFFFFF' }}>
+      <Reveal className="dc-shell">
         {audienceTag && (
           <p style={{ margin: '0 0 18px' }}>
             <AudienceTag tone={tone}>{audienceTag}</AudienceTag>
@@ -110,7 +115,7 @@ export function CaseStudySection({
               src={card.photo.src}
               alt={card.photo.alt}
               className="dc-case-img"
-              style={{ width: '100%', height: '100%', minHeight: 380, objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%', minHeight: 320, objectFit: 'cover', display: 'block' }}
             />
           ) : (
             <div
@@ -118,7 +123,7 @@ export function CaseStudySection({
               aria-label="Photo placeholder"
               className="dc-case-img"
               style={{
-                minHeight: 380,
+                minHeight: 320,
                 height: '100%',
                 background: tones[card.tone].bg,
                 display: 'flex',
@@ -141,7 +146,7 @@ export function CaseStudySection({
           )}
           {content}
         </article>
-      </div>
+      </Reveal>
     </section>
   )
 }

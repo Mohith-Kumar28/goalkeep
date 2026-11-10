@@ -3,7 +3,7 @@ import { subscribeNewsletter } from '@/server/forms'
 
 export type FormId = 'card' | 'closing'
 
-export type Signup = { email: string; name: string; organization: string; website: string }
+export type Signup = { email: string; name: string; organization: string; audience: string; edition: string; website: string }
 
 export type SubscribeState =
   | { status: 'idle' }

@@ -186,7 +186,7 @@ export const content: ServicePageContent = {
     title: "Apni Shala Foundation",
     body: "A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.",
     tags: [
-      { label: "Education", tone: "gold" },
+      { label: "Education", tone: "blue" },
       { label: "Identifying key metrics", tone: "blue" },
     ],
   },

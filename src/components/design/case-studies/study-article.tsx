@@ -1,3 +1,5 @@
+import { ClampText } from '@/components/primitives/clamp-text'
+import { Reveal } from '@/components/primitives/reveal'
 import { tones } from '../tones'
 import type { ApproachStep, Bullet, CaseStudy, Testimonial } from '@/content/design/case-studies'
 
@@ -8,12 +10,14 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
       <article className="dc-shell dc-cs-art">
         <section id="background" className="dc-cs-row" style={{ alignItems: 'center' }}>
           <div>
-            <Aside aside={background.aside} />
+            <Reveal>
+              <Aside aside={background.aside} />
+            </Reveal>
           </div>
           <div>
             <span className="dc-cs-label">Background</span>
             {background.paragraphs.map((text) => (
-              <p key={text}>{text}</p>
+              <ClampText key={text}>{text}</ClampText>
             ))}
             <Points points={background.points} />
           </div>
@@ -25,7 +29,9 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
           </span>
           <div className="dc-cs-steps">
             {study.steps.map((step, i) => (
-              <Step key={step.title} step={step} flip={i % 2 === 1} />
+              <Reveal key={step.title}>
+                <Step step={step} flip={i % 2 === 1} />
+              </Reveal>
             ))}
           </div>
         </section>
@@ -46,9 +52,12 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
             <span style={{ fontSize: 18, color: '#14131A' }}>{outcomes.lead}</span>
           </div>
           <div className="dc-cs-outcome-grid">
-            {outcomes.cards.map((card) => (
-              <div
+            {outcomes.cards.map((card, i) => (
+              <Reveal
                 key={card.title}
+                delay={i * 0.07}
+              >
+              <div
                 className="dc-cs-outcome"
                 style={{ background: tones[card.tone].bg, borderRadius: 14, padding: '18px 18px 16px' }}
               >
@@ -67,6 +76,7 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
                 </span>
                 <Points points={card.items.map((text) => ({ text }))} />
               </div>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -77,12 +87,14 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
           </div>
           <div>
             {study.reinforced.map((text) => (
-              <p key={text}>{text}</p>
+              <ClampText key={text}>{text}</ClampText>
             ))}
           </div>
           {study.testimonial && (
             <div style={{ gridColumn: '1 / -1' }}>
-              <TestimonialCard testimonial={study.testimonial} />
+              <Reveal>
+                <TestimonialCard testimonial={study.testimonial} />
+              </Reveal>
             </div>
           )}
         </section>
@@ -133,7 +145,7 @@ function Step({ step, flip }: { step: ApproachStep; flip: boolean }) {
       )}
       <div>
         <h3>{step.title}</h3>
-        <p style={{ margin: 0 }}>{step.body}</p>
+        <ClampText className="dc-cs-step-body">{step.body}</ClampText>
       </div>
     </div>
   )
@@ -147,8 +159,8 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         alt={testimonial.photo.alt}
         style={{ objectPosition: testimonial.photo.position }}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '40px 48px' }}>
-        <svg aria-hidden="true" width="44" height="34" viewBox="0 0 44 34" fill="#EAC452">
+      <div className="dc-cs-testi-body" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '40px 48px' }}>
+        <svg aria-hidden="true" width="44" height="34" viewBox="0 0 44 34" fill="#3F63C8">
           <path d="M0 34V20C0 8 6 1.5 18 0l2 5C13 7 10 11 10 17h8v17H0zm24 0V20C24 8 30 1.5 42 0l2 5c-7 2-10 6-10 12h8v17H24z" />
         </svg>
         <blockquote

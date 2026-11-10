@@ -19,56 +19,6 @@
   color: #14131a;
   box-shadow: 0 4px 14px rgba(20, 19, 26, 0.14);
 }
-.dc .dc-cloud {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 24px;
-  row-gap: 16px;
-  align-items: center;
-  padding: 6px 0 18px;
-  margin-left: -24px;
-}
-.dc .dc-cloud .dc-cb:nth-child(odd) {
-  justify-self: start;
-}
-.dc .dc-cloud .dc-cb:nth-child(even) {
-  justify-self: end;
-}
-.dc .dc-cb {
-  position: relative;
-  border: 1.5px solid #e5e7ee;
-  border-radius: 18px;
-  padding: 12px 16px;
-  font-family: inherit;
-  line-height: 1.35;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background-color 420ms,
-    color 420ms,
-    border-color 420ms,
-    box-shadow 420ms,
-    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dc .dc-cb-tail {
-  position: absolute;
-  bottom: -7px;
-  width: 13px;
-  height: 13px;
-  border-right: 1.5px solid;
-  border-bottom: 1.5px solid;
-  transform: rotate(45deg);
-  border-radius: 0 0 3px 0;
-  transition:
-    background-color 420ms,
-    border-color 420ms;
-}
-.dc .dc-cb-left .dc-cb-tail {
-  left: 24px;
-}
-.dc .dc-cb-right .dc-cb-tail {
-  right: 24px;
-}
 .dc .dc-stage-tab {
   display: flex;
   align-items: center;
@@ -105,55 +55,5 @@
   }
   .dc .dc-pair {
     margin-bottom: 40px;
-  }
-}
-@media (max-width: 760px) {
-  .dc .dc-cloud {
-    grid-template-columns: minmax(0, 1fr);
-    margin-left: 0;
-  }
-  /* Phones: the copy that explains the bubbles comes first, then a chat-style column. */
-  .dc .dc-split:has(> .dc-cloud) > .dc-cloud {
-    order: 1;
-  }
-  .dc .dc-cloud .dc-cb-left {
-    justify-self: start !important;
-  }
-  .dc .dc-cloud .dc-cb-right {
-    justify-self: end !important;
-  }
-  .dc .dc-stage-tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-  /* Phone tabs: number above the label so long labels get the full tab width. */
-  .dc .dc-stage-tab {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 8px !important;
-    padding: 10px 12px !important;
-  }
-  .dc .dc-stage-tab > span:last-child {
-    font-size: 16px !important;
-    overflow-wrap: anywhere;
-  }
-
-  .dc .dc-cb {
-    transform: none !important;
-    margin-top: 0 !important;
-    max-width: 88% !important;
-    font-size: 15px !important;
-  }
-}
-
-/* Stage drawings: a portrait redraw replaces the landscape one on phones, where it would shrink its labels to ~7px. */
-.dc .dc-scene-mob {
-  display: none;
-}
-@media (max-width: 760px) {
-  .dc .dc-scene-desk {
-    display: none;
-  }
-  .dc .dc-scene-mob {
-    display: block;
   }
 }

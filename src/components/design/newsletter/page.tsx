@@ -1,19 +1,35 @@
+import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Rich } from '@/components/design/kickstarter/rich'
-import { newsletter } from '@/content/design/newsletter'
+import { audiences, newsletter } from '@/content/design/newsletter'
 import type { Edition } from '@/content/design/newsletter'
 import '@/styles/design-newsletter.css'
 import { useSubscribe } from './use-subscribe'
 import type { FormId, Signup, SubscribeState } from './use-subscribe'
 
-type FormProps = { state: SubscribeState; form: FormId; onSubmit: (form: FormId, signup: Signup) => void }
+type FormProps = {
+  state: SubscribeState
+  form: FormId
+  /** The past edition whose "Subscribe to keep reading" button brought them here. */
+  edition: Edition | null
+  onSubmit: (form: FormId, signup: Signup) => void
+}
 
-function readSubmit(event: FormEvent<HTMLFormElement>, form: FormId, onSubmit: FormProps['onSubmit']) {
+function readSubmit(event: FormEvent<HTMLFormElement>, { form, edition, onSubmit }: FormProps) {
   event.preventDefault()
   const data = new FormData(event.currentTarget)
   const field = (name: string) => String(data.get(name) ?? '')
-  onSubmit(form, { email: field('EMAIL'), name: field('FNAME'), organization: field('ORG'), website: field('website') })
+  onSubmit(form, {
+    email: field('EMAIL'),
+    name: field('FNAME'),
+    organization: field('ORG'),
+    audience: field('AUDIENCE'),
+    edition: edition?.id ?? '',
+    website: field('website'),
+  })
 }
+
+const forMonth = (template: string, edition: Edition) => template.replace('{month}', edition.month)
 
 function Honeypot() {
   return <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="dc-nl-hp" />
@@ -28,7 +44,8 @@ function FormError({ state, form }: { state: SubscribeState; form: FormId }) {
   )
 }
 
-function SubscribeCard({ state, form, onSubmit, onReset }: FormProps & { onReset: () => void }) {
+function SubscribeCard({ onReset, ...props }: FormProps & { onReset: () => void }) {
+  const { state, edition } = props
   const { card } = newsletter
   const sending = state.status === 'sending'
   return (
@@ -38,16 +55,17 @@ function SubscribeCard({ state, form, onSubmit, onReset }: FormProps & { onReset
           <h2 className="dc-nl-thanks">
             <Rich html={card.thanksHeading} />
           </h2>
-          <p className="dc-nl-thanks-text">{card.thanks}</p>
+          <p className="dc-nl-thanks-text">{edition ? forMonth(card.editionThanks, edition) : card.thanks}</p>
           <button type="button" className="dc-nl-btn dc-nl-btn-ghost" onClick={onReset}>
             {card.another}
           </button>
         </div>
       ) : (
-        <form className="dc-nl-card-body" onSubmit={(event) => readSubmit(event, form, onSubmit)} aria-busy={sending}>
+        <form className="dc-nl-card-body" onSubmit={(event) => readSubmit(event, props)} aria-busy={sending}>
           <h2 className="dc-nl-card-title">
             <Rich html={card.heading} />
           </h2>
+          {edition && <p className="dc-nl-edition-note">{forMonth(card.edition, edition)}</p>}
           <div className="dc-nl-pair">
             <div className="dc-nl-field">
               <label htmlFor="ku-name">Name</label>
@@ -62,8 +80,17 @@ function SubscribeCard({ state, form, onSubmit, onReset }: FormProps & { onReset
             <label htmlFor="ku-org">Organization</label>
             <input id="ku-org" name="ORG" type="text" autoComplete="organization" disabled={sending} />
           </div>
+          <fieldset className="dc-nl-audience" disabled={sending}>
+            <legend>{card.audience}</legend>
+            {audiences.map((audience) => (
+              <label key={audience.id}>
+                <input type="radio" name="AUDIENCE" value={audience.id} required />
+                {audience.label}
+              </label>
+            ))}
+          </fieldset>
           <Honeypot />
-          <FormError state={state} form={form} />
+          <FormError state={state} form={props.form} />
           <button type="submit" className="dc-nl-btn dc-nl-btn-navy" disabled={sending}>
             {sending ? 'Subscribing…' : 'Subscribe'} <span aria-hidden="true">→</span>
           </button>
@@ -74,7 +101,7 @@ function SubscribeCard({ state, form, onSubmit, onReset }: FormProps & { onReset
   )
 }
 
-function EditionRow({ edition }: { edition: Edition }) {
+function EditionRow({ edition, onSubscribe }: { edition: Edition; onSubscribe: (edition: Edition) => void }) {
   const { image, button } = edition
   const cover = (
     <div className="dc-nl-cover">
@@ -94,7 +121,12 @@ function EditionRow({ edition }: { edition: Edition }) {
           <div className="dc-nl-fade">
             <p>{edition.excerpt}</p>
           </div>
-          <a href="#subscribe" className="dc-nl-btn dc-nl-edition-btn" style={{ background: button.bg, borderColor: button.bg, color: button.fg }}>
+          <a
+            href="#subscribe"
+            className="dc-nl-btn dc-nl-edition-btn"
+            style={{ background: button.bg, borderColor: button.bg, color: button.fg }}
+            onClick={() => onSubscribe(edition)}
+          >
             Subscribe to keep reading <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -119,7 +151,8 @@ function ClosingMark() {
   )
 }
 
-function ClosingBand({ state, form, onSubmit }: FormProps) {
+function ClosingBand(props: FormProps) {
+  const { state, form } = props
   const { closing } = newsletter
   const sending = state.status === 'sending'
   return (
@@ -134,7 +167,7 @@ function ClosingBand({ state, form, onSubmit }: FormProps) {
             {closing.thanks}
           </p>
         ) : (
-          <form className="dc-nl-inline" onSubmit={(event) => readSubmit(event, form, onSubmit)} aria-busy={sending}>
+          <form className="dc-nl-inline" onSubmit={(event) => readSubmit(event, props)} aria-busy={sending}>
             <label htmlFor="ku-email-2" className="dc-nl-sr">
               Your email address
             </label>
@@ -154,6 +187,11 @@ function ClosingBand({ state, form, onSubmit }: FormProps) {
 export function NewsletterPage() {
   const { hero, editions } = newsletter
   const { state, subscribe, reset } = useSubscribe()
+  const [edition, setEdition] = useState<Edition | null>(null)
+  const startOver = () => {
+    setEdition(null)
+    reset()
+  }
   return (
     <div className="dc dc-nl">
       <section className="dc-nl-hero">
@@ -174,13 +212,13 @@ export function NewsletterPage() {
             </h1>
             <p className="dc-nl-hero-lead">{hero.lead}</p>
           </div>
-          <SubscribeCard form="card" state={state} onSubmit={subscribe} onReset={reset} />
+          <SubscribeCard form="card" state={state} edition={edition} onSubmit={subscribe} onReset={startOver} />
         </div>
       </section>
-      {editions.map((edition) => (
-        <EditionRow key={edition.month} edition={edition} />
+      {editions.map((item) => (
+        <EditionRow key={item.id} edition={item} onSubscribe={setEdition} />
       ))}
-      <ClosingBand form="closing" state={state} onSubmit={subscribe} />
+      <ClosingBand form="closing" state={state} edition={edition} onSubmit={subscribe} />
     </div>
   )
 }

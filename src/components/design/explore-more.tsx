@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Reveal } from '@/components/primitives/reveal'
+import '@/styles/design-case-studies.css'
 import { ArrowIcon } from './icons'
 import { SiteLink } from './site-link'
 import { tones } from './tones'
@@ -29,7 +31,7 @@ export function ExploreMore({
       <div className="dc-shell">
         <h2 className="dc-h2">{heading}</h2>
         <div
-          className="dc-grid2"
+          className="dc-grid2 dc-swipe"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
@@ -37,15 +39,16 @@ export function ExploreMore({
             marginTop: 32,
           }}
         >
-          {cards.map((card) => (
+          {cards.map((card, i) => (
+            <Reveal key={card.href} delay={i * 0.07} className="dc-explore-slot">
             <SiteLink
-              key={card.href}
               href={card.href}
-              className="dc-lift"
+              className="dc-lift dc-explore-card"
               style={{
                 background: tones[card.tone].bg,
                 borderRadius: 12,
                 padding: 32,
+                height: '100%',
                 textDecoration: 'none',
                 color: '#14131A',
                 display: 'flex',
@@ -63,6 +66,7 @@ export function ExploreMore({
                 {card.cta} <ArrowIcon />
               </span>
             </SiteLink>
+            </Reveal>
           ))}
         </div>
       </div>

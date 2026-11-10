@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { Rich } from './rich'
 
@@ -9,7 +10,7 @@ export function FaqSection() {
   const baseId = useId()
 
   return (
-    <section className="dc-band" style={{ background: '#F7F5EF', paddingTop: 48, paddingBottom: 56 }}>
+    <section className="dc-band ps-band" style={{ background: '#F7F5EF', paddingTop: 48, paddingBottom: 56 }}>
       <div
         className="dc-shell dc-faq-grid"
         style={{
@@ -19,7 +20,7 @@ export function FaqSection() {
           alignItems: 'start',
         }}
       >
-        <div>
+        <Reveal>
           <p className="dc-eyebrow" style={{ color: '#176059' }}>
             {faq.eyebrow}
           </p>
@@ -27,6 +28,7 @@ export function FaqSection() {
             <Rich html={faq.heading} />
           </h2>
           <img
+            className="ps-faq-photo"
             src={faq.photo.src}
             alt={faq.photo.alt}
             style={{
@@ -39,7 +41,7 @@ export function FaqSection() {
               marginTop: 32,
             }}
           />
-        </div>
+        </Reveal>
         <div style={{ borderTop: '1px solid #E5E7EE' }}>
           {faq.items.map((item, i) => {
             const isOpen = open === i
@@ -71,7 +73,11 @@ export function FaqSection() {
                   <p
                     id={`${baseId}-${i}`}
                     className="dc-slide-in"
-                    style={{ margin: '0 0 22px', maxWidth: '60ch', color: 'rgba(20,19,26,0.82)' }}
+                    style={{
+                      margin: '0 0 22px',
+                      maxWidth: '60ch',
+                      color: 'rgba(20,19,26,0.82)',
+                    }}
                   >
                     {item.answer}
                   </p>

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/primitives/reveal"
 import { Rich } from "@/components/design/kickstarter/rich"
 import type { about } from "@/content/design/about"
 
@@ -8,7 +9,7 @@ export function PartnersBand({
 }) {
   return (
     <section
-      className="dc-band dc-paper"
+      className="dc-band dc-paper dc-about-partners-band"
       style={{ paddingTop: 56, paddingBottom: 60 }}
     >
       <div className="dc-shell">
@@ -16,7 +17,9 @@ export function PartnersBand({
         <h2 className="dc-h2" style={{ maxWidth: "26ch" }}>
           <Rich html={partners.heading} />
         </h2>
+        <Reveal>
         <div
+          className="dc-about-logos"
           style={{
             display: "flex",
             flexWrap: "wrap",
@@ -31,6 +34,7 @@ export function PartnersBand({
             </div>
           ))}
         </div>
+        </Reveal>
       </div>
     </section>
   )

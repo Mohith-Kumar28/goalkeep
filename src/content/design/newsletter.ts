@@ -1,6 +1,18 @@
 import type { Html } from './service-page'
+import type { Verify } from '../types'
+
+/* Goalkeep sends each edition in two versions, one per audience, 85 to 90%
+   the same (Nov 10 review). */
+export type Audience = 'nonprofit' | 'funder'
+
+export const audiences: Array<{ id: Audience; label: string }> = [
+  { id: 'nonprofit', label: 'Nonprofit' },
+  { id: 'funder', label: 'Funder' },
+]
 
 export type Edition = {
+  /** Sent with a "Subscribe to keep reading" sign-up, so the server emails this edition. */
+  id: string
   month: string
   headline: Html
   lead: string
@@ -10,6 +22,8 @@ export type Edition = {
   button: { bg: string; fg: string }
   /** Which side the cover sits on at desktop width. */
   imageSide: 'left' | 'right'
+  /** The edition on Mailchimp's public archive, per audience version. */
+  archive: Verify<Record<Audience, string>>
 }
 
 export const newsletter = {
@@ -28,9 +42,14 @@ export const newsletter = {
     thanksHeading: "You're on <em>the list.</em>",
     thanks: 'Please check your inbox to confirm your email. The next issue of The Keep-Up arrives at the end of the month.',
     another: 'Subscribe another email',
+    audience: 'I’m from a',
+    /** Shown on the card after a "Subscribe to keep reading" click. `{month}` is the edition's month. */
+    edition: 'We’ll email you the full {month} edition straight away.',
+    editionThanks: 'The full {month} edition is on its way to your inbox. Please also confirm your email, so the next issue reaches you at the end of the month.',
   },
   editions: [
     {
+      id: '2026-10',
       month: 'October 2026',
       headline: 'The hidden cost <em>of messy data</em>',
       lead: 'Almost every NGO I speak with wants to show measurable outcomes, and their funders want to see them too. Yet when it comes to setting aside a real budget for the systems that make those outcomes possible, it’s often the first thing to get cut.',
@@ -44,8 +63,16 @@ export const newsletter = {
       },
       button: { bg: '#F08A78', fg: '#14131A' },
       imageSide: 'left',
+      archive: {
+        verify: 'Matched from Mailchimp\'s public campaign archive: the 5 Nov 06:01 send (Kickstarter block) read as the nonprofit version, the 06:00 send (sponsor-a-seat DLP block) as the funder version. Rumit to confirm.',
+        value: {
+          nonprofit: 'https://mailchi.mp/goalkeep/the-keep-up-october-newsletter-17310147',
+          funder: 'https://mailchi.mp/goalkeep/the-keep-up-october-newsletter',
+        },
+      },
     },
     {
+      id: '2026-09',
       month: 'September 2026',
       headline: 'Why Charcha 2026 reinforced the need to <em>build organisational capacity</em>',
       lead: 'Across more than 40 sessions at Charcha 2026 in New Delhi, on livelihoods, skilling, health, CSR and AI, one thread kept surfacing: the sector has no shortage of data. What it is short on is the ability to turn that data into better decisions.',
@@ -59,8 +86,16 @@ export const newsletter = {
       },
       button: { bg: '#2F4A92', fg: '#FFFFFF' },
       imageSide: 'right',
+      archive: {
+        verify: 'Mailchimp\'s public archive has one version of this edition (sent 1 Oct, resent 5 Oct), so both audiences get it. Rumit to confirm.',
+        value: {
+          nonprofit: 'https://mailchi.mp/goalkeep/the-keep-up-september-newsletter',
+          funder: 'https://mailchi.mp/goalkeep/the-keep-up-september-newsletter',
+        },
+      },
     },
     {
+      id: '2026-08',
       month: 'August 2026',
       headline: 'Rethink your data strategy <em>before hiring</em>',
       lead: 'Hiring one “data person” rarely solves an organization’s data problem. In reality, data talent is not a single role but rather a spectrum of capabilities that are needed in order to design, manage, and use data effectively.',
@@ -74,6 +109,13 @@ export const newsletter = {
       },
       button: { bg: '#F2C80F', fg: '#1E3266' },
       imageSide: 'left',
+      archive: {
+        verify: 'Mailchimp\'s public archive has one version of this edition (sent 27 Aug), so both audiences get it. Rumit to confirm.',
+        value: {
+          nonprofit: 'https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsletter',
+          funder: 'https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsletter',
+        },
+      },
     },
   ] satisfies Array<Edition>,
   closing: {

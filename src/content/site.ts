@@ -38,6 +38,11 @@ export type NavItem = {
   children?: Array<NavChild>
 }
 
+/** No blog posts are public yet, so nav and footer hide the blog until VITE_BLOG_LIVE=true; the routes still load by URL. */
+export const blogLive = import.meta.env.VITE_BLOG_LIVE === 'true'
+
+const blogHref = '/resources/blog'
+
 export const nav: Array<NavItem> = [
   { label: 'About us', to: '/about' },
   {
@@ -97,8 +102,8 @@ export const nav: Array<NavItem> = [
   { label: 'Case studies', to: '/case-studies' },
   {
     label: 'Resources',
-    to: '/resources/blog',
-    children: [
+    to: blogLive ? blogHref : '/resources/data-quiz',
+    children: ([
       {
         label: 'Data Culture Quiz',
         description: "Assess your organization's data health",
@@ -120,7 +125,7 @@ export const nav: Array<NavItem> = [
         theme: 'navy',
         tint: '#E7F2F0',
       },
-    ],
+    ] as Array<NavChild>).filter((child) => blogLive || child.to !== blogHref),
   },
 ]
 
@@ -154,8 +159,7 @@ export const footerGroups = [
   {
     heading: 'What we do',
     links: [
-      { label: 'Design, build, adopt', to: '/what-we-do' },
-      { label: 'Custom projects', to: '/custom-projects' },
+      { label: 'Design, build, adopt', to: '/#what-we-do' },
       { label: 'Case studies', to: '/case-studies' },
       { label: 'Kickstarter program', to: '/programs/kickstarter' },
       { label: 'Data literacy program', to: '/programs/data-literacy' },
@@ -164,7 +168,7 @@ export const footerGroups = [
   {
     heading: 'Resources',
     links: [
-      { label: 'Field notes', to: '/resources/blog' },
+      ...(blogLive ? [{ label: 'Field notes', to: blogHref }] : []),
       { label: 'Newsletter', to: '/resources/newsletter' },
       { label: 'Data culture quiz', to: '/resources/data-quiz' },
     ],
@@ -174,8 +178,7 @@ export const footerGroups = [
     links: [
       { label: 'About us', to: '/about' },
       { label: 'Partner with us', to: '/partner-with-us' },
-      { label: 'Careers', to: '/careers' },
-      { label: 'Contact', to: '/contact' },
+      { label: 'Contact', to: contactHref },
     ],
   },
 ]

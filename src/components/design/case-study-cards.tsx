@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Reveal } from '@/components/primitives/reveal'
+import '@/styles/design-case-studies.css'
 import { ArrowIcon } from './icons'
 import { SiteLink } from './site-link'
 import { tones } from './tones'
@@ -6,7 +8,13 @@ import type { Tone } from './tones'
 
 export type CaseTag = { label: string; tone: Tone }
 
-type CaseCardBase = { title: string; body: string; tags: Array<CaseTag> }
+type CaseCardBase = {
+  title: string
+  body: string
+  /** Shorter text for phones; when set it replaces `body` under 760px. */
+  mobileSummary?: string
+  tags: Array<CaseTag>
+}
 
 export type CaseCard =
   | (CaseCardBase & {
@@ -48,7 +56,7 @@ export function CaseStudyCards({
           {heading}
         </h2>
         <div
-          className="dc-grid3 dc-stories"
+          className="dc-grid3 dc-stories dc-swipe"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
@@ -56,8 +64,10 @@ export function CaseStudyCards({
             marginTop: 36,
           }}
         >
-          {cards.map((card) => (
-            <CaseCardView key={card.title} card={card} />
+          {cards.map((card, i) => (
+            <Reveal key={card.title} delay={i * 0.07} className="dc-story-slot">
+              <CaseCardView card={card} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -86,7 +96,14 @@ function CaseCardView({ card }: { card: CaseCard }) {
         ))}
       </span>
       <span style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.28 }}>{card.title}</span>
-      <span style={{ fontSize: 16, lineHeight: 1.55 }}>{card.body}</span>
+      <span className="dc-cs-sum-desktop dc-story-body" style={{ fontSize: 16, lineHeight: 1.55 }}>
+        {card.body}
+      </span>
+      {card.mobileSummary && (
+        <span className="dc-cs-sum-mobile dc-story-body" style={{ fontSize: 16, lineHeight: 1.55 }}>
+          {card.mobileSummary}
+        </span>
+      )}
       {card.kind === 'live' ? (
         <span className="dc-tlink" style={{ marginTop: 'auto', alignSelf: 'flex-start' }}>
           {card.cta ?? 'Read the case study'} <ArrowIcon />
@@ -105,6 +122,7 @@ function CaseCardView({ card }: { card: CaseCard }) {
         <img
           src={card.photo.src}
           alt={card.photo.alt}
+          className="dc-story-img"
           style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }}
         />
         {body}
@@ -114,6 +132,7 @@ function CaseCardView({ card }: { card: CaseCard }) {
   return (
     <div className="dc-surface dc-story">
       <div
+        className="dc-story-img"
         role="img"
         aria-label="Photo placeholder"
         style={{

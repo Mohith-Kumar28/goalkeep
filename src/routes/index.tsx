@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { pageHead } from '@/lib/seo'
 
 import { Approach } from '@/components/sections/approach'
 import { Audiences } from '@/components/sections/audiences'
@@ -14,12 +15,7 @@ import { WhyWeExist } from '@/components/sections/why-we-exist'
 import { site } from '@/content/site'
 
 export const Route = createFileRoute('/')({
-  head: () => ({
-    meta: [
-      { title: site.metaTitle },
-      { name: 'description', content: site.description },
-    ],
-  }),
+  head: () => pageHead({ title: 'Goalkeep | Data to scale social sector impact', socialTitle: site.metaTitle, description: site.description, path: '/' }),
   component: Home,
 })
 

@@ -85,7 +85,7 @@ export const content: ServicePageContent = {
     title: "Peepul",
     body: "Nineteen organisation-level indicators were brought together on a dashboard at Peepul for leadership to effectively monitor and assess organisation-level impact across 8 programs in 2 states.",
     tags: [
-      { label: "Education", tone: 'gold' },
+      { label: "Education", tone: "blue" },
       { label: "Building organizational impact dashboard", tone: 'teal' },
     ],
   },

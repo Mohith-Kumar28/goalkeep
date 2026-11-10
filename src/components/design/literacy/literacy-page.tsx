@@ -2,6 +2,7 @@ import { ContactBand, Cta, DesignHero, DesignPage, ExploreMore } from '@/compone
 import { Credibility } from '@/components/sections/credibility'
 import { literacyContent } from '@/content/design/literacy'
 import '@/styles/design-literacy.css'
+import '@/styles/design-programs.css'
 import { AiSection } from './ai-section'
 import { ChangeSection } from './change-section'
 import { EvidenceSection } from './evidence-section'

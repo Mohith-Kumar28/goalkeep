@@ -458,3 +458,25 @@
     font-size: 32px;
   }
 }
+
+.dc-blog-grid > div,
+.dc-blog-index-list > div {
+  display: flex;
+}
+.dc-blog-grid > div > .dc-blog-card,
+.dc-blog-index-list > div > .dc-blog-card {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  .dc-blog-card-img img {
+    height: 150px;
+  }
+  .dc-blog-card-title {
+    font-size: 18px;
+  }
+  .dc-blog-index {
+    padding-top: 32px;
+    padding-bottom: 40px;
+  }
+}

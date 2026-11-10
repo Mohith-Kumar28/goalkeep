@@ -40,8 +40,11 @@ export function Glance() {
   return (
     <section style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E7EE' }}>
       <div
-        className="dc-shell dc-glance"
-        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}
+        className="dc-shell dc-glance ps-glance"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        }}
       >
         {kickstarter.glance.map((item, i) => {
           const tone = tones[item.tone]
@@ -92,7 +95,15 @@ export function Glance() {
                 >
                   {item.label}
                 </span>
-                <span style={{ display: 'block', fontSize: 16, lineHeight: 1.45, marginTop: 4, color: '#14131A' }}>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: 16,
+                    lineHeight: 1.45,
+                    marginTop: 4,
+                    color: '#14131A',
+                  }}
+                >
                   {item.text}
                 </span>
               </span>

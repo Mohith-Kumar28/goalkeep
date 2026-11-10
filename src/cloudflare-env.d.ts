@@ -1,7 +1,7 @@
 /**
  * The slice of the Workers runtime the site uses. @cloudflare/workers-types
  * isn't installed and its globals clash with the DOM lib, so this declares
- * only the D1 binding from wrangler.jsonc and the contact-email variables.
+ * only the D1 binding from wrangler.jsonc and the email and Mailchimp variables.
  */
 declare module "cloudflare:workers" {
   interface D1Result {
@@ -26,5 +26,9 @@ declare module "cloudflare:workers" {
     CONTACT_EMAIL_FROM?: string
     /** Comma-separated addresses that receive each contact enquiry. */
     CONTACT_EMAIL_TO?: string
+    /** Secret: a Mailchimp Marketing API key, ending in its server, e.g. "…-us8". */
+    MAILCHIMP_API_KEY?: string
+    /** Secret: the audience (list) id the forms add members to. */
+    MAILCHIMP_LIST_ID?: string
   }
 }

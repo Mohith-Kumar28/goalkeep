@@ -6,6 +6,8 @@ import '@/styles/design-case-studies.css'
 import { ArrowIcon, ChevronSideIcon } from '../icons'
 import { SiteLink } from '../site-link'
 import { tones } from '../tones'
+import { Reveal } from '@/components/primitives/reveal'
+import { ClampText } from '@/components/primitives/clamp-text'
 import { StatFigure, StudyCard } from './study-card'
 import { StudyArticle } from './study-article'
 
@@ -47,9 +49,11 @@ export function CaseStudyPage({ study }: { study: CaseStudy }) {
               See all case studies <ArrowIcon />
             </SiteLink>
           </div>
-          <div className="dc-cs-related">
-            {others.map((other) => (
-              <StudyCard key={other.slug} study={other} />
+          <div className="dc-cs-related dc-swipe">
+            {others.map((other, i) => (
+              <Reveal key={other.slug} delay={i * 0.07}>
+                <StudyCard study={other} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -98,6 +102,7 @@ function StudyHeader({ study }: { study: CaseStudy }) {
               </span>
             </p>
             <h1
+              className="dc-cs-h1"
               style={{
                 fontSize: 38,
                 fontWeight: 500,
@@ -110,17 +115,11 @@ function StudyHeader({ study }: { study: CaseStudy }) {
             >
               {study.headline.lead} <em>{study.headline.em}</em>
             </h1>
-            <p
-              style={{
-                margin: '14px 0 0',
-                fontSize: 17,
-                lineHeight: 1.6,
-                color: 'rgba(20,19,26,0.78)',
-                maxWidth: '62ch',
-              }}
+            <ClampText
+              className="dc-cs-intro"
             >
               {study.intro}
-            </p>
+            </ClampText>
             <p
               style={{
                 margin: '14px 0 0',
@@ -138,11 +137,12 @@ function StudyHeader({ study }: { study: CaseStudy }) {
               <span>{study.readTime} min read</span>
             </p>
           </div>
-          <figure style={{ margin: 0 }}>
+          <figure className="dc-cs-hero-fig-wrap" style={{ margin: 0 }}>
             {hero.kind === 'photo' ? (
               <img
                 src={hero.src}
                 alt={hero.alt}
+                className="dc-cs-hero-fig"
                 style={{
                   width: '100%',
                   height: 348,
@@ -154,6 +154,7 @@ function StudyHeader({ study }: { study: CaseStudy }) {
               />
             ) : (
               <div
+                className="dc-cs-hero-fig dc-cs-hero-stat"
                 style={{
                   height: 348,
                   borderRadius: 14,
@@ -176,7 +177,7 @@ function StudyHeader({ study }: { study: CaseStudy }) {
                     width: 260,
                     height: 260,
                     borderRadius: 999,
-                    border: '40px solid rgba(234,196,82,0.9)',
+                    border: '40px solid rgba(255,255,255,0.12)',
                   }}
                 />
                 <StatFigure value={study.card.stat.value} label={study.card.stat.label} size={88} labelSize={19} />

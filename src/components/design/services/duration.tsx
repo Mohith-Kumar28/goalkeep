@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react"
 import type { Duration, RulerSpan } from "@/content/design/service-page"
+import { Reveal } from "../../primitives/reveal"
 import { tones } from "../tones"
 import type { Tone } from "../tones"
 import { Rich } from "./rich"
@@ -99,6 +101,7 @@ function RulerRow({
             boxShadow: "inset 0 0 0 1px #E5E7EE",
           }}
         >
+          <div className="dc-ruler-fill">
           <div
             style={{
               position: "absolute",
@@ -134,6 +137,7 @@ function RulerRow({
               }}
             />
           )}
+          </div>
         </div>
         {span.trail && span.to < cells && (
           <span
@@ -156,6 +160,41 @@ function RulerRow({
   )
 }
 
+/** On a phone the ruler wipes in from the left as it scrolls up the screen, as `--fill` 0 to 1. */
+function useScrollFill() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    const phone = window.matchMedia("(max-width: 760px)")
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)")
+    if (!el) return
+    let frame = 0
+    const update = () => {
+      frame = 0
+      if (!phone.matches || still.matches) {
+        el.style.removeProperty("--fill")
+        return
+      }
+      const vh = window.innerHeight
+      const top = el.getBoundingClientRect().top
+      const progress = (vh * 0.9 - top) / (vh * 0.45)
+      el.style.setProperty("--fill", String(Math.min(1, Math.max(0, progress))))
+    }
+    const queue = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener("scroll", queue, { passive: true })
+    window.addEventListener("resize", queue)
+    return () => {
+      window.removeEventListener("scroll", queue)
+      window.removeEventListener("resize", queue)
+      cancelAnimationFrame(frame)
+    }
+  }, [])
+  return ref
+}
+
 export function DurationSection({
   duration,
   tone,
@@ -163,6 +202,7 @@ export function DurationSection({
   duration: Duration
   tone: Tone
 }) {
+  const rulerRef = useScrollFill()
   const cells = duration.ticks.length
   const ink = tones[tone].ink
   const parsed = duration.ticks.map(parseTick)
@@ -174,18 +214,10 @@ export function DurationSection({
     duration.spans.some((span) => i >= span.from && i < span.to)
   return (
     <section
-      className="dc-band"
-      style={{ background: tones[tone].bg, paddingTop: 48, paddingBottom: 48 }}
+      className="dc-band dc-svc-band"
+      style={{ background: tones[tone].bg }}
     >
-      <div
-        className="dc-shell dc-split dc-duration"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0,5fr) minmax(0,7fr)",
-          gap: 56,
-          alignItems: "center",
-        }}
-      >
+      <Reveal className="dc-shell dc-split dc-duration">
         <div>
           <p className="dc-eyebrow" style={{ color: ink }}>
             {duration.eyebrow}
@@ -196,7 +228,7 @@ export function DurationSection({
           </p>
         </div>
         <div className="dc-ruler-wrap">
-          <div className="dc-ruler" style={{ position: "relative" }}>
+          <div ref={rulerRef} className="dc-ruler" style={{ position: "relative" }}>
             {duration.spans.map((span) => (
               <RulerRow
                 key={span.caption}
@@ -239,7 +271,7 @@ export function DurationSection({
             {axis && <p className="dc-ruler-axis">{axis}</p>}
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

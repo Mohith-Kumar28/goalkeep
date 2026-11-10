@@ -1,12 +1,16 @@
 import { createServerFn } from "@tanstack/react-start"
 import { contact } from "@/content/homepage"
+import { audiences, newsletter } from "@/content/design/newsletter"
 import { detailOptions, likert, scoreQuiz, statementCount } from "@/content/quiz"
 import type { Answer, QuizDetails } from "@/content/quiz"
 import { contactEmail } from "./contact-email"
+import { addToMailchimp } from "./mailchimp"
+import type { MailchimpEnv } from "./mailchimp"
+import { editionEmail } from "./newsletter-email"
 import { quizEmail } from "./quiz-email"
 
 /**
- * The homepage's two forms. Both write to the `goalkeep-site` D1 database
+ * Every form on the site. Each writes to the `goalkeep-site` D1 database
  * (binding `DB`, schema in migrations/) - "for now we'll simply store it in a
  * database". Read submissions with:
  *
@@ -60,6 +64,7 @@ export const submitContact = createServerFn({ method: "POST" })
     const { env } = await import("cloudflare:workers")
     const { getRequestHeader } = await import("@tanstack/react-start/server")
     const userAgent = text(getRequestHeader("user-agent"), 300) || null
+    const fromPartnerPage = (getRequestHeader("referer") ?? "").includes("/partner-with-us")
 
     await env.DB.prepare(
       "INSERT INTO contact_submissions (name, email, organization, service, message, user_agent) VALUES (?, ?, ?, ?, ?, ?)"
@@ -74,14 +79,21 @@ export const submitContact = createServerFn({ method: "POST" })
       )
       .run()
 
-    // Best effort: the enquiry is already stored, so a mail failure never
-    // fails the submission.
-    await notifyContact(env, data)
+    // Best effort: the enquiry is already stored, so neither call can fail
+    // the submission.
+    await Promise.all([
+      notifyContact(env, data),
+      addToMailchimp(env, {
+        email: data.email,
+        name: data.name,
+        source: fromPartnerPage ? "partner" : "contact",
+      }),
+    ])
 
     return { ok: true }
   })
 
-type MailEnv = {
+type MailEnv = MailchimpEnv & {
   RESEND_API_KEY?: string
   CONTACT_EMAIL_FROM?: string
   CONTACT_EMAIL_TO?: string
@@ -146,45 +158,67 @@ async function notifyContact(env: MailEnv, data: Omit<ContactInput, "website">) 
   })
 }
 
-/* Goalkeep's existing Mailchimp audience - the same list the sign-up form on
-   goalkeep.net posts to. */
-const MAILCHIMP =
-  "https://goalkeep.us8.list-manage.com/subscribe/post-json?u=c21fe4d3a05df1cb8cee0f967&id=b94a34e160&f_id=00a139e3f0"
+export type NewsletterInput = {
+  email: string
+  name?: string
+  organization?: string
+  audience?: string
+  /** The edition whose "Subscribe to keep reading" button was used. */
+  edition?: string
+  website: string
+}
+
+const audienceNamed = (id: string) => audiences.find((a) => a.id === id) ?? null
 
 export const subscribeNewsletter = createServerFn({ method: "POST" })
-  .validator((input: { email: string; name?: string; organization?: string; website: string }) => ({
-    email: text(input.email, 200).toLowerCase(),
-    name: text(input.name, 120) || null,
-    organization: text(input.organization, 200) || null,
-    website: text(input.website, 200),
-  }))
+  .validator((input: NewsletterInput) => {
+    const editionId = text(input.edition, 20)
+    return {
+      email: text(input.email, 200).toLowerCase(),
+      name: text(input.name, 120) || null,
+      organization: text(input.organization, 200) || null,
+      audience: audienceNamed(text(input.audience, 20)),
+      edition: newsletter.editions.find((e) => e.id === editionId) ?? null,
+      website: text(input.website, 200),
+    }
+  })
   .handler(async ({ data }): Promise<FormResult> => {
     if (data.website) return { ok: true }
     if (!EMAIL.test(data.email))
       return { ok: false, error: "Please enter a valid email address." }
 
     const { env } = await import("cloudflare:workers")
-    // Signing up twice is not an error; a second sign-up fills in a name or
-    // organization the first one left out.
+    // Signing up twice is not an error; a second sign-up fills in whatever
+    // the first one left out.
     await env.DB.prepare(
-      `INSERT INTO newsletter_signups (email, name, organization) VALUES (?, ?, ?)
+      `INSERT INTO newsletter_signups (email, name, organization, audience, edition) VALUES (?, ?, ?, ?, ?)
        ON CONFLICT (email) DO UPDATE SET
          name = COALESCE(excluded.name, name),
-         organization = COALESCE(excluded.organization, organization)`
+         organization = COALESCE(excluded.organization, organization),
+         audience = COALESCE(excluded.audience, audience),
+         edition = COALESCE(excluded.edition, edition)`
     )
-      .bind(data.email, data.name, data.organization)
+      .bind(data.email, data.name, data.organization, data.audience?.id ?? null, data.edition?.id ?? null)
       .run()
 
-    // Best effort: also add them to the Mailchimp list. The address is already
-    // stored, so a Mailchimp failure never fails the sign-up.
-    try {
-      const fname = data.name ? `&FNAME=${encodeURIComponent(data.name)}` : ""
-      await fetch(`${MAILCHIMP}&EMAIL=${encodeURIComponent(data.email)}${fname}&c=cb`, {
-        signal: AbortSignal.timeout(4000),
-      })
-    } catch {
-      // Stored in D1 regardless.
-    }
+    // Best effort: the address is already stored, so neither call can fail
+    // the sign-up. Most of each edition is shared, so a reader who didn't
+    // pick an audience gets the nonprofit version.
+    const { edition } = data
+    await Promise.all([
+      addToMailchimp(env, {
+        email: data.email,
+        name: data.name,
+        source: "newsletter",
+        tags: data.audience ? [data.audience.label] : [],
+      }),
+      edition &&
+        sendMail(env, "newsletter edition", {
+          to: [data.email],
+          reply_to: teamAddresses(env)[0],
+          ...editionEmail(edition, data.audience?.id ?? "nonprofit"),
+        }),
+    ])
 
     return { ok: true }
   })
@@ -257,7 +291,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
     const userAgent = text(getRequestHeader("user-agent"), 300) || null
 
     await env.DB.prepare(
-      "INSERT INTO quiz_responses (name, email, organization, region, sector, role, size, budget, answers, score_data, score_technology, score_process, score_strategy, score_overall, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO quiz_responses (name, email, organization, region, sector, role, size, budget, answers, score_data, score_technology, score_process, score_strategy, score_overall, band, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     )
       .bind(
         data.name,
@@ -274,15 +308,24 @@ export const submitQuiz = createServerFn({ method: "POST" })
         byDomain.process,
         byDomain.strategy,
         score.average,
+        score.band.id,
         userAgent
       )
       .run()
 
-    const emailed = await sendMail(env, "quiz", {
-      to: [data.email],
-      reply_to: teamAddresses(env)[0],
-      ...quizEmail(data.name, data.organization, score),
-    })
+    const [emailed] = await Promise.all([
+      sendMail(env, "quiz", {
+        to: [data.email],
+        reply_to: teamAddresses(env)[0],
+        ...quizEmail(data.name, data.organization, score),
+      }),
+      addToMailchimp(env, {
+        email: data.email,
+        name: data.name,
+        source: "quiz",
+        tags: [`Quiz: ${score.band.label}`],
+      }),
+    ])
 
     return { ok: true, emailed }
   })

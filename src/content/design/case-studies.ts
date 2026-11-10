@@ -66,6 +66,8 @@ export type CaseStudy = {
   card: {
     title: string
     summary: string
+    /** Shorter text for phones; when set it replaces `summary` under 760px. */
+    mobileSummary?: string
     stat: { label: string; value: string }
     /** A study with no photo yet shows its stat on the card instead. */
     cover: ({ kind: 'photo' } & Photo) | { kind: 'stat' }

@@ -327,7 +327,53 @@
 @media (max-width: 760px) {
   .dc .dc-about-nums,
   .dc .dc-about-ways-notes {
-    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 24px !important;
+  }
+  .dc .dc-about-ways-notes > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .dc .dc-about-nums .dc-sticky {
+    min-height: 0 !important;
+    padding: 14px 14px 16px;
+    border-radius: 2px 2px 16px 2px;
+  }
+  .dc .dc-num-v {
+    font-size: 34px !important;
+  }
+  .dc .dc-num-l {
+    margin-top: 6px !important;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+  .dc .dc-way-note {
+    min-height: 0;
+    padding: 14px 14px 16px;
+    gap: 6px;
+    border-radius: 2px 2px 16px 2px;
+  }
+  .dc .dc-way-t {
+    font-size: 16px !important;
+  }
+  .dc .dc-way-b {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+  }
+  .dc .dc-about-mission-body {
+    margin-top: 14px;
+  }
+  .dc .dc-about-mission .gk-clamp-toggle {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .dc .dc-about-mission,
+  .dc .dc-about-ways {
+    gap: 24px !important;
+  }
+  .dc .dc-about-logos {
+    gap: 6px 12px !important;
+    margin-top: 20px !important;
   }
   .dc .dc-about-founder-band {
     padding-top: 28px !important;
@@ -419,12 +465,32 @@
     line-height: 1.55;
   }
   .dc .dc-logo-tile {
-    width: calc(33.33% - 10px);
-    height: 80px;
-    padding: 10px;
+    width: calc(33.33% - 8px);
+    height: 56px;
+    padding: 6px;
   }
   .dc .dc-about-mission .dc-polaroid img,
   .dc .dc-about-ways .dc-polaroid img {
-    height: 260px !important;
+    height: 190px !important;
   }
+  .dc .dc-about-mission-band,
+  .dc .dc-about-partners-band {
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+  }
+}
+
+.dc .dc-about-mission-body {
+  margin: 24px 0 0;
+  max-width: 48ch;
+  color: rgba(20, 19, 26, 0.82);
+}
+.dc .dc-about-nums > div,
+.dc .dc-about-ways-notes > div {
+  display: flex;
+}
+.dc .dc-about-nums > div > *,
+.dc .dc-about-ways-notes > div > * {
+  flex: 1;
+  min-width: 0;
 }

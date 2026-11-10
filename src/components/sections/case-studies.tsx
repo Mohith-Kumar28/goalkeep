@@ -1,5 +1,6 @@
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
+import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -139,9 +140,11 @@ function LeadCard({ study }: { study: CaseStudy }) {
       </div>
       <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
         <Byline study={study} size="lg" />
-        <p className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
-          {study.body}
-        </p>
+        <div>
+          <ClampText className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
+            {study.body}
+          </ClampText>
+        </div>
       </div>
     </article>
   )
@@ -161,9 +164,11 @@ function Card({ study }: { study: CaseStudy }) {
       <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
         <Byline study={study} />
 
-        <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">
-          {study.body}
-        </p>
+        <div>
+          <ClampText className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">
+            {study.body}
+          </ClampText>
+        </div>
       </div>
     </article>
   )

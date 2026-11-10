@@ -775,3 +775,8 @@
     transform: none;
   }
 }
+
+/* The read-more toggle is navy, which disappears on a dark scrim. */
+[data-ground="scrim"] .gk-clamp-toggle {
+  color: var(--gk-white);
+}

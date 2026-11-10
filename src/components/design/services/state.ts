@@ -4,7 +4,10 @@ export type Audience = keyof Audiences
 
 export type SignsState = { audience: Audience; checked: ReadonlyArray<number> }
 
-export type SignsAction = { type: 'toggle'; index: number } | { type: 'audience'; audience: Audience }
+export type SignsAction =
+  | { type: 'toggle'; index: number }
+  | { type: 'select'; index: number }
+  | { type: 'audience'; audience: Audience }
 
 export const initialSigns: SignsState = { audience: 'nonprofit', checked: [] }
 
@@ -17,6 +20,8 @@ export function signsReducer(state: SignsState, action: SignsAction): SignsState
           ? state.checked.filter((i) => i !== action.index)
           : [...state.checked, action.index],
       }
+    case 'select':
+      return state.checked.includes(action.index) ? state : { ...state, checked: [...state.checked, action.index] }
     case 'audience':
       return action.audience === state.audience ? state : { audience: action.audience, checked: [] }
   }

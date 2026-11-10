@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { whyWeExist } from '@/content/homepage'
+import { ClampText } from '@/components/primitives/clamp-text'
 import { cn } from '@/lib/utils'
 
 /**
@@ -80,9 +81,9 @@ export function WhyWeExist() {
           <h2 id="why-heading" className="h2">
             {mission.headlineLead} <em>{mission.headlineEm}</em>
           </h2>
-          <p className="mt-4 max-w-[56ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)] md:mt-5 md:text-[length:var(--fs-lg)]">
+          <ClampText className="mt-4 max-w-[56ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)] md:mt-5 md:text-[length:var(--fs-lg)]">
             {mission.body}
-          </p>
+          </ClampText>
         </header>
 
         {/* The video's own 1520x1020 frame sets the height, so the band

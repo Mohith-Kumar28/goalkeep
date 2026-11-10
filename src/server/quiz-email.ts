@@ -42,7 +42,7 @@ export function quizEmail(name: string, organization: string, score: QuizScore) 
             <td style="padding:14px 0;border-bottom:1px solid ${LINE};">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="font:700 15px/22px ${FONT};color:${INK};">${escape(d.title)}</td>
-                <td align="right" style="font:600 13px/22px ${FONT};color:${MUTED};">${escape(d.level.label)} · <span style="color:${INK};font-weight:700;">${formatScore(d.average)}</span> / 5</td>
+                <td align="right" style="font:600 13px/22px ${FONT};color:${MUTED};">${escape(d.band.label)} · <span style="color:${INK};font-weight:700;">${formatScore(d.average)}</span> / 5</td>
               </tr></table>
               <div style="margin-top:8px;">${bar(d.average)}</div>
             </td>
@@ -59,7 +59,7 @@ export function quizEmail(name: string, organization: string, score: QuizScore) 
 <title>${escape(subject)}</title>
 </head>
 <body style="margin:0;padding:0;background:${TINT};">
-  <div style="display:none;max-height:0;overflow:hidden;">Overall ${formatScore(score.average)} / 5 · ${escape(score.level.label)}</div>
+  <div style="display:none;max-height:0;overflow:hidden;">Overall ${formatScore(score.average)} / 5 · ${escape(score.band.label)}</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${TINT};">
     <tr>
       <td align="center" style="padding:32px 16px;">
@@ -68,11 +68,14 @@ export function quizEmail(name: string, organization: string, score: QuizScore) 
             <td style="background:${NAVY};padding:28px 32px;">
               <div style="font:700 13px/18px ${FONT};letter-spacing:.12em;text-transform:uppercase;color:${YELLOW};">Goalkeep · Data culture quiz</div>
               <div style="margin-top:8px;font:700 24px/30px ${FONT};color:#ffffff;">${escape(organization)} scored ${formatScore(score.average)} / 5</div>
-              <div style="margin-top:6px;font:400 15px/22px ${FONT};color:#c9d3ef;">${escape(score.level.label)}. ${escape(score.level.reading)}</div>
+              <div style="margin-top:6px;font:400 15px/22px ${FONT};color:#c9d3ef;">${escape(score.band.label)}. ${escape(score.band.reading)}</div>
             </td>
           </tr>
           <tr>
             <td style="padding:24px 32px 0;font:400 15px/24px ${FONT};color:${INK};">Hi ${first}, thanks for taking the quiz. Here is how your answers came out across the four parts of a data culture.</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 32px 0;font:400 15px/24px ${FONT};color:${INK};">${escape(score.band.email)}</td>
           </tr>
           <tr>
             <td style="padding:8px 32px 0;">
@@ -102,10 +105,12 @@ export function quizEmail(name: string, organization: string, score: QuizScore) 
   const text = [
     `${organization}: data culture quiz results`,
     "",
-    `Overall: ${formatScore(score.average)} / 5 (${score.level.label})`,
-    score.level.reading,
+    `Overall: ${formatScore(score.average)} / 5 (${score.band.label})`,
+    score.band.reading,
     "",
-    ...score.domains.map((d) => `${d.title}: ${formatScore(d.average)} / 5 (${d.level.label})`),
+    score.band.email,
+    "",
+    ...score.domains.map((d) => `${d.title}: ${formatScore(d.average)} / 5 (${d.band.label})`),
     "",
     `Your lowest score is in ${score.weakest.title}. See ${SITE}${score.weakest.next.to}`,
     "",

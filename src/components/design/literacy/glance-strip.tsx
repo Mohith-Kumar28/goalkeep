@@ -5,8 +5,11 @@ export function GlanceStrip() {
   return (
     <section style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E7EE' }}>
       <div
-        className="dc-shell dc-glance"
-        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}
+        className="dc-shell dc-glance ps-glance"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        }}
       >
         {literacyContent.glance.map((item) => (
           <div key={item.label} className="dc-glance-item">
@@ -39,7 +42,15 @@ export function GlanceStrip() {
               >
                 {item.label}
               </span>
-              <span style={{ display: 'block', fontSize: 16, lineHeight: 1.45, marginTop: 4, color: '#14131A' }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: 16,
+                  lineHeight: 1.45,
+                  marginTop: 4,
+                  color: '#14131A',
+                }}
+              >
                 {item.body}
               </span>
             </span>

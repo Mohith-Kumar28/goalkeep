@@ -321,3 +321,42 @@
 .dc-nl h3 {
   text-wrap: wrap;
 }
+
+/* Which version of the newsletter they get (Nov 10 review). */
+.dc-nl-audience {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.dc-nl-audience legend {
+  float: left;
+  margin-right: 4px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.dc-nl-audience label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.dc-nl-audience input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #2f4a92;
+}
+.dc-nl-edition-note {
+  margin: -6px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid #eac452;
+  background: #ffffff;
+  font-size: 15px;
+  line-height: 1.5;
+}

@@ -81,12 +81,26 @@ const findings = await page.evaluate(() => {
     // The devtools trigger is a goober-classed button outside that root.
     !!n.closest('[class*="go2"], [class*="go3"], [class*="go5"], [class*="go9"]')
 
+  /* Screen-reader-only text (Tailwind sr-only: a 1px clipped box) is never
+   * painted, so its colour against the page behind it means nothing. */
+  const isVisuallyHidden = (n) => {
+    for (let a = n; a; a = a.parentElement) {
+      const cs = getComputedStyle(a)
+      if (cs.position !== 'absolute' && cs.position !== 'fixed') continue
+      const r = a.getBoundingClientRect()
+      const clipped =
+        /rect\(0(px)?,? 0(px)?,? 0(px)?,? 0(px)?\)/.test(cs.clip) || cs.clipPath.startsWith('inset(50%')
+      if (clipped || (r.width <= 1 && r.height <= 1 && cs.overflow === 'hidden')) return true
+    }
+    return false
+  }
+
   const out = []
   const YELLOW = '233, 223, 34'
 
   for (const el of document.querySelectorAll('h1,h2,h3,p,a,span,button,li,dt,dd,blockquote,figcaption')) {
     // The dev-only devtools panel is not our markup.
-    if (isDevtools(el)) continue
+    if (isDevtools(el) || isVisuallyHidden(el)) continue
     const txt = (el.textContent || '').trim()
     if (!txt || el.children.length > 0) continue
     const r = el.getBoundingClientRect()

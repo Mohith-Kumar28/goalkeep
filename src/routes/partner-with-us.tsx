@@ -1,20 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { pageHead } from '@/lib/seo'
+import { ContactBand, useContactForm } from "@/components/design"
+import { ContactFormProvider } from "@/components/design/contact-form"
 import { GkButton } from "@/components/primitives/gk-button"
 import { Reveal } from "@/components/primitives/reveal"
+import { contact } from "@/content/homepage"
 import { partnerPage } from "@/content/partner"
 
 export const Route = createFileRoute("/partner-with-us")({
-  head: () => ({
-    meta: [
-      { title: "Partner with us — Goalkeep" },
-      {
-        name: "description",
-        content:
-          "For funders and ecosystem partners: data systems your grantees and partner organisations can actually run.",
-      },
-    ],
-  }),
-  component: PartnerWithUs,
+  head: () => pageHead({ title: 'Partner with us | Goalkeep', description: 'For funders and ecosystem partners: data systems your grantees and partner organisations can actually run.', path: '/partner-with-us' }),
+  component: () => (
+    <ContactFormProvider service={contact.generalEnquiry}>
+      <PartnerWithUs />
+    </ContactFormProvider>
+  ),
 })
 
 /**
@@ -31,7 +30,8 @@ export const Route = createFileRoute("/partner-with-us")({
  * All copy is placeholder until Goalkeep's content pass; see content/partner.ts.
  */
 function PartnerWithUs() {
-  const { intro, segments } = partnerPage
+  const { intro, segments, contact: band } = partnerPage
+  const form = useContactForm()
 
   return (
     <>
@@ -82,7 +82,7 @@ function PartnerWithUs() {
               </h2>
               <p className="lead mt-5 max-w-[46ch]">{segment.lead}</p>
               <div className="mt-8">
-                <GkButton to="/contact" variant="primary" withArrow>
+                <GkButton href="#contact" variant="primary" withArrow onClick={() => form.open(segment.cta)}>
                   {segment.cta}
                 </GkButton>
               </div>
@@ -111,6 +111,18 @@ function PartnerWithUs() {
           </div>
         </section>
       ))}
+
+      <div className="dc">
+        <ContactBand
+          heading={
+            <>
+              {band.heading} <em>{band.headingEm}</em>
+            </>
+          }
+          body={band.body}
+          ctas={[{ label: band.cta }]}
+        />
+      </div>
     </>
   )
 }

@@ -5,6 +5,7 @@ import { contact } from '@/content/homepage'
 import { audienceFilters, caseStudies, quizHref, sectorFilters } from '@/content/design/case-studies'
 import type { Audience, Filter, Sector } from '@/content/design/case-studies'
 import '@/styles/design-case-studies.css'
+import { Reveal } from '@/components/primitives/reveal'
 import { ArrowIcon } from '../icons'
 import { SiteLink } from '../site-link'
 import { StudyCard } from './study-card'
@@ -65,9 +66,10 @@ function ListingHero() {
             </a>
           </div>
         </div>
-        <div style={{ position: 'relative', paddingBottom: 64 }}>
+        <div className="dc-cs-hero-photos" style={{ position: 'relative', paddingBottom: 64 }}>
           <div style={{ marginLeft: '10%' }}>
             <img
+              className="dc-cs-hero-main"
               src="/design/5fbbb99e8ba9fef7a76a4be484da22a4.webp"
               alt="A Goalkeep facilitator leading a session with the Peepul team"
               style={{
@@ -90,6 +92,7 @@ function ListingHero() {
               Baithak Foundation
             </span>
             <img
+              className="dc-cs-hero-small"
               src="/design/8625ca604ea24fa43d1fd299a4c5afea.webp"
               alt="Two Baithak Foundation team members smiling during a session"
               style={{
@@ -141,9 +144,11 @@ function Listing() {
             {count === 0 ? 'No case studies yet' : `Showing ${count} ${count === 1 ? 'case study' : 'case studies'}`}
           </p>
         </div>
-        <div className="dc-cs-grid" style={{ marginTop: 36 }}>
+        <div className="dc-cs-grid dc-swipe" style={{ marginTop: 36 }}>
           {shown.map((study, i) => (
-            <StudyCard key={study.slug} study={study} wide={i === 0 && count % 3 === 1} />
+            <Reveal key={study.slug} delay={(i % 3) * 0.07} className={i === 0 && count % 3 === 1 ? 'dc-cs-wide-slot' : undefined}>
+              <StudyCard study={study} wide={i === 0 && count % 3 === 1} />
+            </Reveal>
           ))}
         </div>
         {count === 0 && (

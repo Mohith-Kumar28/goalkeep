@@ -94,9 +94,9 @@ export function CalendarBadgeIcon() {
   )
 }
 
-export function Tick({ style }: { style?: CSSProperties }) {
+export function Tick({ style, className }: { style?: CSSProperties; className?: string }) {
   return (
-    <svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style={style}>
+    <svg aria-hidden="true" width="26" height="26" viewBox="0 0 28 28" style={style} className={className}>
       <path
         d="M 5 15 Q 9 18 11.5 22 Q 16 11 24 5"
         fill="none"

@@ -17,8 +17,9 @@ export type Bubble = {
   side: 'left' | 'right'
   maxWidth: number
   fontSize: number
-  marginTop: number
   rotate: number
+  /** Rumit's cut to six: off bubbles stay in the data, so swapping one is flipping this flag. */
+  shown: boolean
 }
 
 export type Stage = {
@@ -84,16 +85,16 @@ export const kickstarter = {
     ],
     cta: 'Apply for Kickstarter 3.0',
     bubbles: [
-      { text: 'Which is the updated student attendance sheet? I can see three versions.', tone: 'gold', side: 'left', maxWidth: 260, fontSize: 16, marginTop: 0, rotate: -2 },
-      { text: 'Can someone double-check the Jan to March data again for the quarterly funder report?', tone: 'blue', side: 'right', maxWidth: 300, fontSize: 15, marginTop: 8, rotate: 1.5 },
-      { text: 'We collect over 40 data fields for every child, but which ones actually help us track their progress?', tone: 'teal', side: 'left', maxWidth: 320, fontSize: 14, marginTop: -4, rotate: -1 },
-      { text: 'Only Rishi knew how to operate the dashboard. Now that he’s left, how do we manage this?', tone: 'coral', side: 'left', maxWidth: 290, fontSize: 15, marginTop: 10, rotate: 2 },
-      { text: 'Did anyone realize that the blood donation camp turnout has been dropping for 6 months straight? I only just realized.', tone: 'blue', side: 'right', maxWidth: 330, fontSize: 14, marginTop: -6, rotate: -1.5 },
-      { text: 'Has anyone incorporated last year’s data insights into their lesson planning for this year?', tone: 'gold', side: 'left', maxWidth: 270, fontSize: 15, marginTop: 4, rotate: 1 },
-      { text: 'It’s frustrating how we spend more time cleaning Excel sheets than using the data to get learnings and insights.', tone: 'coral', side: 'left', maxWidth: 320, fontSize: 14, marginTop: -8, rotate: -2.5 },
-      { text: 'Which of our livelihood programs have the highest success rate? I’m having a hard time reading the data on this.', tone: 'teal', side: 'right', maxWidth: 320, fontSize: 14, marginTop: 4, rotate: 1.5 },
-      { text: 'Are we effectively tracking parameters for mental health progress in the children’s program?', tone: 'gold', side: 'left', maxWidth: 280, fontSize: 15, marginTop: 8, rotate: 0.5 },
-      { text: 'We built a full data dashboard last year. Has anyone even opened it since?', tone: 'blue', side: 'left', maxWidth: 250, fontSize: 16, marginTop: -2, rotate: -1.5 },
+      { text: 'Which is the updated student attendance sheet? I can see three versions.', tone: 'gold', side: 'left', maxWidth: 260, fontSize: 16, rotate: -2, shown: true },
+      { text: 'Can someone double-check the Jan to March data again for the quarterly funder report?', tone: 'blue', side: 'right', maxWidth: 300, fontSize: 15, rotate: 1.5, shown: true },
+      { text: 'We collect over 40 data fields for every child, but which ones actually help us track their progress?', tone: 'teal', side: 'left', maxWidth: 320, fontSize: 14, rotate: -1, shown: true },
+      { text: 'Only Rishi knew how to operate the dashboard. Now that he’s left, how do we manage this?', tone: 'coral', side: 'left', maxWidth: 290, fontSize: 15, rotate: 2, shown: true },
+      { text: 'Did anyone realize that the blood donation camp turnout has been dropping for 6 months straight? I only just realized.', tone: 'blue', side: 'right', maxWidth: 330, fontSize: 14, rotate: -1.5, shown: true },
+      { text: 'Has anyone incorporated last year’s data insights into their lesson planning for this year?', tone: 'gold', side: 'left', maxWidth: 270, fontSize: 15, rotate: 1, shown: false },
+      { text: 'It’s frustrating how we spend more time cleaning Excel sheets than using the data to get learnings and insights.', tone: 'coral', side: 'left', maxWidth: 320, fontSize: 14, rotate: -2.5, shown: false },
+      { text: 'Which of our livelihood programs have the highest success rate? I’m having a hard time reading the data on this.', tone: 'teal', side: 'right', maxWidth: 320, fontSize: 14, rotate: 1.5, shown: false },
+      { text: 'Are we effectively tracking parameters for mental health progress in the children’s program?', tone: 'gold', side: 'left', maxWidth: 280, fontSize: 15, rotate: 0.5, shown: false },
+      { text: 'We built a full data dashboard last year. Has anyone even opened it since?', tone: 'blue', side: 'left', maxWidth: 250, fontSize: 16, rotate: -1.5, shown: true },
     ] satisfies Array<Bubble>,
   },
   stages: {
@@ -156,17 +157,17 @@ export const kickstarter = {
         photo: { src: '/design/8625ca604ea24fa43d1fd299a4c5afea.webp', alt: 'Two Baithak Foundation team members smiling during a session' },
         tags: [
           { label: 'Arts', tone: 'coral' },
-          { label: 'Kickstarter cohort 1', tone: 'gold' },
+          { label: 'Kickstarter cohort 1', tone: 'teal' },
         ],
         title: 'Baithak Foundation',
         body: 'Using a more accessible data system in programme and funder conversations.',
       },
       {
         kind: 'soon',
-        tone: 'gold',
+        tone: 'blue',
         tags: [
           { label: 'Education', tone: 'blue' },
-          { label: 'Kickstarter cohort 1', tone: 'gold' },
+          { label: 'Kickstarter cohort 1', tone: 'teal' },
         ],
         title: 'Vanavil Trust',
         body: 'Using timely information to identify and re-engage children who had dropped out.',
@@ -176,8 +177,8 @@ export const kickstarter = {
         href: '#',
         photo: { src: '/design/64c1c9c5b1e6936ba238b50ada299bd3.webp', alt: 'The Apni Shala Foundation team standing together in their office' },
         tags: [
-          { label: 'Education', tone: 'teal' },
-          { label: 'Kickstarter cohort 1', tone: 'gold' },
+          { label: 'Education', tone: 'blue' },
+          { label: 'Kickstarter cohort 1', tone: 'teal' },
         ],
         title: 'Apni Shala Foundation',
         body: 'Using a priority learning metric to identify student needs earlier and plan interventions.',

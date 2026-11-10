@@ -12,6 +12,8 @@ import { writeFileSync } from 'node:fs'
 const modules = {
   homepage: await import('../src/content/homepage.ts'),
   partners: await import('../src/content/partners.ts'),
+  quiz: await import('../src/content/quiz.ts'),
+  newsletter: await import('../src/content/design/newsletter.ts'),
 }
 
 const rows = []

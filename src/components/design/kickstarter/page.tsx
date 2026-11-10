@@ -1,6 +1,16 @@
-import { ArrowIcon, Cta, ContactBand, DesignHero, DesignPage, CaseStudyCards, ExploreMore, ctaClass } from '@/components/design'
+import {
+  ArrowIcon,
+  Cta,
+  ContactBand,
+  DesignHero,
+  DesignPage,
+  CaseStudyCards,
+  ExploreMore,
+  ctaClass,
+} from '@/components/design'
 import { kickstarter } from '@/content/design/kickstarter'
 import '@/styles/design-kickstarter.css'
+import '@/styles/design-programs.css'
 import { ApplyLink } from './apply-link'
 import { ChangeBand } from './change-band'
 import { FitBand } from './fit-band'

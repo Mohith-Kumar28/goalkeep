@@ -698,6 +698,11 @@ button.dc-btn {
     display: none;
   }
 }
+@media (max-width: 760px) {
+  .dc-mark-slot {
+    display: none;
+  }
+}
 
 /* ── Site header ──────────────────────────────────────────────────────── */
 .dc-header {

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { hero } from "@/content/homepage"
 import { GkButton } from "@/components/primitives/gk-button"
 import { Spotlight } from "@/components/primitives/spotlight"
+import { ClampText } from "@/components/primitives/clamp-text"
 import { SpotlightCard } from "@/components/primitives/spotlight-card"
 import { TypedPhrase } from "@/components/primitives/typed-phrase"
 import { ShapeField } from "@/components/primitives/logo-shapes"
@@ -147,8 +148,11 @@ const GAP_PX = 24
  * The next card is cut by the screen edge, never by a box in the middle of
  * the layout - a hard clip beside the card read as broken. Cards already
  * passed fade out rather than being clipped, so they don't slide over the
- * headline and nothing cuts the card's shadow. Below lg the
- * card is narrower than the column so there is room left for the peek.
+ * headline and nothing cuts the card's shadow.
+ *
+ * 10 Nov: each description is written to fill three lines, so on phones the
+ * card takes the full column and smaller type instead of leaving room for a
+ * peek. Below about 375px that still runs to four, and ClampText holds it.
  */
 function ProofCards() {
   const cards = hero.proofCards
@@ -185,7 +189,7 @@ function ProofCards() {
         onPointerCancel={() => (swipeFrom.current = null)}
       >
         <ol
-          className="pointer-events-none flex transition-transform duration-[600ms] ease-[var(--ease-out)] [--card:86%] motion-reduce:transition-none sm:[--card:100%]"
+          className="pointer-events-none flex transition-transform duration-[600ms] ease-[var(--ease-out)] [--card:100%] motion-reduce:transition-none"
           style={{ gap: GAP_PX, transform: `translateX(${offset})` }}
         >
           {cards.map((card, i) => {
@@ -225,16 +229,16 @@ function ProofCards() {
                         />
                       </div>
 
-                      <div className="px-6 pt-5 pb-6 md:px-7">
+                      <div className="px-4 pt-5 pb-6 sm:px-6 md:px-7">
                         <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)]">
                           {card.tag}
                         </span>
                         <p className="mt-2 text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
                           {card.org}
                         </p>
-                        <p className="mt-3 text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] leading-[1.45] font-semibold text-[var(--gk-navy-deep)]">
+                        <ClampText className="mt-3 text-[0.9375rem] leading-[1.45] font-semibold text-[var(--gk-navy-deep)] sm:text-[length:clamp(1.0625rem,1.4vw,1.1875rem)]">
                           {card.line.value}
-                        </p>
+                        </ClampText>
                       </div>
                     </article>
                   </SpotlightCard>

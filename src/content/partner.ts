@@ -63,4 +63,10 @@ export const partnerPage = {
       ],
     },
   ],
+  contact: {
+    heading: "Tell us about the organisations",
+    headingEm: "you support.",
+    body: "A short conversation is usually enough to tell whether a portfolio or a cohort is a fit. Leave your details and we will write back.",
+    cta: "Talk to us",
+  },
 }

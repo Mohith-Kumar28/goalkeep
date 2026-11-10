@@ -58,6 +58,7 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
         tone={tone}
         checked={state.checked}
         onToggle={(index) => dispatch({ type: 'toggle', index })}
+        onSelect={(index) => dispatch({ type: 'select', index })}
         audienceTag={tag}
       />
       <ApproachSection eyebrow={content.approach.eyebrow} rows={content.approach.rows} tone={tone} />

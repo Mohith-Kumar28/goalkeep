@@ -275,7 +275,7 @@ export const content: ServicePageContent = {
     title: "Vanavil Trust",
     body: "Using timely information to identify and re-engage children who had dropped out.",
     tags: [
-      { label: "Education", tone: "gold" },
+      { label: "Education", tone: "blue" },
       { label: "Case study in progress", tone: "coral" },
     ],
   },

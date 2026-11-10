@@ -1,5 +1,7 @@
 import { ArrowIcon, SiteLink } from '@/components/design'
 import type { RelatedPost } from '@/content/design/blog'
+import { Reveal } from '@/components/primitives/reveal'
+import '@/styles/design-case-studies.css'
 import { Tag } from './tag'
 
 function PostCard({ post }: { post: RelatedPost }) {
@@ -34,9 +36,11 @@ export function RelatedPosts({ posts }: { posts: Array<RelatedPost> }) {
             All posts <ArrowIcon />
           </SiteLink>
         </div>
-        <div className="dc-blog-grid">
-          {posts.map((post) => (
-            <PostCard key={post.title} post={post} />
+        <div className="dc-blog-grid dc-swipe">
+          {posts.map((post, i) => (
+            <Reveal key={post.title} delay={i * 0.07}>
+              <PostCard post={post} />
+            </Reveal>
           ))}
         </div>
       </div>

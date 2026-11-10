@@ -15,6 +15,11 @@
   // Who gets an email for each contact enquiry (comma-separated), and the
   // sender, on the Resend-verified mail.goalkeep.org domain. The Resend API
   // key is a secret: `wrangler secret put RESEND_API_KEY`, or .dev.vars locally.
+  // Every form also adds its submitter to Goalkeep's Mailchimp audience. With
+  // `wrangler secret put MAILCHIMP_API_KEY` (a Marketing API key, "…-us8") and
+  // `wrangler secret put MAILCHIMP_LIST_ID` (the audience id) it uses the API
+  // and tags each member by form; without them it posts to the audience's
+  // public sign-up form, untagged. Local dev never calls Mailchimp.
   "vars": {
     "CONTACT_EMAIL_FROM": "Goalkeep website <website@mail.goalkeep.org>",
     "CONTACT_EMAIL_TO": "aditya@goalkeep.net,mohithkumar808@gmail.com"

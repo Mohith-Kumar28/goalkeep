@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import flowSvg from '@/content/design/literacy-flow.svg?raw'
+import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
+import { useIsMobile } from '../program-snap/use-is-mobile'
+import { useScrollLit } from '../program-snap/use-scroll-lit'
 import { Rich } from './rich'
 import { useCycle } from './use-cycle'
 
@@ -10,7 +13,7 @@ const CHECK_MS = 1900
 
 export function WhoSection() {
   return (
-    <section className="dc-band" style={{ background: '#FFFFFF', paddingTop: 48, paddingBottom: 56 }}>
+    <section className="dc-band ps-band" style={{ background: '#FFFFFF', paddingTop: 48, paddingBottom: 56 }}>
       <div
         className="dc-shell dc-who"
         style={{
@@ -20,14 +23,18 @@ export function WhoSection() {
           alignItems: 'center',
         }}
       >
-        <NominateCard />
+        <Reveal>
+          <NominateCard />
+        </Reveal>
         <div>
-          <p className="dc-eyebrow" style={{ color: '#176059' }}>
-            {who.eyebrow}
-          </p>
-          <h2 className="dc-h2" style={{ maxWidth: '26ch' }}>
-            <Rich html={who.heading} />
-          </h2>
+          <Reveal>
+            <p className="dc-eyebrow" style={{ color: '#176059' }}>
+              {who.eyebrow}
+            </p>
+            <h2 className="dc-h2" style={{ maxWidth: '26ch' }}>
+              <Rich html={who.heading} />
+            </h2>
+          </Reveal>
           <FitChecklist />
         </div>
       </div>
@@ -39,11 +46,30 @@ function NominateCard() {
   const { nominate } = who
   const [leader, mel] = nominate.people
   const [flow, setFlow] = useState<'idle' | 'playing'>('idle')
+  const mobile = useIsMobile()
+  const idleBox = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = idleBox.current
+    if (!mobile || flow === 'playing' || !el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setFlow('playing')
+      },
+      { threshold: 0.6 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [mobile, flow])
 
   return (
     <div
-      className="dc-surface"
-      style={{ padding: '32px 30px 30px', borderRadius: 20, boxShadow: '0 18px 44px rgba(20,19,26,0.10)' }}
+      className="dc-surface ps-nom"
+      style={{
+        padding: '32px 30px 30px',
+        borderRadius: 20,
+        boxShadow: '0 18px 44px rgba(20,19,26,0.10)',
+      }}
     >
       <p
         style={{
@@ -57,7 +83,16 @@ function NominateCard() {
       >
         {nominate.label}
       </p>
-      <p style={{ margin: '8px 0 0', fontSize: 22, fontWeight: 700, lineHeight: 1.3 }}>{nominate.title}</p>
+      <p
+        style={{
+          margin: '8px 0 0',
+          fontSize: 22,
+          fontWeight: 700,
+          lineHeight: 1.3,
+        }}
+      >
+        {nominate.title}
+      </p>
       <div
         style={{
           display: 'grid',
@@ -68,13 +103,22 @@ function NominateCard() {
         }}
       >
         <Nominee person={leader} />
-        <span aria-hidden="true" style={{ fontSize: 30, fontWeight: 800, color: '#2F9C8F', marginTop: 48 }}>
+        <span
+          aria-hidden="true"
+          style={{
+            fontSize: 30,
+            fontWeight: 800,
+            color: '#2F9C8F',
+            marginTop: 48,
+          }}
+        >
           +
         </span>
         <Nominee person={mel} />
       </div>
       {flow === 'idle' ? (
         <div
+          ref={idleBox}
           style={{
             marginTop: 14,
             minHeight: 168,
@@ -87,7 +131,7 @@ function NominateCard() {
             padding: 20,
           }}
         >
-          <button type="button" className="dc-flow-btn" onClick={() => setFlow('playing')}>
+          <button type="button" className="dc-flow-btn ps-desk" onClick={() => setFlow('playing')}>
             <span className="dc-flow-btn-ic" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5.5v13a1 1 0 0 0 1.5.87l11-6.5a1 1 0 0 0 0-1.74l-11-6.5A1 1 0 0 0 8 5.5z" />
@@ -99,7 +143,13 @@ function NominateCard() {
       ) : (
         <div
           className="dc-slide-up"
-          style={{ marginTop: 14, minHeight: 168, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+          style={{
+            marginTop: 14,
+            minHeight: 168,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
         >
           <div dangerouslySetInnerHTML={{ __html: flowSvg }} />
           <p
@@ -117,7 +167,14 @@ function NominateCard() {
           </p>
         </div>
       )}
-      <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.55, color: 'rgba(20,19,26,0.8)' }}>
+      <p
+        style={{
+          margin: '18px 0 0',
+          fontSize: 16,
+          lineHeight: 1.55,
+          color: 'rgba(20,19,26,0.8)',
+        }}
+      >
         {nominate.together}
       </p>
     </div>
@@ -126,7 +183,14 @@ function NominateCard() {
 
 function Nominee({ person }: { person: (typeof who.nominate.people)[number] }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 12,
+      }}
+    >
       <img
         src={person.photo.src}
         alt={person.photo.alt}
@@ -151,23 +215,36 @@ function Nominee({ person }: { person: (typeof who.nominate.people)[number] }) {
 }
 
 function FitChecklist() {
-  const [lit, pick] = useCycle(who.signs.length, CHECK_MS)
+  const [cycled, pick] = useCycle(who.signs.length, CHECK_MS)
+  const mobile = useIsMobile()
+  const { lit, register } = useScrollLit(who.signs.length, 0.7)
 
   return (
     <div
       role="group"
       aria-label={who.groupLabel}
-      style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 28, maxWidth: 640 }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        marginTop: 28,
+        maxWidth: 640,
+      }}
     >
       {who.signs.map((sign, i) => {
         const accent = who.accents[i % who.accents.length]
-        const vars = { '--tint': accent.tint, '--base': accent.base, '--shadow': accent.shadow } as CSSProperties
+        const vars = {
+          '--tint': accent.tint,
+          '--base': accent.base,
+          '--shadow': accent.shadow,
+        } as CSSProperties
         return (
           <button
             key={sign}
             type="button"
             className="dc-chk"
-            aria-pressed={i === lit}
+            ref={register(i)}
+            aria-pressed={mobile ? i < lit : i === cycled}
             style={vars}
             onMouseEnter={() => pick(i)}
             onClick={() => pick(i)}

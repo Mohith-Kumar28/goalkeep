@@ -58,7 +58,7 @@ export const Route = createRootRoute({
         { name: "description", content: site.description },
         { property: "og:site_name", content: site.name },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: origin },
+        { property: "og:url", content: site.url },
         { property: "og:title", content: site.metaTitle },
         { property: "og:description", content: site.description },
         /*
@@ -76,6 +76,18 @@ export const Route = createRootRoute({
             "Goalkeep — Enabling social sector organisations to use data to scale impact. Alongside a case card for Apni Shala Foundation.",
         },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: site.metaTitle },
+        { name: "twitter:description", content: site.description },
+        {
+          "script:ld+json": {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: site.name,
+            url: site.url,
+            logo: `${site.url}/goalkeep-icon.png`,
+            description: site.description,
+          },
+        },
         { name: "twitter:image", content: `${origin}/og.jpg?v=${OG_VERSION}` },
         { name: "theme-color", content: "#2F4A92" },
       ],
@@ -83,7 +95,6 @@ export const Route = createRootRoute({
         { rel: "stylesheet", href: appCss },
         { rel: "icon", href: "/goalkeep-icon.png", type: "image/png" },
         { rel: "apple-touch-icon", href: "/goalkeep-icon.png" },
-        { rel: "canonical", href: origin },
       ],
     }
   },

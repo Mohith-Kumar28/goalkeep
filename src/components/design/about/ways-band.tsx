@@ -1,6 +1,7 @@
 import { useState } from "react"
 import type { FormEvent } from "react"
 import { ArrowIcon, CloseIcon } from "@/components/design/icons"
+import { Reveal } from "@/components/primitives/reveal"
 import { Rich } from "@/components/design/kickstarter/rich"
 import type { Audience, about } from "@/content/design/about"
 import { contact } from "@/content/homepage"
@@ -87,9 +88,9 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
               marginTop: 28,
             }}
           >
-            {ways.audiences.map((item) => (
+            {ways.audiences.map((item, i) => (
+              <Reveal key={item.id} delay={i * 0.07} className="dc-way-slot">
               <button
-                key={item.id}
                 type="button"
                 className="dc-way-note"
                 data-tone={item.tone}
@@ -97,6 +98,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                 onClick={() => pick(item)}
               >
                 <span
+                  className="dc-way-t"
                   style={{
                     fontSize: 21,
                     fontWeight: 800,
@@ -107,6 +109,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                   {item.title}
                 </span>
                 <span
+                  className="dc-way-b"
                   style={{
                     fontSize: 15,
                     lineHeight: 1.55,
@@ -116,6 +119,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                   {item.body}
                 </span>
               </button>
+              </Reveal>
             ))}
           </div>
         </div>

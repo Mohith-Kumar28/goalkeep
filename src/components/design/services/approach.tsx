@@ -2,6 +2,8 @@ import type { ApproachRow } from '@/content/design/service-page'
 import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { Cta } from '../cta'
+import { ClampText } from '../../primitives/clamp-text'
+import { Reveal } from '../../primitives/reveal'
 import { ArrowIcon } from '../icons'
 import { SiteLink } from '../site-link'
 import { Rich } from './rich'
@@ -25,19 +27,21 @@ export function ApproachSection({
 }) {
   return (
     <section
-      className="dc-band"
-      style={{ background: tones[tone].bg, paddingTop: 56, paddingBottom: 56, position: 'relative', zIndex: 1 }}
+      className="dc-band dc-svc-band"
+      style={{ background: tones[tone].bg, position: 'relative', zIndex: 1 }}
     >
       <div className="dc-shell">
         <p className="dc-eyebrow" style={{ color: tones[tone].ink }}>
           {eyebrow}
         </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 48, marginTop: 24 }}>
+        <div className="dc-approach-list">
           {rows.map((row, i) => {
             const text = (
               <div>
                 <Rich as="h3" className="dc-h3" html={row.heading} />
-                <Rich as="p" html={row.body} style={{ margin: '20px 0 0', maxWidth: '48ch' }} />
+                <ClampText className="dc-approach-body">
+                  <Rich html={row.body} />
+                </ClampText>
                 {row.link && (
                   <p style={{ margin: '16px 0 0' }}>
                     <TextLink href={row.link.href} tone={tone}>
@@ -63,7 +67,7 @@ export function ApproachSection({
               </div>
             )
             const image = (
-              <div className="dc-alt-img" style={{ position: 'relative', height: 340 }}>
+              <div className="dc-alt-img">
                 <img
                   className="dc-photo"
                   src={row.photo.src}
@@ -74,19 +78,10 @@ export function ApproachSection({
             )
             const reversed = i % 2 === 1
             return (
-              <div
-                key={row.heading}
-                className={reversed ? 'dc-alt dc-alt-rev' : 'dc-alt'}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-                  gap: 64,
-                  alignItems: 'center',
-                }}
-              >
+              <Reveal key={row.heading} className={reversed ? 'dc-alt dc-alt-rev' : 'dc-alt'}>
                 {reversed ? image : text}
                 {reversed ? text : image}
-              </div>
+              </Reveal>
             )
           })}
         </div>

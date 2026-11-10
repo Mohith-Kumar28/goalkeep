@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
+import { pageHead } from '@/lib/seo'
 import { ServicePage } from '@/components/design/services/service-page'
 import { servicePages } from '@/content/design/services'
 import type { ServiceSlug } from '@/content/design/service-page'
@@ -10,11 +11,7 @@ export const Route = createFileRoute('/services/$slug')({
     if (!isServiceSlug(params.slug)) throw notFound()
     return servicePages[params.slug]
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [{ title: loaderData.meta.title }, { name: 'description', content: loaderData.meta.description }]
-      : [],
-  }),
+  head: ({ loaderData }) => loaderData ? pageHead({ title: loaderData.meta.title, description: loaderData.meta.description, path: `/services/${loaderData.slug}` }) : {},
   component: ServiceRoute,
 })
 
