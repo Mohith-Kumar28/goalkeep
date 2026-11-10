@@ -192,6 +192,11 @@ export function NewsletterPage() {
     setEdition(null)
     reset()
   }
+  const keepReading = (item: Edition) => {
+    setEdition(item)
+    if (state.status === 'done') reset()
+    requestAnimationFrame(() => document.getElementById('ku-name')?.focus({ preventScroll: true }))
+  }
   return (
     <div className="dc dc-nl">
       <section className="dc-nl-hero">
@@ -216,7 +221,7 @@ export function NewsletterPage() {
         </div>
       </section>
       {editions.map((item) => (
-        <EditionRow key={item.id} edition={item} onSubscribe={setEdition} />
+        <EditionRow key={item.id} edition={item} onSubscribe={keepReading} />
       ))}
       <ClosingBand form="closing" state={state} edition={edition} onSubmit={subscribe} />
     </div>

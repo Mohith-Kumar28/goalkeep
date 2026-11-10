@@ -297,21 +297,9 @@
   letter-spacing: -0.01em;
   text-wrap: wrap;
 }
-.dc-cs-ph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 6px;
-  height: 300px;
-  border: 1.5px dashed #c9cfdc;
-  border-radius: 14px;
-  background: #f7f8fb;
-  color: rgba(20, 19, 26, 0.55);
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  padding: 16px;
+.dc-cs-step.dc-cs-step-text {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 72ch;
 }
 
 /* The quote over the background photo, and the plain panel that stands in for it. */
@@ -446,6 +434,43 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
+  .dc-cs-grid > .dc-cs-wide-slot {
+    grid-column: auto;
+  }
+  .dc-cs-card.dc-cs-wide {
+    flex-direction: column;
+  }
+  .dc-cs-wide .dc-cs-cover {
+    width: 100%;
+    height: 220px;
+    min-height: 0;
+  }
+  .dc-cs-wide .dc-cs-card-body {
+    padding: 22px 24px 24px;
+    justify-content: flex-start;
+  }
+  .dc-cs-wide .dc-cs-card-title {
+    font-size: 20px;
+    line-height: 1.32;
+  }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .dc-cs-related {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 10px;
+  }
+  .dc-cs-related::-webkit-scrollbar {
+    display: none;
+  }
+  .dc-cs-related > * {
+    flex: 0 0 44%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
 }
 @media (max-width: 760px) {
   .dc-cs-grid,
@@ -574,8 +599,7 @@
   .dc-cs-steps {
     gap: 22px;
   }
-  .dc-cs-step img,
-  .dc-cs-ph {
+  .dc-cs-step img {
     height: 170px;
   }
   .dc-cs-step h3 {
@@ -654,9 +678,31 @@
     height: 110px !important;
   }
   .dc-cs-chip {
-    min-height: 34px;
-    padding: 5px 12px;
+    min-height: 40px;
+    padding: 5px 13px;
     font-size: 14px;
+  }
+  .dc-cs-art .gk-clamp:has(+ .gk-clamp-toggle) {
+    margin-bottom: 0;
+  }
+  .dc-cs-art .gk-clamp + .gk-clamp-toggle {
+    display: block;
+    margin: -4px 0 6px;
+    padding: 10px 0;
+  }
+  .dc-cs-step .gk-clamp + .gk-clamp-toggle {
+    margin-bottom: 0;
+  }
+  .dc-cs-intro + .gk-clamp-toggle {
+    padding: 10px 0;
+    margin-top: -6px;
+  }
+  .dc-cs-empty {
+    padding: 24px 20px !important;
+    margin-top: 20px !important;
+  }
+  .dc-cs-empty > span:first-child > span:first-child {
+    font-size: 19px !important;
   }
   .dc-cs-filter-label {
     min-width: 0;

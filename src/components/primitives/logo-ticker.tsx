@@ -1,4 +1,3 @@
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import type { PartnerLogo } from '@/content/types'
 import { cn } from '@/lib/utils'
 
@@ -7,7 +6,7 @@ export type LogoGroup = { label: string; logos: Array<PartnerLogo> }
 /**
  * One labelled marquee rail per group. Runs continuously, pausing only on
  * focus-within so a keyboard user is not chasing a moving target. Under
- * reduced motion each group is a static wrapped grid.
+ * reduced motion each group is a static wrapped grid instead.
  */
 function Rail({
   logos,
@@ -44,7 +43,15 @@ function Rail({
   )
 }
 
-function LogoTile({ logo, tabbable = true }: { logo: PartnerLogo; tabbable?: boolean }) {
+function LogoTile({
+  logo,
+  tabbable = true,
+  className = 'h-20 w-[172px] md:h-28 md:w-[228px]',
+}: {
+  logo: PartnerLogo
+  tabbable?: boolean
+  className?: string
+}) {
   return (
     <img
       src={`/logos/${logo.file}`}
@@ -54,14 +61,12 @@ function LogoTile({ logo, tabbable = true }: { logo: PartnerLogo; tabbable?: boo
       tabIndex={tabbable ? 0 : -1}
       width={228}
       height={112}
-      className="h-20 w-[172px] object-contain md:h-28 md:w-[228px]"
+      className={cn('object-contain', className)}
     />
   )
 }
 
 export function LogoTicker({ groups }: { groups: Array<LogoGroup> }) {
-  const reduced = useReducedMotion()
-
   return (
     <div className="flex flex-col gap-8 md:gap-10">
       {groups.map((group, index) => (
@@ -69,21 +74,22 @@ export function LogoTicker({ groups }: { groups: Array<LogoGroup> }) {
           <h3 className="shell text-center text-[length:var(--fs-sm)] font-[var(--w-bold)] tracking-[var(--tracking-label)] text-[var(--fg-2)] uppercase">
             {group.label}
           </h3>
-          {reduced ? (
-            <ul className="shell grid grid-cols-3 items-center justify-items-center gap-x-6 gap-y-8 sm:grid-cols-4 md:grid-cols-6">
-              {group.logos.map((logo) => (
-                <li key={logo.file}>
-                  <LogoTile logo={logo} />
-                </li>
-              ))}
-            </ul>
-          ) : (
+          {/* Both layouts render and CSS picks one, so the server render and
+              first paint already have the final height. */}
+          <ul className="shell hidden flex-wrap items-center justify-center gap-x-4 gap-y-3 motion-reduce:flex md:gap-x-6 md:gap-y-6">
+            {group.logos.map((logo) => (
+              <li key={logo.file}>
+                <LogoTile logo={logo} className="h-16 w-[104px] md:h-24 md:w-[150px]" />
+              </li>
+            ))}
+          </ul>
+          <div className="motion-reduce:hidden">
             <Rail
               logos={group.logos}
               direction={index % 2 === 0 ? 'left' : 'right'}
               durationSeconds={index % 2 === 0 ? 68 : 82}
             />
-          )}
+          </div>
         </section>
       ))}
     </div>

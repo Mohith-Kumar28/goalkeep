@@ -213,3 +213,47 @@ Both docs were re-downloaded on Nov 10 and match the copies in this folder. Neit
 | Rumit | Whether the October 06:01 send is the nonprofit version and 06:00 the funder version |
 | Rumit, Goalkeep | Hold items 1.18, 1.19, 1.20 and 4.4 |
 | Mohith | Before deploy, run `wrangler d1 migrations apply goalkeep-site-v5 --remote` for `0005_audience_edition_band.sql` |
+
+## 14. Full review round (Nov 10, evening)
+
+Five review agents checked every page against both docs: phone, tablet and desktop widths, mid-scroll and settled, every interaction, and reduced motion. Each fixed what it found in its own files, and the coordinator fixed the shared files. Notable fixes:
+
+- **Quiz g-mark.** Restored to the original export. Two guesses at Rumit's "semicircle" remark had turned the tail into a near-closed loop.
+- **Approach rows.** Each holds the open height, so hovering never shifts the layout.
+- **Deliverable grids.** Compact on desktop, with every illustration in one shared frame.
+- **Who we do it for, phones.**
+  - The pinned list is centred, so no blank band shows below it.
+  - The section height is constant, so nothing below it jumps.
+  - All four testimonials are reachable in a swipe row.
+- **Kickstarter fit band.** Stays pinned until the last bubble lights, at every desktop height. The Vanavil card links to its live case study.
+- **About on tablets.** A smaller founder photo, and bios open below the tapped card.
+- **Case studies.** British Asian Trust no longer shows "Workshop photo to come" boxes. The listing grid is balanced on tablets.
+- **Hexagon sub-labels.** Now cream, which passes AA contrast.
+- **Partner logos.** No layout jump on load, which also fixes the footer "Design, build, adopt" anchor.
+- **Mobile menu.** Closes on link tap and fits with the banner on.
+- **Six signs on phones.** Colour in as you scroll, as Rumit asked. The verdict is hidden on phones because auto-colouring would always read "needs serious attention".
+- **Smaller fixes.**
+  - Footer links and every Read more toggle have 40px tap areas.
+  - The contact band leaves no empty space on phones.
+  - Hero photos are 4:3 on phones.
+  - Header labels no longer wrap at 961 to 1100px.
+  - The 404 page has a link home.
+  - The quiz shows an email error message.
+  - The newsletter thank-you no longer goes stale.
+  - With reduced motion, `Reveal` skips the fade.
+  - The footer tagline uses the new mission wording.
+
+**Open questions for Rumit from this round:**
+
+1. **The "semicircle" remark (T 43:52).** What did he mean? The g-mark is the original design.
+2. **Kickstarter Apni Shala card.** It links to `/case-studies`, because no Apni Shala study exists. Is that right?
+3. **Dashboards case-study cards.** The Vanavil and BAT cards describe different work from the published studies. Should they link to the studies or stay "coming soon"?
+4. **Data adoption, approach row 3.** "Explore the Data Literacy Program" opens the form, as in the export. Should it link to `/programs/data-literacy`?
+5. **Data systems case-study line.** "used to surface only at year-end previously" is redundant. Use the homepage wording?
+6. **British Asian Trust.** It needs 3 workshop photos.
+7. **About page logos.** Should the partner logos there also use the two labelled rows?
+8. **Link wording.** Case-study cards say "Read case study" and other places say "Read the case study". Pick one.
+9. **Header button.** Should "Partner with us" go to `/partner-with-us` instead of the contact band?
+10. **`/programs`.** It still uses the older page design and nothing links to it. Restyle it or remove it?
+11. **Blog article.** It still carries draft markers. They need clearing before the blog goes live.
+12. **Homepage hero.** Is the headline weight final? The `?hw=` preview code is still in `hero.tsx`.

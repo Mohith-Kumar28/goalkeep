@@ -36,7 +36,6 @@ function RulerRow({
   const ink = tones[tone].ink
   const { base, hatch } = toneAccents[tone]
   const range = pct(span.from, span.to, cells)
-  const headroom = compact ? 64 : 72
   return (
     <div>
       {span.label && (
@@ -48,18 +47,17 @@ function RulerRow({
         className="dc-ruler-row"
         style={{
           position: "relative",
-          paddingTop: headroom,
           marginBottom: compact ? 0 : 8,
         }}
       >
         <div
           className="dc-ruler-cap"
           style={{
-            position: "absolute",
+            position: "relative",
             ...range,
-            top: 0,
             textAlign: "center",
             ["--mid" as string]: (span.from + span.to) / 2 / cells,
+            ["--cap-gap" as string]: compact ? "8px" : "16px",
           }}
         >
           <span
@@ -145,7 +143,7 @@ function RulerRow({
             style={{
               position: "absolute",
               ...pct(span.to, cells, cells),
-              top: headroom - 55,
+              bottom: 79,
               textAlign: "center",
               fontSize: 13,
               fontWeight: 700,

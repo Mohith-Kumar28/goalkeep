@@ -13,7 +13,7 @@ import stage3 from './stage-3.svg?raw'
 import stage3Mobile from './stage-3-mobile.svg?raw'
 import stage4 from './stage-4.svg?raw'
 import stage4Mobile from './stage-4-mobile.svg?raw'
-import { useAutoCycle } from './use-auto-cycle'
+import { useAutoCycle } from '../program-snap/use-auto-cycle'
 
 const illustrations = [stage1, stage2, stage3, stage4]
 const mobileIllustrations = [stage1Mobile, stage2Mobile, stage3Mobile, stage4Mobile]

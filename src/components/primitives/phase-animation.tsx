@@ -255,7 +255,7 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
 
       {/* The question every note has to answer. */}
       <motion.p
-        className="absolute inset-x-[6%] top-[7%] text-center text-[length:clamp(0.8125rem,1.2vw,1rem)] font-bold"
+        className="absolute inset-x-[4%] top-[5%] text-center text-[length:clamp(0.75rem,1.2vw,1rem)] leading-tight font-bold"
         style={{ color: ink }}
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 6 }}
@@ -342,8 +342,8 @@ function DesignSketch({ ink, accent }: { ink: string; accent: string }) {
                   strokeWidth={3}
                   strokeLinecap="round"
                   vectorEffect="non-scaling-stroke"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
                   transition={{
                     duration: 0.3,
                     delay: (index % cols) * 0.05 + Math.floor(index / cols) * 0.08,

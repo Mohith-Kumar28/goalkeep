@@ -6,7 +6,7 @@ import { literacyContent } from '@/content/design/literacy'
 import { useIsMobile } from '../program-snap/use-is-mobile'
 import { useScrollLit } from '../program-snap/use-scroll-lit'
 import { Rich } from './rich'
-import { useCycle } from './use-cycle'
+import { useAutoCycle } from '../program-snap/use-auto-cycle'
 
 const { who } = literacyContent
 const CHECK_MS = 1900
@@ -215,7 +215,7 @@ function Nominee({ person }: { person: (typeof who.nominate.people)[number] }) {
 }
 
 function FitChecklist() {
-  const [cycled, pick] = useCycle(who.signs.length, CHECK_MS)
+  const [cycled, pick] = useAutoCycle(who.signs.length, CHECK_MS)
   const mobile = useIsMobile()
   const { lit, register } = useScrollLit(who.signs.length, 0.7)
 

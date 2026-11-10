@@ -422,7 +422,13 @@
 .dc-q-field.is-err input,
 .dc-q-field.is-err select,
 .dc-q-field input.is-err {
-  border-color: #e07a5f;
+  border-color: #c8613f;
+}
+.dc-q-field-msg {
+  margin: 6px 0 0;
+  color: #9c452a;
+  font-size: 13px;
+  line-height: 1.4;
 }
 .dc-q-other {
   margin-top: 8px;

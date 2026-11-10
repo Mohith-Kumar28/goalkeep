@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -22,11 +22,12 @@ export function Reveal({
   as?: 'div' | 'section' | 'li' | 'article'
 }) {
   const Component = motion[as]
+  const reduced = useReducedMotion()
 
   return (
     <Component
       className={cn(className)}
-      initial={{ opacity: 0, y: 8 }}
+      initial={reduced ? false : { opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       /* A tall group (a list, a grid) starts as soon as its top is in view;
          a share of its height would leave a phone screen blank. */

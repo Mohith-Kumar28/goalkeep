@@ -2,6 +2,7 @@ import type { ApproachRow } from '@/content/design/service-page'
 import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { Cta } from '../cta'
+import { useContactForm } from '../contact-form'
 import { ClampText } from '../../primitives/clamp-text'
 import { Reveal } from '../../primitives/reveal'
 import { ArrowIcon } from '../icons'
@@ -13,6 +14,15 @@ function TextLink({ href, tone, children }: { href: string; tone: Tone; children
     <SiteLink href={href} className="dc-tlink" style={{ color: tones[tone].ink }}>
       {children} <ArrowIcon />
     </SiteLink>
+  )
+}
+
+function AskLink({ intent, tone }: { intent: string; tone: Tone }) {
+  const form = useContactForm()
+  return (
+    <a href="#contact" className="dc-tlink" style={{ color: tones[tone].ink }} onClick={() => form.open(intent)}>
+      {intent} <ArrowIcon />
+    </a>
   )
 }
 
@@ -51,17 +61,24 @@ export function ApproachSection({
                 )}
                 {row.actions && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 20, marginTop: 24 }}>
-                    {row.actions.map((action) =>
-                      action.kind === 'form' ? (
-                        <Cta key={action.label} variant="primary" intent={action.label} arrow>
-                          {action.label}
-                        </Cta>
-                      ) : (
-                        <TextLink key={action.label} href={action.href} tone={tone}>
-                          {action.label}
-                        </TextLink>
-                      ),
-                    )}
+                    {row.actions.map((action) => {
+                      switch (action.kind) {
+                        case 'form':
+                          return (
+                            <Cta key={action.label} variant="primary" intent={action.label} arrow>
+                              {action.label}
+                            </Cta>
+                          )
+                        case 'ask':
+                          return <AskLink key={action.label} intent={action.label} tone={tone} />
+                        case 'link':
+                          return (
+                            <TextLink key={action.label} href={action.href} tone={tone}>
+                              {action.label}
+                            </TextLink>
+                          )
+                      }
+                    })}
                   </div>
                 )}
               </div>

@@ -75,7 +75,7 @@ function PartnerWithUs() {
           }}
         >
           <div className="shell grid gap-10 lg:grid-cols-12 lg:gap-14">
-            <div className="lg:col-span-5">
+            <Reveal className="lg:col-span-5">
               <p className="eyebrow mb-4">{segment.eyebrow}</p>
               <h2 className="h2 max-w-[22ch]">
                 {segment.headlineLead} <em>{segment.headlineEm}</em>
@@ -86,12 +86,14 @@ function PartnerWithUs() {
                   {segment.cta}
                 </GkButton>
               </div>
-            </div>
+            </Reveal>
 
             <ol className="grid gap-4 lg:col-span-7">
               {segment.offers.map((offer, i) => (
-                <li
+                <Reveal
+                  as="li"
                   key={offer.title}
+                  delay={i * 0.07}
                   className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-6 shadow-[var(--shadow-xs)] md:p-7"
                 >
                   <p className="flex items-baseline gap-4">
@@ -105,7 +107,7 @@ function PartnerWithUs() {
                   <p className="mt-2 pl-9 text-[length:var(--fs-base)] leading-relaxed">
                     {offer.body}
                   </p>
-                </li>
+                </Reveal>
               ))}
             </ol>
           </div>

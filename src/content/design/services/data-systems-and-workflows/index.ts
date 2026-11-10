@@ -189,6 +189,7 @@ export const content: ServicePageContent = {
       { label: "Education", tone: "blue" },
       { label: "Identifying key metrics", tone: "blue" },
     ],
+    cta: "See our case studies",
   },
   caseQuote: {
     text: "We end up capturing a lot of data, but it’s the first time we’ve stepped back to think of what are the key findings we really want our data to shed light on as an organisation. We are now at a place to be making less emotional, and more data-driven decisions.”",

@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import { createIsomorphicFn } from "@tanstack/react-start"
 import { getRequestUrl } from "@tanstack/react-start/server"
 
+import { SiteLink } from "@/components/design/site-link"
 import { AnnouncementBanner } from "@/components/layout/announcement-banner"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
@@ -99,14 +100,17 @@ export const Route = createRootRoute({
     }
   },
   notFoundComponent: () => (
-    <main className="shell band flex flex-col gap-5">
+    <div className="shell band flex flex-col gap-5">
       <p className="eyebrow">404</p>
       <h1 className="h2 text-[var(--fg-1)]">That page isn&apos;t here.</h1>
       <p className="lead max-w-[52ch] text-[var(--fg-2)]">
         The link may be old, or we may have moved it. The honest answer is we
         don&apos;t know which.
       </p>
-    </main>
+      <SiteLink href="/" className="dc-btn dc-btn-primary self-start">
+        Go to the homepage
+      </SiteLink>
+    </div>
   ),
   shellComponent: RootDocument,
 })

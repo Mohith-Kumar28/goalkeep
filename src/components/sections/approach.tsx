@@ -235,7 +235,7 @@ function PhaseRow({
       >
         <div
           className={cn(
-            'relative z-10 flex flex-col justify-center px-5 pt-4 pb-6 md:col-span-6 md:px-8 md:py-8',
+            'relative z-10 flex flex-col items-start justify-center px-5 pt-4 pb-6 md:col-span-6 md:px-8 md:py-8',
             flip && 'md:order-last',
           )}
         >

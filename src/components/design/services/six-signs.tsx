@@ -104,6 +104,7 @@ export function SixSignsSection({ signs, heading, items, tone, checked, onToggle
           <p className="dc-signs-prompt" style={{ margin: '16px 0 0', maxWidth: '40ch' }}>{signs.prompt}</p>
           <div
             className="dc-signs-cta"
+            data-hidden={count < 2}
             style={{ height: 64, display: 'flex', alignItems: 'flex-end', visibility: count >= 2 ? 'visible' : 'hidden' }}>
             <Cta variant="primary" intent={signs.cta} arrow>
               {signs.cta}

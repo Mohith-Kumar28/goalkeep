@@ -134,19 +134,17 @@ function Points({ points }: { points: Array<Bullet> }) {
 
 function Step({ step, flip }: { step: ApproachStep; flip: boolean }) {
   const { image } = step
+  const text = (
+    <div>
+      <h3>{step.title}</h3>
+      <ClampText className="dc-cs-step-body">{step.body}</ClampText>
+    </div>
+  )
+  if (image.kind === 'placeholder') return <div className="dc-cs-step dc-cs-step-text">{text}</div>
   return (
     <div className={`dc-cs-step${flip ? ' dc-cs-flip' : ''}`}>
-      {image.kind === 'photo' ? (
-        <img src={image.src} alt={image.alt} style={{ objectPosition: image.position }} />
-      ) : (
-        <div className="dc-cs-ph" role="img" aria-label={image.label}>
-          <span>{image.label}</span>
-        </div>
-      )}
-      <div>
-        <h3>{step.title}</h3>
-        <ClampText className="dc-cs-step-body">{step.body}</ClampText>
-      </div>
+      <img src={image.src} alt={image.alt} style={{ objectPosition: image.position }} />
+      {text}
     </div>
   )
 }

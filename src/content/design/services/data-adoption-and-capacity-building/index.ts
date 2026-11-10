@@ -107,11 +107,7 @@ export const content: ServicePageContent = {
         },
         actions: [
           { kind: "form", label: "Partner with us" },
-          {
-            kind: "link",
-            label: "Fund an organisation you support",
-            href: "#",
-          },
+          { kind: "ask", label: "Fund an organisation you support" },
         ],
       },
       {
@@ -204,7 +200,7 @@ export const content: ServicePageContent = {
     ],
     title: "Dasra and SVP India",
     body: "Conducted capacity building workshops to help 16 organizations in their cohort map their ToC to measurable indicators.",
-    cta: "Read the case study",
+    cta: "See our case studies",
   },
   caseQuote: {
     text: "It’s always inspiring to see how Goalkeep conducts their sessions. Their attention to detail is very high and the approach involved forming strong relationships with the participating NGOs, which is why we like having them as an MEL partner.”",

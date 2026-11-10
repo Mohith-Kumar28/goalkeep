@@ -5,13 +5,13 @@ import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { SnapTabs } from '../program-snap/snap-tabs'
 import { Rich } from './rich'
-import { useCycle } from './use-cycle'
+import { useAutoCycle } from '../program-snap/use-auto-cycle'
 
 const { skills } = literacyContent
 const STEP_MS = 8000
 
 export function SkillsSection() {
-  const [step, pick] = useCycle(skills.items.length, STEP_MS)
+  const [step, pick] = useAutoCycle(skills.items.length, STEP_MS)
   const skill = skills.items[step]
   const accent = skills.accents[step]
 

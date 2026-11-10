@@ -144,14 +144,15 @@ function Listing() {
             {count === 0 ? 'No case studies yet' : `Showing ${count} ${count === 1 ? 'case study' : 'case studies'}`}
           </p>
         </div>
-        <div className="dc-cs-grid dc-swipe" style={{ marginTop: 36 }}>
-          {shown.map((study, i) => (
-            <Reveal key={study.slug} delay={(i % 3) * 0.07} className={i === 0 && count % 3 === 1 ? 'dc-cs-wide-slot' : undefined}>
-              <StudyCard study={study} wide={i === 0 && count % 3 === 1} />
-            </Reveal>
-          ))}
-        </div>
-        {count === 0 && (
+        {count > 0 ? (
+          <div className="dc-cs-grid dc-swipe" style={{ marginTop: 36 }}>
+            {shown.map((study, i) => (
+              <Reveal key={study.slug} delay={(i % 3) * 0.07} className={i === 0 && count % 3 === 1 ? 'dc-cs-wide-slot' : undefined}>
+                <StudyCard study={study} wide={i === 0 && count % 3 === 1} />
+              </Reveal>
+            ))}
+          </div>
+        ) : (
           <EmptyState
             onReset={() => {
               setAudience('all')
@@ -198,6 +199,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
   const form = useContactForm()
   return (
     <div
+      className="dc-cs-empty"
       style={{
         marginTop: 36,
         padding: '44px 40px',

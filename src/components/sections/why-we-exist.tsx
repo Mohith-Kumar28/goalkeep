@@ -76,7 +76,7 @@ export function WhyWeExist() {
       aria-labelledby="why-heading"
     >
       <div className="shell grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
-        <header className="accent-blue flex flex-col lg:col-span-5" style={{ color: 'var(--fg-1)' }}>
+        <header className="accent-blue flex flex-col items-start lg:col-span-5" style={{ color: 'var(--fg-1)' }}>
           <p className="eyebrow mb-4">{whyWeExist.eyebrow}</p>
           <h2 id="why-heading" className="h2">
             {mission.headlineLead} <em>{mission.headlineEm}</em>

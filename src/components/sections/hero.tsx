@@ -153,6 +153,8 @@ const GAP_PX = 24
  * 10 Nov: each description is written to fill three lines, so on phones the
  * card takes the full column and smaller type instead of leaving room for a
  * peek. Below about 375px that still runs to four, and ClampText holds it.
+ * The tag is smaller on phones too, so Peepul's long one stays on one line
+ * and every card has the organisation on line two.
  */
 function ProofCards() {
   const cards = hero.proofCards
@@ -165,7 +167,7 @@ function ProofCards() {
 
   return (
     <div
-      className="mx-auto w-full max-w-[31rem]"
+      className="w-full max-w-[31rem] lg:mx-auto"
       role="region"
       aria-roledescription="carousel"
       aria-label="Our work"
@@ -229,14 +231,14 @@ function ProofCards() {
                         />
                       </div>
 
-                      <div className="px-4 pt-5 pb-6 sm:px-6 md:px-7">
-                        <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)]">
+                      <div className="px-4 pt-5 pb-6 sm:px-6 md:px-7 lg:max-xl:px-5">
+                        <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)] max-sm:text-[0.75rem] lg:max-xl:text-[0.8125rem]">
                           {card.tag}
                         </span>
                         <p className="mt-2 text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
                           {card.org}
                         </p>
-                        <ClampText className="mt-3 text-[0.9375rem] leading-[1.45] font-semibold text-[var(--gk-navy-deep)] sm:text-[length:clamp(1.0625rem,1.4vw,1.1875rem)]">
+                        <ClampText className="mt-3 text-[0.9375rem] leading-[1.45] font-semibold text-[var(--gk-navy-deep)] sm:text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] lg:max-xl:text-[0.9375rem]">
                           {card.line.value}
                         </ClampText>
                       </div>

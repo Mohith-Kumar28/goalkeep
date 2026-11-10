@@ -63,6 +63,8 @@ export type ApproachAction =
   | { kind: 'form'; label: string }
   /** A text link with an arrow, in the page tone's ink. */
   | { kind: 'link'; label: string; href: string }
+  /** The same text link, opening the contact form with its label as the intent. */
+  | { kind: 'ask'; label: string }
 
 export type ApproachRow = {
   heading: Html

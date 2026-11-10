@@ -163,8 +163,9 @@ export const kickstarter = {
         body: 'Using a more accessible data system in programme and funder conversations.',
       },
       {
-        kind: 'soon',
-        tone: 'blue',
+        kind: 'live',
+        href: '/case-studies/vanavil',
+        photo: { src: '/design/1410813022db18712b058a2e66fc31f2.webp', alt: 'Vanavil Trust and Goalkeep at work' },
         tags: [
           { label: 'Education', tone: 'blue' },
           { label: 'Kickstarter cohort 1', tone: 'teal' },
@@ -174,7 +175,8 @@ export const kickstarter = {
       },
       {
         kind: 'live',
-        href: '#',
+        href: '/case-studies',
+        cta: 'See all case studies',
         photo: { src: '/design/64c1c9c5b1e6936ba238b50ada299bd3.webp', alt: 'The Apni Shala Foundation team standing together in their office' },
         tags: [
           { label: 'Education', tone: 'blue' },

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 /**
  * An index that steps through `count` items every `ms` until the visitor
- * picks one by hand, which ends the cycle for good, as in the export.
+ * picks one by hand, which ends the cycle for good, as in the export. It
+ * holds still under reduced motion.
  */
 export function useAutoCycle(count: number, ms: number) {
   const [index, setIndex] = useState(0)
@@ -16,9 +17,9 @@ export function useAutoCycle(count: number, ms: number) {
     return () => clearInterval(timer)
   }, [auto, reduced, count, ms])
 
-  const pick = (next: number) => {
+  const pick = useCallback((next: number) => {
     setAuto(false)
     setIndex(next)
-  }
+  }, [])
   return [index, pick] as const
 }

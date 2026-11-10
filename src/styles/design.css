@@ -592,7 +592,7 @@ button.dc-btn {
   justify-content: center;
 }
 .dc-carousel-dot {
-  width: 28px;
+  width: 40px;
   height: 44px;
   border: none;
   background: transparent;
@@ -766,6 +766,7 @@ button.dc-btn {
   background: none;
   border: 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 :where(.dc-header) a.dc-nav-link:hover,
 .dc-nav-link:hover,
@@ -914,12 +915,14 @@ button.dc-btn {
     gap: 16px;
   }
 }
+@media (max-width: 960px) {
+  .dc-header-bar > .dc-partner {
+    margin-left: auto;
+  }
+}
 @media (max-width: 520px) {
   .dc-header-bar {
     gap: 8px;
-  }
-  .dc-header-bar > .dc-partner {
-    margin-left: auto;
   }
 }
 @media (min-width: 961px) {
@@ -929,7 +932,10 @@ button.dc-btn {
 }
 @media (max-width: 1100px) and (min-width: 961px) {
   .dc-navlinks {
-    gap: 22px;
+    gap: 18px;
+  }
+  .dc-header-bar {
+    gap: 20px;
   }
 }
 
@@ -994,9 +1000,12 @@ button.dc-btn {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 10px;
+  gap: 0;
 }
 .dc-footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
   color: #14131a;
   text-decoration: none;
   font-size: 15px;
@@ -1057,6 +1066,9 @@ button.dc-btn {
   margin: 0;
 }
 .dc-banner a {
+  display: inline-block;
+  padding: 10px 0;
+  margin: -10px 0;
   color: #ffffff;
   font-weight: 700;
   text-decoration: underline;
@@ -1083,8 +1095,10 @@ button.dc-btn {
     overflow: hidden;
   }
   .gk-clamp-toggle {
-    display: inline-block;
-    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin-top: 0;
     padding: 0;
     border: 0;
     background: none;
@@ -1095,5 +1109,29 @@ button.dc-btn {
     text-decoration: underline;
     text-underline-offset: 3px;
     cursor: pointer;
+  }
+}
+
+@media (min-width: 761px) {
+  .dc-contact-split:not([data-compact]) {
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 760px) {
+  .dc-contact-split {
+    row-gap: 0 !important;
+  }
+  .dc-contact-split:not(:has(.dc-contact-form-card)) > div:last-child {
+    display: none;
+  }
+  .dc-contact-split .dc-contact-form-card {
+    margin-top: 24px;
+  }
+}
+@media (max-width: 760px) {
+  .dc-carousel-frame {
+    height: auto;
+    aspect-ratio: 4 / 3;
   }
 }

@@ -40,7 +40,7 @@ export type Article = {
   related: Array<RelatedPost>
 }
 
-const IDR_MEGHALAYA = 'http://idronline.org/article/health/is-meghalaya-learning-to-read-its-own-health-data'
+const IDR_MEGHALAYA = 'https://idronline.org/article/health/is-meghalaya-learning-to-read-its-own-health-data'
 
 const whichWayDoesYourDataTravel: Article = {
   slug: 'which-way-does-your-data-travel',

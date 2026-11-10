@@ -47,19 +47,29 @@ export function DetailsStep({
     if (!found.size) onDone()
   }
 
-  const text = (key: Key, label: string, type = 'text', placeholder = '', autoComplete = '') => (
-    <div className={bad.has(key) ? 'dc-q-field is-err' : 'dc-q-field'}>
-      <label htmlFor={`q-${key}`}>{label}</label>
-      <input
-        id={`q-${key}`}
-        type={type}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        value={details[key]}
-        onChange={(e) => edit(key, e.target.value)}
-      />
-    </div>
-  )
+  const text = (key: Key, label: string, type = 'text', placeholder = '', autoComplete = '') => {
+    const malformed = key === 'email' && bad.has(key) && details.email.trim() !== ''
+    return (
+      <div className={bad.has(key) ? 'dc-q-field is-err' : 'dc-q-field'}>
+        <label htmlFor={`q-${key}`}>{label}</label>
+        <input
+          id={`q-${key}`}
+          type={type}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          value={details[key]}
+          aria-invalid={bad.has(key) || undefined}
+          aria-describedby={malformed ? `q-${key}-msg` : undefined}
+          onChange={(e) => edit(key, e.target.value)}
+        />
+        {malformed && (
+          <p id={`q-${key}-msg`} className="dc-q-field-msg">
+            {quizPage.form.badEmail}
+          </p>
+        )}
+      </div>
+    )
+  }
 
   const select = (key: 'role' | 'region' | 'size' | 'sector', label: string) => {
     const other = key === 'role' ? 'roleOther' : key === 'sector' ? 'sectorOther' : null
@@ -70,6 +80,7 @@ export function DetailsStep({
           id={`q-${key}`}
           className={details[key] ? undefined : 'is-placeholder'}
           value={details[key]}
+          aria-invalid={bad.has(key) || undefined}
           onChange={(e) => edit(key, e.target.value)}
         >
           <option value="" disabled>
@@ -83,6 +94,7 @@ export function DetailsStep({
           <input
             className={bad.has(other) ? 'dc-q-other is-err' : 'dc-q-other'}
             aria-label={`${label}, please specify`}
+            aria-invalid={bad.has(other) || undefined}
             placeholder="Please specify"
             value={details[other]}
             onChange={(e) => edit(other, e.target.value)}

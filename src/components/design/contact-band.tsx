@@ -57,15 +57,15 @@ export function ContactBand({
       }}
     >
       <div
-        className="dc-shell dc-split"
+        className="dc-shell dc-split dc-contact-split"
         style={{
           position: 'relative',
           display: 'grid',
           gridTemplateColumns: 'minmax(0,6fr) minmax(0,5fr)',
           gap: 64,
           alignItems: 'center',
-          minHeight: compact ? undefined : 340,
         }}
+        data-compact={compact || undefined}
       >
         <div>
           {eyebrow}

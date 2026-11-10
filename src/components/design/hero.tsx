@@ -74,7 +74,7 @@ export function HeroCarousel({ photos, label }: { photos: Array<HeroPhoto>; labe
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 }}>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 0, alignItems: 'center' }}>
           {photos.map((photo, i) => (
             <button
               key={photo.src}

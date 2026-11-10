@@ -35,7 +35,7 @@ export type Bullet = {
 export type ApproachStep = {
   title: string
   body: string
-  /** A step awaiting its photo shows a dashed placeholder. */
+  /** A step awaiting its photo shows its text alone until the photo arrives. */
   image: ({ kind: 'photo' } & Photo) | { kind: 'placeholder'; label: string }
 }
 

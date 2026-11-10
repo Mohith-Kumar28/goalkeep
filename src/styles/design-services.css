@@ -108,8 +108,13 @@
   .dc-aud-sub {
     display: none;
   }
-  /* Phones: the notes come straight after the prompt, so the verdict and button they change
-     sit below the tap, not off screen above it. */
+  .dc:has(.dc-aud-sticky) section[id] {
+    scroll-margin-top: 72px;
+  }
+}
+/* Single column: the notes come straight after the prompt, so the verdict and button they
+   change sit below the tap, not off screen above it, and nothing reserves room for them. */
+@media (max-width: 1100px) {
   .dc-split:has(> .dc-signs-intro) {
     gap: 0 !important;
   }
@@ -129,8 +134,9 @@
     height: auto !important;
     margin-top: 16px;
   }
-  .dc:has(.dc-aud-sticky) section[id] {
-    scroll-margin-top: 72px;
+  .dc-signs-verdict[data-empty="true"],
+  .dc-signs-cta[data-hidden="true"] {
+    display: none !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -156,7 +162,7 @@
 }
 .dc-deliv-item .dc-tile {
   width: 100%;
-  max-width: 172px;
+  max-width: 208px;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -200,20 +206,25 @@
     gap: 24px !important;
   }
   .dc-duration .dc-ruler-cap {
-    left: calc(var(--mid) * 100%) !important;
-    width: 132px !important;
     min-width: 0;
-    transform: translateX(-50%);
+  }
+  .dc-duration .dc-ruler-caption {
+    max-width: 150px;
   }
 }
 @media (min-width: 761px) {
+  .dc-ruler-cap {
+    margin-bottom: var(--cap-gap);
+  }
   .dc-ruler-caption {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: max-content;
     max-width: 240px;
   }
+}
+.dc-ruler-caption {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
 }
 
 .dc-svc-band {
@@ -331,14 +342,22 @@
   position: absolute;
   inset: 0;
 }
-.dc-case-body .gk-clamp-toggle,
-.dc-explore-card .gk-clamp-toggle {
+.dc-case-body .gk-clamp-toggle {
   position: relative;
   z-index: 1;
   align-self: flex-start;
 }
 
+/* Two columns: the photo fills whatever height the text needs instead of setting it. */
+@media (min-width: 1101px) {
+  .dc-svc-band .dc-case-img {
+    contain: size;
+  }
+}
 @media (max-width: 1100px) {
+  .dc-svc-band .dc-case-img {
+    max-height: 320px;
+  }
   .dc-approach-list .dc-alt {
     gap: 20px;
   }
@@ -365,9 +384,7 @@
     margin-top: 12px;
   }
 
-  .dc-signs-prompt,
-  .dc-signs-verdict[data-empty="true"],
-  .dc-signs-cta[style*="visibility: hidden"] {
+  .dc-signs-prompt {
     display: none;
   }
   .dc-signs-intro + .dc-notes {
@@ -415,7 +432,7 @@
     color: #ffffff;
   }
   .dc-signs-verdict {
-    margin-top: 16px !important;
+    display: none !important;
   }
 
   .dc-duration .dc-ruler {
@@ -460,6 +477,12 @@
     flex: 0 0 82%;
     scroll-snap-align: start;
     padding: 20px;
+  }
+  .dc-explore-body {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
   }
 }
 @media (prefers-reduced-motion: reduce) {

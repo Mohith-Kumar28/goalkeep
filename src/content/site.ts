@@ -7,7 +7,7 @@ export const site = {
    * into this one sentence.
    */
   tagline:
-    'Goalkeep helps organizations measure, communicate, and deepen their impact with confidence.',
+    'Goalkeep enables organisations to measure, communicate and deepen their impact with confidence.',
   /**
    * <title> / og:title and the meta description - what shows when the link is
    * shared. 23 Oct: Rumit sent both, built from the hero headline and typing

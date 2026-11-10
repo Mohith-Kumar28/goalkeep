@@ -4,28 +4,37 @@ import type { about } from "@/content/design/about"
 
 const TONE_ORDER = ["gold", "blue", "teal", "coral"] as const
 
-const MOBILE_QUERY = "(max-width: 760px)"
-const MOBILE_COLUMNS = 2
+const INLINE_QUERY = "(max-width: 1100px)"
+const PHONE_QUERY = "(max-width: 760px)"
 
-function useIsMobile() {
-  const [mobile, setMobile] = useState(false)
+function useInlineColumns() {
+  const [columns, setColumns] = useState<number | null>(null)
   useEffect(() => {
-    const query = window.matchMedia(MOBILE_QUERY)
-    const update = () => setMobile(query.matches)
+    const inline = window.matchMedia(INLINE_QUERY)
+    const phone = window.matchMedia(PHONE_QUERY)
+    const update = () =>
+      setColumns(inline.matches ? (phone.matches ? 2 : 3) : null)
     update()
-    query.addEventListener("change", update)
-    return () => query.removeEventListener("change", update)
+    inline.addEventListener("change", update)
+    phone.addEventListener("change", update)
+    return () => {
+      inline.removeEventListener("change", update)
+      phone.removeEventListener("change", update)
+    }
   }, [])
-  return mobile
+  return columns
 }
 
 export function TeamBand({ team }: { team: typeof about.team }) {
   const [selected, setSelected] = useState(0)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const mobile = useIsMobile()
+  const columns = useInlineColumns()
+  const mobile = columns !== null
   const panelRef = useRef<HTMLDivElement>(null)
   const panelRow =
-    openIndex === null ? -1 : Math.floor(openIndex / MOBILE_COLUMNS)
+    openIndex === null || columns === null
+      ? -1
+      : Math.floor(openIndex / columns)
 
   useEffect(() => {
     if (openIndex !== null) {
@@ -153,9 +162,13 @@ export function TeamBand({ team }: { team: typeof about.team }) {
                 <button
                   key={p.name}
                   type="button"
-                  className={k === selected ? "dc-mini dc-on" : "dc-mini"}
+                  className={
+                    (mobile ? openIndex === k : k === selected)
+                      ? "dc-mini dc-on"
+                      : "dc-mini"
+                  }
                   data-tone={p.tone}
-                  aria-pressed={k === selected}
+                  aria-pressed={mobile ? undefined : k === selected}
                   aria-expanded={mobile ? openIndex === k : undefined}
                   onClick={() => choose(k)}
                   onMouseEnter={mobile ? undefined : () => setSelected(k)}
@@ -177,14 +190,10 @@ export function TeamBand({ team }: { team: typeof about.team }) {
                   <span className="dc-mini-r">{p.role}</span>
                 </button>
               )
+              if (columns === null) return [card]
               const endsRow =
-                k % MOBILE_COLUMNS === MOBILE_COLUMNS - 1 ||
-                k === team.people.length - 1
-              if (
-                !mobile ||
-                !endsRow ||
-                Math.floor(k / MOBILE_COLUMNS) !== panelRow
-              )
+                k % columns === columns - 1 || k === team.people.length - 1
+              if (!endsRow || Math.floor(k / columns) !== panelRow)
                 return [card]
               const open = team.people[openIndex!]
               return [
@@ -194,7 +203,8 @@ export function TeamBand({ team }: { team: typeof about.team }) {
                   ref={panelRef}
                   className="dc-sticky dc-mini-panel"
                   data-tone={TONE_ORDER[openIndex! % 4]}
-                  data-col={openIndex! % MOBILE_COLUMNS}
+                  data-col={openIndex! % columns}
+                  data-cols={columns}
                   aria-live="polite"
                 >
                   <button

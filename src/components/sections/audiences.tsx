@@ -33,6 +33,8 @@ import { cn } from '@/lib/utils'
  * unnoticed, so below md the four options are a compact list (icon left,
  * label right) pinned with the pitch, and scrolling steps through them. The
  * label above them is black on every segment instead of the blue it was.
+ * Scrolling always leaves the list on Funders, so on phones the four
+ * testimonials are a swipe row that follows the selection.
  */
 type Theme = {
   /** The band's ground. */
@@ -95,6 +97,39 @@ export function Audiences() {
   const audience = audiences[active]
   const theme = THEMES[audience.id]
   const runway = useRef<HTMLDivElement>(null)
+  const pinned = useRef<HTMLDivElement>(null)
+  const reel = useRef<HTMLUListElement>(null)
+  const pinTop = useRef(PIN_TOP_PX)
+  const [pinTopPx, setPinTopPx] = useState(PIN_TOP_PX)
+
+  /* The pinned block sits in the middle of the screen, so the scroll it is
+     held for shows as even margins rather than one blank band below it. A
+     block taller than the screen keeps its bottom, with the buttons, on
+     screen. It is placed by its closed height: opening a Read more must not
+     move the pin, or the next pixel of scroll would change the segment. */
+  useEffect(() => {
+    const node = pinned.current
+    if (!node) return
+    const panel = node.querySelector<HTMLElement>('[role=tabpanel]')
+    const sizers = [...node.querySelectorAll<HTMLElement>('[data-pitch-sizer]')]
+    const place = () => {
+      const reserved = Math.max(...sizers.map((sizer) => sizer.offsetHeight))
+      const closed = node.offsetHeight - (panel?.offsetHeight ?? 0) + reserved
+      const room = window.innerHeight - closed
+      const top = room >= 2 * PIN_TOP_PX ? Math.round(room / 2) : room - PIN_TOP_PX
+      pinTop.current = top
+      setPinTopPx(top)
+    }
+    place()
+    const observer = new ResizeObserver(place)
+    observer.observe(node)
+    sizers.forEach((sizer) => observer.observe(sizer))
+    window.addEventListener('resize', place)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', place)
+    }
+  }, [])
 
   /* The segment follows the scroll only when the scroll moves it to a new
      step, so a tap is not undone by the next pixel of scrolling. */
@@ -107,7 +142,7 @@ export function Audiences() {
       frame = requestAnimationFrame(() => {
         const node = runway.current
         if (!node || !query.matches) return
-        const travelled = PIN_TOP_PX - node.getBoundingClientRect().top
+        const travelled = pinTop.current - node.getBoundingClientRect().top
         const next = Math.min(audiences.length - 1, Math.max(0, Math.floor(travelled / STEP_PX + 0.5)))
         if (next === activeStep) return
         activeStep = next
@@ -127,9 +162,17 @@ export function Audiences() {
     setActive(index)
     const node = runway.current
     if (!node || !window.matchMedia(PHONE).matches) return
-    const top = window.scrollY + node.getBoundingClientRect().top - PIN_TOP_PX + index * STEP_PX
+    const top = window.scrollY + node.getBoundingClientRect().top - pinTop.current + index * STEP_PX
     window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' })
   }
+
+  useEffect(() => {
+    const row = reel.current
+    const card = row?.children[active] as HTMLElement | undefined
+    if (!row || !card || !window.matchMedia(PHONE).matches) return
+    const left = card.offsetLeft - row.offsetLeft - (row.clientWidth - card.offsetWidth) / 2
+    row.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' })
+  }, [active, reduced])
 
   // Deep links survive the category rename: /#early-stage still resolves.
   useEffect(() => {
@@ -168,7 +211,7 @@ export function Audiences() {
           bold italic ending - stay within three lines. */}
       <div className="shell relative grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,8fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
         <div ref={runway} className="min-w-0">
-          <div className="max-md:sticky" style={{ top: PIN_TOP_PX }}>
+          <div ref={pinned} className="max-md:sticky" style={{ top: pinTopPx }}>
             {/* 30 Sep: the section's name is back on the page, as an eyebrow
                 like "what we do" and "why we exist" - the segment questions
                 below stay the headlines. */}
@@ -222,17 +265,38 @@ export function Audiences() {
               role="tabpanel"
               id={`audience-panel-${audience.id}`}
               aria-labelledby={`audience-tab-${audience.id}`}
-              className="mt-5 md:mt-8"
+              className="mt-5 grid md:mt-8"
             >
-              <Pitch key={audience.id} audience={audience} theme={theme} reduced={reduced} />
+              <div className="col-start-1 row-start-1">
+                <Pitch key={audience.id} audience={audience} theme={theme} reduced={reduced} />
+              </div>
+              {/* Every segment's pitch, unseen, in the same cell: the block
+                  is always as tall as the longest one, so switching never
+                  moves the page below it. */}
+              {audiences.map((item) => (
+                <div key={item.id} data-pitch-sizer aria-hidden="true" className="invisible col-start-1 row-start-1 self-start">
+                  <Pitch audience={item} theme={THEMES[item.id]} reduced />
+                </div>
+              ))}
             </div>
           </div>
           {/* The scroll the pinned list is held for, one step per segment. */}
           <div aria-hidden="true" className="md:hidden" style={{ height: (audiences.length - 1) * STEP_PX }} />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 max-md:hidden">
           <Testimonial key={audience.id} audience={audience} reduced={reduced} />
         </div>
+        <ul
+          ref={reel}
+          aria-label="What our partners say"
+          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:hidden"
+        >
+          {audiences.map((item) => (
+            <li key={item.id} className="w-[85%] shrink-0 snap-center">
+              <Testimonial audience={item} reduced className="h-full max-sm:bg-[var(--gk-navy)]" />
+            </li>
+          ))}
+        </ul>
       </div>
 
       <PhotoMarquee key={audience.id} photos={audience.photos} compact className="mt-8 md:mt-10" />
@@ -294,13 +358,13 @@ function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme;
  * The testimonial, image-first: a photograph with the quote set over its
  * lower edge. "It'll give a little bit of a text break to this entire thing."
  */
-function Testimonial({ audience, reduced }: { audience: Audience; reduced: boolean }) {
+function Testimonial({ audience, reduced, className }: { audience: Audience; reduced: boolean; className?: string }) {
   const { testimonial } = audience
 
   return (
     <motion.figure
       {...step(reduced, 3)}
-      className="relative overflow-hidden rounded-[var(--r-lg)] shadow-[var(--shadow-md)]"
+      className={cn('relative overflow-hidden rounded-[var(--r-lg)] shadow-[var(--shadow-md)]', className)}
     >
       {/* Phones: a short photo with the quote under it on navy, rather than a
           portrait-shaped photo tall enough to carry the quote over it. */}

@@ -29,7 +29,7 @@ export function ExploreMore({
   return (
     <section className="dc-band" style={{ background: '#FFFFFF', paddingTop: 56, paddingBottom: 56 }}>
       <div className="dc-shell">
-        <h2 className="dc-h2">{heading}</h2>
+        <h2 className="dc-h2" style={{ maxWidth: 'none' }}>{heading}</h2>
         <div
           className="dc-grid2 dc-swipe"
           style={{

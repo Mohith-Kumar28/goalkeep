@@ -1,5 +1,5 @@
 import { useRouterState } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { ChevronIcon, CloseIcon, MenuIcon } from '@/components/design/icons'
 import { SiteLink } from '@/components/design/site-link'
@@ -15,8 +15,14 @@ export function SiteHeader() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const current = navChildFor(pathname)
   const [menuOpen, setMenuOpen] = useState(false)
+  const header = useRef<HTMLElement>(null)
+  const [menuTop, setMenuTop] = useState(0)
 
   useEffect(() => setMenuOpen(false), [pathname])
+
+  useLayoutEffect(() => {
+    if (menuOpen) setMenuTop(header.current?.getBoundingClientRect().bottom ?? 0)
+  }, [menuOpen])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -26,7 +32,14 @@ export function SiteHeader() {
   }, [menuOpen])
 
   return (
-    <header className="dc-header" data-theme={current?.theme ?? 'navy'}>
+    <header
+      ref={header}
+      className="dc-header"
+      data-theme={current?.theme ?? 'navy'}
+      onClick={(event) => {
+        if ((event.target as Element).closest('a')) setMenuOpen(false)
+      }}
+    >
       <div className="dc-shell dc-header-bar">
         <SiteLink href="/" aria-label="Goalkeep home" className="dc-logo">
           <img className="dc-logo-white" src="/wordmark-white.webp" alt="Goalkeep" width={673} height={160} />
@@ -65,7 +78,11 @@ export function SiteHeader() {
       </div>
 
       {menuOpen && (
-        <div id="mobile-nav" className="dc-mobile-nav">
+        <div
+          id="mobile-nav"
+          className="dc-mobile-nav"
+          style={menuTop ? { maxHeight: `calc(100dvh - ${menuTop}px)` } : undefined}
+        >
           <nav aria-label="Main" className="dc-shell">
             {nav.map((item) =>
               item.children ? (
@@ -85,7 +102,12 @@ export function SiteHeader() {
                   ))}
                 </div>
               ) : (
-                <SiteLink key={item.label} href={item.to} className="dc-mobile-link">
+                <SiteLink
+                  key={item.label}
+                  href={item.to}
+                  className="dc-mobile-link"
+                  aria-current={isUnder(pathname, item.to) ? 'page' : undefined}
+                >
                   {item.label}
                 </SiteLink>
               ),
@@ -136,7 +158,7 @@ function NavMenu({ item, activeTo, pathname }: { item: NavItem; activeTo?: strin
      click must not toggle it shut. */
   const mouseDown = useRef(false)
   const id = `nav-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`
-  const containsCurrent = item.children?.some((child) => isUnder(pathname, child.to)) ?? false
+  const containsCurrent = isUnder(pathname, item.to) || (item.children?.some((child) => isUnder(pathname, child.to)) ?? false)
 
   useEffect(() => {
     if (!open) return

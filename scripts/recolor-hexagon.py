@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw
 W, H = 1520, 1020
 FILL = np.array([0xB0, 0x54, 0x40], dtype=np.float32)
 TITLE = np.array([0xFF, 0xF8, 0xF2], dtype=np.float32)
-SUB = np.array([0xF8, 0xDC, 0xD2], dtype=np.float32)
+SUB = TITLE
 OLD_FILL = 234.0
 OLD_TITLE = 63.0
 OLD_SUB_T = 0.26

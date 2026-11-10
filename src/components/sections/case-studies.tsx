@@ -1,6 +1,10 @@
+import { Link } from '@tanstack/react-router'
+import type { ReactNode } from 'react'
 import { caseStudies, caseStudySection } from '@/content/homepage'
+import { caseStudies as studyPages, caseStudyHref } from '@/content/design/case-studies'
 import type { CaseStudy } from '@/content/types'
 import { ClampText } from '@/components/primitives/clamp-text'
+import { GkButton } from '@/components/primitives/gk-button'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -32,6 +36,9 @@ import { Reveal } from '@/components/primitives/reveal'
  * 21 Oct: the homepage launches on its own, so the cards are static - no
  * "Read case study" links and no "Read all case studies" button until the
  * case-study pages exist. Vanavil made way for Dasra and SVP India.
+ *
+ * 10 Nov: the pages exist now. A card whose organisation has one opens it,
+ * and the section links to the full list.
  */
 export function CaseStudies() {
   /*
@@ -49,13 +56,16 @@ export function CaseStudies() {
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-8 md:mb-10">
+          <div className="mb-8 flex flex-col items-start gap-5 md:mb-10 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="eyebrow mb-4">{caseStudySection.eyebrow}</p>
               <h2 id="case-studies-heading" className="h2 max-w-[36ch]">
                 {caseStudySection.headline} <em>{caseStudySection.headlineTail}</em>
               </h2>
             </div>
+            <GkButton to="/case-studies" variant="secondary" withArrow className="shrink-0">
+              All case studies
+            </GkButton>
           </div>
         </Reveal>
 
@@ -121,55 +131,84 @@ function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }
   )
 }
 
+const pageFor = (study: CaseStudy) => studyPages.find((candidate) => candidate.org === study.org)
+
+/**
+ * The card opens the organisation's case-study page, when it has one. A
+ * linked card cannot hold a Read more button, so its text is cut at four
+ * lines on phones instead; the page has the rest.
+ */
+function StudyLink({ study, children }: { study: CaseStudy; children: ReactNode }) {
+  const page = pageFor(study)
+  if (!page) return children
+  return (
+    <Link
+      to={caseStudyHref(page.slug)}
+      aria-label={`${study.org} case study`}
+      className="card-lift block h-full rounded-[var(--r-lg)]"
+    >
+      {children}
+    </Link>
+  )
+}
+
+function Body({ study, className }: { study: CaseStudy; className: string }) {
+  if (pageFor(study)) return <p className={`${className} max-md:line-clamp-4`}>{study.body}</p>
+  return <ClampText className={className}>{study.body}</ClampText>
+}
+
 /** The lead case study: photograph left, the story right. */
 function LeadCard({ study }: { study: CaseStudy }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid md:grid-cols-2">
-      {/* The photo fills the row the text sets rather than sizing it. Sized by
-          its own aspect ratio, it grew the card ~100px when the lazy image
-          arrived - in the middle of a scroll to the contact form, which then
-          stopped short (23 Oct). */}
-      <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[16rem]">
-        <img
-          src={study.image}
-          alt={study.imageAlt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
-      <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
-        <Byline study={study} size="lg" />
-        <div>
-          <ClampText className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
-            {study.body}
-          </ClampText>
+    <StudyLink study={study}>
+      <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid md:grid-cols-2">
+        {/* The photo fills the row the text sets rather than sizing it. Sized by
+            its own aspect ratio, it grew the card ~100px when the lazy image
+            arrived - in the middle of a scroll to the contact form, which then
+            stopped short (23 Oct). */}
+        <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[16rem]">
+          <img
+            src={study.image}
+            alt={study.imageAlt}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         </div>
-      </div>
-    </article>
+        <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
+          <Byline study={study} size="lg" />
+          <div>
+            <Body
+              study={study}
+              className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]"
+            />
+          </div>
+        </div>
+      </article>
+    </StudyLink>
   )
 }
 
 function Card({ study }: { study: CaseStudy }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]">
-      <img
-        src={study.image}
-        alt={study.imageAlt}
-        loading="lazy"
-        decoding="async"
-        className="aspect-[16/10] w-full object-cover"
-      />
+    <StudyLink study={study}>
+      <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]">
+        <img
+          src={study.image}
+          alt={study.imageAlt}
+          loading="lazy"
+          decoding="async"
+          className="aspect-[16/10] w-full object-cover"
+        />
 
-      <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
-        <Byline study={study} />
+        <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
+          <Byline study={study} />
 
-        <div>
-          <ClampText className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">
-            {study.body}
-          </ClampText>
+          <div>
+            <Body study={study} className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]" />
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </StudyLink>
   )
 }

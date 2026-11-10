@@ -17,6 +17,7 @@ export const quizPage = {
     note: 'Twelve questions come next, one at a time.',
     submit: 'Start the quiz',
     invalid: 'Please fill in the highlighted fields.',
+    badEmail: 'Enter a full email address, like name@organisation.org.',
   },
   hint: 'Answer for your organisation as it is today.',
   thanks: {
