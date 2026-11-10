@@ -1,10 +1,7 @@
 import { SiteLink } from '@/components/design/site-link'
-import { useRouterState } from '@tanstack/react-router'
-import { isLandingPage, site } from '@/content/site'
+import { site } from '@/content/site'
 
 export function SiteFooter() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
-  if (isLandingPage(pathname)) return null
   return (
     <footer className="dc-footer">
       <div

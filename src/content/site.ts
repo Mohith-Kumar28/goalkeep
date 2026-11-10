@@ -136,11 +136,6 @@ export function themeForPath(pathname: string): PageTheme {
 
 export const contactHref = '/#contact'
 
-/** Standalone landing pages: the design gives them the logo alone, with no menu and no footer. */
-export function isLandingPage(pathname: string): boolean {
-  const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname
-  return path === '/resources/newsletter' || path === '/resources/data-quiz'
-}
 
 /* Not rendered since 21 Oct - the footer is one line until the other pages
    go live. */

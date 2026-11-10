@@ -10,8 +10,8 @@
   --dc-q-ink: #14131a;
   --dc-q-ink-2: rgba(20, 19, 26, 0.72);
   --dc-q-border: #e5e7ee;
-  --dc-q-header: 64px;
-  --dc-q-top: 78px;
+  --dc-q-header: 77px;
+  --dc-q-top: 77px;
 }
 .dc-q-stage {
   min-height: calc(100vh - var(--dc-q-header));

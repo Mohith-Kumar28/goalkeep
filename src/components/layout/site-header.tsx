@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { ChevronIcon, CloseIcon, MenuIcon } from '@/components/design/icons'
 import { SiteLink } from '@/components/design/site-link'
-import { contactHref, isLandingPage, nav, navChildFor } from '@/content/site'
+import { contactHref, nav, navChildFor } from '@/content/site'
 import type { NavItem } from '@/content/site'
 
 /**
@@ -24,18 +24,6 @@ export function SiteHeader() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [menuOpen])
-
-  if (isLandingPage(pathname)) {
-    return (
-      <header className="dc-header" data-theme="navy">
-        <div className="dc-shell dc-header-bar">
-          <SiteLink href="/" aria-label="Goalkeep home" className="dc-logo">
-            <img className="dc-logo-white" src="/wordmark-white.webp" alt="Goalkeep" width={673} height={160} />
-          </SiteLink>
-        </div>
-      </header>
-    )
-  }
 
   return (
     <header className="dc-header" data-theme={current?.theme ?? 'navy'}>
