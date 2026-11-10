@@ -114,7 +114,7 @@ export const content: ServicePageContent = {
         actions: [
           {
             kind: "link",
-            label: "Early-stage nonprofit? Explore Kickstarter 2.0",
+            label: "Early-stage nonprofit? Explore Kickstarter 3.0",
             href: "/programs/kickstarter",
           },
         ],

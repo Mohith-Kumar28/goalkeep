@@ -421,7 +421,7 @@ export const literacyContent = {
   },
   explore: [
     {
-      title: 'Kickstarter 2.0',
+      title: 'Kickstarter 3.0',
       body: 'Build the data backbone your organisation needs to grow. A hands-on program for early-stage nonprofits that need a simple, integrated and usable data system.',
       href: '/programs/kickstarter',
       cta: 'Explore the program',

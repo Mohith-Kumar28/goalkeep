@@ -33,15 +33,15 @@ export type Stage = {
 export const kickstarter = {
   service: 'Data systems and workflows',
   meta: {
-    title: 'Kickstarter 2.0 | Goalkeep',
+    title: 'Kickstarter 3.0 | Goalkeep',
     description:
       'Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits that want to move from scattered information and manual reporting to a simple, integrated data system their teams can use.',
   },
   hero: {
     headline: 'Build the data backbone<br class="dc-br-d"> <em>your organisation<br class="dc-br-d"> needs to grow.</em>' satisfies Html,
     lead: 'Kickstarter is Goalkeep’s hands-on program for early-stage nonprofits that want to move from scattered information and manual reporting to a simple, integrated data system their teams can use.',
-    badge: 'Kickstarter 2.0 · next cohort begins January 2027',
-    primary: 'Apply for Kickstarter 2.0',
+    badge: 'Kickstarter 3.0 · next cohort begins January 2027',
+    primary: 'Apply for Kickstarter 3.0',
     secondary: 'Partner with us to support a cohort',
     photos: [
       { src: '/design/d9f25a2c090890697a8d9bf1806f663d.webp', alt: 'A Goalkeep working session on the floor of a partner office' },
@@ -81,7 +81,7 @@ export const kickstarter = {
       'Each one is a sign your programme has outgrown its spreadsheets, and that your team needs a more robust system that reflects how you work and actually helps you use what data you collect.',
       'Kickstarter gives you more than just a dashboard. It helps build a decision infrastructure within your organization.',
     ],
-    cta: 'Apply for Kickstarter 2.0',
+    cta: 'Apply for Kickstarter 3.0',
     bubbles: [
       { text: 'Which is the updated student attendance sheet? I can see three versions.', tone: 'gold', side: 'left', maxWidth: 260, fontSize: 16, marginTop: 0, rotate: -2 },
       { text: 'Can someone double-check the Jan to March data again for the quarterly funder report?', tone: 'blue', side: 'right', maxWidth: 300, fontSize: 15, marginTop: 8, rotate: 1.5 },
@@ -98,7 +98,7 @@ export const kickstarter = {
   stages: {
     eyebrow: 'how the program works',
     heading: 'Four stages, <em>one connected system.</em>' satisfies Html,
-    cta: 'Apply for Kickstarter 2.0',
+    cta: 'Apply for Kickstarter 3.0',
     items: [
       {
         name: 'Understand',
