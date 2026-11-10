@@ -531,8 +531,8 @@ button.dc-btn {
     text-wrap: balance;
   }
   .dc-deliv-grid {
-    row-gap: 28px !important;
-    margin-top: 28px !important;
+    row-gap: 24px !important;
+    margin-top: 24px !important;
   }
   .dc-glance-item:nth-child(n + 2) {
     border-top: 1px solid #e5e7ee;

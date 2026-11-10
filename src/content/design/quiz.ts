@@ -52,9 +52,7 @@ export const ring = {
     strategy: { rot: 241.1956, len: 123.22 },
   } satisfies Record<DomainId, { rot: number; len: number }>,
   whiteTop: { rot: -47.3044, len: 115.802 },
-  /* Runs between the two points where it crosses the top ring, so both ends
-     tuck under the data and technology arcs instead of stopping short. */
-  bottom: { cx: 142, cy: 283.8, r: 124.2, rot: -36.81, len: 548.06 },
+  bottom: { cx: 142, cy: 283.8, r: 124.2, rot: 7.4957, len: 357.6889 },
 }
 
 export const ringLabels: Array<{ id: DomainId; text: string; left: string; top: string }> = [

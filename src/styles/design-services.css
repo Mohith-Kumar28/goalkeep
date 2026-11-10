@@ -142,27 +142,32 @@
 
 .dc-deliv-grid {
   column-gap: 32px;
-  row-gap: 28px;
-  margin-top: 28px;
+  row-gap: 24px;
+  margin-top: 24px;
+  max-width: 1040px;
+  margin-inline: auto;
 }
 .dc-deliv-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: 8px;
 }
 .dc-deliv-item .dc-tile {
   width: 100%;
-  max-width: 260px;
-  border-radius: 16px;
+  max-width: 172px;
+  border-radius: 12px;
   overflow: hidden;
+}
+.dc-deliv-item .dc-tile svg {
+  height: auto;
 }
 .dc-deliv-label {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.45;
-  max-width: 300px;
+  font-size: 15px;
+  line-height: 1.4;
+  max-width: 280px;
   text-wrap: balance;
 }
 .dc-duration .dc-ruler {
