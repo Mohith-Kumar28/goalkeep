@@ -25,7 +25,7 @@ export const content: ServicePageContent = {
     headline: "Give your Theory of<br class=\"dc-br-d\"> Change <em>a robust<br class=\"dc-br-d\"> measurement framework.</em>",
     lead: "We work with programme, MEL and leadership teams to clarify the outcomes that matter, the questions your data needs to answer, and the evidence required to answer them.",
     primary: 'Work with us',
-    secondary: { label: 'Read Peepul case study', href: '#case' },
+    secondary: { label: 'Read Peepul case study', href: '/case-studies/peepul' },
     photos: [
       { src: "/design/d9f25a2c090890697a8d9bf1806f663d.webp", alt: "A Goalkeep working session on the floor of a partner office", position: "45% 50%" },
       { src: "/design/d7e0a2f562f148853d7f839e7a34590d.webp", alt: "Goalkeep with a partner team after a workshop", position: "50% 40%" },
@@ -80,7 +80,7 @@ export const content: ServicePageContent = {
   },
   caseStudy: {
     kind: 'live',
-    href: '#',
+    href: '/case-studies/peepul',
     photo: { src: "/design/adf7e6efd567e8191c6319f6ce9ebe1f.webp", alt: "Peepul and Goalkeep team members working through a dashboard around a table" },
     title: "Peepul",
     body: "Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.",

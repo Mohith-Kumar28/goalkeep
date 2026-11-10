@@ -1,12 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PageStub } from '@/components/layout/page-stub'
+import { NewsletterPage } from '@/components/design/newsletter/page'
+import { newsletter } from '@/content/design/newsletter'
 
 export const Route = createFileRoute('/resources/newsletter')({
   head: () => ({
-    meta: [
-      { title: 'Newsletter — Goalkeep' },
-      { name: 'description', content: 'Occasional notes on data work in the social sector. No spam, no growth hacking.' },
-    ],
+    meta: [{ title: newsletter.meta.title }, { name: 'description', content: newsletter.meta.description }],
   }),
-  component: () => <PageStub eyebrow="Newsletter" heading={<>Occasional notes, from projects in progress.</>} />,
+  component: NewsletterPage,
 })

@@ -662,6 +662,8 @@ export const contact = {
   /* 23 Oct: the dropdown lists the four services from "what we do" and
      nothing else, as Rumit asked in the 21 Oct call. */
   serviceOptions: services.map((service) => service.title),
+  /** What forms outside a service page send: the server accepts it beside the four titles. */
+  generalEnquiry: 'General enquiry',
   submit: 'Send',
   done: {
     title: 'Thanks - we’ve got your message.',

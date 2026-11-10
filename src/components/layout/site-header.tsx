@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { ChevronIcon, CloseIcon, MenuIcon } from '@/components/design/icons'
 import { SiteLink } from '@/components/design/site-link'
-import { contactHref, nav, navChildFor } from '@/content/site'
+import { contactHref, isLandingPage, nav, navChildFor } from '@/content/site'
 import type { NavItem } from '@/content/site'
 
 /**
@@ -25,6 +25,18 @@ export function SiteHeader() {
     return () => document.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
+  if (isLandingPage(pathname)) {
+    return (
+      <header className="dc-header" data-theme="navy">
+        <div className="dc-shell dc-header-bar">
+          <SiteLink href="/" aria-label="Goalkeep home" className="dc-logo">
+            <img className="dc-logo-white" src="/wordmark-white.webp" alt="Goalkeep" width={673} height={160} />
+          </SiteLink>
+        </div>
+      </header>
+    )
+  }
+
   return (
     <header className="dc-header" data-theme={current?.theme ?? 'navy'}>
       <div className="dc-shell dc-header-bar">
@@ -36,9 +48,14 @@ export function SiteHeader() {
         <nav aria-label="Main" className="dc-navlinks">
           {nav.map((item) =>
             item.children ? (
-              <NavMenu key={item.label} item={item} activeTo={current?.to} />
+              <NavMenu key={item.label} item={item} activeTo={current?.to} pathname={pathname} />
             ) : (
-              <SiteLink key={item.label} href={item.to} className="dc-nav-link">
+              <SiteLink
+                key={item.label}
+                href={item.to}
+                className={isUnder(pathname, item.to) ? 'dc-nav-link is-active' : 'dc-nav-link'}
+                aria-current={isUnder(pathname, item.to) ? 'page' : undefined}
+              >
                 {item.label}
               </SiteLink>
             ),
@@ -95,6 +112,10 @@ export function SiteHeader() {
   )
 }
 
+function isUnder(pathname: string, to: string) {
+  return pathname === to || pathname.startsWith(`${to}/`)
+}
+
 /** The contact band of the page you are on if it has one, else the homepage's. */
 function PartnerLink({ className }: { className: string }) {
   return (
@@ -119,7 +140,7 @@ function PartnerLink({ className }: { className: string }) {
  * toggles it for touch and keyboard. Escape, a click outside or focus leaving
  * closes it.
  */
-function NavMenu({ item, activeTo }: { item: NavItem; activeTo?: string }) {
+function NavMenu({ item, activeTo, pathname }: { item: NavItem; activeTo?: string; pathname: string }) {
   const [open, setOpen] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
@@ -127,7 +148,7 @@ function NavMenu({ item, activeTo }: { item: NavItem; activeTo?: string }) {
      click must not toggle it shut. */
   const mouseDown = useRef(false)
   const id = `nav-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`
-  const containsCurrent = item.children?.some((child) => child.to === activeTo) ?? false
+  const containsCurrent = item.children?.some((child) => isUnder(pathname, child.to)) ?? false
 
   useEffect(() => {
     if (!open) return

@@ -38,11 +38,8 @@ export type NavItem = {
   children?: Array<NavChild>
 }
 
-/* The links are anchors into the homepage (`/#…`) so they also work from
-   other routes. Resources goes to the blog index, the only resources page
-   that is live; the data culture quiz stays out until it launches. */
 export const nav: Array<NavItem> = [
-  { label: 'About us', to: '/#why-we-exist' },
+  { label: 'About us', to: '/about' },
   {
     label: 'What we do',
     to: '/#what-we-do',
@@ -97,8 +94,34 @@ export const nav: Array<NavItem> = [
       },
     ],
   },
-  { label: 'Case studies', to: '/#case-studies' },
-  { label: 'Resources', to: '/resources/blog' },
+  { label: 'Case studies', to: '/case-studies' },
+  {
+    label: 'Resources',
+    to: '/resources/blog',
+    children: [
+      {
+        label: 'Data Culture Quiz',
+        description: "Assess your organization's data health",
+        to: '/resources/data-quiz',
+        theme: 'navy',
+        tint: '#FBF3DF',
+      },
+      {
+        label: 'The Keep-Up',
+        description: 'Subscribe to our monthly newsletter',
+        to: '/resources/newsletter',
+        theme: 'navy',
+        tint: '#EAEFF9',
+      },
+      {
+        label: 'Blog',
+        description: 'Read the latest articles on all things data',
+        to: '/resources/blog',
+        theme: 'navy',
+        tint: '#E7F2F0',
+      },
+    ],
+  },
 ]
 
 /** The menu entry for a page, if it has one. */
@@ -112,6 +135,12 @@ export function themeForPath(pathname: string): PageTheme {
 }
 
 export const contactHref = '/#contact'
+
+/** Standalone landing pages: the design gives them the logo alone, with no menu and no footer. */
+export function isLandingPage(pathname: string): boolean {
+  const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname
+  return path === '/resources/newsletter' || path === '/resources/data-quiz'
+}
 
 /* Not rendered since 21 Oct - the footer is one line until the other pages
    go live. */

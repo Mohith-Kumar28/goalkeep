@@ -51,7 +51,7 @@ export const submitContact = createServerFn({ method: "POST" })
       return { ok: false, error: "Please enter a valid email address." }
     if (!data.organization)
       return { ok: false, error: "Please tell us your organization’s name." }
-    if (!contact.serviceOptions.includes(data.service)) {
+    if (data.service !== contact.generalEnquiry && !contact.serviceOptions.includes(data.service)) {
       return { ok: false, error: "Please choose how we can help." }
     }
     if (!data.message)
@@ -152,8 +152,10 @@ const MAILCHIMP =
   "https://goalkeep.us8.list-manage.com/subscribe/post-json?u=c21fe4d3a05df1cb8cee0f967&id=b94a34e160&f_id=00a139e3f0"
 
 export const subscribeNewsletter = createServerFn({ method: "POST" })
-  .validator((input: { email: string; website: string }) => ({
+  .validator((input: { email: string; name?: string; organization?: string; website: string }) => ({
     email: text(input.email, 200).toLowerCase(),
+    name: text(input.name, 120) || null,
+    organization: text(input.organization, 200) || null,
     website: text(input.website, 200),
   }))
   .handler(async ({ data }): Promise<FormResult> => {
@@ -162,17 +164,22 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
       return { ok: false, error: "Please enter a valid email address." }
 
     const { env } = await import("cloudflare:workers")
-    // Signing up twice is not an error.
+    // Signing up twice is not an error; a second sign-up fills in a name or
+    // organization the first one left out.
     await env.DB.prepare(
-      "INSERT OR IGNORE INTO newsletter_signups (email) VALUES (?)"
+      `INSERT INTO newsletter_signups (email, name, organization) VALUES (?, ?, ?)
+       ON CONFLICT (email) DO UPDATE SET
+         name = COALESCE(excluded.name, name),
+         organization = COALESCE(excluded.organization, organization)`
     )
-      .bind(data.email)
+      .bind(data.email, data.name, data.organization)
       .run()
 
     // Best effort: also add them to the Mailchimp list. The address is already
     // stored, so a Mailchimp failure never fails the sign-up.
     try {
-      await fetch(`${MAILCHIMP}&EMAIL=${encodeURIComponent(data.email)}&c=cb`, {
+      const fname = data.name ? `&FNAME=${encodeURIComponent(data.name)}` : ""
+      await fetch(`${MAILCHIMP}&EMAIL=${encodeURIComponent(data.email)}${fname}&c=cb`, {
         signal: AbortSignal.timeout(4000),
       })
     } catch {
@@ -222,9 +229,9 @@ export const submitQuiz = createServerFn({ method: "POST" })
       return { ok: false, error: "Please enter a valid email address." }
     if (!data.organization)
       return { ok: false, error: "Please tell us your organisation’s name." }
-    if (!detailOptions.region.includes(data.region))
+    if (data.region && !detailOptions.region.includes(data.region))
       return { ok: false, error: "Please choose your region." }
-    if (!detailOptions.sector.includes(data.sector))
+    if (data.sector && !detailOptions.sector.includes(data.sector))
       return { ok: false, error: "Please choose your sector." }
     if (data.sector === "Other" && !data.sectorOther)
       return { ok: false, error: "Please tell us your sector." }
@@ -232,7 +239,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
       return { ok: false, error: "Please choose your role." }
     if (data.role === "Other" && !data.roleOther)
       return { ok: false, error: "Please tell us your role." }
-    if (!detailOptions.size.includes(data.size))
+    if (data.size && !detailOptions.size.includes(data.size))
       return { ok: false, error: "Please choose your organisation’s size." }
     const answers = data.answers.filter(isAnswer)
     if (answers.length !== statementCount)

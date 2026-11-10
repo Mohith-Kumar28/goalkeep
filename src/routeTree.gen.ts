@@ -17,6 +17,7 @@ import { Route as CustomProjectsRouteImport } from './routes/custom-projects'
 import { Route as PartnerWithUsRouteImport } from './routes/partner-with-us'
 import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
 import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies/index'
+import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies/$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs/index'
 import { Route as ProgramsDataLiteracyRouteImport } from './routes/programs/data-literacy'
 import { Route as ProgramsKickstarterRouteImport } from './routes/programs/kickstarter'
@@ -24,6 +25,7 @@ import { Route as ResourcesDataQuizRouteImport } from './routes/resources/data-q
 import { Route as ResourcesNewsletterRouteImport } from './routes/resources/newsletter'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
 import { Route as ResourcesBlogIndexRouteImport } from './routes/resources/blog/index'
+import { Route as ResourcesBlogSlugRouteImport } from './routes/resources/blog/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -65,6 +67,11 @@ const CaseStudiesIndexRoute = CaseStudiesIndexRouteImport.update({
   path: '/case-studies/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaseStudiesSlugRoute = CaseStudiesSlugRouteImport.update({
+  id: '/case-studies/$slug',
+  path: '/case-studies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
   id: '/programs/',
   path: '/programs/',
@@ -100,6 +107,11 @@ const ResourcesBlogIndexRoute = ResourcesBlogIndexRouteImport.update({
   path: '/resources/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResourcesBlogSlugRoute = ResourcesBlogSlugRouteImport.update({
+  id: '/resources/blog/$slug',
+  path: '/resources/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -109,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/custom-projects': typeof CustomProjectsRoute
   '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
@@ -116,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
 export interface FileRoutesByTo {
@@ -126,6 +140,7 @@ export interface FileRoutesByTo {
   '/custom-projects': typeof CustomProjectsRoute
   '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
@@ -133,6 +148,7 @@ export interface FileRoutesByTo {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog': typeof ResourcesBlogIndexRoute
 }
 export interface FileRoutesById {
@@ -144,6 +160,7 @@ export interface FileRoutesById {
   '/custom-projects': typeof CustomProjectsRoute
   '/partner-with-us': typeof PartnerWithUsRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/programs/data-literacy': typeof ProgramsDataLiteracyRoute
   '/programs/kickstarter': typeof ProgramsKickstarterRoute
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
@@ -151,6 +168,7 @@ export interface FileRoutesById {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
 export interface FileRouteTypes {
@@ -163,6 +181,7 @@ export interface FileRouteTypes {
     | '/custom-projects'
     | '/partner-with-us'
     | '/what-we-do'
+    | '/case-studies/$slug'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
     | '/resources/data-quiz'
@@ -170,6 +189,7 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/resources/blog/$slug'
     | '/resources/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -180,6 +200,7 @@ export interface FileRouteTypes {
     | '/custom-projects'
     | '/partner-with-us'
     | '/what-we-do'
+    | '/case-studies/$slug'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
     | '/resources/data-quiz'
@@ -187,6 +208,7 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies'
     | '/programs'
+    | '/resources/blog/$slug'
     | '/resources/blog'
   id:
     | '__root__'
@@ -197,6 +219,7 @@ export interface FileRouteTypes {
     | '/custom-projects'
     | '/partner-with-us'
     | '/what-we-do'
+    | '/case-studies/$slug'
     | '/programs/data-literacy'
     | '/programs/kickstarter'
     | '/resources/data-quiz'
@@ -204,6 +227,7 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/resources/blog/$slug'
     | '/resources/blog/'
   fileRoutesById: FileRoutesById
 }
@@ -215,6 +239,7 @@ export interface RootRouteChildren {
   CustomProjectsRoute: typeof CustomProjectsRoute
   PartnerWithUsRoute: typeof PartnerWithUsRoute
   WhatWeDoRoute: typeof WhatWeDoRoute
+  CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   ProgramsDataLiteracyRoute: typeof ProgramsDataLiteracyRoute
   ProgramsKickstarterRoute: typeof ProgramsKickstarterRoute
   ResourcesDataQuizRoute: typeof ResourcesDataQuizRoute
@@ -222,6 +247,7 @@ export interface RootRouteChildren {
   ServicesSlugRoute: typeof ServicesSlugRoute
   CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ResourcesBlogSlugRoute: typeof ResourcesBlogSlugRoute
   ResourcesBlogIndexRoute: typeof ResourcesBlogIndexRoute
 }
 
@@ -283,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CaseStudiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/case-studies/$slug': {
+      id: '/case-studies/$slug'
+      path: '/case-studies/$slug'
+      fullPath: '/case-studies/$slug'
+      preLoaderRoute: typeof CaseStudiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/programs/': {
       id: '/programs/'
       path: '/programs'
@@ -332,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesBlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resources/blog/$slug': {
+      id: '/resources/blog/$slug'
+      path: '/resources/blog/$slug'
+      fullPath: '/resources/blog/$slug'
+      preLoaderRoute: typeof ResourcesBlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -343,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   CustomProjectsRoute: CustomProjectsRoute,
   PartnerWithUsRoute: PartnerWithUsRoute,
   WhatWeDoRoute: WhatWeDoRoute,
+  CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   ProgramsDataLiteracyRoute: ProgramsDataLiteracyRoute,
   ProgramsKickstarterRoute: ProgramsKickstarterRoute,
   ResourcesDataQuizRoute: ResourcesDataQuizRoute,
@@ -350,6 +391,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesSlugRoute: ServicesSlugRoute,
   CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  ResourcesBlogSlugRoute: ResourcesBlogSlugRoute,
   ResourcesBlogIndexRoute: ResourcesBlogIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -5,10 +5,13 @@ import { useContactForm } from './contact-form'
 import { ctaClass } from './cta'
 import type { CtaVariant } from './cta'
 import { ArrowIcon, CloseIcon } from './icons'
+import { SiteLink } from './site-link'
 
 export type ContactBandCta = {
   label: string
   variant?: CtaVariant
+  /** Makes the button a plain link instead of opening the form. */
+  href?: string
 }
 
 type ContactBandProps = {
@@ -21,6 +24,10 @@ type ContactBandProps = {
   ctas: Array<ContactBandCta>
   headingMaxWidth?: string
   paddingY?: number
+  /** A shorter band with a smaller heading, for the end of an article. */
+  compact?: boolean
+  /** The animated mark beside the form. Off where the design leaves that column empty until the form opens. */
+  mark?: boolean
 }
 
 export function ContactBand({
@@ -30,6 +37,8 @@ export function ContactBand({
   ctas,
   headingMaxWidth = '20ch',
   paddingY = 64,
+  compact = false,
+  mark = true,
 }: ContactBandProps) {
   const form = useContactForm()
   const formShown = form.state.status !== 'closed'
@@ -55,35 +64,52 @@ export function ContactBand({
           gridTemplateColumns: 'minmax(0,6fr) minmax(0,5fr)',
           gap: 64,
           alignItems: 'center',
-          minHeight: 340,
+          minHeight: compact ? undefined : 340,
         }}
       >
         <div>
           {eyebrow}
-          <h2 className="dc-h2" style={{ maxWidth: headingMaxWidth }}>
+          <h2 className="dc-h2" style={{ maxWidth: headingMaxWidth, fontSize: compact ? 32 : undefined }}>
             {heading}
           </h2>
-          <p className="dc-contact-body">{body}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 36 }}>
-            {ctas.map((cta, i) => (
-              <button
-                key={cta.label}
-                type="button"
-                className={ctaClass(cta.variant ?? (i === 0 ? 'accent' : 'secondary'))}
-                aria-expanded={formShown}
-                onClick={() => form.open(cta.label)}
-              >
-                {cta.label}
-                {i === 0 && <ArrowIcon />}
-              </button>
-            ))}
+          <p
+            className="dc-contact-body"
+            style={compact ? { margin: '10px 0 0', fontSize: 17, maxWidth: '48ch' } : undefined}
+          >
+            {body}
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: compact ? 18 : 36 }}>
+            {ctas.map((cta, i) => {
+              const className = ctaClass(cta.variant ?? (i === 0 ? 'accent' : 'secondary'))
+              if (cta.href !== undefined) {
+                return (
+                  <SiteLink key={cta.label} href={cta.href} className={className}>
+                    {cta.label}
+                  </SiteLink>
+                )
+              }
+              return (
+                <button
+                  key={cta.label}
+                  type="button"
+                  className={className}
+                  aria-expanded={formShown}
+                  onClick={() => form.open(cta.label)}
+                >
+                  {cta.label}
+                  {i === 0 && <ArrowIcon />}
+                </button>
+              )
+            })}
           </div>
         </div>
         <div style={{ position: 'relative' }}>
-          <div className="dc-mark-slot" data-form-open={formShown}>
-            <MarkAssembly size={150} className="dc-mark-lg" />
-            <MarkAssembly size={120} className="dc-mark-sm" />
-          </div>
+          {mark && (
+            <div className="dc-mark-slot" data-form-open={formShown}>
+              <MarkAssembly size={150} className="dc-mark-lg" />
+              <MarkAssembly size={120} className="dc-mark-sm" />
+            </div>
+          )}
           {formShown && <SlideInForm />}
         </div>
       </div>

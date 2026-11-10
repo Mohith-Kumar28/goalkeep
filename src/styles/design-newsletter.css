@@ -1,0 +1,325 @@
+/* The Keep-Up newsletter page (export of 10 Nov 2026). A standalone landing
+   page: the shared header is the white logo on navy, so the hero starts on the
+   same navy and flows out of it. */
+
+.dc-nl {
+  background: #ffffff;
+}
+.dc-nl em {
+  font-style: italic;
+  font-weight: 800;
+}
+.dc-nl-wrap {
+  position: relative;
+  max-width: 1248px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.dc-nl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.dc-nl-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* Hero */
+.dc-nl-hero {
+  position: relative;
+  overflow: hidden;
+  background: #2f4a92;
+  color: #ffffff;
+}
+.dc-nl-ring {
+  position: absolute;
+  pointer-events: none;
+}
+.dc-nl-ring-a {
+  right: -120px;
+  top: -46px;
+  width: 380px;
+  height: 380px;
+}
+.dc-nl-ring-b {
+  left: -70px;
+  bottom: -70px;
+  width: 220px;
+  height: 220px;
+}
+.dc-nl-hero-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 56px;
+  align-items: center;
+  padding-top: 34px;
+  padding-bottom: 64px;
+}
+.dc-nl-hero-copy {
+  flex: 1 1 480px;
+  min-width: 0;
+}
+.dc-nl-h1 {
+  margin: 0;
+  font-size: clamp(40px, 5.2vw, 56px);
+  line-height: 1.06;
+  font-weight: 500;
+  letter-spacing: -1.12px;
+}
+.dc-nl-h1 em {
+  color: #eac452;
+}
+.dc-nl-hero-lead {
+  margin: 24px 0 0;
+  max-width: 520px;
+  font-size: 20px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Subscribe card */
+.dc-nl-card {
+  flex: 1 1 400px;
+  min-width: 0;
+  max-width: 500px;
+  background: #f7f5ef;
+  color: #14131a;
+  border-radius: 12px;
+  padding: 28px;
+}
+.dc-nl-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dc-nl-card-title,
+.dc-nl-thanks {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+.dc-nl-thanks {
+  font-size: 28px;
+}
+.dc-nl-thanks-text {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.dc-nl-card-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #5a5966;
+}
+.dc-nl-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.dc-nl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dc-nl-field label {
+  font-size: 15px;
+  font-weight: 700;
+}
+.dc-nl input[type="text"],
+.dc-nl input[type="email"] {
+  font-family: inherit;
+  height: 48px;
+  padding: 0 14px;
+  font-size: 16px;
+  border: 1px solid #d3d7e2;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #14131a;
+  min-width: 0;
+}
+.dc-nl input:focus {
+  outline: none;
+  border-color: #eac452;
+  box-shadow: 0 0 0 2px #eac452;
+}
+.dc-nl input:disabled {
+  opacity: 0.7;
+}
+.dc-nl-error {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #9c452a;
+}
+
+/* Buttons */
+.dc-nl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.dc-nl-btn:focus-visible {
+  outline: 2px solid #eac452;
+  outline-offset: 2px;
+}
+.dc-nl-btn:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+.dc-nl-btn-ghost {
+  background: transparent;
+  border-color: #14131a;
+  color: #14131a;
+  padding: 0 20px;
+}
+.dc-nl-btn-navy {
+  background: #2f4a92;
+  border-color: #2f4a92;
+  color: #ffffff;
+}
+.dc-nl-inline .dc-nl-btn {
+  height: 50px;
+  flex: 0 0 auto;
+}
+.dc-nl .dc-nl-edition-btn,
+.dc-nl .dc-nl-edition-btn:hover {
+  margin-top: 24px;
+  padding: 0 20px;
+}
+
+/* Editions */
+.dc-nl-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 56px;
+  align-items: center;
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+.dc-nl-row[data-image-side="right"] {
+  flex-wrap: wrap-reverse;
+}
+.dc-nl-cover {
+  flex: 1 1 460px;
+  min-width: 0;
+}
+.dc-nl-copy {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+.dc-nl-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.dc-nl-kicker {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.17px;
+  text-transform: uppercase;
+  color: #2f4d9f;
+}
+.dc-nl-edition-title {
+  margin: 0 0 22px;
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.18;
+  font-weight: 400;
+  letter-spacing: -0.6px;
+}
+.dc-nl-lead {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.dc-nl-fade {
+  max-height: 122px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+}
+.dc-nl-fade p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* Closing band */
+.dc-nl-closing {
+  position: relative;
+  overflow: hidden;
+  background: #fbf3df;
+}
+.dc-nl-closing-inner {
+  padding-top: 88px;
+  padding-bottom: 88px;
+}
+.dc-nl-closing-title {
+  margin: 0 0 32px;
+  max-width: 820px;
+  font-size: clamp(34px, 4.2vw, 50px);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+.dc-nl-closing-thanks {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.dc-nl-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 560px;
+}
+.dc-nl-inline input[type="email"] {
+  flex: 1 1 260px;
+  height: 50px;
+  padding: 0 16px;
+}
+.dc-nl-inline .dc-nl-error {
+  flex: 1 1 100%;
+}
+.dc-nl-mark {
+  position: absolute;
+  right: max(24px, calc((100% - 1200px) / 2 + 60px));
+  top: 50%;
+  margin-top: -120px;
+  width: 158px;
+  height: 240px;
+}
+
+@media (max-width: 900px) {
+  .dc-nl-mark {
+    display: none;
+  }
+}
+
+.dc-nl h1,
+.dc-nl h2,
+.dc-nl h3 {
+  text-wrap: wrap;
+}

@@ -151,7 +151,7 @@ export const kickstarter = {
     cards: [
       {
         kind: 'live',
-        href: '#',
+        href: '/case-studies/baithak',
         photo: { src: '/design/8625ca604ea24fa43d1fd299a4c5afea.webp', alt: 'Two Baithak Foundation team members smiling during a session' },
         tags: [
           { label: 'Arts', tone: 'coral' },
