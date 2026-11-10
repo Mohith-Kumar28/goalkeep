@@ -4,7 +4,7 @@ import { AboutPage } from "@/components/design/about/page"
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About us — Goalkeep" },
+      { title: "About us | Goalkeep" },
       {
         name: "description",
         content:
