@@ -52,7 +52,7 @@ export const literacyContent = {
   hero: {
     headline: 'Build a <span class="dc-nowrap">data-confident</span><br class="dc-br-d"> workforce <em>within your<br class="dc-br-d"> organisation.</em>',
     lead: 'The Data Literacy Program is Goalkeep’s train-the-trainer program for strengthening data capability across social-purpose organisations. Over a 3-day workshop, participants build foundational skills in interpreting, analysing, visualising and communicating with data, so they can run trainings within their own organisation.',
-    badge: 'Data Literacy Program · next cohort begins December 2026',
+    badge: 'Data Literacy Program · next cohort begins January 2027',
     primary: 'Register your interest',
     secondary: 'Partner with us to support a cohort',
     carouselLabel: 'Photos from the Data Literacy Program',
@@ -90,7 +90,7 @@ export const literacyContent = {
     {
       icon: 'calendar',
       label: 'Next cohort',
-      body: 'Begins December 2026. Register your interest now.',
+      body: 'Begins January 2027. Register your interest now.',
       bg: '#EAEFF9',
       ink: '#2F4D9F',
     },
@@ -255,7 +255,7 @@ export const literacyContent = {
   },
   ai: {
     eyebrow: 'how ai is integrated into the program',
-    heading: 'Data literacy remains the core capability. <em>AI is only an assistive layer.</em>',
+    heading: 'Data literacy remains the core capability. <em>AI is an assistive layer.</em>',
     body: 'Participants learn to use everyday AI tools responsibly, keeping foundational data skills, verification and human judgement at the centre. Every skill follows the same three steps.',
     steps: [
       {

@@ -1,4 +1,4 @@
-import { weekTicks } from "../../service-page"
+import { monthTicks } from "../../service-page"
 import type { ServicePageContent } from "../../service-page"
 import architecture from "./architecture.svg?raw"
 import diagnostic from "./diagnostic.svg?raw"
@@ -27,7 +27,7 @@ export const content: ServicePageContent = {
       'Build an integrated<br class="dc-br-d"> data system <em>that<br class="dc-br-d"> grows with you.</em>',
     lead: "We design and build integrated data systems that bring data entry, analysis and insight into one connected experience, shaped around your organisation's workflows.",
     primary: "Work with us",
-    secondary: { label: "Read Apni Shala case study", href: "#case" },
+    secondary: { label: "Apni Shala case study", href: "#case" },
     photos: [
       {
         src: "/design/277f6c1beb347d5810cdc7e70a59ad56.webp",
@@ -164,13 +164,13 @@ export const content: ServicePageContent = {
   },
   duration: {
     eyebrow: "indicative duration",
-    heading: "Typically <em>six to twelve weeks.</em>",
+    heading: "Typically <em>3 to 4 months.</em>",
     body: "For discovery, design and an initial build, depending on data complexity, migration requirements, integrations and the number of user workflows. An agreed maintenance and adoption period follows, depending on the complexity of the system.",
-    ticks: weekTicks(14),
+    ticks: monthTicks(6),
     spans: [
       {
-        from: 5,
-        to: 12,
+        from: 2,
+        to: 4,
         caption: "discovery, design and initial build",
         trail: "then maintenance and adoption",
       },

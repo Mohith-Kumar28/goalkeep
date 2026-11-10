@@ -29,11 +29,21 @@ const LAYER_VIDEO = {
 const LAYER_LABEL =
   'Capital, programs, tools, talent and systems feed into decision infrastructure, which is what Goalkeep brings: clear metrics, intuitive systems and usable insights. The result is enhanced scale, increased funding, improved efficiency and measurable outcomes.'
 
+/* Phones: the video's outcome column renders at about 6px and morphs as it
+   plays, so below sm it is cropped off and drawn here at its final state. */
+const LAYER_OUTCOMES = [
+  { label: 'Enhanced Scale', fill: 0.88, color: '#C3CEEC' },
+  { label: 'Increased Funding', fill: 0.8, color: '#9CADDB' },
+  { label: 'Improved Efficiency', fill: 1, color: '#FFFFFF' },
+  { label: 'Measurable Outcomes', fill: 0.94, color: '#E9F0FA' },
+]
+
 export function WhyWeExist() {
   const { mission } = whyWeExist
   const ref = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [reduced, setReduced] = useState(false)
+  const [inView, setInView] = useState(false)
 
   useEffect(() => {
     setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -45,6 +55,7 @@ export function WhyWeExist() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setInView(true)
           void videoRef.current?.play().catch(() => {})
           observer.disconnect()
         }
@@ -59,7 +70,7 @@ export function WhyWeExist() {
     <section
       ref={ref}
       id="why-we-exist"
-      className="relative scroll-mt-24 py-14 md:py-16"
+      className="relative scroll-mt-24 py-10 md:py-14"
       style={{ background: C.ground, color: C.ink }}
       aria-labelledby="why-heading"
     >
@@ -69,7 +80,7 @@ export function WhyWeExist() {
           <h2 id="why-heading" className="h2">
             {mission.headlineLead} <em>{mission.headlineEm}</em>
           </h2>
-          <p className="mt-5 max-w-[56ch] text-[length:var(--fs-lg)] leading-relaxed text-[var(--fg-1)]">
+          <p className="mt-4 max-w-[56ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)] md:mt-5 md:text-[length:var(--fs-lg)]">
             {mission.body}
           </p>
         </header>
@@ -80,30 +91,45 @@ export function WhyWeExist() {
           className="relative overflow-hidden rounded-[24px] lg:col-span-7"
           style={{ background: PANEL_BG[3] }}
         >
-          {reduced ? (
-            <img src={LAYER_VIDEO.still} alt="" width={1520} height={1020} className="block h-auto w-full" />
-          ) : (
-            <video
-              ref={videoRef}
-              className="block h-auto w-full"
-              width={1520}
-              height={1020}
-              muted
-              playsInline
-              preload="metadata"
-              poster={LAYER_VIDEO.poster}
-              aria-hidden="true"
-              /* The bts footage's rewind (proof.tsx): `loop` stopped after
-                 one pass in some browsers, `ended` always fires. */
-              onEnded={(event) => {
-                event.currentTarget.currentTime = 0
-                void event.currentTarget.play().catch(() => {})
-              }}
-            >
-              <source src={LAYER_VIDEO.mp4} type="video/mp4" />
-              <source src={LAYER_VIDEO.webm} type="video/webm" />
-            </video>
-          )}
+          <div className="gk-layer-crop">
+            {reduced ? (
+              <img src={LAYER_VIDEO.still} alt="" width={1520} height={1020} className="block h-auto w-full" />
+            ) : (
+              <video
+                ref={videoRef}
+                className="block h-auto w-full"
+                width={1520}
+                height={1020}
+                muted
+                playsInline
+                preload="metadata"
+                poster={LAYER_VIDEO.poster}
+                aria-hidden="true"
+                /* The bts footage's rewind (proof.tsx): `loop` stopped after
+                   one pass in some browsers, `ended` always fires. */
+                onEnded={(event) => {
+                  event.currentTarget.currentTime = 0
+                  void event.currentTarget.play().catch(() => {})
+                }}
+              >
+                <source src={LAYER_VIDEO.mp4} type="video/mp4" />
+                <source src={LAYER_VIDEO.webm} type="video/webm" />
+              </video>
+            )}
+          </div>
+          <ul
+            aria-hidden="true"
+            className={cn('gk-layer-outcomes', (inView || reduced) && 'is-in')}
+          >
+            {LAYER_OUTCOMES.map((outcome, index) => (
+              <li key={outcome.label} style={{ '--i': index } as CSSProperties}>
+                <span>{outcome.label}</span>
+                <span className="gk-layer-track">
+                  <span style={{ background: outcome.color, '--fill': outcome.fill } as CSSProperties} />
+                </span>
+              </li>
+            ))}
+          </ul>
           <figcaption className="sr-only">{LAYER_LABEL}</figcaption>
         </figure>
       </div>

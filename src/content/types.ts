@@ -70,8 +70,7 @@ export type Audience = {
      *  its lower edge. */
     photo: string
   }
-  /** One CTA per segment. */
-  cta: Cta
+  ctas: Array<Cta>
 }
 
 export type CaseStudy = {
@@ -116,6 +115,6 @@ export type Faq = Verify<{
 export type PartnerLogo = {
   file: string
   name: string
-  /** Funders and intermediaries ride the second row. */
+  /** `funder` covers funders and intermediaries; it picks the row. */
   kind: 'org' | 'funder'
 }

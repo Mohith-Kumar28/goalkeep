@@ -39,58 +39,66 @@ export function Proof() {
       aria-labelledby="proof-heading"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <div className="absolute inset-0" aria-hidden="true">
-        {reduced ? (
-          <img src="/video/bts-poster.jpg" alt="" className="h-full w-full object-cover" />
-        ) : (
-          <video
-            className="h-full w-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            preload="metadata"
-            /* 28 Sep: `loop` stopped after one pass in some browsers, so the
-               rewind is done here - `ended` always fires without `loop`. The
-               mp4 goes first because its index makes the seek back to 0
-               dependable. */
-            onEnded={(event) => {
-              event.currentTarget.currentTime = 0
-              void event.currentTarget.play()
-            }}
-            poster="/video/bts-poster.jpg"
-          >
-            <source src="/video/bts.mp4" type="video/mp4" />
-            <source src="/video/bts.webm" type="video/webm" />
-          </video>
-        )}
-        {/* Lighter than the photographs' 0.84 - footage has to read as
-            footage - but still enough for the figures to sit on. */}
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: 'rgb(47 74 146 / 0.78)' }}
-        />
-      </div>
-
-      <div className="shell relative">
-        <Reveal>
+      {/* Phones get the footage as a landscape block between the headline
+          and the figures (10 Nov: "a landscape view… rather than a vertical
+          thing"), and the figures two to a row. From md up it is the band's
+          background again: the shell is static there, so this positions
+          against the section. */}
+      <div className="shell flex flex-col">
+        <Reveal className="relative z-[1]">
           <p className="eyebrow mb-4 text-[var(--gk-yellow)]">{proof.eyebrow}</p>
-          <h2 id="proof-heading" className="h2 mb-12 max-w-[34ch] font-medium">
+          <h2 id="proof-heading" className="h2 mb-6 max-w-[34ch] font-medium md:mb-10">
             {/* 28 Sep: plain. The yellow emphasis marks came off with the
                 rest of the page's circles, underlines and highlights. */}
             {proof.headline}
           </h2>
         </Reveal>
 
-        <ol className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className="relative mb-8 aspect-video overflow-hidden rounded-[var(--r-md)] md:absolute md:inset-0 md:mb-0 md:aspect-auto md:rounded-none"
+          aria-hidden="true"
+        >
+          {reduced ? (
+            <img src="/video/bts-poster.jpg" alt="" className="h-full w-full object-cover" />
+          ) : (
+            <video
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              playsInline
+              preload="metadata"
+              /* 28 Sep: `loop` stopped after one pass in some browsers, so the
+                 rewind is done here - `ended` always fires without `loop`. The
+                 mp4 goes first because its index makes the seek back to 0
+                 dependable. */
+              onEnded={(event) => {
+                event.currentTarget.currentTime = 0
+                void event.currentTarget.play()
+              }}
+              poster="/video/bts-poster.jpg"
+            >
+              <source src="/video/bts.mp4" type="video/mp4" />
+              <source src="/video/bts.webm" type="video/webm" />
+            </video>
+          )}
+          {/* Lighter than the photographs' 0.84 - footage has to read as
+              footage - but still enough for the figures to sit on. */}
+          <div
+            className="absolute inset-0 hidden md:block"
+            style={{ backgroundColor: 'rgb(47 74 146 / 0.78)' }}
+          />
+        </div>
+
+        <ol className="relative z-[1] grid grid-cols-2 gap-x-5 gap-y-7 md:gap-x-8 md:gap-y-12 lg:grid-cols-4">
           {proof.stats.map((stat, index) => (
             <Reveal as="li" key={stat.value.sentence} delay={index * 0.08}>
               <StatCounter
                 value={stat.value.figure}
                 suffix={stat.value.suffix}
-                className="text-[length:clamp(2.5rem,5vw,3.5rem)]"
+                className="text-[length:clamp(2rem,5vw,3.5rem)]"
                 style={{ color: HUES[index] }}
               />
-              <p className="mt-4 max-w-[24ch] text-[length:var(--fs-base)] leading-snug text-white/85">
+              <p className="mt-2 max-w-[24ch] text-[length:var(--fs-sm)] leading-snug text-white/85 md:mt-4 md:text-[length:var(--fs-base)]">
                 {stat.value.sentence}
               </p>
             </Reveal>

@@ -372,6 +372,13 @@
   grid-template-columns: 1fr 1fr;
   gap: 14px 20px;
 }
+.dc-q-rule {
+  grid-column: 1 / -1;
+  height: 0;
+  margin: 2px 0;
+  border: 0;
+  border-top: 1px solid var(--dc-q-border);
+}
 .dc-q-field label {
   display: block;
   font-size: 14px;

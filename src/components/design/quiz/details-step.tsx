@@ -102,6 +102,7 @@ export function DetailsStep({
           {text('email', 'Email *', 'email', '', 'email')}
           {text('organization', 'Organisation name *', 'text', '', 'organization')}
           {select('role', 'Your role *')}
+          <hr className="dc-q-rule" />
           {text('budget', 'Organisation budget', 'text', 'e.g. INR 1 crore')}
           {select('region', 'Region')}
           {select('size', 'Organisation size')}

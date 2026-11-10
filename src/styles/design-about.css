@@ -329,9 +329,94 @@
   .dc .dc-about-ways-notes {
     grid-template-columns: minmax(0, 1fr) !important;
   }
+  .dc .dc-about-founder-band {
+    padding-top: 28px !important;
+    padding-bottom: 36px !important;
+  }
+  .dc .dc-about-founder {
+    gap: 22px !important;
+  }
+  .dc .dc-founder-sticky {
+    width: 132px;
+    margin-left: 8px;
+  }
+  .dc .dc-founder-sticky .dc-polaroid {
+    padding: 8px 8px 10px;
+  }
+  .dc .dc-founder-img {
+    height: 132px !important;
+  }
   .dc .dc-about-minis {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 16px 12px !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 18px 14px !important;
+    padding: 4px 8px 0 !important;
+  }
+  .dc .dc-mini {
+    padding: 6px 6px 8px;
+  }
+  .dc .dc-mini-ph {
+    aspect-ratio: 4 / 3;
+  }
+  .dc .dc-mini-n {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  .dc .dc-mini-r {
+    font-size: 12px;
+  }
+  .dc .dc-mini-panel {
+    grid-column: 1 / -1;
+    margin: 4px 0 4px;
+    padding: 18px 18px 20px;
+    transform: none;
+    animation: dc-spotlight 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .dc .dc-mini-panel::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 25%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    background: var(--note);
+    transform: rotate(45deg);
+  }
+  .dc .dc-mini-panel[data-col="1"]::before {
+    left: 75%;
+  }
+  .dc .dc-mini-panel-x {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    color: #14131a;
+    cursor: pointer;
+  }
+  .dc .dc-mini-panel-n {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    padding-right: 28px;
+  }
+  .dc .dc-mini-panel-r {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .dc .dc-mini-panel-b {
+    display: block;
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.55;
   }
   .dc .dc-logo-tile {
     width: calc(33.33% - 10px);

@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import { createIsomorphicFn } from "@tanstack/react-start"
 import { getRequestUrl } from "@tanstack/react-start/server"
 
+import { AnnouncementBanner } from "@/components/layout/announcement-banner"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
 import { site } from "@/content/site"
@@ -112,6 +113,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
+        <AnnouncementBanner />
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />

@@ -39,11 +39,11 @@ export function Closing() {
   return (
     <section
       data-ground="navy"
-      className="ground-navy accent-yellow relative overflow-hidden py-14 md:py-16"
+      className="ground-navy accent-yellow relative overflow-hidden py-12 md:py-14"
       aria-labelledby="closing-heading"
       style={{ backgroundColor: 'var(--gk-navy)' }}
     >
-      <div className="shell relative grid items-center gap-10 lg:grid-cols-12">
+      <div className="shell relative grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-8">
           {/* The eyebrow and the second headline line ("Sub: remove") both
               went in the copy replacement. One sentence, then the buttons. */}
@@ -54,7 +54,7 @@ export function Closing() {
           </Reveal>
 
           <Reveal delay={0.4}>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-8">
               <GkButton href={closing.primaryCta.to} variant="accent" onDark withArrow>
                 {closing.primaryCta.label}
               </GkButton>
@@ -64,8 +64,8 @@ export function Closing() {
 
           {/* The mark assembles on phones too, under the buttons — it is the
               page's last frame and worth having on every screen. */}
-          <div className="mt-10 flex justify-center lg:hidden">
-            <MarkAssembly size={120} />
+          <div className="mt-8 flex justify-center lg:hidden">
+            <MarkAssembly size={96} />
           </div>
         </div>
 

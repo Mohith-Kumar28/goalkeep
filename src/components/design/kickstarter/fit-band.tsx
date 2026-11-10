@@ -1,7 +1,8 @@
-import { Cta } from '@/components/design'
+import { ArrowIcon, ctaClass } from '@/components/design'
 import { tones } from '@/components/design/tones'
 import { kickstarter } from '@/content/design/kickstarter'
 import type { Tone } from '@/components/design/tones'
+import { ApplyLink } from './apply-link'
 import { Rich } from './rich'
 import { useAutoCycle } from './use-auto-cycle'
 
@@ -67,9 +68,10 @@ export function FitBand() {
           <p style={{ margin: '20px 0 0', maxWidth: '40ch' }}>{fit.paragraphs[0]}</p>
           <p style={{ margin: '16px 0 0', maxWidth: '40ch' }}>{fit.paragraphs[1]}</p>
           <div style={{ marginTop: 32 }}>
-            <Cta variant="primary" intent={fit.cta} arrow>
+            <ApplyLink className={ctaClass('primary')} label={fit.cta}>
               {fit.cta}
-            </Cta>
+              <ArrowIcon />
+            </ApplyLink>
           </div>
         </div>
       </div>

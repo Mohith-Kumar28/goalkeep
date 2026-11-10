@@ -3,7 +3,7 @@ import type { about } from "@/content/design/about"
 export function FounderBand({ founder }: { founder: typeof about.founder }) {
   return (
     <section
-      className="dc-band"
+      className="dc-band dc-about-founder-band"
       style={{ background: "#FFFFFF", paddingTop: 56, paddingBottom: 56 }}
     >
       <h1 className="sr-only">About Goalkeep</h1>
@@ -33,6 +33,7 @@ export function FounderBand({ founder }: { founder: typeof about.founder }) {
               }}
             />
             <img
+              className="dc-founder-img"
               src={founder.photo.src}
               alt={founder.photo.alt}
               style={{ height: 380, objectPosition: founder.photo.position }}

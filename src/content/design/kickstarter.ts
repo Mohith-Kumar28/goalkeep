@@ -32,6 +32,7 @@ export type Stage = {
 
 export const kickstarter = {
   service: 'Data systems and workflows',
+  applyUrl: '#contact',
   meta: {
     title: 'Kickstarter 3.0 | Goalkeep',
     description:
@@ -119,7 +120,7 @@ export const kickstarter = {
         tone: 'teal',
         accent: '#2F9C8F',
         tagline: 'We build an integrated, customised system for entering, managing and using programme data.',
-        body: 'We favour an open-source core, using technologies such as PostgreSQL or Supabase where appropriate, with tools for version control and hosting, chosen around your needs, budget, security requirements and ability to maintain it. With our AI-integrated build, you receive your working dashboard in 6–8 weeks, so that most of the time in the remaining 6 months can be spent on edits, iterations, testing, and ensuring your team actually uses the dashboard.',
+        body: 'We favour open source platforms that enable version control, hosting, chosen around your needs, budget, security requirements and ability to maintain it. With our AI-integrated build, you receive your working dashboard in 6–8 weeks, so that most of the time in the remaining 6 months can be spent on edits, iterations, testing, and ensuring your team actually uses the dashboard.',
       },
       {
         name: 'Adopt',

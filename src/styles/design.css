@@ -866,6 +866,9 @@ button.dc-btn {
   text-decoration: none;
   color: #14131a;
 }
+.dc-mobile-nav a.dc-btn-primary {
+  color: #ffffff;
+}
 .dc-mobile-link {
   display: block;
   padding: 14px 0;
@@ -929,11 +932,136 @@ button.dc-btn {
 .dc-footer {
   background: #ffffff;
   border-top: 1px solid #e5e7ee;
-  padding-top: 32px;
-  padding-bottom: 32px;
+  padding-top: 56px;
+  padding-bottom: 24px;
+}
+.dc-footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 48px;
+}
+.dc-footer-logo {
+  display: inline-block;
+}
+.dc-footer-logo img {
+  display: block;
+  height: 32px;
+  width: auto;
+}
+.dc-footer-brand p {
+  margin: 14px 0 0;
+  max-width: 40ch;
+  font-size: 15px;
+  color: rgba(20, 19, 26, 0.72);
+}
+.dc-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.dc-btn-outline {
+  background: transparent;
+  color: #2f4a92;
+  border-color: #2f4a92;
+}
+:where(.dc-footer) .dc-btn-outline:hover {
+  background: #eaeff9;
+}
+:where(.dc-footer) .dc-btn-primary:hover {
+  background: #1e3266;
+}
+.dc-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+.dc-footer-nav h2 {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #2f4a92;
+}
+.dc-footer-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.dc-footer-nav a {
+  color: #14131a;
+  text-decoration: none;
+  font-size: 15px;
+}
+.dc-footer-nav a:hover {
+  color: #2f4a92;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.dc-footer-base {
+  margin-top: 48px;
+}
+.dc-footer-base p {
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7ee;
+  font-size: 13px;
+  color: rgba(20, 19, 26, 0.72);
+}
+@media (max-width: 960px) {
+  .dc-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
 }
 @media (max-width: 760px) {
+  .dc-footer {
+    padding-top: 40px;
+  }
   .dc-footer .dc-shell {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .dc-footer-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+  .dc-footer-actions .dc-btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+  .dc-footer-base {
+    margin-top: 32px;
+  }
+}
+
+/* ── Announcement banner ──────────────────────────────────────────────── */
+.dc-banner {
+  background: #1e3266;
+  color: #ffffff;
+  font-family: "Nunito Sans Variable", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 8px 0;
+}
+.dc-banner p {
+  margin: 0;
+}
+.dc-banner a {
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.dc-banner a:hover {
+  color: #eac452;
+}
+@media (max-width: 760px) {
+  .dc-banner .dc-shell {
     padding-left: 16px;
     padding-right: 16px;
   }

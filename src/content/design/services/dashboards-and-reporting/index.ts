@@ -1,4 +1,4 @@
-import { weekTicks } from "../../service-page"
+import { monthTicks } from "../../service-page"
 import type { ServicePageContent } from "../../service-page"
 import filters from "./filters.svg?raw"
 import fnContribution from "./fn-contribution.svg?raw"
@@ -264,10 +264,10 @@ export const content: ServicePageContent = {
   },
   duration: {
     eyebrow: "indicative duration",
-    heading: "Typically <em>four to eight weeks.</em>",
+    heading: "Typically <em>3 to 4 months.</em>",
     body: "For dashboard design, build and testing within a wider measurement or data-systems engagement, depending on how ready the underlying data is and the number of user groups and views. An agreed maintenance and adoption period follows.",
-    ticks: weekTicks(10),
-    spans: [{ from: 3, to: 8, caption: "most engagements land here" }],
+    ticks: monthTicks(6),
+    spans: [{ from: 2, to: 4, caption: "most engagements land here" }],
   },
   caseStudy: {
     kind: "soon",

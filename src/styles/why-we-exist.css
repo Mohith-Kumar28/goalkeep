@@ -81,3 +81,17 @@
 .gk-why .gk-wipe2{position:absolute;top:0;left:0;right:0;bottom:0;background:#E6DE6A;transform:translateX(101%);animation:gkWipe .8s cubic-bezier(.7,0,.25,1) .07s both;z-index:3;pointer-events:none}
 .gk-why .gk-progress{position:absolute;left:0;top:0;height:5px;width:100%;background:#E6DE6A;transform-origin:left;animation:gkLine 7s linear both;z-index:2}
 @media (prefers-reduced-motion:reduce){.gk-why .gk-up,.gk-why .gk-pop,.gk-why .gk-fade,.gk-why .gk-left,.gk-why .gk-right,.gk-why .gk-draw,.gk-why .gk-drawslow,.gk-why .gk-grow,.gk-why .gk-line,.gk-why .gk-reveal,.gk-why .gk-shake,.gk-why .gk-flow,.gk-why .gk-halo,.gk-why .gk-out,.gk-why .gk-gridout,.gk-why .gk-morph,.gk-why .gk-bulk,.gk-why .gk-shrink,.gk-why .gk-burst,.gk-why .gk-drop,.gk-why .gk-blink,.gk-why .gk-growx,.gk-why .gk-barup,.gk-why .gk-shiftx,.gk-why .gk-rise,.gk-why .gk-flash,.gk-why .gk-slot,.gk-why .gk-comet,.gk-why .gk-spin,.gk-why .gk-bob,.gk-why .gk-sq,.gk-why .gk-sq-lit,.gk-why .gk-wipe,.gk-why .gk-wipe2,.gk-why .gk-progress{animation:none!important}.gk-why .gk-sq-lit{background:#E09A8C!important}.gk-why .gk-morph,.gk-why .gk-gridout,.gk-why .gk-out,.gk-why .gk-comet,.gk-why .gk-slot{display:none}}
+
+/* Homepage missing-layer figure on phones: crop the video to its inputs and
+   hexagon, and draw the outcome column below it as readable text. */
+.gk-layer-outcomes{display:none;grid-template-columns:1fr 1fr;gap:14px 16px;padding:4px 20px 22px;color:#fff;font-size:13px;font-weight:700;line-height:1.2}
+.gk-layer-outcomes li{display:flex;flex-direction:column;gap:7px}
+.gk-layer-track{display:block;height:9px;border-radius:999px;background:#3D5094;overflow:hidden}
+.gk-layer-track>span{display:block;height:100%;border-radius:inherit;transform-origin:left center;transform:scaleX(.3);transition:transform 1.4s cubic-bezier(.3,.9,.3,1) calc(1.2s + var(--i,0) * .25s)}
+.gk-layer-outcomes.is-in .gk-layer-track>span{transform:scaleX(var(--fill,1))}
+@media (prefers-reduced-motion:reduce){.gk-layer-track>span{transition:none}}
+@media (max-width: 639.98px) {
+  .gk-layer-crop{position:relative;overflow:hidden;aspect-ratio:920/840}
+  .gk-layer-crop>*{position:absolute;left:0;top:calc(-90 / 840 * 100%);width:calc(1520 / 920 * 100%)!important;max-width:none}
+  .gk-layer-outcomes{display:grid}
+}

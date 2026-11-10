@@ -5,6 +5,9 @@ import type { PartnerLogo } from './types'
  * live site and named by hand — the existing site ships them with no real
  * alt text, which we are not reproducing.
  *
+ * `kind` is the provisional category that decides the row. [VERIFY] Rumit's
+ * confirmed categorisation replaces it.
+ *
  * [VERIFY] Permission to display each mark, and whether this is the full
  * current list. The footnote on the ticker says "Logos shown with permission",
  * so that has to be true before launch.
@@ -39,6 +42,7 @@ export const partners: Array<PartnerLogo> = [
   { file: 'org-27.png', name: 'Quest Alliance', kind: 'org' },
 ]
 
-/** Top row scrolls right to left; bottom row left to right. */
-export const tickerRowOne = partners.filter((_, i) => i % 2 === 0)
-export const tickerRowTwo = partners.filter((_, i) => i % 2 === 1)
+export const partnerGroups = [
+  { label: 'Nonprofits', logos: partners.filter((p) => p.kind === 'org') },
+  { label: 'Funders & intermediaries', logos: partners.filter((p) => p.kind === 'funder') },
+]

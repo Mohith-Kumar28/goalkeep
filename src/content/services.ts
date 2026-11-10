@@ -126,7 +126,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         headline: { lead: 'Technology', em: 'approach' },
         highlight: 'open-source data stack',
         paragraphs: [
-          'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
+          'We favour using an open-source data stack that your team is comfortable with. Depending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
         ],
       },
       {

@@ -1,5 +1,6 @@
-import { ArrowIcon, tones, useContactForm } from '@/components/design'
+import { ArrowIcon, tones } from '@/components/design'
 import { kickstarter } from '@/content/design/kickstarter'
+import { ApplyLink } from './apply-link'
 import { Rich } from './rich'
 import stage1 from './stage-1.svg?raw'
 import stage1Mobile from './stage-1-mobile.svg?raw'
@@ -17,7 +18,6 @@ const STEP_MS = 8000
 
 export function StagesBand() {
   const { stages } = kickstarter
-  const form = useContactForm()
   const [step, pick] = useAutoCycle(stages.items.length, STEP_MS)
   const stage = stages.items[step]
   const ink = tones[stage.tone].ink
@@ -146,13 +146,9 @@ export function StagesBand() {
                   Next: {next.name} <ArrowIcon />
                 </button>
               ) : (
-                <a
-                  className="dc-btn dc-btn-maroon"
-                  href="#contact"
-                  onClick={() => form.open(stages.cta)}
-                >
+                <ApplyLink className="dc-btn dc-btn-maroon" label={stages.cta}>
                   {stages.cta} <ArrowIcon />
-                </a>
+                </ApplyLink>
               )}
             </p>
           </div>

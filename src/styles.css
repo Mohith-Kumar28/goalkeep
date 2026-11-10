@@ -209,12 +209,18 @@
 
   .band {
     position: relative;
-    padding-block: var(--sp-8);
+    padding-block: var(--band-y, var(--sp-8));
   }
   @media (min-width: 768px) {
     .band {
-      padding-block: var(--sp-9);
+      padding-block: var(--band-y-md, var(--sp-9));
     }
+  }
+  /* 10 Nov: "the sections are seeming very very large… make everything a
+     little bit tighter and more compact." The homepage only, for now. */
+  .home {
+    --band-y: var(--sp-7);
+    --band-y-md: 4.5rem;
   }
 
   /* --- Grounds -----------------------------------------------------------

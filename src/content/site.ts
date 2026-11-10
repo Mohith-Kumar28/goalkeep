@@ -136,9 +136,20 @@ export function themeForPath(pathname: string): PageTheme {
 
 export const contactHref = '/#contact'
 
+/** [VERIFY] Placeholder: no contact address or company page exists in the codebase. Confirm both with Goalkeep. */
+export const contactEmail = 'hello@goalkeep.net'
+export const linkedinUrl = 'https://www.linkedin.com/company/goalkeep'
 
-/* Not rendered since 21 Oct - the footer is one line until the other pages
-   go live. */
+/**
+ * The thin strip above the header. Set `enabled` to true to show it; `text`
+ * is the one line, and `link` is the underlined call to action after it.
+ */
+export const banner = {
+  enabled: false,
+  text: 'Kickstarter applications are open.',
+  link: { label: 'Apply now', to: '/programs/kickstarter' },
+}
+
 export const footerGroups = [
   {
     heading: 'What we do',

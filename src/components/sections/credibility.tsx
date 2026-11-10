@@ -1,6 +1,6 @@
 import { LogoTicker } from '@/components/primitives/logo-ticker'
 import { ticker } from '@/content/homepage'
-import { tickerRowOne, tickerRowTwo } from '@/content/partners'
+import { partnerGroups } from '@/content/partners'
 
 /**
  * Band 2 — the partner wall.
@@ -9,8 +9,8 @@ import { tickerRowOne, tickerRowTwo } from '@/content/partners'
  *
  *   · "The header is not standing out" - it is a real section heading now,
  *     not a small letterspaced label, and the subline holds to one line.
- *   · Aditya asked to see the marks in their own colours rather than
- *     greyscale. After 28 Sep only the full-colour rail remains.
+ *   · Full-colour marks, in two labelled rows (10 Nov): Nonprofits, and
+ *     Funders & intermediaries.
  */
 export function Credibility({ ground = 'ground-cream' }: { ground?: string }) {
   return (
@@ -29,11 +29,7 @@ export function Credibility({ ground = 'ground-cream' }: { ground?: string }) {
         </p>
       </div>
 
-      {/* 28 Sep: Option A won - full colour, always running, no pause on
-          hover. The greyscale and scroll-reveal variants are gone. */}
-      <div className="ticker-mask">
-        <LogoTicker rowOne={tickerRowOne} rowTwo={tickerRowTwo} tone="color" />
-      </div>
+      <LogoTicker groups={partnerGroups} />
     </section>
   )
 }

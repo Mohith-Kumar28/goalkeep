@@ -52,7 +52,7 @@ export const hero = {
     phrases: [
       'build systems that scale with them',
       'turn data into decisions',
-      'increase data adoption among their teams and cohorts',
+      'increase data adoption among their teams and organisations',
     ],
     tail: '.',
   },
@@ -80,7 +80,7 @@ export const hero = {
       imageAlt: 'The Apni Shala Foundation team standing together in their office',
       line: {
         value:
-          'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
+          'A handful of metrics on the weekly dashboard helped Apni Shala identify student learning gaps that used to surface only at year-end.',
       },
     },
     {
@@ -100,7 +100,7 @@ export const hero = {
       imageAlt: 'Peepul and Goalkeep team members working through a dashboard around a table',
       line: {
         value:
-          'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled.',
+          '19 organisation-level indicators and a leadership dashboard helped Peepul effectively monitor their programs as they scaled.',
       },
     },
   ],
@@ -190,8 +190,8 @@ export const whyWeExist = {
    services Goalkeep can be engaged for, copy from the review doc. */
 export const whatWeDo = {
   eyebrow: 'what we do',
-  headline: 'We help organizations use data to',
-  headlineTail: 'measure, communicate, and deepen their impact.',
+  headline: 'We enable organisations to',
+  headlineTail: 'measure, communicate and deepen their impact with confidence.',
 }
 
 export type Service = {
@@ -303,7 +303,7 @@ export const audienceSection = {
 export const audiences: Array<Audience> = [
   {
     id: 'early-stage',
-    label: 'Early-stage NGOs',
+    label: 'Early stage nonprofits',
     header: 'Lots of data, but no clear way to',
     headerEm: 'make sense of it?',
     body: {
@@ -328,11 +328,11 @@ export const audiences: Array<Audience> = [
       credentials: 'Apni Shala Foundation',
       photo: '/photos/aud-early-testimonial.webp',
     },
-    cta: { label: 'Talk to us', to: '#contact' },
+    ctas: [{ label: 'Kickstarter', to: '/programs/kickstarter' }, { label: 'Talk to us', to: '#contact' }],
   },
   {
     id: 'data-mature',
-    label: 'Mid-to-large Nonprofits',
+    label: 'Mid-to-Large Nonprofits',
     header: 'Looking to improve insights and increase adoption of',
     headerEm: 'your data systems?',
     body: {
@@ -357,7 +357,7 @@ export const audiences: Array<Audience> = [
       credentials: 'Sanjhi Sikhiya',
       photo: '/photos/aud-mature-testimonial.webp',
     },
-    cta: { label: 'Talk to us', to: '#contact' },
+    ctas: [{ label: 'Data Literacy Program', to: '/programs/data-literacy' }, { label: 'Talk to us', to: '#contact' }],
   },
   {
     id: 'intermediary',
@@ -385,15 +385,15 @@ export const audiences: Array<Audience> = [
       credentials: 'Dasra',
       photo: '/photos/aud-eco-testimonial.webp',
     },
-    cta: { label: 'Partner with us', to: '#contact' },
+    ctas: [{ label: 'Partner with us', to: '/partner-with-us' }],
   },
   {
     id: 'funders',
-    label: 'Funding Organizations',
+    label: 'Funders',
     header: 'Looking to develop stronger measurement practices and better communicate',
     headerEm: 'portfolio-wide impact?',
     body: {
-      value: 'Understand and communicate portfolio-level impact while strengthening grantees’ ability to use data. We can support portfolio measurement and reporting, sponsor capacity-building programmes, and help partners develop stronger and more consistent measurement practices.',
+      value: 'Understand and communicate portfolio-level impact while strengthening grantees’ ability to use data. We support portfolio measurement and reporting, run tailored capacity-building programmes, and foster practices to ensure consistent, reliable, and timely data flows.',
     },
     /* 21 Oct doc: three of the five photographs swapped for cohort and
        facilitation shots. */
@@ -415,7 +415,7 @@ export const audiences: Array<Audience> = [
       credentials: 'Forbes Marshall',
       photo: '/photos/aud-funder-testimonial.webp',
     },
-    cta: { label: 'Partner with us', to: '#contact' },
+    ctas: [{ label: 'Partner with us', to: '/partner-with-us' }],
   },
 ]
 
@@ -444,9 +444,6 @@ export const caseStudySection = {
   eyebrow: 'case studies',
   headline: 'What changed,',
   headlineTail: 'and what it took to get there.',
-  /* Highlighted, as a trial of the paper-highlighter treatment on a short
-     phrase - see headlineCircle in whyWeExist. */
-  headlineMark: 'what it took',
   /* 21 Oct: no "Read all case studies" button - the homepage launches on its
      own, so there is nothing for it to open yet. */
 }
@@ -498,7 +495,7 @@ export const caseStudies: Array<CaseStudy> = [
     org: 'Apni Shala Foundation',
     sector: 'Education',
     intervention: 'Identifying key metrics',
-    body: 'A handful of hero metrics on the weekly dashboard helped Apni Shala quickly identify student learning gaps that used to surface only at year-end previously.',
+    body: 'A handful of metrics on the weekly dashboard helped Apni Shala identify student learning gaps that used to surface only at year-end.',
     image: '/photos/case-apni-shala.webp',
     imageAlt: 'The Apni Shala Foundation team standing together in their office',
   },
@@ -533,7 +530,7 @@ export const faqs: Array<Faq> = [
     value: {
       question: 'What software do you use?',
       answer:
-        'We favour an open-source data stack and avoid locking organisations into proprietary Goalkeep software.\n\nDepending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
+        'We favour using an open-source data stack that your team is comfortable with.\n\nDepending on the need, the open-source core may include technologies such as PostgreSQL or Supabase for the database, supported by tools such as GitHub for version control and Vercel for hosting where appropriate. The exact stack is selected around the organisation’s workflows, budget, existing systems, security needs and ability to maintain it.',
     },
   },
   {
@@ -548,14 +545,14 @@ export const faqs: Array<Faq> = [
     value: {
       question: 'Our teams do not see the value of data. How do we help them use it?',
       answer:
-        'During our engagement, we address two questions. First, does the dashboard answer questions people genuinely have and help them make decisions they are responsible for? If not, you may want to consider redesigning it. Second, do people have the confidence and skills to use it? Role-based training, guided data reviews and regular team routines help increase dashboard adoption across all levels in your organization.',
+        'During our engagement, we address two questions. First, does the data answer questions people genuinely have and help them make decisions they are responsible for? If not, you may want to consider redesigning it. Second, do people have the confidence and skills to use it? Role-based training, guided data reviews and regular team routines help increase data use across all levels in your organization.',
     },
   },
   {
     value: {
-      question: 'Can we build what you provide internally?',
+      question: 'Will our internal team be able to maintain and build on what you deliver?',
       answer:
-        'Often, yes—but teams may need focused expertise to design the measurement framework, data architecture and adoption journey while building internal ownership. Goalkeep brings measurement, data-engineering, dashboard and capacity-building expertise, and works with your team so the system remains useful after the engagement.',
+        'Yes, absolutely. Our goal is always long-term sustainability, not dependency. We bring the expertise of designing measurement frameworks, data architectures, and dashboards and work alongside your team throughout the engagement. Through dedicated capacity building and knowledge transfer, we ensure your internal team is equipped to own, maintain, and build on every system and asset we deliver.',
     },
   },
 ]

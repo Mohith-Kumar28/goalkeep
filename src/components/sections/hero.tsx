@@ -226,14 +226,12 @@ function ProofCards() {
                       </div>
 
                       <div className="px-6 pt-5 pb-6 md:px-7">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)]">
-                            {card.tag}
-                          </span>
-                          <span className="text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
-                            {card.org}
-                          </span>
-                        </div>
+                        <span className="chip bg-[var(--gk-yellow-tint)] text-[var(--gk-ink)]">
+                          {card.tag}
+                        </span>
+                        <p className="mt-2 text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
+                          {card.org}
+                        </p>
                         <p className="mt-3 text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] leading-[1.45] font-semibold text-[var(--gk-navy-deep)]">
                           {card.line.value}
                         </p>

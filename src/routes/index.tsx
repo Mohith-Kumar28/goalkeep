@@ -54,7 +54,7 @@ export const Route = createFileRoute('/')({
  */
 function Home() {
   return (
-    <>
+    <div className="home">
       <Hero />
       <Credibility />
       <WhyWeExist />
@@ -66,6 +66,6 @@ function Home() {
       <Faqs />
       <Closing />
       <Contact />
-    </>
+    </div>
   )
 }

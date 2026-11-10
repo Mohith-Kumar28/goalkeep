@@ -1,6 +1,5 @@
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import type { CaseStudy } from '@/content/types'
-import { Marker } from '@/components/primitives/marker'
 import { Reveal } from '@/components/primitives/reveal'
 
 /**
@@ -49,30 +48,30 @@ export function CaseStudies() {
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-10 md:mb-14">
+          <div className="mb-8 md:mb-10">
             <div>
               <p className="eyebrow mb-4">{caseStudySection.eyebrow}</p>
               <h2 id="case-studies-heading" className="h2 max-w-[36ch]">
-                {caseStudySection.headline}{' '}
-                <em>
-                  {/* The marker highlight came off with the other decorations
-                      on 28 Sep and was asked back the same day. */}
-                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[0]}
-                  <Marker>{caseStudySection.headlineMark}</Marker>
-                  {caseStudySection.headlineTail.split(caseStudySection.headlineMark)[1]}
-                </em>
+                {caseStudySection.headline} <em>{caseStudySection.headlineTail}</em>
               </h2>
             </div>
           </div>
         </Reveal>
 
-        <Reveal>
-          <LeadCard study={lead} />
-        </Reveal>
-
-        <ul className="mt-6 grid gap-6 md:grid-cols-3">
+        {/* 10 Nov: on phones the four cards are one swipe row instead of a
+            tall stack. Touch scrolls it cleanly; the trackpad problem above
+            was a desktop one, and from md up this is the grid again. */}
+        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
+          <Reveal as="li" className="w-[85%] shrink-0 snap-center md:col-span-3 md:w-auto">
+            <LeadCard study={lead} />
+          </Reveal>
           {rest.map((study, index) => (
-            <Reveal as="li" key={study.slug} delay={index * 0.07} className="h-full">
+            <Reveal
+              as="li"
+              key={study.slug}
+              delay={index * 0.07}
+              className="w-[85%] shrink-0 snap-center md:w-auto"
+            >
               <Card study={study} />
             </Reveal>
           ))}
@@ -88,7 +87,7 @@ export function CaseStudies() {
  */
 const INTERVENTION_TINTS: Record<string, string> = {
   'Data collection & visualisation': 'var(--gk-teal-tint)',
-  'Theory of Change in practice': 'var(--gk-yellow-tint)',
+  'Theory of Change in practice': 'var(--gk-blue-tint)',
   'Grant management systems': 'var(--gk-blue-tint)',
   'Capacity building': 'var(--gk-coral-tint)',
 }
@@ -124,12 +123,12 @@ function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }
 /** The lead case study: photograph left, the story right. */
 function LeadCard({ study }: { study: CaseStudy }) {
   return (
-    <article className="grid overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid-cols-2">
+    <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid md:grid-cols-2">
       {/* The photo fills the row the text sets rather than sizing it. Sized by
           its own aspect ratio, it grew the card ~100px when the lazy image
           arrived - in the middle of a scroll to the contact form, which then
           stopped short (23 Oct). */}
-      <div className="relative min-h-[16rem]">
+      <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[16rem]">
         <img
           src={study.image}
           alt={study.imageAlt}
@@ -138,9 +137,9 @@ function LeadCard({ study }: { study: CaseStudy }) {
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
-      <div className="flex flex-col justify-center gap-4 p-8 md:p-12">
+      <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
         <Byline study={study} size="lg" />
-        <p className="max-w-[46ch] text-[length:var(--fs-base)] leading-relaxed text-[var(--fg-1)]">
+        <p className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
           {study.body}
         </p>
       </div>
@@ -159,7 +158,7 @@ function Card({ study }: { study: CaseStudy }) {
         className="aspect-[16/10] w-full object-cover"
       />
 
-      <div className="flex flex-1 flex-col gap-3 p-7">
+      <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
         <Byline study={study} />
 
         <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">

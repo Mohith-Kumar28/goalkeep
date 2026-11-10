@@ -1,6 +1,7 @@
-import { Cta, ContactBand, DesignHero, DesignPage, CaseStudyCards, ExploreMore } from '@/components/design'
+import { ArrowIcon, Cta, ContactBand, DesignHero, DesignPage, CaseStudyCards, ExploreMore, ctaClass } from '@/components/design'
 import { kickstarter } from '@/content/design/kickstarter'
 import '@/styles/design-kickstarter.css'
+import { ApplyLink } from './apply-link'
 import { ChangeBand } from './change-band'
 import { FitBand } from './fit-band'
 import { Glance } from './glance'
@@ -36,9 +37,10 @@ export function KickstarterPage() {
         }
         actions={
           <>
-            <Cta intent={hero.primary} arrow>
+            <ApplyLink className={ctaClass('accent')} label={hero.primary}>
               {hero.primary}
-            </Cta>
+              <ArrowIcon />
+            </ApplyLink>
             <Cta variant="secondary" intent={hero.secondary}>
               {hero.secondary}
             </Cta>

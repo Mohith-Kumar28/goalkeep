@@ -16,18 +16,16 @@ import { cn } from '@/lib/utils'
  *
  * "Nice approach, I can see this working out well — needs tweaks though."
  *
- * The interaction survives the review intact: hovering or focusing a stage
- * inverts it and collapses the two right-hand blocks into one panel that plays
- * a sequence. What changed is everything around it.
+ * Hovering or focusing a stage opens it, and its media plays a sequence.
+ * 10 Nov: "a lot going on… with the inverse of colours". The text half is
+ * always black on white; only the media half turns navy and animates. On
+ * phones the media sits above its text in every row, so the stages read
+ * image, text, image, text.
  *
  *   · The three rows were three separate bordered cards with gaps between them.
  *     "This is seeming very blocks right now — block, block, block. Let's make
  *     it a little more seamless." They are now one surface divided by
  *     hairlines, and the open row fills it edge to edge.
- *   · Open rows inverted to a saturated teal or coral. "Colours mismatch to
- *     brand." They now invert to navy, which is the brand's own dark ground;
- *     each stage keeps its identity through one accent hue rather than a
- *     full-bleed fill.
  *   · The closed-state photographs had 2px ink borders. Gone — they sit flush,
  *     and the open panel's photographs bleed to its edges.
  *   · The animations themselves were abstract. They are now the two sequences
@@ -40,7 +38,7 @@ import { cn } from '@/lib/utils'
  */
 
 /**
- * On the inverted row the accent has to survive on navy, which the muted teal
+ * In the open row's media the accent has to survive on navy, which the muted teal
  * and coral do not — hence the -lift values. See tokens.css.
  */
 const HUE: Record<
@@ -155,7 +153,7 @@ export function Approach({ ground = 'ground-cream' }: { ground?: string }) {
     >
       <div className="shell relative">
         <Reveal>
-          <div className="mb-8 md:mb-10">
+          <div className="mb-6 md:mb-10">
             <p className="eyebrow mb-4">{approach.eyebrow}</p>
             <h2 id="approach-heading" className="h2 max-w-[34ch]">
               {approach.headline} <em>{approach.headlineTail}</em>
@@ -210,12 +208,7 @@ function PhaseRow({
   return (
     <li
       ref={rowRef}
-      className="group relative overflow-hidden transition-colors duration-[var(--dur-slow)] ease-[var(--ease-out)]"
-      style={{
-        background: active ? 'var(--gk-navy)' : 'var(--gk-white)',
-        color: active ? 'var(--fg-inverse)' : 'var(--fg-1)',
-      }}
-      data-ground={active ? 'navy' : undefined}
+      className="group relative overflow-hidden bg-[var(--gk-white)] text-[var(--fg-1)]"
       /* 23 Oct: hover opens a row only when the pointer itself moves. A
          "Partner with us" or "Talk to us" scrolls the page under a still
          cursor, and a row opening on that resized the section mid-scroll and
@@ -244,7 +237,7 @@ function PhaseRow({
       >
         <div
           className={cn(
-            'relative z-10 flex flex-col justify-center p-6 md:col-span-6 md:px-8 md:py-8',
+            'relative z-10 flex flex-col justify-center px-5 pt-4 pb-6 md:col-span-6 md:px-8 md:py-8',
             flip && 'md:order-last',
           )}
         >
@@ -255,7 +248,7 @@ function PhaseRow({
             className="flex w-full items-center gap-4 text-left"
           >
             <span
-              className="stat-figure grid size-11 shrink-0 place-items-center rounded-[var(--r-sm)] text-[length:var(--fs-base)] transition-colors duration-[var(--dur-slow)]"
+              className="stat-figure grid size-10 shrink-0 place-items-center rounded-[var(--r-sm)] text-[length:var(--fs-base)] transition-colors duration-[var(--dur-slow)] md:size-11"
               style={{
                 background: active ? hue.onNavy : 'var(--gk-cream-deep)',
                 color: active ? 'var(--gk-ink)' : 'var(--gk-navy)',
@@ -269,8 +262,7 @@ function PhaseRow({
           </button>
 
           <p
-            className="mt-5 text-[length:clamp(1.125rem,1.6vw,1.3125rem)] leading-snug font-bold"
-            style={{ color: active ? hue.onNavy : 'var(--fg-1)' }}
+            className="mt-4 text-[length:clamp(1.0625rem,1.6vw,1.3125rem)] leading-snug font-bold md:mt-5"
           >
             {pillar.heading}
           </p>
@@ -278,8 +270,7 @@ function PhaseRow({
           <p
             /* 28 Sep: wide enough that no row's paragraph leaves one word
                alone on a fifth line. */
-            className="mt-3 max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed"
-            style={{ color: active ? 'var(--fg-inverse)' : 'var(--fg-1)' }}
+            className="mt-2 max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed md:mt-3"
           >
             {pillar.body}
           </p>
@@ -292,9 +283,10 @@ function PhaseRow({
             text, half picture. */}
         <div
           className={cn(
-            'pointer-events-none relative mx-6 mb-6 aspect-square overflow-hidden sm:aspect-[16/10] rounded-[var(--r-md)] md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
+            'pointer-events-none relative order-first mx-5 mt-5 aspect-[4/3] overflow-hidden rounded-[var(--r-md)] transition-colors duration-[var(--dur-slow)] sm:aspect-[16/10] md:order-none md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
           )}
-          style={{ background: active ? 'rgb(255 255 255 / 0.05)' : 'var(--gk-cream-deep)' }}
+          style={{ background: active ? 'var(--gk-navy)' : 'var(--gk-cream-deep)' }}
+          data-ground={active ? 'navy' : undefined}
         >
           {active ? (
             <PhaseAnimation

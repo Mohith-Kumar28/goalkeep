@@ -1,4 +1,5 @@
 import { ContactBand, Cta, DesignHero, DesignPage, ExploreMore } from '@/components/design'
+import { Credibility } from '@/components/sections/credibility'
 import { literacyContent } from '@/content/design/literacy'
 import '@/styles/design-literacy.css'
 import { AiSection } from './ai-section'
@@ -49,6 +50,7 @@ export function LiteracyPage() {
       <ChangeSection />
       <EvidenceSection />
       <FaqSection />
+      <Credibility />
       <ContactBand
         heading={<Rich html={contact.heading} />}
         body={contact.body}

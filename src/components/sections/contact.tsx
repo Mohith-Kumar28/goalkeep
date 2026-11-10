@@ -73,18 +73,18 @@ export function Contact({
       className="ground-cream band accent-blue relative scroll-mt-24"
       aria-labelledby="contact-heading"
     >
-      <div className="shell grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div className="shell grid gap-8 lg:grid-cols-12 lg:gap-12">
         <Reveal className="lg:col-span-5">
           <p className="eyebrow mb-4">{contact.eyebrow}</p>
           <h2 id="contact-heading" className="h2">
             {contact.headline} <em>{contact.headlineEm}</em>
           </h2>
-          <p className="lead mt-5 max-w-[40ch]">{contact.lead}</p>
+          <p className="lead mt-4 max-w-[40ch] md:mt-5">{contact.lead}</p>
           {aside}
         </Reveal>
 
         <Reveal className="lg:col-span-7" delay={0.08}>
-          <div className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-6 shadow-[var(--shadow-sm)] md:p-10">
+          <div className="rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] p-5 shadow-[var(--shadow-sm)] md:p-10">
             {status === 'done' ? (
               <div role="status" className="flex min-h-[20rem] flex-col justify-center">
                 <p className="h3">{contact.done.title}</p>

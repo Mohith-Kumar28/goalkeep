@@ -122,8 +122,7 @@ export function Audiences() {
             <div
               role="tablist"
               aria-label="Kinds of organisation we work with"
-              /* 21 Oct: two labels got longer ("Mid-to-large Nonprofits",
-                 "Ecosystem partners and Intermediaries"), so the row is wider. */
+              /* The longer labels need a wider row. */
               className="flex max-w-[36rem] flex-wrap gap-2"
             >
               {audiences.map((item, index) => {
@@ -212,18 +211,23 @@ function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme;
         {audience.body.value}
       </motion.p>
 
-      <motion.div {...step(reduced, 2)} className="mt-6">
-        {/* A router `to` can't carry a #section, so anchored CTAs are hrefs. */}
-        <GkButton
-          {...(audience.cta.to.includes('#') ? { href: audience.cta.to } : { to: audience.cta.to })}
-          variant="primary"
-          withArrow
-          /* 28 Sep: the button wears the selected tab's colours. */
-          className="hover:brightness-95"
-          style={{ background: theme.tab, borderColor: theme.tab, color: theme.tabInk }}
-        >
-          {audience.cta.label}
-        </GkButton>
+      <motion.div {...step(reduced, 2)} className="mt-6 flex flex-wrap gap-3">
+        {audience.ctas.map((cta, index) => (
+          <GkButton
+            key={cta.label}
+            {...(cta.to.includes('#') ? { href: cta.to } : { to: cta.to })}
+            variant={index === 0 ? 'primary' : 'secondary'}
+            withArrow={index === 0}
+            className="hover:brightness-95"
+            style={
+              index === 0
+                ? { background: theme.tab, borderColor: theme.tab, color: theme.tabInk }
+                : undefined
+            }
+          >
+            {cta.label}
+          </GkButton>
+        ))}
       </motion.div>
     </div>
   )

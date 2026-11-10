@@ -26,7 +26,7 @@ export const content: ServicePageContent = {
       'Build a <span class="dc-nowrap">data-confident</span><br class="dc-br-d"> workforce <em>across all levels<br class="dc-br-d"> of your organisation.</em>',
     lead: "We enable practical, role-specific data adoption that helps people use data in their everyday work, so it becomes a habit rather than a one-off event.",
     primary: "Work with us",
-    secondary: { label: "Read Dasra case study", href: "#case" },
+    secondary: { label: "Dasra case study", href: "#case" },
     photos: [
       {
         src: "/design/6616bb19d578b4407abaff9cbb89cc4b.webp",
@@ -180,12 +180,12 @@ export const content: ServicePageContent = {
     eyebrow: "indicative duration",
     heading: "From a few hours <em>to a few months.</em>",
     body: "Direct workshops run from four hours to three days. Custom learning journeys and ecosystem partnerships vary by cohort and scope, and the Data Literacy Program is a multi-month train-the-trainer journey.",
-    ticks: ["4 hours", "1 day", "3 days", "1 month", "3 months", "6 months"],
+    ticks: ["4 hours", "1 day", "3 days", "1 month", "3 months"],
     spans: [
       { from: 0, to: 3, caption: "direct workshops", label: "Workshops" },
       {
         from: 3,
-        to: 6,
+        to: 5,
         caption: "multi-month train-the-trainer journey",
         label: "Data Literacy Program",
       },

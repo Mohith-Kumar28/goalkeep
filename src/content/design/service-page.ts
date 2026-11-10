@@ -93,12 +93,14 @@ export type Duration = {
   eyebrow: string
   heading: Html
   body: string
-  /** One label per ruler cell, e.g. `weekTicks(10)` or `['4 hours', '1 day']`. */
+  /** One label per ruler cell, e.g. `weekTicks(10)`, `monthTicks(6)` or `['4 hours', '1 day']`. */
   ticks: Array<string>
   spans: Array<RulerSpan>
   /** The single-bar ruler of the impact page: 64px of headroom and no gap under the bar. */
   compact?: boolean
 }
+
+export const monthTicks = (months: number): Array<string> => Array.from({ length: months }, (_, i) => `mo ${i + 1}`)
 
 export const weekTicks = (weeks: number): Array<string> => Array.from({ length: weeks }, (_, i) => `wk ${i + 1}`)
 
