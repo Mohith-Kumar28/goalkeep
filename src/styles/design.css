@@ -135,6 +135,9 @@
   text-wrap: balance;
   max-width: 24ch;
 }
+.dc-nowrap {
+  white-space: nowrap;
+}
 .dc-h3 {
   font-size: 32px;
   font-weight: 400;
@@ -217,6 +220,13 @@ button.dc-btn {
   border-bottom: 1.5px solid currentColor;
   padding-bottom: 2px;
   transition: gap 140ms;
+  position: relative;
+}
+/* A finger-sized hit area around the underlined link, without moving the layout. */
+.dc-tlink::after {
+  content: "";
+  position: absolute;
+  inset: -10px -6px;
 }
 .dc-tlink:hover {
   gap: 12px;
@@ -386,6 +396,10 @@ button.dc-btn {
   .dc-grid3 {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+  /* An odd last card spans the row instead of leaving an empty cell beside it. */
+  .dc-grid3 > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
   .dc-split,
   .dc-alt,
   .dc-alt-rev {
@@ -394,7 +408,8 @@ button.dc-btn {
   .dc-alt-rev .dc-alt-img {
     order: -1;
   }
-  .dc-hero-split {
+  .dc-hero-split,
+  .dc-case-split {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
@@ -406,8 +421,12 @@ button.dc-btn {
     padding-left: 16px;
     padding-right: 16px;
   }
+  /* Balanced wrapping and ch caps are tuned for wide columns; on a phone they strand a word
+     ("fit?", "four") on its own line, so headings fill the line and only avoid orphans. */
   .dc-h2 {
     font-size: 28px;
+    text-wrap: pretty;
+    max-width: none !important;
   }
   .dc-h3 {
     font-size: 26px;
@@ -430,8 +449,11 @@ button.dc-btn {
   .dc-hero-img {
     margin: 0 -16px;
   }
-  .dc-case-split {
-    grid-template-columns: minmax(0, 1fr) !important;
+  .dc-case-body {
+    padding: 24px !important;
+  }
+  .dc-case-img {
+    min-height: 240px !important;
   }
   .dc-note {
     transform: none !important;
@@ -440,13 +462,53 @@ button.dc-btn {
   .dc-deliv-split {
     grid-template-columns: minmax(0, 1fr) !important;
   }
-  .dc-ruler-wrap {
-    overflow-x: auto;
+  /* Phones: the ruler fits the screen, captions sit in the flow above their bar so they can wrap,
+     and week ticks drop the "wk" prefix for a single "Weeks" axis label. */
+  .dc-ruler-row {
+    padding-top: 0 !important;
   }
+  .dc-ruler-cap {
+    position: relative !important;
+    top: auto !important;
+    margin: 0 0 6px;
+    min-width: 132px;
+  }
+  .dc-ruler-trail {
+    position: static !important;
+    display: block;
+    width: auto !important;
+    margin-top: 6px;
+    text-align: right !important;
+  }
+  .dc-tick-unit {
+    display: none;
+  }
+  .dc-ruler-axis {
+    display: block !important;
+  }
+}
+@media (min-width: 761px) {
+  .dc-ruler {
+    min-width: 640px;
+  }
+}
+.dc-ruler-axis {
+  display: none;
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(20, 19, 26, 0.6);
 }
 @media (max-width: 1100px) {
   .dc-glance {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  /* Dividers follow the wrapped grid: no rule at a row's start, a rule between rows. */
+  .dc-glance-item:nth-child(odd) {
+    border-left: none !important;
+  }
+  .dc-glance-item:nth-child(n + 3) {
+    border-top: 1px solid #e5e7ee;
   }
 }
 @media (max-width: 760px) {
@@ -455,6 +517,25 @@ button.dc-btn {
   .dc-outcomes,
   .dc-change {
     grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .dc-glance-item {
+    border-left: none !important;
+  }
+  .dc .dc-pair {
+    margin-bottom: 16px !important;
+  }
+  .dc-hero-split {
+    padding-bottom: 40px !important;
+  }
+  .dc-tlink {
+    text-wrap: balance;
+  }
+  .dc-deliv-grid {
+    row-gap: 28px !important;
+    margin-top: 28px !important;
+  }
+  .dc-glance-item:nth-child(n + 2) {
+    border-top: 1px solid #e5e7ee;
   }
   .dc-change-arrow {
     transform: rotate(90deg);
@@ -486,6 +567,7 @@ button.dc-btn {
   overflow: hidden;
   height: 400px;
   box-shadow: 0 18px 40px rgba(20, 19, 26, 0.28);
+  touch-action: pan-y;
 }
 .dc-carousel-track {
   display: flex;
@@ -511,7 +593,7 @@ button.dc-btn {
 }
 .dc-carousel-dot {
   width: 28px;
-  height: 28px;
+  height: 44px;
   border: none;
   background: transparent;
   padding: 0;

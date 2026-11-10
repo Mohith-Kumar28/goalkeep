@@ -61,7 +61,7 @@ export function AudienceSwitch({
                 </span>
                 <span style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: 1.25 }}>
                   <span style={{ fontSize: 16, fontWeight: 800 }}>{audiences[audience].label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.8 }}>{audiences[audience].sub}</span>
+                  <span className="dc-aud-sub" style={{ fontSize: 13, fontWeight: 600, opacity: 0.8 }}>{audiences[audience].sub}</span>
                 </span>
               </button>
             )

@@ -23,7 +23,7 @@ export const content: ServicePageContent = {
   tone: "teal",
   hero: {
     headline:
-      'Build a data-confident<br class="dc-br-d"> workforce <em>across all levels<br class="dc-br-d"> of your organisation.</em>',
+      'Build a <span class="dc-nowrap">data-confident</span><br class="dc-br-d"> workforce <em>across all levels<br class="dc-br-d"> of your organisation.</em>',
     lead: "We enable practical, role-specific data adoption that helps people use data in their everyday work, so it becomes a habit rather than a one-off event.",
     primary: "Work with us",
     secondary: { label: "Read Dasra case study", href: "#case" },

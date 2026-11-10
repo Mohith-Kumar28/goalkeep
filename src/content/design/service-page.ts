@@ -4,7 +4,7 @@ import type { HeroPhoto } from '@/components/design/hero'
 import type { Tone } from '@/components/design/tones'
 
 /** Authored inline markup copied from the 6 Nov design: only <em>, <strong>,
- *  <br class="dc-br-d"> and plain text. Rendered with innerHTML, so it must
+ *  <br class="dc-br-d">, <span class="dc-nowrap"> and plain text. Rendered with innerHTML, so it must
  *  never carry user input. */
 export type Html = string
 

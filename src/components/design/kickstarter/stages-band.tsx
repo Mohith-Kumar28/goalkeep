@@ -2,12 +2,17 @@ import { ArrowIcon, tones, useContactForm } from '@/components/design'
 import { kickstarter } from '@/content/design/kickstarter'
 import { Rich } from './rich'
 import stage1 from './stage-1.svg?raw'
+import stage1Mobile from './stage-1-mobile.svg?raw'
 import stage2 from './stage-2.svg?raw'
+import stage2Mobile from './stage-2-mobile.svg?raw'
 import stage3 from './stage-3.svg?raw'
+import stage3Mobile from './stage-3-mobile.svg?raw'
 import stage4 from './stage-4.svg?raw'
+import stage4Mobile from './stage-4-mobile.svg?raw'
 import { useAutoCycle } from './use-auto-cycle'
 
 const illustrations = [stage1, stage2, stage3, stage4]
+const mobileIllustrations = [stage1Mobile, stage2Mobile, stage3Mobile, stage4Mobile]
 const STEP_MS = 8000
 
 export function StagesBand() {
@@ -106,7 +111,10 @@ export function StagesBand() {
             alignItems: 'center',
           }}
         >
-          <div dangerouslySetInnerHTML={{ __html: illustrations[step] }} />
+          <div>
+            <div className="dc-scene-desk" dangerouslySetInnerHTML={{ __html: illustrations[step] }} />
+            <div className="dc-scene-mob" dangerouslySetInnerHTML={{ __html: mobileIllustrations[step] }} />
+          </div>
           <div>
             <p
               style={{

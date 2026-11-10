@@ -1,6 +1,6 @@
 import { useRouterState } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { ReactNode, TouchEvent } from 'react'
 import { themeForPath } from '@/content/site'
 import type { PageTheme } from '@/content/site'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
@@ -14,6 +14,7 @@ export type HeroPhoto = {
 }
 
 const AUTOPLAY_MS = 5000
+const SWIPE_PX = 40
 
 export function HeroCarousel({ photos, label }: { photos: Array<HeroPhoto>; label: string }) {
   const [index, setIndex] = useState(0)
@@ -33,9 +34,26 @@ export function HeroCarousel({ photos, label }: { photos: Array<HeroPhoto>; labe
     setIndex((next + count) % count)
   }
 
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null)
+  const onTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (!touchStart) return
+    const touch = event.changedTouches[0]
+    const dx = touch.clientX - touchStart.x
+    const dy = touch.clientY - touchStart.y
+    setTouchStart(null)
+    if (Math.abs(dx) > SWIPE_PX && Math.abs(dx) > Math.abs(dy)) go(index + (dx < 0 ? 1 : -1))
+  }
+
   return (
     <div>
-      <div role="region" aria-roledescription="carousel" aria-label={label} className="dc-carousel-frame">
+      <div
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={label}
+        className="dc-carousel-frame"
+        onTouchStart={(event) => setTouchStart({ x: event.touches[0].clientX, y: event.touches[0].clientY })}
+        onTouchEnd={onTouchEnd}
+      >
         <div className="dc-carousel-track" style={{ transform: `translateX(${-index * 100}%)` }}>
           {photos.map((photo, i) => (
             <img

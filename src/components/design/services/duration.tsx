@@ -7,6 +7,8 @@ import { toneAccents } from './service-tones'
 const BRACKET =
   'M 4 22 Q 6 8 30 10 L 140 10 Q 150 10 150 2 Q 150 10 160 10 L 270 10 Q 294 8 296 22'
 
+const weekNumber = (tick: string) => /^wk (\d+)$/.exec(tick)?.[1]
+
 const pct = (from: number, to: number, cells: number) => ({
   left: `calc(${from} / ${cells} * 100%)`,
   width: `calc(${to - from} / ${cells} * 100%)`,
@@ -16,10 +18,11 @@ function RulerRow({ span, cells, tone, compact }: { span: RulerSpan; cells: numb
   const ink = tones[tone].ink
   const { base, hatch } = toneAccents[tone]
   const range = pct(span.from, span.to, cells)
+  const headroom = compact ? 64 : 72
   return (
-    <div style={{ position: 'relative', paddingTop: compact ? 64 : 72, marginBottom: compact ? 0 : 8 }}>
+    <div className="dc-ruler-row" style={{ position: 'relative', paddingTop: headroom, marginBottom: compact ? 0 : 8 }}>
       {span.label && <p style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 700 }}>{span.label}</p>}
-      <div style={{ position: 'absolute', ...range, top: span.label ? 26 : 0, textAlign: 'center' }}>
+      <div className="dc-ruler-cap" style={{ position: 'absolute', ...range, top: span.label ? 26 : 0, textAlign: 'center' }}>
         <span style={{ display: 'inline-block', fontSize: 15, fontWeight: 800, color: ink }}>{span.caption}</span>
         <svg
           aria-hidden="true"
@@ -63,34 +66,35 @@ function RulerRow({ span, cells, tone, compact }: { span: RulerSpan; cells: numb
         />
         <div style={{ position: 'absolute', ...range, top: 0, bottom: 0, background: base, borderRadius: 6 }} />
         {span.trail && span.to < cells && (
-          <>
-            <div
-              style={{
-                position: 'absolute',
-                ...pct(span.to, cells, cells),
-                top: 0,
-                bottom: 0,
-                borderRadius: 6,
-                background: `repeating-linear-gradient(135deg, ${hatch} 0 6px, transparent 6px 12px)`,
-                opacity: 0.7,
-              }}
-            />
-            <span
-              style={{
-                position: 'absolute',
-                ...pct(span.to, cells, cells),
-                top: -55,
-                textAlign: 'center',
-                fontSize: 13,
-                fontWeight: 700,
-                color: ink,
-              }}
-            >
-              {span.trail}
-            </span>
-          </>
+          <div
+            style={{
+              position: 'absolute',
+              ...pct(span.to, cells, cells),
+              top: 0,
+              bottom: 0,
+              borderRadius: 6,
+              background: `repeating-linear-gradient(135deg, ${hatch} 0 6px, transparent 6px 12px)`,
+              opacity: 0.7,
+            }}
+          />
         )}
       </div>
+      {span.trail && span.to < cells && (
+        <span
+          className="dc-ruler-trail"
+          style={{
+            position: 'absolute',
+            ...pct(span.to, cells, cells),
+            top: headroom - 55,
+            textAlign: 'center',
+            fontSize: 13,
+            fontWeight: 700,
+            color: ink,
+          }}
+        >
+          {span.trail}
+        </span>
+      )}
     </div>
   )
 }
@@ -108,7 +112,7 @@ export function DurationSection({ duration, tone }: { duration: Duration; tone: 
         <Rich as="h2" className="dc-h2" html={duration.heading} />
         <p style={{ margin: '16px 0 0', maxWidth: '60ch' }}>{duration.body}</p>
         <div className="dc-ruler-wrap" style={{ marginTop: 28 }}>
-          <div style={{ minWidth: 640, position: 'relative' }}>
+          <div className="dc-ruler" style={{ position: 'relative' }}>
             {duration.spans.map((span) => (
               <RulerRow key={span.caption} span={span} cells={cells} tone={tone} compact={duration.compact ?? false} />
             ))}
@@ -125,10 +129,18 @@ export function DurationSection({ duration, tone }: { duration: Duration; tone: 
                     borderRight: '1px solid #D3D7E2',
                   }}
                 >
-                  {tick}
+                  {weekNumber(tick) ? (
+                    <>
+                      <span className="dc-tick-unit">wk </span>
+                      {weekNumber(tick)}
+                    </>
+                  ) : (
+                    tick
+                  )}
                 </span>
               ))}
             </div>
+            {duration.ticks.every(weekNumber) && <p className="dc-ruler-axis">Weeks</p>}
           </div>
         </div>
       </div>

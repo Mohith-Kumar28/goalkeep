@@ -97,7 +97,10 @@ function NominateCard() {
           </button>
         </div>
       ) : (
-        <div className="dc-slide-up">
+        <div
+          className="dc-slide-up"
+          style={{ marginTop: 14, minHeight: 168, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+        >
           <div dangerouslySetInnerHTML={{ __html: flowSvg }} />
           <p
             style={{

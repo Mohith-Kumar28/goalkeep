@@ -19,7 +19,7 @@ export function DeliverablesSection({
         )}
         <Rich as="h2" className="dc-h2" html={heading} style={{ margin: '0 auto', textAlign: 'center', maxWidth: '28ch' }} />
         <div
-          className="dc-grid3"
+          className="dc-grid3 dc-deliv-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',

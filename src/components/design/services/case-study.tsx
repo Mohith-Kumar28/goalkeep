@@ -22,7 +22,7 @@ export function CaseStudySection({
 }) {
   const gap = roomy ? { padding: 44, title: 24, body: 16, link: 32 } : { padding: 40, title: 22, body: 14, link: 28 }
   const content = (
-    <div style={{ padding: gap.padding, display: 'flex', flexDirection: 'column' }}>
+    <div className="dc-case-body" style={{ padding: gap.padding, display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
         {card.tags.map((tag) => (
           <span
@@ -109,12 +109,14 @@ export function CaseStudySection({
             <img
               src={card.photo.src}
               alt={card.photo.alt}
+              className="dc-case-img"
               style={{ width: '100%', height: '100%', minHeight: 380, objectFit: 'cover', display: 'block' }}
             />
           ) : (
             <div
               role="img"
               aria-label="Photo placeholder"
+              className="dc-case-img"
               style={{
                 minHeight: 380,
                 height: '100%',

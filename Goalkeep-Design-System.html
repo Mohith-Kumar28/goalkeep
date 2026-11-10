@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Goalkeep Design System</title>
+<style>
+@font-face{font-family:"Nunito Sans";font-style:normal;font-weight:200 1000;src:url("file:///Users/mohithkumar/Developer/personal/goalkeep/node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2") format("woff2")}
+@font-face{font-family:"Nunito Sans";font-style:italic;font-weight:200 1000;src:url("file:///Users/mohithkumar/Developer/personal/goalkeep/node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-italic.woff2") format("woff2")}
+@font-face{font-family:"Caveat";font-weight:400 700;src:url("file:///Users/mohithkumar/Developer/personal/goalkeep/node_modules/@fontsource-variable/caveat/files/caveat-latin-wght-normal.woff2") format("woff2")}
+
+:root{
+  --navy:#2f4a92;--navy-deep:#1e3266;--navy-lift:#3d5aa8;--cream:#fcfcfd;--cream-deep:#f1f4fa;--ink:#14131a;
+  --blue:#3f63c8;--blue-deep:#2f4d9f;--teal:#2f9c8f;--teal-ink:#176059;--coral:#e07a5f;--coral-ink:#9c452a;
+  --yellow:#eac452;--yellow-deep:#cfa72f;--yellow-ink:#7d5e0c;
+  --hair:#e5e7ee;--hair-strong:#d3d7e2;
+  --scribble:#f6d83a;--hl:#fcf0a5;--hl-end:#f7db63;
+  --fg2:rgb(20 19 26 / .72);
+}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;background:#fff;color:var(--ink);font-family:"Nunito Sans",system-ui,sans-serif;font-size:10pt;line-height:1.55}
+.page{width:210mm;min-height:297mm;padding:18mm 17mm 16mm;position:relative;page-break-after:always;overflow:hidden;background:var(--cream)}
+.page:last-child{page-break-after:auto}
+.foot{position:absolute;left:17mm;right:17mm;bottom:9mm;display:flex;justify-content:space-between;font-size:7.5pt;color:var(--fg2);border-top:1px solid var(--hair);padding-top:2.5mm}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:7.5pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blue-deep);margin:0 0 3mm}
+.eyebrow::before{content:"";width:20px;height:2px;background:currentColor;opacity:.85}
+h1{font-size:30pt;font-weight:500;line-height:1.06;letter-spacing:-.02em;margin:0}
+h1 em,h2 em{font-weight:800;font-style:italic}
+h2{font-size:21pt;font-weight:400;line-height:1.14;letter-spacing:-.02em;margin:0 0 5mm}
+h3{font-size:11.5pt;font-weight:700;margin:6mm 0 2mm;letter-spacing:-.012em}
+p{margin:0 0 2.5mm}
+.lead{font-size:11.5pt;line-height:1.55}
+.muted{color:var(--fg2)}
+code{font-family:"Nunito Sans";font-weight:700;font-size:.92em;background:var(--cream-deep);padding:.05em .35em;border-radius:3px;color:var(--navy-deep)}
+table{width:100%;border-collapse:collapse;font-size:8.6pt;margin:1mm 0 3mm;background:#fff;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+th{text-align:left;font-size:7pt;letter-spacing:.08em;text-transform:uppercase;color:var(--fg2);font-weight:700;padding:2mm 2.5mm;background:var(--cream-deep);border-bottom:1px solid var(--hair)}
+td{padding:1.7mm 2.5mm;border-bottom:1px solid var(--hair);vertical-align:top}
+tr:last-child td{border-bottom:0}
+ul{margin:0 0 3mm;padding-left:4.5mm}li{margin:0 0 1.2mm}
+.grid{display:grid;gap:4mm}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.card{background:#fff;border:1px solid var(--hair);border-radius:12px;box-shadow:0 1px 2px rgb(20 19 26/.04),0 2px 8px rgb(20 19 26/.05);padding:4mm}
+
+/* swatches */
+.sw{border:1px solid var(--hair);border-radius:10px;overflow:hidden;background:#fff}
+.sw .c{height:17mm}
+.sw .m{padding:2mm 2.5mm;font-size:7.6pt;line-height:1.35}
+.sw .m b{display:block;font-size:8.2pt}
+.sw.sm .c{height:11mm}
+.ramp{display:grid;grid-template-columns:22mm repeat(5,1fr);gap:2mm;align-items:stretch;margin-bottom:2mm}
+.ramp .lab{font-weight:700;font-size:9pt;display:flex;align-items:center}
+.ramp .chip{border-radius:6px;height:14mm;padding:1.5mm 2mm;font-size:7pt;display:flex;flex-direction:column;justify-content:flex-end;line-height:1.25;border:1px solid rgb(0 0 0/.05)}
+.ramp .hd{font-size:6.8pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fg2)}
+
+/* cover */
+.cover{background:var(--navy);color:#fff;padding:0}
+.cover .in{padding:24mm 20mm;position:relative;z-index:2;height:297mm;display:flex;flex-direction:column}
+.cover h1{font-size:44pt;color:#fff;max-width:14ch;margin-top:auto}
+.cover .eyebrow{color:var(--yellow)}
+.cover .sub{font-size:13pt;color:rgb(255 255 255/.86);max-width:44ch;margin-top:7mm}
+.arc{position:absolute;pointer-events:none}
+
+/* marker */
+.marker{position:relative;isolation:isolate;display:inline-block;padding-inline:.1em;margin-inline:.16em .1em;color:var(--ink)}
+.marker::before{content:"";position:absolute;z-index:-1;inset:-.18em -.3em -.14em -.24em;background-color:var(--hl);
+background-image:linear-gradient(to right,var(--hl-end) 0 5%,transparent 9%),linear-gradient(to left,var(--hl-end) 0 4%,transparent 8%),linear-gradient(to top,rgb(0 0 0/.05) 0,transparent 40%);
+transform:rotate(-.4deg) skewX(-4deg);
+-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0 50C2 36 1 21 1 6C40 2 78 9 118 5C158 1 200 8 239 4C240 19 239 37 238 52C200 57 160 49 120 54C80 59 40 51 0 50Z' fill='%23fff'/%3E%3C/svg%3E");-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat}
+.marker.light::before{background-color:#fff;background-image:linear-gradient(to top,rgb(47 74 146/.14) 0,transparent 42%)}
+.marker.light{color:var(--navy)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:9pt;line-height:1;padding:3mm 4.5mm;border-radius:4px;border:1px solid;white-space:nowrap}
+.b-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.b-secondary{background:#fff;color:var(--navy);border-color:var(--hair-strong)}
+.b-ghost{background:transparent;color:var(--navy);border-color:var(--navy)}
+.b-accent{background:var(--yellow);color:var(--navy-deep);border-color:var(--yellow)}
+.b-d-primary{background:#fff;color:var(--navy);border-color:#fff}
+.b-d-secondary{background:transparent;color:#fff;border-color:rgb(255 255 255/.6)}
+.link-cta{display:inline-flex;gap:6px;font-weight:700;color:var(--blue-deep);border-bottom:1.5px solid currentColor;padding-bottom:2px}
+.navy{background:var(--navy);color:#fff;border-radius:12px;padding:5mm}
+.navy .link-cta{color:var(--yellow)}
+.hand{font-family:"Caveat",cursive;font-weight:600}
+.tag{display:inline-block;padding:.3em .7em;border-radius:4px;font-weight:700;font-size:8.5pt}
+.spec{display:flex;align-items:baseline;gap:5mm;padding:2.6mm 0;border-bottom:1px solid var(--hair)}
+.spec .k{width:30mm;flex:none;font-size:7.5pt;color:var(--fg2);line-height:1.3}
+.spec .k b{display:block;color:var(--ink);font-size:8.3pt}
+.do{border-left:3px solid var(--teal)}.dont{border-left:3px solid var(--coral)}
+.box-title{font-size:7pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:2mm}
+.toc li{display:flex;justify-content:space-between;border-bottom:1px solid rgb(255 255 255/.16);padding:1.6mm 0;margin:0;list-style:none;font-size:10pt}
+.toc{padding:0;margin:8mm 0 0;max-width:110mm}
+.bandrow{display:grid;grid-template-columns:7mm 38mm 1fr;align-items:center;gap:3mm;border-radius:6px;padding:2.2mm 3mm;margin-bottom:1.6mm;font-size:8.6pt;border:1px solid var(--hair)}
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<section class="page cover">
+  <svg class="arc" style="width:150mm;height:150mm;top:-45mm;right:-50mm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="43.5" fill="none" stroke="#3d5aa8" stroke-width="13" stroke-linecap="round" stroke-dasharray="100 300" transform="rotate(60 50 50)"/></svg>
+  <svg class="arc" style="width:85mm;height:85mm;bottom:-28mm;left:-28mm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="39" fill="none" stroke="#3d5aa8" stroke-width="22"/></svg>
+  <div class="in">
+    <img src="file:///Users/mohithkumar/Developer/personal/goalkeep/public/wordmark-white.webp" style="height:12mm;width:auto;align-self:flex-start">
+    <p class="eyebrow" style="margin-top:auto">Brand &amp; design guidelines</p>
+    <h1 style="margin-top:0">Goalkeep <em>design system.</em></h1>
+    <p class="sub">Typography, colour, shape, patterns and motion, taken from the shipped homepage (v5.0). <span class="marker light">Formal first, human second.</span></p>
+    <ol class="toc">
+      <li><span>01 · Brand character &amp; logo</span><span>2</span></li>
+      <li><span>02 · Colour</span><span>3</span></li>
+      <li><span>03 · Typography</span><span>5</span></li>
+      <li><span>04 · Shape, depth &amp; buttons</span><span>7</span></li>
+      <li><span>05 · Patterns &amp; brand devices</span><span>8</span></li>
+      <li><span>06 · Layout, motion &amp; icons</span><span>9</span></li>
+      <li><span>07 · Do / don't</span><span>10</span></li>
+    </ol>
+    <p style="margin-top:8mm;font-size:8pt;color:rgb(255 255 255/.7)">Source of truth: <b>src/styles/tokens.css</b> · <b>src/styles.css</b>. Reference the token, never the hex.</p>
+  </div>
+</section>
+
+<!-- ===================== 1. CHARACTER + LOGO ===================== -->
+<section class="page">
+  <p class="eyebrow">01 · Brand character</p>
+  <h2>Goalkeep's work decides whether a nonprofit gets funded. <em>The page has to read like that.</em></h2>
+  <div class="grid g3" style="margin-bottom:6mm">
+    <div class="card"><div class="box-title" style="color:var(--blue-deep)">Formal structure</div>Navy and white grounds, rectangular buttons, one quiet surface treatment, restrained heading weights.</div>
+    <div class="card"><div class="box-title" style="color:var(--teal-ink)">A human hand on top</div>Handwriting (Caveat), a real <span class="marker">highlighter</span> stroke and hand-drawn circles. These are the three things the client explicitly liked.</div>
+    <div class="card dont"><div class="box-title" style="color:var(--coral-ink)">Never</div>"Young media agency": full-chroma colour, black outlines, hard offset shadows, pill buttons, bouncy hovers, boxed photos.</div>
+  </div>
+
+  <p class="eyebrow">Logo</p>
+  <div class="grid g3" style="margin-bottom:4mm">
+    <div class="card" style="display:flex;align-items:center;justify-content:center;height:34mm"><img src="file:///Users/mohithkumar/Developer/personal/goalkeep/public/wordmark-ink.webp" style="height:11mm"></div>
+    <div class="card" style="background:var(--navy);border-color:var(--navy);display:flex;align-items:center;justify-content:center;height:34mm"><img src="file:///Users/mohithkumar/Developer/personal/goalkeep/public/wordmark-white.webp" style="height:11mm"></div>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;height:34mm"><img src="file:///Users/mohithkumar/Developer/personal/goalkeep/public/goalkeep-icon.png" style="height:22mm"></div>
+  </div>
+  <table>
+    <tr><th>Asset</th><th>File</th><th>Use</th></tr>
+    <tr><td>Wordmark, dark letters</td><td><code>public/wordmark-ink.webp</code> (673×160)</td><td>Light grounds</td></tr>
+    <tr><td>Wordmark, white letters</td><td><code>public/wordmark-white.webp</code></td><td>Navy grounds</td></tr>
+    <tr><td>Icon (the g ring)</td><td><code>public/goalkeep-icon.png</code></td><td>Favicon, app icon, share card</td></tr>
+  </table>
+  <ul>
+    <li>Header size: 32px tall, 36px from tablet up. The ring keeps its colours in both versions; only the letters change.</li>
+    <li>The mark is a <b>closed ring of five round-capped arcs</b> plus a smile beneath. Stroke is 13.8% of the diameter; spans 71.5° / 68° / 71° / 77.5° / 72°.</li>
+  </ul>
+  <h3>Mark colours: for drawing the logo only, never UI accents</h3>
+  <div class="grid g5">
+    <div class="sw sm"><div class="c" style="background:#e8e724"></div><div class="m"><b>Mark yellow</b>#E8E724</div></div>
+    <div class="sw sm"><div class="c" style="background:#3f3d3d"></div><div class="m"><b>Mark ink</b>#3F3D3D · white on dark</div></div>
+    <div class="sw sm"><div class="c" style="background:#526eb5"></div><div class="m"><b>Mark blue</b>#526EB5</div></div>
+    <div class="sw sm"><div class="c" style="background:#79c2b4"></div><div class="m"><b>Mark teal</b>#79C2B4</div></div>
+    <div class="sw sm"><div class="c" style="background:#ee9d90"></div><div class="m"><b>Mark coral</b>#EE9D90</div></div>
+  </div>
+  <div class="foot"><span>Goalkeep design system</span><span>2</span></div>
+</section>
+
+<!-- ===================== 2. COLOUR ===================== -->
+<section class="page">
+  <p class="eyebrow">02 · Colour</p>
+  <h2>Navy and white carry the page. <em>Everything else is a highlight.</em></h2>
+  <h3 style="margin-top:0">Grounds &amp; ink</h3>
+  <div class="grid g4" style="margin-bottom:3mm">
+    <div class="sw"><div class="c" style="background:#2f4a92"></div><div class="m"><b>Navy</b>--gk-navy · #2F4A92<br><span class="muted">Hero, proof, closing</span></div></div>
+    <div class="sw"><div class="c" style="background:#1e3266"></div><div class="m"><b>Navy deep</b>--gk-navy-deep · #1E3266<br><span class="muted">Pressed, primary hover</span></div></div>
+    <div class="sw"><div class="c" style="background:#3d5aa8"></div><div class="m"><b>Navy lift</b>--gk-navy-lift · #3D5AA8<br><span class="muted">Raised off navy, hero arcs</span></div></div>
+    <div class="sw"><div class="c" style="background:#14131a"></div><div class="m"><b>Ink</b>--gk-ink · #14131A<br><span class="muted">The only dark text colour</span></div></div>
+    <div class="sw"><div class="c" style="background:#ffffff"></div><div class="m"><b>White</b>--gk-white · #FFFFFF<br><span class="muted">Cards</span></div></div>
+    <div class="sw"><div class="c" style="background:#fcfcfd"></div><div class="m"><b>Cream</b>--gk-cream · #FCFCFD<br><span class="muted">Light page ground</span></div></div>
+    <div class="sw"><div class="c" style="background:#f1f4fa"></div><div class="m"><b>Cream deep</b>--gk-cream-deep · #F1F4FA<br><span class="muted">Pale-blue highlight band</span></div></div>
+    <div class="sw"><div class="c" style="background:#f7f5ef"></div><div class="m"><b>Beige</b>--gk-beige · #F7F5EF<br><span class="muted">"Why we exist", sector label</span></div></div>
+  </div>
+
+  <h3>Accent hues, muted off full chroma</h3>
+  <div class="ramp"><span></span><span class="hd">Base</span><span class="hd">Deep · hover</span><span class="hd">Ink · small text</span><span class="hd">Tint · wash</span><span class="hd">Lift · on navy</span></div>
+  <div class="ramp"><span class="lab">Blue</span>
+    <span class="chip" style="background:#3f63c8;color:#fff">#3F63C8</span><span class="chip" style="background:#2f4d9f;color:#fff">#2F4D9F</span><span class="chip" style="background:#fff;color:var(--fg2)">use deep</span><span class="chip" style="background:#eaeff9">#EAEFF9</span><span class="chip" style="background:#8fa8e8">#8FA8E8</span></div>
+  <div class="ramp"><span class="lab">Teal</span>
+    <span class="chip" style="background:#2f9c8f;color:#fff">#2F9C8F</span><span class="chip" style="background:#237a70;color:#fff">#237A70</span><span class="chip" style="background:#176059;color:#fff">#176059</span><span class="chip" style="background:#e7f2f0">#E7F2F0</span><span class="chip" style="background:#5fc9ba">#5FC9BA</span></div>
+  <div class="ramp"><span class="lab">Coral</span>
+    <span class="chip" style="background:#e07a5f;color:#fff">#E07A5F</span><span class="chip" style="background:#c8613f;color:#fff">#C8613F</span><span class="chip" style="background:#9c452a;color:#fff">#9C452A</span><span class="chip" style="background:#fbeee9">#FBEEE9</span><span class="chip" style="background:#f0a58c">#F0A58C</span></div>
+  <div class="ramp"><span class="lab">Gold</span>
+    <span class="chip" style="background:#eac452">#EAC452</span><span class="chip" style="background:#cfa72f">#CFA72F</span><span class="chip" style="background:#7d5e0c;color:#fff">#7D5E0C</span><span class="chip" style="background:#fbf3df">#FBF3DF</span><span class="chip" style="background:#fff;color:var(--fg2)">n/a</span></div>
+  <p class="muted" style="font-size:8pt">Tokens follow <code>--gk-{hue}</code>, <code>-deep</code>, <code>-ink</code>, <code>-tint</code>, <code>-lift</code>. Lift values exist because muted teal and coral drop to ~2.5:1 on navy.</p>
+
+  <h3>Hand marks &amp; highlighter</h3>
+  <div class="grid g3">
+    <div class="sw sm"><div class="c" style="background:#f6d83a"></div><div class="m"><b>Scribble</b>--gk-scribble · #F6D83A · every hand mark</div></div>
+    <div class="sw sm"><div class="c" style="background:#fcf0a5"></div><div class="m"><b>Highlight</b>--gk-highlight · #FCF0A5 · marker body</div></div>
+    <div class="sw sm"><div class="c" style="background:#f7db63"></div><div class="m"><b>Highlight end</b>--gk-highlight-end · #F7DB63 · darker ends</div></div>
+  </div>
+  <div class="foot"><span>Goalkeep design system</span><span>3</span></div>
+</section>
+
+<section class="page">
+  <p class="eyebrow">02 · Colour</p>
+  <h3 style="margin-top:0">Semantic tokens</h3>
+  <table>
+    <tr><th>Token</th><th>Value</th><th>Use</th></tr>
+    <tr><td><code>--fg-1</code></td><td>ink #14131A</td><td>All text on light</td></tr>
+    <tr><td><code>--fg-2</code></td><td>rgb(20 19 26 / 0.72)</td><td>Secondary text: an alpha of ink, never a grey</td></tr>
+    <tr><td><code>--fg-inverse</code> / <code>--fg-inverse-2</code></td><td>white / white 76%</td><td>Text on navy</td></tr>
+    <tr><td><code>--bg-page · card · sunken · inverse</code></td><td>cream · white · cream-deep · navy</td><td></td></tr>
+    <tr><td><code>--hairline</code></td><td>#E5E7EE</td><td>1px borders on white</td></tr>
+    <tr><td><code>--hairline-strong</code></td><td>#D3D7E2</td><td>Dividers that must be read, hover borders</td></tr>
+    <tr><td><code>--hairline-inverse</code></td><td>rgb(255 255 255 / 0.16)</td><td>Borders on navy</td></tr>
+  </table>
+
+  <h3>Grounds &amp; band accents</h3>
+  <p>Each section picks <b>one ground class and one accent class</b>. Components read <code>--band-*</code> variables and never name a hue.</p>
+  <div class="grid g3" style="margin-bottom:3mm">
+    <div style="background:var(--navy);color:#fff;border-radius:10px;padding:4mm"><div class="eyebrow" style="color:var(--yellow);display:flex">.ground-navy</div><b>White text</b><br><span style="color:rgb(255 255 255/.76)">Secondary at 76%</span><br><span class="link-cta" style="color:var(--yellow);margin-top:2mm">Gold links</span></div>
+    <div style="background:var(--cream);border:1px solid var(--hair);border-radius:10px;padding:4mm"><div class="eyebrow" style="display:flex">.ground-cream</div><b>Ink text</b><br><span class="muted">Secondary at 72%</span><br><span class="link-cta" style="margin-top:2mm">Blue-deep links</span></div>
+    <div style="background:var(--cream-deep);border-radius:10px;padding:4mm"><div class="eyebrow" style="display:flex">.ground-cream-deep</div><b>Ink text</b><br><span class="muted">The pale-blue highlight band</span><br><span class="link-cta" style="margin-top:2mm">Blue-deep links</span></div>
+  </div>
+  <p>Accent classes <code>.accent-blue</code> <code>.accent-teal</code> <code>.accent-coral</code> <code>.accent-yellow</code> set <code>--band-accent</code>, <code>-accent-deep</code>, <code>-accent-ink</code> and <code>--band-tint</code>. On navy the accent ink switches to a light value (blue becomes gold).</p>
+
+  <h3>Colour rules, enforced by <code>pnpm check:design</code></h3>
+  <div class="grid g2">
+    <div class="card"><b>1. No grey text.</b> Text is ink or white; anything softer is an alpha of one of those two.</div>
+    <div class="card"><b>2. Navy and white are the grounds.</b> Tints are occasional highlight bands, not a third ground.</div>
+    <div class="card"><b>3. Gold is a marker</b>, never text on a light ground (hard-banned).</div>
+    <div class="card"><b>4. Pop teal and coral are display colours on white.</b> On navy use <code>-lift</code>; pop versions under 24px are banned.</div>
+    <div class="card"><b>5. Any opaque colour not in the token list fails</b> <code>check-palette.mjs</code>. No stray Tailwind defaults.</div>
+    <div class="card"><b>6. Focus:</b> blue 3px halo on light, gold halo on navy. Text selection is gold behind ink.</div>
+  </div>
+  <div class="foot"><span>Goalkeep design system</span><span>4</span></div>
+</section>
+
+<!-- ===================== 3. TYPE ===================== -->
+<section class="page">
+  <p class="eyebrow">03 · Typography</p>
+  <h2>Two families. <em>Weight, italics and the hand do the rest.</em></h2>
+  <div class="grid g2" style="margin-bottom:5mm">
+    <div class="card">
+      <div class="box-title" style="color:var(--blue-deep)">Primary: everything</div>
+      <div style="font-size:30pt;font-weight:500;line-height:1">Nunito Sans</div>
+      <div style="font-size:11pt;margin-top:2mm">Aa Bb Cc 0123456789 <i>Italic</i> <b style="font-weight:800">ExtraBold</b></div>
+      <p class="muted" style="font-size:8pt;margin-top:2mm">Variable 200–1000, with italics. Display, headings, body, labels, buttons. Fallback: ui-sans-serif, system-ui.</p>
+    </div>
+    <div class="card">
+      <div class="box-title" style="color:var(--teal-ink)">Secondary: the hand</div>
+      <div class="hand" style="font-size:38pt;line-height:.9">Caveat</div>
+      <div class="hand" style="font-size:17pt;margin-top:2mm">notes in the margin, asides</div>
+      <p class="muted" style="font-size:8pt;margin-top:2mm">Variable 400–700. Marginalia and highlight moments only. Fallback: "Bradley Hand", cursive.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:0">Type roles</h3>
+  <div class="spec"><div class="k"><b>.display / h1</b>clamp(34–56px) · 500 · lh 1.06 · −0.02em</div><div style="font-size:27pt;font-weight:500;line-height:1.06;letter-spacing:-.02em">Use data to <em style="font-weight:800">scale impact.</em></div></div>
+  <div class="spec"><div class="k"><b>.h2</b>clamp(28–42px) · 400 · lh 1.16 · −0.02em</div><div style="font-size:19pt;font-weight:400;line-height:1.16;letter-spacing:-.02em">Short on data? <em style="font-weight:800">Short on decisions.</em></div></div>
+  <div class="spec"><div class="k"><b>.h3</b>22px · 700 · lh 1.28</div><div style="font-size:14pt;font-weight:700">Impact and measurement strategy</div></div>
+  <div class="spec"><div class="k"><b>.lead</b>19px · 400 · lh 1.6</div><div style="font-size:12pt">We work with nonprofits, funders, and ecosystem partners.</div></div>
+  <div class="spec"><div class="k"><b>Body</b>17px · 400 · lh 1.65</div><div style="font-size:10.5pt">Paragraph text on any light ground stays in ink, never a tint or grey.</div></div>
+  <div class="spec"><div class="k"><b>.eyebrow</b>13px · 700 · caps · +0.09em · 24×2px rule</div><div><span class="eyebrow" style="margin:0">What we do</span></div></div>
+  <div class="spec"><div class="k"><b>.hand / .hand-lg</b>Caveat 24px · 600 / 24–32px · 700</div><div class="hand" style="font-size:18pt">this is where it changed</div></div>
+  <div class="spec"><div class="k"><b>.stat-figure</b>800 · tabular · −0.03em · lh 1</div><div style="font-size:28pt;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;color:var(--navy)">120+</div></div>
+  <div class="spec" style="border:0"><div class="k"><b>.chip / button</b>15px · 700</div><div><span class="tag" style="background:var(--yellow-tint,#fbf3df)">Education</span> <span class="tag" style="background:#e7f2f0">Health</span></div></div>
+  <div class="foot"><span>Goalkeep design system</span><span>5</span></div>
+</section>
+
+<section class="page">
+  <p class="eyebrow">03 · Typography</p>
+  <div class="grid g2">
+    <div>
+      <h3 style="margin-top:0">Size scale</h3>
+      <table>
+        <tr><th>Token</th><th>rem</th><th>px</th></tr>
+        <tr><td>--fs-xs</td><td>0.8125</td><td>13</td></tr>
+        <tr><td>--fs-sm</td><td>0.9375</td><td>15</td></tr>
+        <tr><td>--fs-base</td><td>1.0625</td><td>17 (body)</td></tr>
+        <tr><td>--fs-lg</td><td>1.1875</td><td>19</td></tr>
+        <tr><td>--fs-xl</td><td>1.375</td><td>22</td></tr>
+        <tr><td>--fs-2xl</td><td>1.75</td><td>28</td></tr>
+        <tr><td>--fs-3xl</td><td>2.25</td><td>36</td></tr>
+        <tr><td>--fs-4xl</td><td>2.875</td><td>46</td></tr>
+        <tr><td>--fs-5xl</td><td>3.5</td><td>56</td></tr>
+        <tr><td>--fs-hand-sm / hand / hand-lg</td><td>1.25 / 1.5 / 2</td><td>20 / 24 / 32</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Weight, leading, tracking</h3>
+      <table>
+        <tr><th>Weight</th><th>Value</th></tr>
+        <tr><td style="font-weight:400">Regular</td><td>400</td></tr>
+        <tr><td style="font-weight:500">Medium</td><td>500</td></tr>
+        <tr><td style="font-weight:600">Semibold</td><td>600</td></tr>
+        <tr><td style="font-weight:700">Bold</td><td>700</td></tr>
+        <tr><td style="font-weight:800">ExtraBold (ceiling)</td><td>800, never 900</td></tr>
+      </table>
+      <table>
+        <tr><th>Property</th><th>Display</th><th>Heading</th><th>Body / label</th></tr>
+        <tr><td>Line-height</td><td>1.06</td><td>1.16</td><td>1.65</td></tr>
+        <tr><td>Tracking</td><td>−0.02em</td><td>−0.012em</td><td>label +0.09em</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>The headline pattern</h3>
+  <div class="card" style="margin-bottom:3mm">
+    <p style="font-size:17pt;line-height:1.2;letter-spacing:-.02em;margin:0">India's social sector isn't short on data. <em style="font-weight:800">It's short on decisions made with data.</em></p>
+  </div>
+  <p>Headings are set <b>light</b>. Only the phrase that carries the sentence is <b><i>bold italic</i></b> (<code>&lt;em&gt;</code> renders as italic 800). Emphasis is never a colour and never a second, lighter line.</p>
+
+  <h3>Copy formatting</h3>
+  <ul>
+    <li><b>Sentence case everywhere</b>: headings, buttons, nav. Eyebrows are written lowercase in content and uppercased by CSS.</li>
+    <li>Line lengths: hero lead 46ch, headings 22–36ch. Headings use <code>text-wrap: balance</code>.</li>
+    <li>Hyphenated words never break across lines.</li>
+    <li>Paragraph body on any light ground is ink. "Just keep it in black."</li>
+  </ul>
+  <div class="foot"><span>Goalkeep design system</span><span>6</span></div>
+</section>
+
+<!-- ===================== 4. SHAPE, DEPTH, BUTTONS ===================== -->
+<section class="page">
+  <p class="eyebrow">04 · Shape, depth &amp; buttons</p>
+  <h2>One surface treatment. <em>No black borders, ever.</em></h2>
+  <div class="grid g2">
+    <div>
+      <h3 style="margin-top:0">Radius</h3>
+      <div style="display:flex;gap:3mm;align-items:flex-end;margin-bottom:3mm">
+        <div style="text-align:center;font-size:7.5pt"><div style="width:14mm;height:14mm;background:var(--cream-deep);border:1px solid var(--hair-strong);border-radius:4px"></div>4px</div>
+        <div style="text-align:center;font-size:7.5pt"><div style="width:14mm;height:14mm;background:var(--cream-deep);border:1px solid var(--hair-strong);border-radius:8px"></div>8px</div>
+        <div style="text-align:center;font-size:7.5pt"><div style="width:14mm;height:14mm;background:var(--cream-deep);border:1px solid var(--hair-strong);border-radius:12px"></div>12px</div>
+        <div style="text-align:center;font-size:7.5pt"><div style="width:14mm;height:14mm;background:var(--cream-deep);border:1px solid var(--hair-strong);border-radius:16px"></div>16px</div>
+        <div style="text-align:center;font-size:7.5pt"><div style="width:14mm;height:14mm;background:var(--cream-deep);border:1px solid var(--hair-strong);border-radius:999px"></div>pill</div>
+      </div>
+      <table>
+        <tr><td><code>--r-btn / --r-sm</code> 4px</td><td>Buttons, chips, tabs, focus ring</td></tr>
+        <tr><td><code>--r-md</code> 8px</td><td>Inputs</td></tr>
+        <tr><td><code>--r-lg</code> 12px</td><td>Cards and surfaces</td></tr>
+        <tr><td><code>--r-xl</code> 16px</td><td>Large panels</td></tr>
+        <tr><td><code>--r-pill</code></td><td>Round icon buttons only</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Shadows: soft neutral drops only</h3>
+      <div class="grid g2" style="gap:5mm;margin-bottom:3mm">
+        <div style="background:#fff;border-radius:10px;height:13mm;box-shadow:0 1px 2px rgb(20 19 26/.04),0 2px 8px rgb(20 19 26/.05);display:flex;align-items:center;justify-content:center;font-size:8pt">shadow-sm</div>
+        <div style="background:#fff;border-radius:10px;height:13mm;box-shadow:0 2px 6px rgb(20 19 26/.05),0 10px 24px rgb(20 19 26/.07);display:flex;align-items:center;justify-content:center;font-size:8pt">shadow-md</div>
+        <div style="background:#fff;border-radius:10px;height:13mm;box-shadow:0 4px 12px rgb(20 19 26/.06),0 22px 48px rgb(20 19 26/.10);display:flex;align-items:center;justify-content:center;font-size:8pt">shadow-lg</div>
+        <div style="background:var(--navy);color:#fff;border-radius:10px;height:13mm;box-shadow:0 10px 30px rgb(20 30 60/.28);display:flex;align-items:center;justify-content:center;font-size:8pt">shadow-navy</div>
+      </div>
+      <p style="font-size:8.5pt"><b>.surface</b>: white, 1px <code>--hairline</code>, 12px radius, <code>--shadow-sm</code>. <b>.card-lift</b> on hover rises 4px, takes <code>--shadow-lg</code> and <code>--hairline-strong</code>. <b>.surface-inverse</b> on navy: white 6% fill with a 16% white hairline.</p>
+    </div>
+  </div>
+
+  <h3>Buttons</h3>
+  <p>Rectangles with a 4px radius and a flat fill. <b>Hover is a colour step only</b>: nothing moves, overshoots or follows the pointer. The optional arrow nudges 3px.</p>
+  <div class="card" style="display:flex;flex-wrap:wrap;gap:3mm;align-items:center;margin-bottom:3mm">
+    <span class="btn b-primary">Primary</span><span class="btn b-secondary">Secondary</span><span class="btn b-ghost">Ghost</span><span class="btn b-accent">Accent →</span><span class="link-cta">Read the case study →</span>
+  </div>
+  <div class="navy" style="display:flex;flex-wrap:wrap;gap:3mm;align-items:center;margin-bottom:3mm">
+    <span class="btn b-accent">Talk to us →</span><span class="btn b-d-primary">Primary</span><span class="btn b-d-secondary">Secondary</span><span class="link-cta">Text link →</span>
+  </div>
+  <table>
+    <tr><th>Variant</th><th>On light</th><th>On navy</th></tr>
+    <tr><td>primary</td><td>Navy fill, white text; hover navy-deep</td><td>White fill, navy text; hover cream-deep</td></tr>
+    <tr><td>secondary</td><td>White, navy text, hairline-strong border; hover navy border</td><td>Transparent, white text, white 60% border</td></tr>
+    <tr><td>ghost</td><td>Navy outline; hover navy fill</td><td>White 40% outline</td></tr>
+    <tr><td>accent</td><td>Gold fill, navy-deep text; hover gold-deep</td><td>Gold fill; hover white</td></tr>
+    <tr><td>tertiary</td><td colspan="2">Text link: bold, 1.5px underline, gap widens 8 to 12px on hover</td></tr>
+  </table>
+  <p class="muted" style="font-size:8pt">Spec: 15px · 700 · sentence case · padding 20px × 11px · lucide ArrowRight, stroke 2.25.</p>
+  <div class="foot"><span>Goalkeep design system</span><span>7</span></div>
+</section>
+
+<!-- ===================== 5. PATTERNS ===================== -->
+<section class="page">
+  <p class="eyebrow">05 · Patterns &amp; brand devices</p>
+  <h2>The hand, the highlighter <em>and the arcs of the mark.</em></h2>
+  <div class="grid g2">
+    <div class="card">
+      <div class="box-title" style="color:var(--yellow-ink)">The highlighter · .marker</div>
+      <p style="font-size:15pt;line-height:1.4;margin:3mm 0">turn data into <span class="marker">decisions</span></p>
+      <div style="background:var(--navy);border-radius:8px;padding:3mm 4mm;color:#fff;font-size:12pt;margin-bottom:3mm">we design, <span class="marker light">build</span> and enable</div>
+      <ol style="padding-left:4.5mm;font-size:8.5pt;margin:0">
+        <li><b>Chisel ends</b>: CSS skewX(±4°).</li>
+        <li><b>Wobbling edges</b>: an SVG mask on a ::before.</li>
+        <li><b>Uneven ink</b>: darker ends, ink settling at the bottom.</li>
+        <li><b>A degree off level</b>: rotate(−0.4°) or 0.3° (.marker-b).</li>
+      </ol>
+      <p class="muted" style="font-size:8pt;margin-top:2mm">The stroke overshoots the word. Use white with navy text on dark grounds, and split wrapped prose into one stroke per line.</p>
+    </div>
+    <div class="card">
+      <div class="box-title" style="color:var(--yellow-ink)">Hand-drawn marks · &lt;Scribble&gt;</div>
+      <svg viewBox="0 0 300 92" style="width:100%;height:28mm" fill="none" stroke="#f6d83a" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M70 18c-30 0-58 10-58 26s30 26 62 25c34-1 58-12 56-27c-2-14-30-23-64-21c-10 1-18 3-24 6" stroke-width="4"/>
+        <path d="M150 52c30-6 56-8 80-7c22 1 44 3 64 8" stroke-width="5"/>
+        <path d="M150 74c14-10 26 6 40-1s23-11 37-3s26 9 40 2" stroke-width="5"/>
+        <path d="M188 14l9 10l20-18" stroke-width="4"/>
+      </svg>
+      <p style="font-size:8.5pt;margin:2mm 0 1.5mm">Circle, oval, ring, underline (×4 kinds), squiggle, arrows, bracket, star, spiral, check, zigzag, cross.</p>
+      <ul style="font-size:8.5pt;margin:0">
+        <li>Always <b>--gk-scribble</b> yellow. Round caps, 4–7px weight.</li>
+        <li><b>Deliberately imperfect</b>: circles don't close, underlines wobble.</li>
+        <li>Draw in once on scroll (0.9s). <span class="hand" style="font-size:12pt">Margin notes</span> sit at −3° with an arrow.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Logo-arc shapes · &lt;ArcPiece&gt;, &lt;ShapeField&gt;</h3>
+  <div class="grid g2">
+    <div class="card" style="position:relative;height:52mm;overflow:hidden;background:var(--cream-deep);border:0">
+      <svg class="arc" style="width:62mm;height:62mm;top:-20mm;right:-20mm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#f0a58c" stroke-width="17" stroke-linecap="round" stroke-dasharray="90 300" transform="rotate(68 50 50)"/></svg>
+      <svg class="arc" style="width:22mm;height:22mm;bottom:6mm;right:30mm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="none" stroke="#5b75be" stroke-width="30"/></svg>
+      <svg class="arc" style="width:40mm;height:40mm;bottom:-6mm;left:44mm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#e6e85a" stroke-width="20" stroke-linecap="round" stroke-dasharray="70 300" transform="rotate(-22 50 50)"/></svg>
+      <div style="position:relative;max-width:40mm"><div class="eyebrow" style="display:flex">Example</div><b>Large, anchored to a corner, bleeding off the edge.</b></div>
+    </div>
+    <div>
+      <ul style="font-size:8.8pt">
+        <li>Every shape is <b>an arc of the logo ring</b>. Sweep 360 is the ring, 180 the half, ~80–100 the "comma". Nothing generic.</li>
+        <li><b>Large</b> (200–440px), stroke tuned to about 48px, anchored to a corner and running off it, never over text.</li>
+        <li>The visible part must show curvature and at least one round cap, or it reads as a blob.</li>
+        <li><b>At most one coloured piece per light band</b>; two tonal navy-lift pieces on the hero.</li>
+        <li>Drifts gently against scroll. Hidden on phones.</li>
+        <li>Closing band: the mark's five arcs start scattered and <b>assemble on scroll</b>. This is the only place the whole mark is built from its parts.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Photography &amp; light</h3>
+  <div class="grid g2">
+    <ul style="font-size:8.8pt;margin:0">
+      <li>Goalkeep's own photography only (see <code>public/photos/CREDITS.md</code>).</li>
+      <li><b>Never framed in a box.</b> Photos dissolve into the ground with five-stop mask fades (<code>.dissolve-r / -l / -b / -rb / -soft</code>, <code>.photo-bleed</code>).</li>
+      <li>Fade the photograph only, never drawn illustration. Card images run flush to the card edge.</li>
+    </ul>
+    <ul style="font-size:8.8pt;margin:0">
+      <li>Partner logos are greyscale and take colour on hover, in a ticker that fades out 210px from each side.</li>
+      <li>Hero only: a faint pointer glow and a rim light on the case card. Light only; nothing moves, scales or tilts.</li>
+    </ul>
+  </div>
+  <div class="foot"><span>Goalkeep design system</span><span>8</span></div>
+</section>
+
+<!-- ===================== 6. LAYOUT, MOTION ===================== -->
+<section class="page">
+  <p class="eyebrow">06 · Layout, motion &amp; icons</p>
+  <h2>Light, then dark. <em>An alternating rhythm.</em></h2>
+  <div class="grid g2">
+    <div>
+      <h3 style="margin-top:0">Homepage band order</h3>
+      <div class="bandrow" style="background:#2f4a92;color:#fff;border-color:#2f4a92"><b>1</b><b>Hero</b>Navy, flat, gold accent</div>
+      <div class="bandrow" style="background:#fff"><b>2</b><b>Partners</b>White</div>
+      <div class="bandrow" style="background:#f7f5ef"><b>3</b><b>Why we exist</b>Beige</div>
+      <div class="bandrow" style="background:#fff"><b>4</b><b>What we do</b>White</div>
+      <div class="bandrow" style="background:linear-gradient(90deg,#fbf3df,#e7f2f0,#fbeee9,#eaeff9)"><b>5</b><b>Whom we do it for</b>Tint per audience</div>
+      <div class="bandrow" style="background:#fff"><b>6</b><b>Our approach</b>White</div>
+      <div class="bandrow" style="background:#2f4a92;color:#fff;border-color:#2f4a92"><b>7</b><b>Proof</b>Navy over photography</div>
+      <div class="bandrow" style="background:#fff"><b>8</b><b>Case studies</b>White</div>
+      <div class="bandrow" style="background:#fbf3df"><b>9</b><b>FAQs</b>Yellow tint, no surfaces</div>
+      <div class="bandrow" style="background:#2f4a92;color:#fff;border-color:#2f4a92"><b>10</b><b>Closing</b>Navy, mark assembles</div>
+      <div class="bandrow" style="background:#fff"><b>11</b><b>Contact</b>White, form</div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Spacing (4pt scale)</h3>
+      <div style="display:flex;align-items:flex-end;gap:2mm;margin-bottom:2mm">
+        <div style="width:4px;height:4px;background:var(--blue)"></div><div style="width:8px;height:8px;background:var(--blue)"></div><div style="width:12px;height:12px;background:var(--blue)"></div><div style="width:16px;height:16px;background:var(--blue)"></div><div style="width:24px;height:24px;background:var(--blue)"></div><div style="width:32px;height:32px;background:var(--blue)"></div><div style="width:48px;height:48px;background:var(--blue)"></div><div style="width:64px;height:64px;background:var(--blue)"></div>
+      </div>
+      <p style="font-size:8.5pt">--sp-1 to --sp-10: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128px</p>
+      <table>
+        <tr><td><b>.shell</b></td><td>Max 1320px. Side padding 16px, 48px at ≥768, 64px at ≥1280</td></tr>
+        <tr><td><b>.band</b></td><td>Vertical padding 64px, 96px at ≥768</td></tr>
+        <tr><td><b>Grid</b></td><td>12 columns at lg; hero splits 7 / 5</td></tr>
+        <tr><td><b>Section head</b></td><td>Eyebrow, 16px gap, h2, then content</td></tr>
+      </table>
+      <h3>Motion</h3>
+      <table>
+        <tr><td><code>--ease-out</code></td><td>cubic-bezier(0.22, 1, 0.36, 1): all chrome</td></tr>
+        <tr><td><code>--ease-pop</code></td><td>(0.34, 1.4, 0.64, 1): process animations only</td></tr>
+        <tr><td>Durations</td><td>140ms links · 240ms buttons, cards · 520ms marker · 900ms scribbles</td></tr>
+      </table>
+      <ul style="font-size:8.5pt">
+        <li>Nothing overshoots on hover. Scroll reveals play once, only when in view.</li>
+        <li><b>Reduced motion</b>: everything resolves to its final state (typed line shown whole, marks drawn, carousels static).</li>
+      </ul>
+      <h3>Icons</h3>
+      <p style="font-size:8.5pt">lucide-react, stroke 2 to 2.25, sized in em. Round icon buttons are 44px with a 1px white 40% border on navy.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Goalkeep design system</span><span>9</span></div>
+</section>
+
+<!-- ===================== 7. DO / DON'T ===================== -->
+<section class="page">
+  <p class="eyebrow">07 · Do / don't</p>
+  <h2>A middle ground: <em>formal structure, a human hand.</em></h2>
+  <table style="font-size:9.2pt">
+    <tr><th style="color:var(--teal-ink)">Do</th><th style="color:var(--coral-ink)">Don't</th></tr>
+    <tr><td>Navy and white grounds, tints as occasional highlights</td><td>Full-chroma fills, a third "brand colour" ground</td></tr>
+    <tr><td>Light headings with one bold-italic phrase</td><td>900 weight, colour as emphasis, all-caps headlines</td></tr>
+    <tr><td>Nunito Sans and Caveat</td><td>Any third typeface</td></tr>
+    <tr><td>1px hairline and a soft drop shadow</td><td>Black borders, hard offset shadows</td></tr>
+    <tr><td>4px rectangular buttons with a colour-step hover</td><td>Pills, press-in shadows, bounce, magnetic pull</td></tr>
+    <tr><td>Photos dissolving into the ground</td><td>Photos in frames or boxes</td></tr>
+    <tr><td>Logo-arc shapes: large, in a corner, bleeding off</td><td>Random circles floating mid-band</td></tr>
+    <tr><td>Yellow highlighter and hand marks for emphasis</td><td>Flat rectangles of colour behind text</td></tr>
+    <tr><td>Ink or white text, alphas for softness</td><td>Grey text tokens</td></tr>
+    <tr><td>Sentence case</td><td>Title Case Buttons, uppercase headings</td></tr>
+  </table>
+
+  <h3>Source files</h3>
+  <table>
+    <tr><th>What</th><th>Where</th></tr>
+    <tr><td>All tokens</td><td><code>src/styles/tokens.css</code></td></tr>
+    <tr><td>Type roles, grounds, highlighter, surfaces, dissolves</td><td><code>src/styles.css</code></td></tr>
+    <tr><td>Buttons</td><td><code>src/components/primitives/gk-button.tsx</code></td></tr>
+    <tr><td>Highlighter</td><td><code>primitives/marker.tsx</code>, <code>marker-text.tsx</code></td></tr>
+    <tr><td>Hand-drawn marks</td><td><code>primitives/doodles.tsx</code></td></tr>
+    <tr><td>Logo arcs and mark assembly</td><td><code>primitives/logo-shapes.tsx</code></td></tr>
+    <tr><td>Wordmark</td><td><code>layout/wordmark.tsx</code>, <code>public/wordmark-*.webp</code></td></tr>
+    <tr><td>Band order</td><td><code>src/routes/index.tsx</code></td></tr>
+    <tr><td>Audits</td><td><code>pnpm check:design</code> (palette and contrast)</td></tr>
+  </table>
+  <div class="foot"><span>Goalkeep design system</span><span>10</span></div>
+</section>
+</body>
+</html>

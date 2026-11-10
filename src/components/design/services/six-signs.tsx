@@ -46,7 +46,7 @@ export function SixSignsSection({ signs, heading, items, tone, checked, onToggle
           alignItems: 'center',
         }}
       >
-        <div>
+        <div className="dc-signs-intro">
           {audienceTag && (
             <p style={{ margin: '0 0 14px' }}>
               <AudienceTag tone={tone}>{audienceTag}</AudienceTag>
@@ -54,12 +54,14 @@ export function SixSignsSection({ signs, heading, items, tone, checked, onToggle
           )}
           <Rich as="h2" className="dc-h2" html={heading} />
           <p style={{ margin: '16px 0 0', maxWidth: '40ch' }}>{signs.prompt}</p>
-          <div style={{ height: 64, display: 'flex', alignItems: 'flex-end', visibility: count >= 2 ? 'visible' : 'hidden' }}>
+          <div
+            className="dc-signs-cta"
+            style={{ height: 64, display: 'flex', alignItems: 'flex-end', visibility: count >= 2 ? 'visible' : 'hidden' }}>
             <Cta variant="primary" intent={signs.cta} arrow>
               {signs.cta}
             </Cta>
           </div>
-          <div style={{ marginTop: 40 }}>
+          <div className="dc-signs-verdict" style={{ marginTop: 40 }}>
             <p style={{ margin: 0, fontSize: 19, fontWeight: 700, lineHeight: 1.35, maxWidth: '24ch' }}>{verdict.title}</p>
             <p
               style={{

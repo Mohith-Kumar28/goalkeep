@@ -50,7 +50,7 @@ export const literacyContent = {
       'A 3-day train-the-trainer workshop and 6-month mentorship program that builds data literacy across social-purpose organisations.',
   },
   hero: {
-    headline: 'Build a data-confident<br class="dc-br-d"> workforce <em>within your<br class="dc-br-d"> organisation.</em>',
+    headline: 'Build a <span class="dc-nowrap">data-confident</span><br class="dc-br-d"> workforce <em>within your<br class="dc-br-d"> organisation.</em>',
     lead: 'The Data Literacy Program is Goalkeep’s train-the-trainer program for strengthening data capability across social-purpose organisations. Over a 3-day workshop, participants build foundational skills in interpreting, analysing, visualising and communicating with data, so they can run trainings within their own organisation.',
     badge: 'Data Literacy Program · next cohort begins December 2026',
     primary: 'Register your interest',
