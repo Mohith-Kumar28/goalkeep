@@ -23,3 +23,6 @@ graphify-out/
 # local Worker secrets for `vite dev` / `wrangler dev`
 .dev.vars*
 !.dev.vars.example
+
+# local audit screenshots and scratch scripts
+.audit/
