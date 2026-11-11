@@ -27,20 +27,6 @@ export function FaqSection() {
           <h2 className="dc-h2">
             <Rich html={faq.heading} />
           </h2>
-          <img
-            className="ps-faq-photo"
-            src={faq.photo.src}
-            alt={faq.photo.alt}
-            style={{
-              width: '100%',
-              height: 300,
-              objectFit: 'cover',
-              objectPosition: faq.photo.position,
-              display: 'block',
-              borderRadius: 16,
-              marginTop: 32,
-            }}
-          />
         </Reveal>
         <div style={{ borderTop: '1px solid #E5E7EE' }}>
           {faq.items.map((item, i) => {

@@ -227,7 +227,7 @@
   font-style: italic;
 }
 .dc .ps-stage-scene {
-  margin: 14px 0 0;
+  margin: 16px 0 0;
 }
 .dc .ps-stage-scene svg {
   width: 100%;
@@ -533,10 +533,6 @@
   }
   .dc .ps-mosaic img {
     height: 190px;
-  }
-  .dc .ps-faq-photo {
-    height: 150px !important;
-    margin-top: 16px !important;
   }
 }
 

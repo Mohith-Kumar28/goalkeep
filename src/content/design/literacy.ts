@@ -375,12 +375,7 @@ export const literacyContent = {
   },
   faq: {
     eyebrow: 'frequently asked questions',
-    heading: 'Questions organisations <em>ask before they nominate.</em>',
-    photo: {
-      src: '/design/c1c60b43105a3feca541a7e04eec05a8.webp',
-      alt: 'A facilitator answering a question at a table during the immersive',
-      position: '50% 40%',
-    } satisfies Photo,
+    heading: 'Questions organisations <em>ask before they apply.</em>',
     items: [
       {
         question: 'Is this a technical or software-training program?',
