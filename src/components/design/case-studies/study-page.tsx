@@ -7,7 +7,6 @@ import { ArrowIcon, ChevronSideIcon } from '../icons'
 import { SiteLink } from '../site-link'
 import { tones } from '../tones'
 import { Reveal } from '@/components/primitives/reveal'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { StatFigure, StudyCard } from './study-card'
 import { StudyArticle } from './study-article'
 
@@ -115,11 +114,7 @@ function StudyHeader({ study }: { study: CaseStudy }) {
             >
               {study.headline.lead} <em>{study.headline.em}</em>
             </h1>
-            <ClampText
-              className="dc-cs-intro"
-            >
-              {study.intro}
-            </ClampText>
+            <p className="dc-cs-intro">{study.intro}</p>
             <p
               style={{
                 margin: '14px 0 0',

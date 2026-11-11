@@ -227,8 +227,7 @@
   font-style: italic;
 }
 .dc .ps-stage-scene {
-  margin: 14px auto 0;
-  max-width: 250px;
+  margin: 14px 0 0;
 }
 .dc .ps-stage-scene svg {
   width: 100%;
@@ -401,9 +400,9 @@
   .dc .ps-skill-photo {
     display: block;
     width: 100%;
-    height: 170px;
+    height: 420px;
     object-fit: cover;
-    border-radius: 14px;
+    border-radius: 20px;
   }
   .dc .ps-nom {
     padding: 20px 18px 20px !important;

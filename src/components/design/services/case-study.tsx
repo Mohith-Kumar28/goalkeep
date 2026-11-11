@@ -3,7 +3,6 @@ import type { CaseQuote } from '@/content/design/service-page'
 import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { ArrowIcon } from '../icons'
-import { ClampText } from '../../primitives/clamp-text'
 import { Reveal } from '../../primitives/reveal'
 import { SiteLink } from '../site-link'
 import { AudienceTag } from './audience-tag'
@@ -48,7 +47,7 @@ export function CaseStudySection({
       <h3 className="dc-case-title" style={{ margin: `${gap.title}px 0 0` }}>
         {card.title}
       </h3>
-      <ClampText className="dc-case-text">{card.body}</ClampText>
+      <p className="dc-case-text">{card.body}</p>
       {quote && (
         <figure style={{ margin: '20px 0 0', padding: 0 }}>
           <blockquote style={{ margin: 0, fontSize: 17, lineHeight: 1.6, fontStyle: 'italic' }}>

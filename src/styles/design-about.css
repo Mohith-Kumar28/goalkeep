@@ -92,9 +92,25 @@
   font-weight: 700;
 }
 
-.dc .dc-founder-sticky {
-  position: sticky;
-  top: 28px;
+.dc .dc-about-founder {
+  max-width: 760px;
+}
+.dc .dc-founder-signoff {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 30px;
+}
+.dc .dc-founder-fig {
+  flex: none;
+  width: 190px;
+  margin: 0;
+  padding: 10px 10px 12px;
+  transform: rotate(2.5deg);
+}
+.dc .dc-founder-img {
+  height: 190px;
 }
 .dc .dc-li-link {
   display: inline-flex;
@@ -307,7 +323,6 @@
   }
 }
 @media (max-width: 1100px) {
-  .dc .dc-about-founder,
   .dc .dc-about-team,
   .dc .dc-about-ways,
   .dc .dc-about-mission {
@@ -316,7 +331,6 @@
   .dc .dc-about-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  .dc .dc-founder-sticky,
   .dc .dc-spotlight-sticky {
     position: static !important;
   }
@@ -389,24 +403,16 @@
     line-height: 1.55;
   }
 }
-@media (min-width: 761px) and (max-width: 1100px) {
-  .dc .dc-about-founder {
-    grid-template-columns: minmax(0, 220px) minmax(0, 1fr) !important;
-    gap: 40px !important;
-  }
-  .dc .dc-founder-img {
-    height: 250px !important;
-  }
-}
 @media (max-width: 760px) {
-  .dc .dc-about-nums,
-  .dc .dc-about-ways-notes {
+  .dc .dc-about-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 12px !important;
     margin-top: 24px !important;
   }
-  .dc .dc-about-ways-notes > :last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+  .dc .dc-about-ways-notes {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 14px !important;
+    margin-top: 24px !important;
   }
   .dc .dc-about-nums .dc-sticky {
     min-height: 0 !important;
@@ -423,7 +429,7 @@
   }
   .dc .dc-way-note {
     min-height: 0;
-    padding: 14px 14px 16px;
+    padding: 16px 18px 18px;
     gap: 6px;
     border-radius: 2px 2px 16px 2px;
   }
@@ -437,35 +443,27 @@
   .dc .dc-about-mission-body {
     margin-top: 14px;
   }
-  .dc .dc-about-mission .gk-clamp-toggle {
-    display: block;
-    margin: -4px 0 0;
-    padding: 10px 0;
-  }
   .dc .dc-about-mission,
   .dc .dc-about-ways {
     gap: 24px !important;
   }
   .dc .dc-about-logos {
-    gap: 6px 12px !important;
-    margin-top: 20px !important;
+    gap: 26px 14px !important;
+    margin-top: 28px !important;
   }
   .dc .dc-about-founder-band {
     padding-top: 28px !important;
     padding-bottom: 36px !important;
   }
-  .dc .dc-about-founder {
-    gap: 22px !important;
+  .dc .dc-founder-signoff {
+    gap: 14px;
   }
-  .dc .dc-founder-sticky {
-    width: 132px;
-    margin-left: 8px;
-  }
-  .dc .dc-founder-sticky .dc-polaroid {
-    padding: 8px 8px 10px;
+  .dc .dc-founder-fig {
+    width: 128px;
+    padding: 7px 7px 9px;
   }
   .dc .dc-founder-img {
-    height: 132px !important;
+    height: 128px;
   }
   .dc .dc-about-minis {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -486,9 +484,12 @@
     font-size: 12px;
   }
   .dc .dc-logo-tile {
-    width: calc(33.33% - 8px);
-    height: 56px;
-    padding: 6px;
+    width: calc((100% - 28px) / 3);
+    height: 60px;
+    padding: 4px 8px;
+  }
+  .dc .dc-logo-tile img {
+    max-height: 48px;
   }
   .dc .dc-about-mission .dc-polaroid img,
   .dc .dc-about-ways .dc-polaroid img {

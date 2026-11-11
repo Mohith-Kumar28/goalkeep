@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react"
 import { hero } from "@/content/homepage"
 import { GkButton } from "@/components/primitives/gk-button"
 import { Spotlight } from "@/components/primitives/spotlight"
-import { ClampText } from "@/components/primitives/clamp-text"
 import { SpotlightCard } from "@/components/primitives/spotlight-card"
 import { TypedPhrase } from "@/components/primitives/typed-phrase"
 import { ShapeField } from "@/components/primitives/logo-shapes"
@@ -152,7 +151,7 @@ const GAP_PX = 24
  *
  * 10 Nov: each description is written to fill three lines, so on phones the
  * card takes the full column and smaller type instead of leaving room for a
- * peek. Below about 375px that still runs to four, and ClampText holds it.
+ * peek. Below about 375px that still runs to four.
  * The tag is smaller on phones too, so Peepul's long one stays on one line
  * and every card has the organisation on line two.
  */
@@ -238,9 +237,9 @@ function ProofCards() {
                         <p className="mt-2 text-[length:var(--fs-xs)] font-bold tracking-[var(--tracking-label)] text-[var(--gk-navy)] uppercase">
                           {card.org}
                         </p>
-                        <ClampText className="mt-3 text-[0.9375rem] leading-[1.45] font-semibold text-[var(--gk-navy-deep)] sm:text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] lg:max-xl:text-[0.9375rem]">
+                        <p className="mt-3 text-[0.9375rem] leading-[1.45] font-semibold text-[var(--gk-navy-deep)] sm:text-[length:clamp(1.0625rem,1.4vw,1.1875rem)] lg:max-xl:text-[0.9375rem]">
                           {card.line.value}
-                        </ClampText>
+                        </p>
                       </div>
                     </article>
                   </SpotlightCard>

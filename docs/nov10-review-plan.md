@@ -257,3 +257,20 @@ Five review agents checked every page against both docs: phone, tablet and deskt
 10. **`/programs`.** It still uses the older page design and nothing links to it. Restyle it or remove it?
 11. **Blog article.** It still carries draft markers. They need clearing before the blog goes live.
 12. **Homepage hero.** Is the headline weight final? The `?hw=` preview code is still in `hero.tsx`.
+
+## 15. Rumit's phone review (Nov 11)
+
+| # | Rumit asked | Done |
+|---|---|---|
+| 1 | Case-studies banner labels cover the photos and are too big | On mobile the labels are 11px chips in the photo corners, and the photos are re-cropped so faces show. |
+| 2 | Kickstarter stage illustrations as they were before | The `stage-N-mobile` artwork is back at full width (wave 2 had capped it at 250px). The DLP skills photos are back to 420px. |
+| 3 | The Nonprofits/Funders toggle sometimes disappears; make a switch feel like a change | The four audience sections now fade and lift back in over about 0.4s on a switch. The disappearing toggle could not be reproduced in Chromium. The bar now gets its own compositing layer, for the Android Chrome address-bar flicker. **Rumit should retest on his phone.** |
+| 4 | Hero photo full width on mobile, so the section ends on the image | Done on every service and program hero. Dots and arrows sit over the bottom of the photo. |
+| 5 | Slightly smaller section headings on mobile | Section headings are now 25px on phones (they were 28px). |
+| 6 | "Who we do it for" needs a relook | The pinned scroll-select is gone. A swipeable row of four chips switches the audience on tap, and scrolling never changes it. |
+| 7 | The illustration as before, only the hexagon recoloured | The original full video and still are restored, with the recoloured hexagon. |
+| 8 | Remove the line under the partners heading, tighter logos, 3+ per row, same speed | The subtitle is removed. Logos are 96px with 12px gaps, giving 3 to 4 visible per row on phones. Speeds are unchanged. **Question:** the two rows run at about 65 and 15 px/s. His note ("a little slower than the top row and a little faster than the bottom row") may mean he wants them closer together. |
+| 9 | Founder photo beside her sign-off | Moved to the right of her name and title as a polaroid. |
+| 10 | About logo grid looks cramped | 3 per row on mobile, with even boxes, larger gaps, and logos capped at 48px. |
+| 11 | Ways-to-partner notes consistent | All three are full width and stacked on mobile. |
+| G | Remove "Read more" everywhere and show full text | `ClampText` and every mobile line-clamp are deleted, site-wide. |

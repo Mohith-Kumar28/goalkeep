@@ -7,8 +7,7 @@ import { tones } from '../tones'
 import { Rich } from './rich'
 
 /** ExploreMore draws two columns; the services pages offer three siblings. On a phone the
- *  cards swipe sideways instead of stacking, and the whole card is the link, so long text
- *  clamps instead of taking a read-more toggle. */
+ *  cards swipe sideways instead of stacking, and the whole card is the link. */
 export function ExploreServices({ heading, cards }: { heading: Html; cards: Array<ExploreCard> }) {
   return (
     <section className="dc-band dc-svc-band" style={{ background: '#FFFFFF' }}>

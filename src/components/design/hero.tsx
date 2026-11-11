@@ -45,7 +45,7 @@ export function HeroCarousel({ photos, label }: { photos: Array<HeroPhoto>; labe
   }
 
   return (
-    <div>
+    <div className="dc-hero-carousel">
       <div
         role="region"
         aria-roledescription="carousel"
@@ -73,7 +73,7 @@ export function HeroCarousel({ photos, label }: { photos: Array<HeroPhoto>; labe
           ))}
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 }}>
+      <div className="dc-carousel-controls">
         <div style={{ display: 'flex', gap: 0, alignItems: 'center' }}>
           {photos.map((photo, i) => (
             <button

@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react'
 import { ArrowIcon, Cta } from '@/components/design'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { SnapTabs } from '../program-snap/snap-tabs'
@@ -197,7 +196,7 @@ export function SkillsSection() {
                 <p className="ps-stage-kicker" style={{ color: item.ink, marginTop: 12 }}>
                   Skill {k + 1} of {skills.items.length}
                 </p>
-                <ClampText lines={3}>{item.body}</ClampText>
+                <p style={{ margin: 0 }}>{item.body}</p>
                 {!item.next && (
                   <p style={{ margin: '16px 0 0' }}>
                     <Cta variant="primary" intent={skills.cta} arrow>

@@ -1,4 +1,3 @@
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { Rich } from './rich'
@@ -80,7 +79,7 @@ export function EvidenceSection() {
                   fontStyle: 'italic',
                 }}
               >
-                <ClampText as="div" lines={5} className="ps-quote-text">
+                <div className="ps-quote-text">
                   <span
                     aria-hidden="true"
                     style={{
@@ -96,7 +95,7 @@ export function EvidenceSection() {
                     “
                   </span>
                   {quote.text}
-                </ClampText>
+                </div>
               </blockquote>
               <figcaption style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 <img

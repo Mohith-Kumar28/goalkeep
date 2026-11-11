@@ -1,5 +1,4 @@
 import { Reveal } from '@/components/primitives/reveal'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { kickstarter } from '@/content/design/kickstarter'
 import { Rich } from './rich'
 
@@ -16,14 +15,14 @@ export function WhyBand() {
             <h2 className="dc-h2">
               <Rich html={why.heading} />
             </h2>
-            <ClampText className="ps-why-p" lines={4}>
+            <p className="ps-why-p">
               {why.paragraphs[0]}
-            </ClampText>
+            </p>
           </Reveal>
           <div className="ps-why-more">
-            <ClampText className="ps-why-p" lines={3}>
+            <p className="ps-why-p">
               {why.paragraphs[1]}
-            </ClampText>
+            </p>
           </div>
         </div>
         <Reveal className="dc-pair ps-pair" delay={0.08}>

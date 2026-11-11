@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useLayoutEffect, useReducer, useRef } from 'react'
 import '@/styles/design-services.css'
 import type { ServicePageContent } from '@/content/design/service-page'
 import { ContactBand } from '../contact-band'
@@ -15,6 +15,7 @@ import { ExploreServices } from './explore-services'
 import { Rich } from './rich'
 import { SixSignsSection } from './six-signs'
 import { initialSigns, signsReducer } from './state'
+import { replayAudienceSwap } from './swap'
 
 export function ServicePage({ content }: { content: ServicePageContent }) {
   const [state, dispatch] = useReducer(signsReducer, initialSigns)
@@ -24,6 +25,13 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
   const tag = audiences?.[state.audience].tag
   const signs = view?.signs ?? { heading: content.signs.heading, items: content.signs.signs }
   const contact = view?.contact ?? content.contact
+  const shown = useRef(state.audience)
+
+  useLayoutEffect(() => {
+    if (shown.current === state.audience) return
+    shown.current = state.audience
+    replayAudienceSwap()
+  }, [state.audience])
 
   return (
     <DesignPage service={content.service}>
@@ -51,46 +59,54 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
           onPick={(audience) => dispatch({ type: 'audience', audience })}
         />
       )}
-      <SixSignsSection
-        signs={content.signs}
-        heading={signs.heading}
-        items={signs.items}
-        tone={tone}
-        checked={state.checked}
-        onToggle={(index) => dispatch({ type: 'toggle', index })}
-        onSelect={(index) => dispatch({ type: 'select', index })}
-        audienceTag={tag}
-      />
-      <ApproachSection eyebrow={content.approach.eyebrow} rows={content.approach.rows} tone={tone} />
-      <DeliverablesSection
-        heading={content.deliverables.heading}
-        items={view?.deliverables ?? content.deliverables.items}
-        tone={tone}
-        audienceTag={tag}
-      />
-      <DurationSection duration={content.duration} tone={tone} />
-      <CaseStudySection
-        card={view?.caseStudy ?? content.caseStudy}
-        quote={view ? view.caseQuote : content.caseQuote}
-        roomy={content.caseRoomy}
-        tone={tone}
-        audienceTag={tag}
-      />
-      <ContactBand
-        eyebrow={
-          tag && (
-            <p style={{ margin: '0 0 16px' }}>
-              <AudienceTag tone={tone} onNavy>
-                {tag}
-              </AudienceTag>
-            </p>
-          )
-        }
-        heading={<Rich html={contact.heading} />}
-        body={contact.body}
-        ctas={content.contact.ctas.map((label) => ({ label }))}
-      />
-      <ExploreServices heading={content.explore.heading} cards={content.explore.cards} />
+      <div data-aud-swap>
+        <SixSignsSection
+          signs={content.signs}
+          heading={signs.heading}
+          items={signs.items}
+          tone={tone}
+          checked={state.checked}
+          onToggle={(index) => dispatch({ type: 'toggle', index })}
+          onSelect={(index) => dispatch({ type: 'select', index })}
+          audienceTag={tag}
+        />
+
+      </div>      <ApproachSection eyebrow={content.approach.eyebrow} rows={content.approach.rows} tone={tone} />
+      <div data-aud-swap>
+        <DeliverablesSection
+          heading={content.deliverables.heading}
+          items={view?.deliverables ?? content.deliverables.items}
+          tone={tone}
+          audienceTag={tag}
+        />
+
+      </div>      <DurationSection duration={content.duration} tone={tone} />
+      <div data-aud-swap>
+        <CaseStudySection
+          card={view?.caseStudy ?? content.caseStudy}
+          quote={view ? view.caseQuote : content.caseQuote}
+          roomy={content.caseRoomy}
+          tone={tone}
+          audienceTag={tag}
+        />
+
+      </div>      <div data-aud-swap>
+        <ContactBand
+          eyebrow={
+            tag && (
+              <p style={{ margin: '0 0 16px' }}>
+                <AudienceTag tone={tone} onNavy>
+                  {tag}
+                </AudienceTag>
+              </p>
+            )
+          }
+          heading={<Rich html={contact.heading} />}
+          body={contact.body}
+          ctas={content.contact.ctas.map((label) => ({ label }))}
+        />
+
+      </div>      <ExploreServices heading={content.explore.heading} cards={content.explore.cards} />
     </DesignPage>
   )
 }

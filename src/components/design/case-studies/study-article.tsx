@@ -1,4 +1,3 @@
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { tones } from '../tones'
 import type { ApproachStep, Bullet, CaseStudy, Testimonial } from '@/content/design/case-studies'
@@ -17,7 +16,7 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
           <div>
             <span className="dc-cs-label">Background</span>
             {background.paragraphs.map((text) => (
-              <ClampText key={text}>{text}</ClampText>
+              <p key={text}>{text}</p>
             ))}
             <Points points={background.points} />
           </div>
@@ -87,7 +86,7 @@ export function StudyArticle({ study }: { study: CaseStudy }) {
           </div>
           <div>
             {study.reinforced.map((text) => (
-              <ClampText key={text}>{text}</ClampText>
+              <p key={text}>{text}</p>
             ))}
           </div>
           {study.testimonial && (
@@ -137,7 +136,7 @@ function Step({ step, flip }: { step: ApproachStep; flip: boolean }) {
   const text = (
     <div>
       <h3>{step.title}</h3>
-      <ClampText className="dc-cs-step-body">{step.body}</ClampText>
+      <p className="dc-cs-step-body">{step.body}</p>
     </div>
   )
   if (image.kind === 'placeholder') return <div className="dc-cs-step dc-cs-step-text">{text}</div>

@@ -310,7 +310,7 @@
 
   .h2 {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.2vw, 2.625rem);
+    font-size: clamp(1.5625rem, 3.2vw, 2.625rem);
     font-weight: var(--w-regular);
     line-height: var(--lh-heading);
     letter-spacing: var(--tracking-display);
@@ -774,9 +774,4 @@
   .card-lift:hover {
     transform: none;
   }
-}
-
-/* The read-more toggle is navy, which disappears on a dark scrim. */
-[data-ground="scrim"] .gk-clamp-toggle {
-  color: var(--gk-white);
 }

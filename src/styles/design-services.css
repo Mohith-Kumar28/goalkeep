@@ -10,6 +10,7 @@
   position: sticky;
   top: 0;
   z-index: 25;
+  transform: translateZ(0);
   background: rgba(255, 255, 255, 0.97);
   border-bottom: 1px solid #e5e7ee;
   box-shadow: 0 8px 22px rgba(20, 19, 26, 0.07);
@@ -342,11 +343,6 @@
   position: absolute;
   inset: 0;
 }
-.dc-case-body .gk-clamp-toggle {
-  position: relative;
-  z-index: 1;
-  align-self: flex-start;
-}
 
 /* Two columns: the photo fills whatever height the text needs instead of setting it. */
 @media (min-width: 1101px) {
@@ -477,12 +473,6 @@
     flex: 0 0 82%;
     scroll-snap-align: start;
     padding: 20px;
-  }
-  .dc-explore-body {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -8,7 +8,8 @@ import { partnerGroups } from '@/content/partners'
  * After the 23 Sep review:
  *
  *   · "The header is not standing out" - it is a real section heading now,
- *     not a small letterspaced label, and the subline holds to one line.
+ *     not a small letterspaced label. The subline under it came off on
+ *     11 Nov, "looking cluttered".
  *   · Full-colour marks, in two labelled rows (10 Nov): Nonprofits, and
  *     Funders & intermediaries.
  */
@@ -18,15 +19,12 @@ export function Credibility({ ground = 'ground-cream' }: { ground?: string }) {
       className={`${ground} band accent-blue relative !py-12 md:!py-14`}
       aria-labelledby="credibility-heading"
     >
-      <div className="shell mb-8 flex flex-col items-center gap-3 text-center">
+      <div className="shell mb-6 text-center md:mb-8">
         <h2 id="credibility-heading" className="h2">
           {/* The hand-drawn ring came off in the 28 Sep review - it read oddly
               without a transparent SVG behind it. */}
           {ticker.heading} <em>{ticker.headingEm}</em>
         </h2>
-        <p className="text-[length:var(--fs-lg)] text-[var(--fg-1)] md:whitespace-nowrap">
-          {ticker.subline}
-        </p>
       </div>
 
       <LogoTicker groups={partnerGroups} />

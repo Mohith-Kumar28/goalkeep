@@ -1,4 +1,3 @@
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { Rich } from './rich'
@@ -17,9 +16,9 @@ export function WhySection() {
             <h2 className="dc-h2">
               <Rich html={why.heading} />
             </h2>
-            <ClampText className="ps-why-p" lines={4}>
+            <p className="ps-why-p">
               {why.body}
-            </ClampText>
+            </p>
           </Reveal>
           <div className="ps-why-more">
             <p

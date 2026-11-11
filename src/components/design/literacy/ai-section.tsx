@@ -1,4 +1,3 @@
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { literacyContent } from '@/content/design/literacy'
 import { AiGlyph } from './icons'
@@ -24,7 +23,7 @@ export function AiSection() {
             <h2 className="dc-h2" style={{ maxWidth: '24ch' }}>
               <Rich html={ai.heading} />
             </h2>
-            <ClampText className="ps-ai-body">{ai.body}</ClampText>
+            <p className="ps-ai-body">{ai.body}</p>
           </Reveal>
           <Reveal>
             <div

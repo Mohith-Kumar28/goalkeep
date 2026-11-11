@@ -424,7 +424,7 @@ button.dc-btn {
   /* Balanced wrapping and ch caps are tuned for wide columns; on a phone they strand a word
      ("fit?", "four") on its own line, so headings fill the line and only avoid orphans. */
   .dc-h2 {
-    font-size: 28px;
+    font-size: 25px;
     text-wrap: pretty;
     max-width: none !important;
   }
@@ -1084,33 +1084,6 @@ button.dc-btn {
   }
 }
 
-.gk-clamp-toggle {
-  display: none;
-}
-@media (max-width: 760px) {
-  .gk-clamp:not(.gk-clamp-open) {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--gk-clamp-lines, 3);
-    overflow: hidden;
-  }
-  .gk-clamp-toggle {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-    margin-top: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    font: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--gk-navy);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-}
 
 @media (min-width: 761px) {
   .dc-contact-split:not([data-compact]) {
@@ -1133,5 +1106,50 @@ button.dc-btn {
   .dc-carousel-frame {
     height: auto;
     aspect-ratio: 4 / 3;
+  }
+}
+
+.dc-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.dc-hero-carousel {
+  position: relative;
+}
+@media (max-width: 760px) {
+  .dc-hero-split {
+    padding-bottom: 0 !important;
+    row-gap: 28px !important;
+  }
+  .dc-hero-carousel {
+    margin-inline: calc(50% - 50vw);
+  }
+  .dc-hero-carousel .dc-carousel-frame {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .dc-hero-carousel .dc-carousel-frame::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 72px;
+    background: linear-gradient(to top, rgba(20, 19, 26, 0.55), rgba(20, 19, 26, 0));
+    pointer-events: none;
+  }
+  .dc-hero-carousel .dc-carousel-controls {
+    position: absolute;
+    inset: auto 16px 4px;
+    margin: 0;
+    --dc-dot: rgba(255, 255, 255, 0.6);
+    --dc-dot-on: #eac452;
+  }
+  .dc-hero-carousel .dc-carousel-ctl {
+    width: 40px;
+    height: 40px;
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #ffffff;
+    background: rgba(20, 19, 26, 0.25);
   }
 }

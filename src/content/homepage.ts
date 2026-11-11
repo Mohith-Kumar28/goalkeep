@@ -114,8 +114,6 @@ export const ticker = {
   /* Feedback: "Change top text only to: Partners who trust us (centred)". */
   heading: 'Partners who',
   headingEm: 'trust us',
-  /* Added in the copy replacement. */
-  subline: 'Nonprofits, funders and intermediaries across India.',
 }
 
 /* ============================================================

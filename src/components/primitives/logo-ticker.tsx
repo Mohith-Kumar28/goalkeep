@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { PartnerLogo } from '@/content/types'
 import { cn } from '@/lib/utils'
 
@@ -8,34 +9,50 @@ export type LogoGroup = { label: string; logos: Array<PartnerLogo> }
  * focus-within so a keyboard user is not chasing a moving target. Under
  * reduced motion each group is a static wrapped grid instead.
  */
+type RailSpeed = { phone: number; wide: number }
+
+/* Pixels per second, per row. 11 Nov: the phone spacing tightened but the
+   speeds were to stay as they were. */
+const RAIL_SPEEDS: Array<RailSpeed> = [
+  { phone: 65.5, wide: 90.2 },
+  { phone: 15.5, wide: 21.4 },
+]
+
 function Rail({
   logos,
   direction,
-  durationSeconds,
+  speed,
 }: {
   logos: Array<PartnerLogo>
   direction: 'left' | 'right'
-  durationSeconds: number
+  speed: RailSpeed
 }) {
   // Duplicated once so the translation wraps seamlessly at -50%.
   const track = [...logos, ...logos]
 
   return (
-    <div className="group/rail ticker-mask relative overflow-hidden">
+    <div className="group/rail ticker-mask relative overflow-hidden max-md:[mask-image:linear-gradient(to_right,transparent,#000_20px,#000_calc(100%-20px),transparent)]">
       <ul
         className={cn(
-          'flex w-max items-center gap-10 md:gap-16',
+          /* --pitch is a tile's width plus the gap, so the duration below
+             holds the speed whatever the spacing. */
+          'flex w-max items-center gap-3 [--pitch:108] [--speed:var(--speed-phone)] md:gap-16 md:[--pitch:292] md:[--speed:var(--speed-wide)]',
           'motion-safe:animate-[gk-marquee_linear_infinite]',
           'group-focus-within/rail:[animation-play-state:paused]',
         )}
-        style={{
-          animationDuration: `${durationSeconds}s`,
-          animationDirection: direction === 'right' ? 'reverse' : 'normal',
-        }}
+        style={
+          {
+            '--logos': logos.length,
+            '--speed-phone': speed.phone,
+            '--speed-wide': speed.wide,
+            animationDuration: 'calc(var(--logos) * var(--pitch) / var(--speed) * 1s)',
+            animationDirection: direction === 'right' ? 'reverse' : 'normal',
+          } as CSSProperties
+        }
       >
         {track.map((logo, index) => (
           <li key={`${logo.file}-${index}`} aria-hidden={index >= logos.length}>
-            <LogoTile logo={logo} tabbable={index < logos.length} />
+            <LogoTile logo={logo} tabbable={index < logos.length} className="h-12 w-[96px] md:h-28 md:w-[228px]" />
           </li>
         ))}
       </ul>
@@ -46,11 +63,11 @@ function Rail({
 function LogoTile({
   logo,
   tabbable = true,
-  className = 'h-20 w-[172px] md:h-28 md:w-[228px]',
+  className,
 }: {
   logo: PartnerLogo
   tabbable?: boolean
-  className?: string
+  className: string
 }) {
   return (
     <img
@@ -87,7 +104,7 @@ export function LogoTicker({ groups }: { groups: Array<LogoGroup> }) {
             <Rail
               logos={group.logos}
               direction={index % 2 === 0 ? 'left' : 'right'}
-              durationSeconds={index % 2 === 0 ? 68 : 82}
+              speed={RAIL_SPEEDS[index % RAIL_SPEEDS.length]}
             />
           </div>
         </section>

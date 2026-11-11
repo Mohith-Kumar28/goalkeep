@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import { caseStudies as studyPages, caseStudyHref } from '@/content/design/case-studies'
 import type { CaseStudy } from '@/content/types'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { GkButton } from '@/components/primitives/gk-button'
 import { Reveal } from '@/components/primitives/reveal'
 
@@ -152,11 +151,6 @@ function StudyLink({ study, children }: { study: CaseStudy; children: ReactNode 
   )
 }
 
-function Body({ study, className }: { study: CaseStudy; className: string }) {
-  if (pageFor(study)) return <p className={`${className} max-md:line-clamp-4`}>{study.body}</p>
-  return <ClampText className={className}>{study.body}</ClampText>
-}
-
 /** The lead case study: photograph left, the story right. */
 function LeadCard({ study }: { study: CaseStudy }) {
   return (
@@ -177,12 +171,9 @@ function LeadCard({ study }: { study: CaseStudy }) {
         </div>
         <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
           <Byline study={study} size="lg" />
-          <div>
-            <Body
-              study={study}
-              className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]"
-            />
-          </div>
+          <p className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
+            {study.body}
+          </p>
         </div>
       </article>
     </StudyLink>
@@ -204,9 +195,7 @@ function Card({ study }: { study: CaseStudy }) {
         <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
           <Byline study={study} />
 
-          <div>
-            <Body study={study} className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]" />
-          </div>
+          <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">{study.body}</p>
         </div>
       </article>
     </StudyLink>

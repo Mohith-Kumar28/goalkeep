@@ -3,7 +3,6 @@ import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { Cta } from '../cta'
 import { useContactForm } from '../contact-form'
-import { ClampText } from '../../primitives/clamp-text'
 import { Reveal } from '../../primitives/reveal'
 import { ArrowIcon } from '../icons'
 import { SiteLink } from '../site-link'
@@ -49,9 +48,9 @@ export function ApproachSection({
             const text = (
               <div>
                 <Rich as="h3" className="dc-h3" html={row.heading} />
-                <ClampText className="dc-approach-body">
+                <p className="dc-approach-body">
                   <Rich html={row.body} />
-                </ClampText>
+                </p>
                 {row.link && (
                   <p style={{ margin: '16px 0 0' }}>
                     <TextLink href={row.link.href} tone={tone}>

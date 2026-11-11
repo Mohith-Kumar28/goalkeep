@@ -1,5 +1,4 @@
 import { ArrowIcon, tones } from '@/components/design'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { Reveal } from '@/components/primitives/reveal'
 import { kickstarter } from '@/content/design/kickstarter'
 import { SnapTabs } from '../program-snap/snap-tabs'
@@ -194,7 +193,7 @@ export function StagesBand() {
                 <p className="ps-stage-tagline" style={{ color: tones[item.tone].ink }}>
                   {item.tagline}
                 </p>
-                <ClampText lines={3}>{item.body}</ClampText>
+                <p style={{ margin: 0 }}>{item.body}</p>
                 <div className="ps-stage-scene" dangerouslySetInnerHTML={{ __html: mobileIllustrations[k] }} />
                 {k === stages.items.length - 1 && (
                   <p style={{ margin: '16px 0 0' }}>

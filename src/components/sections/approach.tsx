@@ -4,7 +4,6 @@ import type { Pillar } from '@/content/types'
 import { PhaseAnimation } from '@/components/primitives/phase-animation'
 import type { PhaseKind } from '@/components/primitives/phase-animation'
 import { Reveal } from '@/components/primitives/reveal'
-import { ClampText } from '@/components/primitives/clamp-text'
 import { cn } from '@/lib/utils'
 
 /**
@@ -267,9 +266,9 @@ function PhaseRow({
 
           {/* 28 Sep: wide enough that no row's paragraph leaves one word
               alone on a fifth line. */}
-          <ClampText className="mt-2 max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed md:mt-3">
+          <p className="mt-2 max-w-[54ch] text-[length:var(--fs-base)] leading-relaxed md:mt-3">
             {pillar.body}
-          </ClampText>
+          </p>
         </div>
 
         {/* The media. A plain photograph in colour, open or closed - no

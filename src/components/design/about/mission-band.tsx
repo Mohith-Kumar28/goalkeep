@@ -1,5 +1,4 @@
 import { ArrowIcon } from "@/components/design/icons"
-import { ClampText } from "@/components/primitives/clamp-text"
 import { Reveal } from "@/components/primitives/reveal"
 import { Rich } from "@/components/design/kickstarter/rich"
 import type { about } from "@/content/design/about"
@@ -25,7 +24,7 @@ export function MissionBand({ mission }: { mission: typeof about.mission }) {
             <h2 className="dc-h2" style={{ maxWidth: "22ch" }}>
               <Rich html={mission.heading} />
             </h2>
-            <ClampText className="dc-about-mission-body">{mission.body}</ClampText>
+            <p className="dc-about-mission-body">{mission.body}</p>
             <a className="dc-tlink" href="#team" style={{ marginTop: 26 }}>
               {mission.link} <ArrowIcon />
             </a>
