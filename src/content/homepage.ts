@@ -453,14 +453,8 @@ export const caseStudySection = {
  * use their study's card summary.
  */
 export const caseStudies: Array<{ slug: CaseStudySlug; body?: string }> = [
-  {
-    slug: 'peepul',
-    body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
-  },
-  {
-    slug: 'baithak',
-    body: 'A real-time data system that we built for Baithak Foundation played a pivotal role in closing a ₹25 lakh grant. What convinced the funder wasn’t just the dashboard metrics, but that every person on the team also used that data regularly.',
-  },
+  { slug: 'peepul' },
+  { slug: 'baithak' },
   { slug: 'british-asian-trust' },
   { slug: 'vanavil' },
 ]

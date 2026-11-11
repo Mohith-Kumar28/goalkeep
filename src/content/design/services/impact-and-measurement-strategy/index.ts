@@ -1,3 +1,4 @@
+import { studySummary } from '../../case-studies'
 import { weekTicks } from '../../service-page'
 import type { ServicePageContent } from '../../service-page'
 import sign1 from './sign-1.svg?raw'
@@ -83,7 +84,7 @@ export const content: ServicePageContent = {
     href: '/case-studies/peepul',
     photo: { src: "/design/adf7e6efd567e8191c6319f6ce9ebe1f.webp", alt: "Peepul and Goalkeep team members working through a dashboard around a table" },
     title: "Peepul",
-    body: "Nineteen organisation-level indicators were brought together on a dashboard at Peepul for leadership to effectively monitor and assess organisation-level impact across 8 programs in 2 states.",
+    body: studySummary('peepul'),
     tags: [
       { label: "Education", tone: "blue" },
       { label: "Building organizational impact dashboard", tone: 'teal' },

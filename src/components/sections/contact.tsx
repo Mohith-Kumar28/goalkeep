@@ -79,15 +79,15 @@ export function Contact({
           <h2 id="contact-heading" className="h2">
             {contact.headline} <em>{contact.headlineEm}</em>
           </h2>
-          <p className="lead mt-4 max-w-[40ch] md:mt-5">{contact.lead}</p>
-          <p className="mt-6 text-[length:var(--fs-base)] text-[var(--fg-2)]">
-            Or write to us at{' '}
+          <p className="lead mt-4 max-w-[40ch] md:mt-5">
+            {contact.lead} Or write to us at{' '}
             <a
               href="mailto:aditya@goalkeep.org"
-              className="font-bold text-[var(--gk-navy)] underline underline-offset-4 hover:text-[var(--gk-navy-deep)]"
+              className="font-bold whitespace-nowrap text-[var(--gk-navy)] underline underline-offset-4 hover:text-[var(--gk-navy-deep)]"
             >
               aditya@goalkeep.org
             </a>
+            .
           </p>
           {aside}
         </Reveal>

@@ -1,3 +1,4 @@
+import { studySummary } from "../../case-studies"
 import { monthTicks } from "../../service-page"
 import type { ServicePageContent } from "../../service-page"
 import filters from "./filters.svg?raw"
@@ -265,7 +266,7 @@ export const content: ServicePageContent = {
       alt: "Vanavil Trust and Goalkeep at work",
     },
     title: "Vanavil Trust",
-    body: "Using timely information to identify and re-engage children who had dropped out.",
+    body: studySummary("vanavil"),
     tags: [
       { label: "Livelihoods", tone: "coral" },
       { label: "Education", tone: "blue" },

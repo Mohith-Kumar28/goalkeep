@@ -59,7 +59,7 @@ export function CaseStudyCards({
           className="dc-grid3 dc-stories dc-swipe"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gridTemplateColumns: `repeat(${Math.min(cards.length, 3)}, minmax(0, 1fr))`,
             gap: 24,
             marginTop: 36,
           }}

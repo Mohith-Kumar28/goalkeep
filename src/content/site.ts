@@ -127,6 +127,7 @@ export const nav: Array<NavItem> = [
       },
     ] as Array<NavChild>).filter((child) => blogLive || child.to !== blogHref),
   },
+  { label: 'Contact', to: '/#contact' },
 ]
 
 /** The menu entry for a page, if it has one. */

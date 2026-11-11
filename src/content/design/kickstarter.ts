@@ -1,4 +1,5 @@
 import type { CaseCard } from '@/components/design/case-study-cards'
+import { studySummary } from './case-studies'
 import type { ExploreCard } from '@/components/design/explore-more'
 import type { HeroPhoto } from '@/components/design/hero'
 import type { Tone } from '@/components/design/tones'
@@ -163,7 +164,7 @@ export const kickstarter = {
           { label: 'Data collection and visualisation', tone: 'teal' },
         ],
         title: 'Baithak Foundation',
-        body: 'Using a more accessible data system in programme and funder conversations.',
+        body: studySummary('baithak'),
       },
       {
         kind: 'live',
@@ -174,19 +175,7 @@ export const kickstarter = {
           { label: 'Education', tone: 'blue' },
         ],
         title: 'Vanavil Trust',
-        body: 'Using timely information to identify and re-engage children who had dropped out.',
-      },
-      {
-        kind: 'live',
-        href: '/case-studies',
-        cta: 'See all case studies',
-        photo: { src: '/design/64c1c9c5b1e6936ba238b50ada299bd3.webp', alt: 'The Apni Shala Foundation team standing together in their office' },
-        tags: [
-          { label: 'Education', tone: 'blue' },
-          { label: 'Kickstarter cohort 1', tone: 'teal' },
-        ],
-        title: 'Apni Shala Foundation',
-        body: 'Using a priority learning metric to identify student needs earlier and plan interventions.',
+        body: studySummary('vanavil'),
       },
     ] satisfies Array<CaseCard>,
   },

@@ -642,6 +642,9 @@ const bySlug = new Map(caseStudies.map((study) => [study.slug, study]))
 
 export const getCaseStudy = (slug: string): CaseStudy | undefined => bySlug.get(slug as CaseStudySlug)
 
+/** A study's card summary: the one line every case-study card on the site uses. */
+export const studySummary = (slug: CaseStudySlug) => bySlug.get(slug)?.card.summary ?? ''
+
 export const caseStudyHref = (slug: CaseStudySlug) => `/case-studies/${slug}`
 
 export type Filter<TId extends string> = { id: 'all' | TId; label: string; tone: Tone }
