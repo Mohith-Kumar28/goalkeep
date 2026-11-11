@@ -1,23 +1,15 @@
+import { collections, csvFields } from "./admin/collections"
+import type { Collection, CollectionId } from "./admin/collections"
+
 /**
  * CSV downloads of the form tables, for Goalkeep to open in a spreadsheet.
- * Each URL needs `?token=` equal to the EXPORT_TOKEN secret; without it, or
- * with the wrong one, the route answers 404 as if it did not exist.
+ * Columns come from the admin collection registry. Each token URL needs
+ * `?token=` equal to the EXPORT_TOKEN secret; without it, or with the wrong
+ * one, the route answers 404 as if it did not exist. The signed-in admin
+ * downloads the same files from /api/admin/export/<collection>.
  */
 
-const tables = {
-  newsletter: {
-    file: "goalkeep-newsletter-signups.csv",
-    query:
-      "SELECT id, created_at, email, name, organization, audience, edition FROM newsletter_signups ORDER BY id",
-  },
-  quiz: {
-    file: "goalkeep-quiz-responses.csv",
-    query:
-      "SELECT id, created_at, name, email, organization, role, sector, size, budget, band, score_overall, score_data, score_technology, score_process, score_strategy, answers, region FROM quiz_responses ORDER BY id",
-  },
-}
-
-export type ExportId = keyof typeof tables
+export type ExportId = CollectionId
 
 /* A spreadsheet runs a cell that starts with one of these as a formula, and
    every value here was typed into a public form. */
@@ -31,11 +23,27 @@ function cell(value: unknown) {
   return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
 }
 
-const columnsOf = (query: string) =>
-  query
-    .slice("SELECT ".length, query.indexOf(" FROM "))
-    .split(",")
-    .map((column) => column.trim())
+export async function collectionCsv(collection: Collection) {
+  const { env } = await import("cloudflare:workers")
+  const columns = csvFields(collection).map((field) => field.key)
+  const { results } = await env.DB.prepare(
+    `SELECT ${columns.join(", ")} FROM ${collection.table} ORDER BY id`
+  ).all()
+  const lines = [
+    columns.join(","),
+    ...results.map((row) => columns.map((column) => cell(row[column])).join(",")),
+  ]
+
+  // The byte-order mark makes Excel read the file as UTF-8.
+  return new Response(`﻿${lines.join("\r\n")}\r\n`, {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="${collection.file}"`,
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": "noindex",
+    },
+  })
+}
 
 export async function exportCsv(request: Request, id: ExportId) {
   const { env } = await import("cloudflare:workers")
@@ -43,22 +51,5 @@ export async function exportCsv(request: Request, id: ExportId) {
   if (!env.EXPORT_TOKEN || token !== env.EXPORT_TOKEN) {
     return new Response("Not found", { status: 404 })
   }
-
-  const { file, query } = tables[id]
-  const columns = columnsOf(query)
-  const { results } = await env.DB.prepare(query).all()
-  const lines = [
-    columns.join(","),
-    ...results.map((row) => columns.map((column) => cell(row[column])).join(",")),
-  ]
-
-  // The byte-order mark makes Excel read the file as UTF-8.
-  return new Response(`\uFEFF${lines.join("\r\n")}\r\n`, {
-    headers: {
-      "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${file}"`,
-      "Cache-Control": "no-store",
-      "X-Robots-Tag": "noindex",
-    },
-  })
+  return collectionCsv(collections[id])
 }
