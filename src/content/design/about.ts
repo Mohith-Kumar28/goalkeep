@@ -20,7 +20,7 @@ export const about = {
   founder: {
     eyebrow: "a note from our founder",
     photo: {
-      src: "/design/founder-manije.webp",
+      src: "/design/6d381336750276a362aa07133f2c7f9c.webp",
       alt: "Manije Kelkar, founder of Goalkeep",
       position: "50% 30%",
     },
