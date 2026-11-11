@@ -105,6 +105,13 @@
   --ease-pop: var(--ease-pop);
 }
 
+/* The site has one light design. Declaring it stops browsers that auto-darken
+   pages (Samsung Internet, Chrome's "darken websites") from repainting it, and
+   keeps native form controls light when the phone is in dark mode. */
+:root {
+  color-scheme: only light;
+}
+
 :root {
   --background: var(--gk-cream);
   --foreground: var(--gk-ink);

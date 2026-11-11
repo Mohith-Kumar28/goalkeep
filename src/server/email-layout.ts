@@ -3,11 +3,9 @@
  * wordmark, a white body, a quiet footer. Tables and inline styles because
  * email clients ignore most CSS.
  *
- * Dark mode: the Gmail apps recolour an email by inverting its colours, which
- * turned the blue header lavender and its white text dark. Two guards keep the
- * brand colours: coloured blocks also paint a same-colour background-image
- * (Gmail leaves images alone), and their text sits in the screen/difference
- * blend pair, which Gmail's inversion cancels back out.
+ * Dark mode: the Gmail apps recolour emails themselves and no markup stops
+ * them. Every colour here is a plain background and text colour, so whatever
+ * Gmail does, it does to both together and the text stays readable.
  */
 
 export const BLUE = "#2e4a92"
@@ -31,17 +29,12 @@ export function escape(value: string) {
     .replace(/'/g, "&#39;")
 }
 
-/** A solid fill Gmail's dark mode will not invert. */
-export const fill = (color: string) => `background-color:${color};background-image:linear-gradient(${color},${color});`
-
-/** Text on a coloured fill, kept its own colour in Gmail's dark mode. */
-export const keep = (html: string) => `<div class="gk-screen"><div class="gk-diff">${html}</div></div>`
 
 export function button(href: string, label: string, variant: "blue" | "gold" = "blue") {
   const bg = variant === "gold" ? GOLD : BLUE
   const color = variant === "gold" ? INK : "#ffffff"
-  return `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="${fill(bg)}border-radius:4px;">
-    <a href="${href}" style="display:inline-block;padding:13px 24px;font:800 15px/20px ${FONT};color:${color};text-decoration:none;">${keep(label)}</a>
+  return `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};border-radius:4px;">
+    <a href="${href}" style="display:inline-block;padding:13px 24px;font:800 15px/20px ${FONT};color:${color};text-decoration:none;">${label}</a>
   </td></tr></table>`
 }
 
@@ -83,8 +76,6 @@ export function emailDocument({
 <title>${escape(subject)}</title>
 <style>
   :root { color-scheme: light only; }
-  u + .body .gk-screen { background: #000; mix-blend-mode: screen; }
-  u + .body .gk-diff { background: #000; mix-blend-mode: difference; }
   @media (max-width: 520px) {
     .px { padding-left: 22px !important; padding-right: 22px !important; }
     .tiles { padding-left: 16px !important; padding-right: 16px !important; }
@@ -100,11 +91,11 @@ export function emailDocument({
       <td align="center" style="padding:28px 12px 32px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid ${LINE};">
           <tr>
-            <td class="px" style="${fill(BLUE)}padding:28px 40px 34px;">
+            <td class="px" style="background:${BLUE};padding:28px 40px 34px;">
               <img src="${site}/email/wordmark-white.png" width="118" height="28" alt="Goalkeep" style="display:block;border:0;height:28px;width:auto;">
-              ${keep(`<div style="margin-top:32px;font:700 13px/18px ${FONT};letter-spacing:.12em;text-transform:uppercase;color:${GOLD};">${header.eyebrow}</div>
+              <div style="margin-top:32px;font:700 13px/18px ${FONT};letter-spacing:.12em;text-transform:uppercase;color:${GOLD};">${header.eyebrow}</div>
               <div class="hero-title" style="margin-top:12px;font:500 36px/42px ${FONT};letter-spacing:-0.02em;color:#ffffff;">${header.title}</div>
-              ${header.sub ? `<div style="margin-top:12px;font:400 15px/23px ${FONT};color:${BLUE_SOFT};">${header.sub}</div>` : ""}`)}
+              ${header.sub ? `<div style="margin-top:12px;font:400 15px/23px ${FONT};color:${BLUE_SOFT};">${header.sub}</div>` : ""}
             </td>
           </tr>
           ${body}

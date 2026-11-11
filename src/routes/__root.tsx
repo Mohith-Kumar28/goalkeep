@@ -91,6 +91,7 @@ export const Route = createRootRoute({
         },
         { name: "twitter:image", content: `${origin}/og.jpg?v=${OG_VERSION}` },
         { name: "theme-color", content: "#2F4A92" },
+        { name: "color-scheme", content: "only light" },
       ],
       links: [
         { rel: "stylesheet", href: appCss },
