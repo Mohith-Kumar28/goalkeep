@@ -1156,8 +1156,20 @@ button.dc-btn {
 
 @media (min-width: 761px) {
   .dc-footer-nav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 32px 24px;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "services programs goalkeep"
+      "services programs resources";
+    gap: 28px 24px;
+  }
+  .dc-footer-nav [data-group="services"] { grid-area: services; }
+  .dc-footer-nav [data-group="programs"] { grid-area: programs; }
+  .dc-footer-nav [data-group="goalkeep"] { grid-area: goalkeep; }
+  .dc-footer-nav [data-group="resources"] { grid-area: resources; }
+}
+@media (min-width: 1101px) {
+  .dc-footer-nav [data-group="services"] a {
+    white-space: nowrap;
   }
 }
 @media (min-width: 1101px) {

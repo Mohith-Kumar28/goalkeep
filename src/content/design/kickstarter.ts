@@ -31,9 +31,11 @@ export type Stage = {
   body: string
 }
 
+const APPLY_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeTmJjM32EVQd52nKAsIB-pFzVyf-SZv2bKe1wMts0u_5QEKg/viewform'
+
 export const kickstarter = {
   service: 'Data systems and workflows',
-  applyUrl: '#contact',
+  applyUrl: APPLY_URL,
   meta: {
     title: 'Kickstarter 3.0 | Goalkeep',
     description:
@@ -191,7 +193,7 @@ export const kickstarter = {
   contact: {
     heading: 'Ready to turn messy data into <em>a system you can actually get insights from?</em>' satisfies Html,
     body: 'Build a system that helps your team see what matters, act earlier and communicate your impact with confidence.',
-    ctas: [{ label: 'Apply for the next cohort' }, { label: 'Speak to us about funding a cohort' }],
+    ctas: [{ label: 'Apply for the next cohort', href: APPLY_URL }, { label: 'Speak to us about funding a cohort' }],
   },
   explore: [
     {

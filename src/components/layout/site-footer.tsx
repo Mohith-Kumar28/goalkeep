@@ -45,7 +45,7 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Footer" className="dc-footer-nav">
           {footerGroups.map((group) => (
-            <div key={group.heading}>
+            <div key={group.heading} data-group={group.heading.toLowerCase()}>
               <h2>{group.heading}</h2>
               <ul>
                 {group.links.map((link) => (

@@ -114,18 +114,17 @@ export function DetailsStep({
           {text('email', 'Email *', 'email', '', 'email')}
           {text('organization', 'Organisation name *', 'text', '', 'organization')}
           {select('role', 'Your role *')}
-          <hr className="dc-q-rule" />
           {select('budget', 'Organisation budget')}
           {select('size', 'Organisation size')}
           {select('sector', 'Primary sector')}
+          <div className="dc-q-actions">
+            <button className="dc-q-btn dc-q-btn-navy" type="submit">
+              {quizPage.form.submit}
+              <ArrowIcon />
+            </button>
+          </div>
         </div>
-        <div className="dc-q-actions">
-          <button className="dc-q-btn dc-q-btn-navy" type="submit">
-            {quizPage.form.submit}
-            <ArrowIcon />
-          </button>
-          <small>{quizPage.form.note}</small>
-        </div>
+        <p className="dc-q-note">{quizPage.form.note}</p>
         {shown && (
           <div className="dc-q-form-error" role="alert">
             {quizPage.form.invalid}

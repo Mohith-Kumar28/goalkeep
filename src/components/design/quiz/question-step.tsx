@@ -13,11 +13,13 @@ export function QuestionStep({
   current,
   onAnswer,
   onBack,
+  organization,
 }: {
   index: number
   current: Answer | undefined
   onAnswer: (value: Answer) => void
   onBack: () => void
+  organization: string
 }) {
   const { domain, text } = statements[index]
   const mark = marks[domain.id]
@@ -33,7 +35,15 @@ export function QuestionStep({
       </div>
       <div className="dc-q-mid">
         <h2 className="dc-q-statement">{text}</h2>
-        <div className="dc-q-hint">{quizPage.hint}</div>
+        <div className="dc-q-hint">
+          {organization ? (
+            <>
+              Answer for <strong>{organization}</strong> as it is today.
+            </>
+          ) : (
+            quizPage.hint
+          )}
+        </div>
         <div className="dc-q-answers" role="radiogroup" aria-label="Your answer">
           {scale.map((option) => {
             const on = current === option.value

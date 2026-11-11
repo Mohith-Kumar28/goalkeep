@@ -1,3 +1,4 @@
+import { markOutlines } from '@/components/primitives/logo-shapes'
 import { marks, ring } from '@/content/design/quiz'
 import type { DomainId } from '@/content/quiz'
 
@@ -21,29 +22,27 @@ function Arc({ cx, cy, r, rot, len, color }: { cx: number; cy: number; r: number
   )
 }
 
-/** The logo's ring, its four coloured arcs drawing in one after another. */
+/* The ring's five pieces clockwise from twelve, coloured by the domain each one stands for. */
+const RING_FILLS = [marks.strategy.mark, '#fff', marks.data.mark, marks.technology.mark, marks.process.mark]
+const DRAW_ORDER = [2, 3, 4, 0]
+
+/** The logo, its four coloured pieces settling in one after another. */
 export function GMark() {
-  const { top, whiteTop, bottom, segments } = ring
   return (
-    <svg viewBox="0 0 282 428" aria-hidden="true">
-      <Arc cx={top.cx} cy={top.cy} r={top.r} rot={whiteTop.rot} len={whiteTop.len} color="#fff" />
-      <Arc cx={bottom.cx} cy={bottom.cy} r={bottom.r} rot={bottom.rot} len={bottom.len} color="#fff" />
-      {ORDER.map((id, i) => (
-        <circle
-          key={id}
-          className="dc-q-arc"
-          cx={top.cx}
-          cy={top.cy}
-          r={top.r}
-          fill="none"
-          stroke={marks[id].mark}
-          strokeWidth={top.width}
-          strokeLinecap="round"
-          strokeDasharray={`${segments[id].len} ${TOP_C}`}
-          transform={`rotate(${segments[id].rot} ${top.cx} ${top.cy})`}
-          style={{ ['--len' as string]: segments[id].len, animationDelay: `${0.15 + i * 0.12}s` }}
-        />
-      ))}
+    <svg viewBox={markOutlines.viewBox} aria-hidden="true">
+      <path d={markOutlines.smile} fill="#fff" />
+      {markOutlines.ring.map((d, i) => {
+        const order = DRAW_ORDER.indexOf(i)
+        return (
+          <path
+            key={i}
+            d={d}
+            fill={RING_FILLS[i]}
+            className={order >= 0 ? 'dc-q-arc' : undefined}
+            style={order >= 0 ? { transformOrigin: markOutlines.origin, animationDelay: `${0.15 + order * 0.12}s` } : undefined}
+          />
+        )
+      })}
     </svg>
   )
 }

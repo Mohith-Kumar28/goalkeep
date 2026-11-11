@@ -138,7 +138,7 @@ export function QuizPage() {
                       }}
                     />
                   )}
-                  {view === 'question' && <QuestionStep index={index} current={answers[index]} onAnswer={answer} onBack={back} />}
+                  {view === 'question' && <QuestionStep index={index} current={answers[index]} onAnswer={answer} onBack={back} organization={details.organization.trim()} />}
                   {view === 'thanks' && <ThanksStep submission={submission} onRetry={() => void send(answers as Array<Answer>)} />}
                 </div>
               </div>

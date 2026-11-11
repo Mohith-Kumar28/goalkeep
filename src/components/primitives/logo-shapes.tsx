@@ -367,6 +367,15 @@ function outline({ circle, from, to, end }: MarkPiece) {
   ].join('')
 }
 
+/** The mark's outlines, for drawings that colour the pieces themselves: the
+ *  ring clockwise from the yellow at twelve, then the smile. */
+export const markOutlines = {
+  viewBox: `0 0 ${BOX_W} ${BOX_H}`,
+  origin: `${RING.cx}px ${RING.cy}px`,
+  ring: PIECES.slice(0, 5).map(outline),
+  smile: outline(PIECES[5]),
+}
+
 const hue = (piece: MarkPiece, onDark: boolean) => (onDark ? (piece.hueOnDark ?? piece.hue) : piece.hue)
 
 const EASE = [0.22, 1, 0.36, 1] as const

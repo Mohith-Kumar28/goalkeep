@@ -83,7 +83,12 @@ export function ContactBand({
               const className = ctaClass(cta.variant ?? (i === 0 ? 'accent' : 'secondary'))
               if (cta.href !== undefined) {
                 return (
-                  <SiteLink key={cta.label} href={cta.href} className={className}>
+                  <SiteLink
+                    key={cta.label}
+                    href={cta.href}
+                    className={className}
+                    {...(cta.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
                     {cta.label}
                   </SiteLink>
                 )
