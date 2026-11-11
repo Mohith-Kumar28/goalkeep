@@ -1,6 +1,7 @@
+import { pageMeta } from '@/content/page-meta'
 import { site } from '@/content/site'
 
-const MAX_DESCRIPTION = 155
+const MAX_DESCRIPTION = 160
 
 const clip = (text: string, max: number) => {
   const flat = text.replace(/\s+/g, ' ').trim()
@@ -14,7 +15,8 @@ const clip = (text: string, max: number) => {
  * must follow them. The canonical and og:url name the production domain, not
  * the host serving the request; og:image stays per-request, in the root.
  */
-export const pageHead = (page: { title: string; description: string; path: string; socialTitle?: string }) => {
+export const pageHead = (fallback: { title: string; description: string; path: string; socialTitle?: string }) => {
+  const page = { ...fallback, ...pageMeta[fallback.path] }
   const description = clip(page.description, MAX_DESCRIPTION)
   const url = `${site.url}${page.path === '/' ? '' : page.path}`
   return {

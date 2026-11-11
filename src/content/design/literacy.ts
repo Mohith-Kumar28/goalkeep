@@ -47,7 +47,7 @@ export const literacyContent = {
   meta: {
     title: 'Data Literacy Program | Goalkeep',
     description:
-      'A 3-day train-the-trainer workshop and 6-month mentorship program that builds data literacy across social-purpose organisations.',
+      'A 3-day train-the-trainer workshop and 3-month mentorship program that builds data literacy across social-purpose organisations.',
   },
   hero: {
     headline: 'Build a <span class="dc-nowrap">data-confident</span><br class="dc-br-d"> workforce <em>within your<br class="dc-br-d"> organisation.</em>',
@@ -97,7 +97,7 @@ export const literacyContent = {
     {
       icon: 'book',
       label: 'The format',
-      body: '3-day immersive workshop followed by a 6-month mentorship program',
+      body: '3-day immersive workshop followed by a 3-month mentorship program',
       bg: '#E7F2F0',
       ink: '#176059',
     },

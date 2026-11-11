@@ -15,7 +15,7 @@ import { WhyWeExist } from '@/components/sections/why-we-exist'
 import { site } from '@/content/site'
 
 export const Route = createFileRoute('/')({
-  head: () => pageHead({ title: 'Goalkeep | Data to scale social sector impact', socialTitle: site.metaTitle, description: site.description, path: '/' }),
+  head: () => pageHead({ title: 'Goalkeep | Data to scale social sector impact', description: site.description, path: '/' }),
   component: Home,
 })
 

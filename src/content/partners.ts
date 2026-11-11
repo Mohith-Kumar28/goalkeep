@@ -15,7 +15,7 @@ import type { PartnerLogo } from './types'
 export const partners: Array<PartnerLogo> = [
   { file: 'org-01.png', name: 'Dost Education', kind: 'org' },
   { file: 'org-02.png', name: 'Aangan Trust', kind: 'org' },
-  { file: 'org-03.png', name: 'Acumen Academy', kind: 'funder' },
+  { file: 'org-03.png', name: 'Acumen', kind: 'funder' },
   { file: 'org-04.png', name: 'SVP India', kind: 'funder' },
   { file: 'org-05.png', name: 'Alohomora Education Foundation', kind: 'org' },
   { file: 'org-06.png', name: 'Catalysts for Social Action', kind: 'org' },
