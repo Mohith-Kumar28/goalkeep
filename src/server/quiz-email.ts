@@ -1,4 +1,5 @@
-import type { QuizScore } from "@/content/quiz"
+import { marks } from "@/content/design/quiz"
+import type { DomainId, QuizScore } from "@/content/quiz"
 
 /**
  * The results email a quiz-taker receives, in the order Goalkeep sent on
@@ -30,14 +31,16 @@ function escape(value: string) {
     .replace(/'/g, "&#39;")
 }
 
-function tile(title: string, total: number, max: number) {
+/** Each domain in the colours the quiz page gives it: the logo segment for the bar, its ink for the score. */
+function tile(id: DomainId, title: string, total: number, max: number) {
+  const mark = marks[id]
   const width = Math.max(Math.round((total / max) * 100), 4)
   return `<td class="tile" width="50%" valign="top" style="padding:6px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid ${LINE};border-radius:12px;"><tr><td style="padding:16px 18px;">
-      <div style="font:700 14px/20px ${FONT};color:${MUTED};">${escape(title)}</div>
-      <div style="margin-top:4px;font:800 30px/34px ${FONT};color:${BLUE};">${total}<span style="font-size:16px;font-weight:700;color:${MUTED};">/${max}</span></div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;background:${BLUE_TINT};border-radius:999px;"><tr>
-        <td style="width:${width}%;height:6px;background:${BLUE};border-radius:999px;font-size:0;line-height:0;">&nbsp;</td><td style="font-size:0;line-height:0;">&nbsp;</td>
+      <div style="font:700 14px/20px ${FONT};color:${MUTED};"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${mark.mark};margin-right:7px;vertical-align:1px;"></span>${escape(title)}</div>
+      <div style="margin-top:4px;font:800 30px/34px ${FONT};color:${mark.ink};">${total}<span style="font-size:16px;font-weight:700;color:${MUTED};">/${max}</span></div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;background:${mark.tint};border-radius:999px;"><tr>
+        <td style="width:${width}%;height:7px;background:${mark.mark};border-radius:999px;font-size:0;line-height:0;">&nbsp;</td><td style="font-size:0;line-height:0;">&nbsp;</td>
       </tr></table>
     </td></tr></table>
   </td>`
@@ -82,7 +85,8 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
               <img src="${site}/email/wordmark-white.png" width="118" height="28" alt="Goalkeep" style="display:block;border:0;height:28px;width:auto;">
               <div style="margin-top:34px;font:700 13px/18px ${FONT};letter-spacing:.12em;text-transform:uppercase;color:${GOLD};">Data culture quiz results</div>
               <div class="hero-title" style="margin-top:12px;font:500 40px/46px ${FONT};letter-spacing:-0.02em;color:#ffffff;">You are a Data <strong style="font-weight:800;font-style:italic;color:${GOLD};">${escape(score.persona.label)}</strong></div>
-              <div style="margin-top:14px;font:400 16px/24px ${FONT};color:${BLUE_SOFT};">${escape(organization)} scored <strong style="color:#ffffff;font-weight:800;">${score.total}/${score.max}</strong></div>
+              <div style="margin-top:10px;font:italic 400 17px/25px ${FONT};color:#ffffff;">${escape(score.persona.byline)}</div>
+              <div style="margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.22);font:400 15px/22px ${FONT};color:${BLUE_SOFT};"><strong style="color:#ffffff;font-weight:700;">${escape(organization)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;Total score <strong style="color:#ffffff;font-weight:800;">${score.total}/${score.max}</strong></div>
             </td>
           </tr>
 
@@ -95,8 +99,8 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
           <tr>
             <td class="tiles" style="padding:12px 34px 0;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                <tr>${tile(a.title, a.total, a.max)}${tile(b.title, b.total, b.max)}</tr>
-                <tr>${tile(c.title, c.total, c.max)}${tile(d.title, d.total, d.max)}</tr>
+                <tr>${tile(a.id, a.title, a.total, a.max)}${tile(b.id, b.title, b.total, b.max)}</tr>
+                <tr>${tile(c.id, c.title, c.total, c.max)}${tile(d.id, d.title, d.total, d.max)}</tr>
               </table>
             </td>
           </tr>
@@ -118,7 +122,7 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
               <div style="font:800 19px/26px ${FONT};color:${INK};margin-bottom:14px;">Build a data culture that lasts</div>
               ${p(`Would you like to learn how to cultivate a sustainable data culture in your organization? Goalkeep offers the &ldquo;Data-Culture Rubric&rdquo; to all its clients. The rubric is a comprehensive assessment that evaluates various aspects of your organization's data-culture ecosystem.`)}
               ${p(`Through a series of thought-provoking questions, our rubric delves into the depth of your organization's data culture, providing you with a clear understanding of its strengths and areas that require improvement.`)}
-              ${p(`To embark on this transformative journey of becoming a data-driven trailblazer, simply reach out to us at <a href="mailto:${CONTACT}" style="color:${BLUE};font-weight:700;">${CONTACT}</a>.`, true)}
+              ${p(`To embark on this transformative journey of becoming a data-driven trailblazer, or to speak about taking a more in-depth data culture quiz for your entire team, simply reach out to us at <a href="mailto:${CONTACT}" style="color:${BLUE};font-weight:700;">${CONTACT}</a>.`, true)}
             </td>
           </tr>
 
@@ -143,6 +147,8 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
 
   const text = [
     `You are a ${persona}`,
+    score.persona.byline,
+    organization,
     "",
     `Hi ${name.split(/\s+/)[0] ?? name}, thank you for taking the data culture quiz.`,
     "",
@@ -156,7 +162,7 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
     "",
     "Through a series of thought-provoking questions, our rubric delves into the depth of your organization's data culture, providing you with a clear understanding of its strengths and areas that require improvement.",
     "",
-    `To embark on this transformative journey of becoming a data-driven trailblazer, simply reach out to us at ${CONTACT}.`,
+    `To embark on this transformative journey of becoming a data-driven trailblazer, or to speak about taking a more in-depth data culture quiz for your entire team, simply reach out to us at ${CONTACT}.`,
     "",
     "Let's talk!",
   ].join("\n")

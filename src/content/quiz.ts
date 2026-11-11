@@ -118,14 +118,14 @@ export type PersonaId = 'explorer' | 'consumer' | 'striver' | 'trailblazer'
 
 /** What the results email calls the respondent: "You are a Data ___". `min` is
  *  the lowest total (out of 60) for the tier; a tier runs up to the next one's. */
-export type Persona = { id: PersonaId; label: string; min: number }
+export type Persona = { id: PersonaId; label: string; min: number; byline: string }
 
 /* Goalkeep's tiers, Nov 11: 0–14, 15–29, 30–44, 45–60. */
 export const personas: Array<Persona> = [
-  { id: 'explorer', label: 'Explorer', min: 0 },
-  { id: 'consumer', label: 'Consumer', min: 15 },
-  { id: 'striver', label: 'Striver', min: 30 },
-  { id: 'trailblazer', label: 'Trailblazer', min: 45 },
+  { id: 'explorer', label: 'Explorer', min: 0, byline: 'Data is considered auxiliary to work.' },
+  { id: 'consumer', label: 'Consumer', min: 15, byline: 'Data is utilised but may not be a priority.' },
+  { id: 'striver', label: 'Striver', min: 30, byline: 'Data systems are on the path upward but need some work.' },
+  { id: 'trailblazer', label: 'Trailblazer', min: 45, byline: 'Data culture in your organisation is institutional and universal.' },
 ]
 
 export const personaFor = (total: number): Persona =>
