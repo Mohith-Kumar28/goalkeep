@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
+import { LoopVideo } from '@/components/primitives/loop-video'
 import { whyWeExist } from '@/content/homepage'
 import { cn } from '@/lib/utils'
 
@@ -18,46 +19,30 @@ import { cn } from '@/lib/utils'
  * About page.
  */
 const LAYER_VIDEO = {
-  mp4: '/video/missing-layer.mp4',
-  webm: '/video/missing-layer.webm',
   /* First frame, so nothing jumps when playback starts. */
   poster: '/video/missing-layer-poster.jpg',
   /* Last frame, the full picture, for reduced motion. */
   still: '/video/missing-layer-still.jpg',
 }
 
+const LAYER_SOURCES = [
+  { src: '/video/missing-layer.mp4', type: 'video/mp4' },
+  { src: '/video/missing-layer.webm', type: 'video/webm' },
+]
+
 const LAYER_LABEL =
   'Capital, programs, tools, talent and systems feed into decision infrastructure, which is what Goalkeep brings: clear metrics, intuitive systems and usable insights. The result is enhanced scale, increased funding, improved efficiency and measurable outcomes.'
 
 export function WhyWeExist() {
   const { mission } = whyWeExist
-  const ref = useRef<HTMLElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
     setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   }, [])
 
-  useEffect(() => {
-    const node = ref.current
-    if (!node || reduced) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          void videoRef.current?.play().catch(() => {})
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.3 },
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [reduced])
-
   return (
     <section
-      ref={ref}
       id="why-we-exist"
       className="relative scroll-mt-24 py-10 md:py-14"
       style={{ background: C.ground, color: C.ink }}
@@ -83,26 +68,13 @@ export function WhyWeExist() {
           {reduced ? (
             <img src={LAYER_VIDEO.still} alt="" width={1520} height={1020} className="block h-auto w-full" />
           ) : (
-            <video
-              ref={videoRef}
+            <LoopVideo
+              sources={LAYER_SOURCES}
+              poster={LAYER_VIDEO.poster}
               className="block h-auto w-full"
               width={1520}
               height={1020}
-              muted
-              playsInline
-              preload="metadata"
-              poster={LAYER_VIDEO.poster}
-              aria-hidden="true"
-              /* The bts footage's rewind (proof.tsx): `loop` stopped after
-                 one pass in some browsers, `ended` always fires. */
-              onEnded={(event) => {
-                event.currentTarget.currentTime = 0
-                void event.currentTarget.play().catch(() => {})
-              }}
-            >
-              <source src={LAYER_VIDEO.mp4} type="video/mp4" />
-              <source src={LAYER_VIDEO.webm} type="video/webm" />
-            </video>
+            />
           )}
           <figcaption className="sr-only">{LAYER_LABEL}</figcaption>
         </figure>

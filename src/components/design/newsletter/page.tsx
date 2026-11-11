@@ -202,7 +202,7 @@ export function NewsletterPage() {
       <section className="dc-nl-hero">
         <div aria-hidden="true" className="dc-nl-ring dc-nl-ring-a">
           <svg viewBox="0 0 100 100" width="100%" height="100%" style={{ overflow: 'visible' }}>
-            <circle cx="50" cy="50" r="43.5" fill="none" stroke="#3D5AA8" strokeWidth="13" strokeLinecap="round" strokeDasharray="125.27 273.32" transform="rotate(55 50 50)" />
+            <circle cx="50" cy="50" r="43.5" fill="none" stroke="#3D5AA8" strokeWidth="13" strokeLinecap="round" strokeDasharray="132.87 273.32" transform="rotate(55 50 50)" />
           </svg>
         </div>
         <div aria-hidden="true" className="dc-nl-ring dc-nl-ring-b">

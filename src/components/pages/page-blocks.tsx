@@ -22,6 +22,12 @@ import { Faqs } from '@/components/sections/faqs'
 import { Proof } from '@/components/sections/proof'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
+import { LoopVideo } from '@/components/primitives/loop-video'
+
+const BTS_SOURCES = [
+  { src: '/video/bts.mp4', type: 'video/mp4' },
+  { src: '/video/bts.webm', type: 'video/webm' },
+]
 
 /**
  * Renders a programs or services page from its blocks.
@@ -1127,10 +1133,7 @@ function Evidence({ block }: { block: Of<'stats'> }) {
         {reduced ? (
           <img src="/video/bts-poster.jpg" alt="" className="h-full w-full object-cover" />
         ) : (
-          <video className="h-full w-full object-cover" autoPlay muted playsInline loop preload="metadata" poster="/video/bts-poster.jpg">
-            <source src="/video/bts.mp4" type="video/mp4" />
-            <source src="/video/bts.webm" type="video/webm" />
-          </video>
+          <LoopVideo sources={BTS_SOURCES} poster="/video/bts-poster.jpg" className="h-full w-full object-cover" />
         )}
         <div className="absolute inset-0" style={{ backgroundColor: 'rgb(47 74 146 / 0.86)' }} />
       </div>

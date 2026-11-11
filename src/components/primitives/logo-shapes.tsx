@@ -124,7 +124,7 @@ const FIELDS: Record<string, Array<Piece>> = {
      rather than as shapes. */
   hero: [
     {
-      sweep: 132,
+      sweep: 170,
       start: 150,
       thickness: 13,
       color: 'var(--gk-navy-lift)',

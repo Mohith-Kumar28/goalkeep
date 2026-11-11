@@ -1,7 +1,13 @@
 import { proof } from '@/content/homepage'
+import { LoopVideo } from '@/components/primitives/loop-video'
 import { StatCounter } from '@/components/primitives/stat-counter'
 import { Reveal } from '@/components/primitives/reveal'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
+
+const BTS_SOURCES = [
+  { src: '/video/bts.mp4', type: 'video/mp4' },
+  { src: '/video/bts.webm', type: 'video/webm' },
+]
 
 /**
  * The numbers, in one place.
@@ -61,25 +67,7 @@ export function Proof() {
           {reduced ? (
             <img src="/video/bts-poster.jpg" alt="" className="h-full w-full object-cover" />
           ) : (
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              playsInline
-              preload="metadata"
-              /* 28 Sep: `loop` stopped after one pass in some browsers, so the
-                 rewind is done here - `ended` always fires without `loop`. The
-                 mp4 goes first because its index makes the seek back to 0
-                 dependable. */
-              onEnded={(event) => {
-                event.currentTarget.currentTime = 0
-                void event.currentTarget.play()
-              }}
-              poster="/video/bts-poster.jpg"
-            >
-              <source src="/video/bts.mp4" type="video/mp4" />
-              <source src="/video/bts.webm" type="video/webm" />
-            </video>
+            <LoopVideo sources={BTS_SOURCES} poster="/video/bts-poster.jpg" className="h-full w-full object-cover" />
           )}
           {/* Lighter than the photographs' 0.84 - footage has to read as
               footage - but still enough for the figures to sit on. */}
