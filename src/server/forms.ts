@@ -82,7 +82,7 @@ export const submitContact = createServerFn({ method: "POST" })
     // Best effort: the enquiry is already stored, so neither call can fail
     // the submission.
     await Promise.all([
-      notifyContact(env, data),
+      notifyContact(env, data, siteOrigin(getRequestHeader)),
       addToMailchimp(env, {
         email: data.email,
         name: data.name,
@@ -162,11 +162,11 @@ async function sendMail(env: MailEnv, label: string, mail: Mail): Promise<boolea
 }
 
 /** Replying to the email replies to the person who wrote in. */
-async function notifyContact(env: MailEnv, data: Omit<ContactInput, "website">) {
+async function notifyContact(env: MailEnv, data: Omit<ContactInput, "website">, site: string) {
   await sendMail(env, "contact", {
     to: teamAddresses(env),
     reply_to: data.email,
-    ...contactEmail(data),
+    ...contactEmail(data, site),
   })
 }
 
@@ -219,10 +219,11 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
     // sign-up. Most of each edition is shared, so a reader who didn't pick
     // an audience gets the nonprofit version.
     if (data.edition) {
+      const { getRequestHeader } = await import("@tanstack/react-start/server")
       await sendMail(env, "newsletter edition", {
         to: [data.email],
         reply_to: teamAddresses(env)[0],
-        ...editionEmail(data.edition, data.audience?.version ?? "nonprofit"),
+        ...editionEmail(data.edition, data.audience?.version ?? "nonprofit", siteOrigin(getRequestHeader)),
       })
     }
 
