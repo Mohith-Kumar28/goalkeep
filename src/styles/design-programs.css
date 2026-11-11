@@ -226,13 +226,6 @@
   line-height: 1.4;
   font-style: italic;
 }
-.dc .ps-stage-scene {
-  margin: 16px 0 0;
-}
-.dc .ps-stage-scene svg {
-  width: 100%;
-  height: auto;
-}
 
 .dc .ps-ai-body {
   margin: 14px 0 0;
@@ -544,4 +537,173 @@
   .dc .ps-opt-num {
     transition: none;
   }
+}
+
+/* Kickstarter stages on phones: each illustration rebuilt as cards, two to a row. */
+.dc .ks-sc {
+  margin: 20px 0 0;
+  padding: 18px 14px 16px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.dc .ks-sc-label {
+  margin: 0 2px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.dc .ks-sc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.dc .ks-sc-wide {
+  grid-column: 1 / -1;
+}
+.dc .ks-sc-cell > * {
+  height: 100%;
+}
+.dc .ks-sc-card,
+.dc .ks-sc-note {
+  position: relative;
+  padding: 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7ee;
+  box-shadow: 0 6px 16px rgba(20, 19, 26, 0.06);
+}
+.dc .ks-sc-card p,
+.dc .ks-sc-note p {
+  margin: 0;
+}
+.dc .ks-sc-note p {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #14131a;
+}
+.dc .ks-sc-note.is-picked {
+  background: #fcf0a5;
+  border-color: #eac452;
+}
+.dc .ks-sc-check {
+  position: absolute;
+  top: -9px;
+  right: -6px;
+  display: flex;
+}
+.dc .ks-sc-lines {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+.dc .ks-sc-lines i {
+  display: block;
+  height: 6px;
+  border-radius: 4px;
+  background: #e5e7ee;
+}
+.dc .ks-sc-lines i:last-child {
+  width: 60%;
+}
+.dc .ks-sc-note.is-picked .ks-sc-lines i {
+  background: #f7db63;
+}
+.dc .ks-sc-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.dc .ks-sc-strong {
+  margin-top: 6px !important;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #14131a;
+}
+.dc .ks-sc-field {
+  font-size: 13px;
+  font-weight: 700;
+  color: #14131a;
+}
+.dc .ks-sc-input {
+  display: block;
+  height: 30px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1.5px dashed #9fb2e0;
+  background: #f6f8fd;
+}
+.dc .ks-sc-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3f63c8;
+  border-color: #3f63c8;
+}
+.dc .ks-sc-save span {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+.dc .ks-sc-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 64px;
+  margin: 10px 0 4px;
+}
+.dc .ks-sc-bars i {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: #3f63c8;
+}
+.dc .ks-sc-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+.dc .ks-sc-tab p {
+  font-size: 15px;
+  font-weight: 700;
+  color: #14131a;
+}
+.dc .ks-sc-tab.is-on {
+  border-color: #2f9c8f;
+  background: #e7f2f0;
+}
+.dc .ks-sc-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2f9c8f;
+}
+.dc .ks-sc-line {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.dc .ks-sc-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+}
+.dc .ks-sc-quote {
+  margin-top: 6px !important;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #14131a;
+}
+.dc .ks-sc-after {
+  border-width: 2px;
 }

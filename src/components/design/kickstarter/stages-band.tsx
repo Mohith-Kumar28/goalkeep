@@ -1,12 +1,10 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
 import { ArrowIcon, tones } from '@/components/design'
 import { Reveal } from '@/components/primitives/reveal'
-import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { kickstarter } from '@/content/design/kickstarter'
 import { SnapTabs } from '../program-snap/snap-tabs'
 import { ApplyLink } from './apply-link'
 import { Rich } from './rich'
+import { StageCards } from './stage-cards'
 import stage1 from './stage-1.svg?raw'
 import stage2 from './stage-2.svg?raw'
 import stage3 from './stage-3.svg?raw'
@@ -14,8 +12,6 @@ import stage4 from './stage-4.svg?raw'
 import { useAutoCycle } from '../program-snap/use-auto-cycle'
 
 const illustrations = [stage1, stage2, stage3, stage4]
-/* Phones: the side margins of the 560-wide drawing are trimmed so its labels read larger. */
-const phoneIllustrations = illustrations.map((svg) => svg.replace('viewBox="0 0 560 400"', 'viewBox="18 0 524 400"'))
 const STEP_MS = 8000
 
 export function StagesBand() {
@@ -194,7 +190,7 @@ export function StagesBand() {
                   {item.tagline}
                 </p>
                 <p style={{ margin: 0 }}>{item.body}</p>
-                <StageScene svg={phoneIllustrations[k]} />
+                <StageCards index={k} tone={item.tone} />
                 {k === stages.items.length - 1 && (
                   <p style={{ margin: '16px 0 0' }}>
                     <ApplyLink className="dc-btn dc-btn-maroon" label={stages.cta}>
@@ -211,20 +207,3 @@ export function StagesBand() {
   )
 }
 
-/** On phones the landscape drawing wipes in, left to right, as it scrolls up the screen. */
-function StageScene({ svg }: { svg: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const reduced = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.55'] })
-  const clipPath = useTransform(scrollYProgress, [0, 1], ['inset(0% 100% 0% 0% round 20px)', 'inset(0% 0% 0% 0% round 20px)'])
-  const opacity = useTransform(scrollYProgress, [0, 0.35], [0, 1])
-  const y = useTransform(scrollYProgress, [0, 1], [28, 0])
-  return (
-    <motion.div
-      ref={ref}
-      className="ps-stage-scene"
-      style={reduced ? undefined : { clipPath, opacity, y }}
-      dangerouslySetInnerHTML={{ __html: svg }}
-    />
-  )
-}
