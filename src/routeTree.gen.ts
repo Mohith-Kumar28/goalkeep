@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CustomProjectsRouteImport } from './routes/custom-projects'
 import { Route as PartnerWithUsRouteImport } from './routes/partner-with-us'
 import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies/index'
 import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies/$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs/index'
@@ -24,6 +26,8 @@ import { Route as ProgramsKickstarterRouteImport } from './routes/programs/kicks
 import { Route as ResourcesDataQuizRouteImport } from './routes/resources/data-quiz'
 import { Route as ResourcesNewsletterRouteImport } from './routes/resources/newsletter'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as AdminCollectionIndexRouteImport } from './routes/admin.$collection.index'
+import { Route as AdminCollectionIdRouteImport } from './routes/admin.$collection.$id'
 import { Route as ApiExportContactDotcsvRouteImport } from './routes/api/export/contact[.]csv'
 import { Route as ApiExportNewsletterDotcsvRouteImport } from './routes/api/export/newsletter[.]csv'
 import { Route as ApiExportQuizDotcsvRouteImport } from './routes/api/export/quiz[.]csv'
@@ -39,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -65,6 +74,11 @@ const WhatWeDoRoute = WhatWeDoRouteImport.update({
   id: '/what-we-do',
   path: '/what-we-do',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const CaseStudiesIndexRoute = CaseStudiesIndexRouteImport.update({
   id: '/case-studies/',
@@ -106,6 +120,16 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminCollectionIndexRoute = AdminCollectionIndexRouteImport.update({
+  id: '/$collection/',
+  path: '/$collection/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCollectionIdRoute = AdminCollectionIdRouteImport.update({
+  id: '/$collection/$id',
+  path: '/$collection/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiExportContactDotcsvRoute = ApiExportContactDotcsvRouteImport.update({
   id: '/api/export/contact.csv',
   path: '/api/export/contact.csv',
@@ -142,6 +166,7 @@ const ApiAdminExportCollectionRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/custom-projects': typeof CustomProjectsRoute
@@ -153,12 +178,15 @@ export interface FileRoutesByFullPath {
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
   '/resources/newsletter': typeof ResourcesNewsletterRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/admin/$collection/$id': typeof AdminCollectionIdRoute
   '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
+  '/admin/$collection/': typeof AdminCollectionIndexRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
   '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
@@ -176,12 +204,15 @@ export interface FileRoutesByTo {
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
   '/resources/newsletter': typeof ResourcesNewsletterRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/admin/$collection/$id': typeof AdminCollectionIdRoute
   '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
+  '/admin/$collection': typeof AdminCollectionIndexRoute
   '/resources/blog': typeof ResourcesBlogIndexRoute
   '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
@@ -189,6 +220,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/custom-projects': typeof CustomProjectsRoute
@@ -200,12 +232,15 @@ export interface FileRoutesById {
   '/resources/data-quiz': typeof ResourcesDataQuizRoute
   '/resources/newsletter': typeof ResourcesNewsletterRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/admin/$collection/$id': typeof AdminCollectionIdRoute
   '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
+  '/admin/$collection/': typeof AdminCollectionIndexRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
   '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
@@ -214,6 +249,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/careers'
     | '/contact'
     | '/custom-projects'
@@ -225,12 +261,15 @@ export interface FileRouteTypes {
     | '/resources/data-quiz'
     | '/resources/newsletter'
     | '/services/$slug'
+    | '/admin/'
     | '/case-studies/'
     | '/programs/'
+    | '/admin/$collection/$id'
     | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
+    | '/admin/$collection/'
     | '/resources/blog/'
     | '/api/admin/export/$collection'
   fileRoutesByTo: FileRoutesByTo
@@ -248,18 +287,22 @@ export interface FileRouteTypes {
     | '/resources/data-quiz'
     | '/resources/newsletter'
     | '/services/$slug'
+    | '/admin'
     | '/case-studies'
     | '/programs'
+    | '/admin/$collection/$id'
     | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
+    | '/admin/$collection'
     | '/resources/blog'
     | '/api/admin/export/$collection'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/careers'
     | '/contact'
     | '/custom-projects'
@@ -271,12 +314,15 @@ export interface FileRouteTypes {
     | '/resources/data-quiz'
     | '/resources/newsletter'
     | '/services/$slug'
+    | '/admin/'
     | '/case-studies/'
     | '/programs/'
+    | '/admin/$collection/$id'
     | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
+    | '/admin/$collection/'
     | '/resources/blog/'
     | '/api/admin/export/$collection'
   fileRoutesById: FileRoutesById
@@ -284,6 +330,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   CustomProjectsRoute: typeof CustomProjectsRoute
@@ -321,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/careers': {
       id: '/careers'
       path: '/careers'
@@ -355,6 +409,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/what-we-do'
       preLoaderRoute: typeof WhatWeDoRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/case-studies/': {
       id: '/case-studies/'
@@ -412,6 +473,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/$collection/': {
+      id: '/admin/$collection/'
+      path: '/$collection'
+      fullPath: '/admin/$collection/'
+      preLoaderRoute: typeof AdminCollectionIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$collection/$id': {
+      id: '/admin/$collection/$id'
+      path: '/$collection/$id'
+      fullPath: '/admin/$collection/$id'
+      preLoaderRoute: typeof AdminCollectionIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/export/contact.csv': {
       id: '/api/export/contact.csv'
       path: '/api/export/contact.csv'
@@ -457,9 +532,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminCollectionIdRoute: typeof AdminCollectionIdRoute
+  AdminCollectionIndexRoute: typeof AdminCollectionIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminCollectionIdRoute: AdminCollectionIdRoute,
+  AdminCollectionIndexRoute: AdminCollectionIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   CustomProjectsRoute: CustomProjectsRoute,

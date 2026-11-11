@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import { HeadContent, Scripts, createRootRoute, useRouterState } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { createIsomorphicFn } from "@tanstack/react-start"
@@ -116,6 +116,7 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const inAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") })
   return (
     <html lang="en">
       <head>
@@ -128,10 +129,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
-        <AnnouncementBanner />
-        <SiteHeader />
+        {!inAdmin && <AnnouncementBanner />}
+        {!inAdmin && <SiteHeader />}
         <main id="main">{children}</main>
-        <SiteFooter />
+        {!inAdmin && <SiteFooter />}
         {import.meta.env.DEV && (
           <TanStackDevtools
             config={{ position: "bottom-right" }}

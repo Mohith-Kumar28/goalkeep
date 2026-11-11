@@ -35,7 +35,7 @@ export async function collectionCsv(collection: Collection) {
   ]
 
   // The byte-order mark makes Excel read the file as UTF-8.
-  return new Response(`﻿${lines.join("\r\n")}\r\n`, {
+  return new Response(`\uFEFF${lines.join("\r\n")}\r\n`, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${collection.file}"`,

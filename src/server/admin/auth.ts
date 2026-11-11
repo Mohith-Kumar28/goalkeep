@@ -46,7 +46,7 @@ async function validSession(password: string, token: string | undefined) {
   if (!token) return false
   const [expiry, signature] = token.split(".")
   if (!/^\d+$/.test(expiry) || Number(expiry) < Date.now()) return false
-  if (!/^[0-9a-f]{64}$/.test(signature ?? "")) return false
+  if (!/^[0-9a-f]{64}$/.test(signature)) return false
   const given = Uint8Array.from(signature.match(/../g)!, (pair) => parseInt(pair, 16))
   return sameBytes(await hmac(password, expiry), given)
 }
@@ -60,7 +60,7 @@ async function context() {
 }
 
 /** Admin pages are private: never cached, never indexed. */
-function keepPrivate(server: typeof import("@tanstack/react-start/server")) {
+function keepPrivate(server: Awaited<ReturnType<typeof context>>["server"]) {
   server.setResponseHeader("Cache-Control", "no-store")
   server.setResponseHeader("X-Robots-Tag", "noindex, nofollow")
 }

@@ -3,6 +3,7 @@
 @import "./styles/tokens.css";
 @import "./styles/why-we-exist.css";
 @import "./styles/design.css";
+@import "./styles/admin.css";
 
 /* Two families, per the brief: Nunito Sans and the hand. Outfit and Plus
    Jakarta are no longer imported — see tokens.css. */

@@ -32,6 +32,8 @@ export type Field = {
   /** A column of the list view. */
   list?: boolean
   searchable?: boolean
+  /** A select shown as a small tag rather than plain text. */
+  chip?: boolean
   /** Left out of the CSV exports. */
   noCsv?: boolean
 }
@@ -81,7 +83,7 @@ export const collections: Record<CollectionId, Collection> = {
       { key: "email", label: "Email", kind: "email", editable: true, required: true, max: 200, list: true, searchable: true },
       { key: "organization", label: "Organization", kind: "text", editable: true, max: 200, list: true, searchable: true },
       { key: "service", label: "Interested in", kind: "select", editable: true, required: true, options: asOptions(contactServices), list: true, searchable: true },
-      { key: "message", label: "Message", kind: "longtext", editable: true, max: 4000, searchable: true },
+      { key: "message", label: "Message", kind: "longtext", editable: true, required: true, max: 4000, searchable: true },
       userAgent,
     ],
   },
@@ -98,7 +100,7 @@ export const collections: Record<CollectionId, Collection> = {
       { key: "email", label: "Email", kind: "email", editable: true, required: true, max: 200, list: true, searchable: true },
       { key: "name", label: "Name", kind: "text", editable: true, max: 120, list: true, searchable: true },
       { key: "organization", label: "Organization", kind: "text", editable: true, max: 200, list: true, searchable: true },
-      { key: "audience", label: "Reader", kind: "select", editable: true, options: readers.map((r) => ({ value: r.id, label: r.label })), list: true },
+      { key: "audience", label: "Reader", kind: "select", editable: true, options: readers.map((r) => ({ value: r.id, label: r.label })), list: true, chip: true },
       { key: "edition", label: "Edition", kind: "select", editable: true, options: newsletter.editions.map((e) => ({ value: e.id, label: e.month })) },
     ],
   },
@@ -120,7 +122,7 @@ export const collections: Record<CollectionId, Collection> = {
       { key: "size", label: "Size", kind: "select", editable: true, required: true, options: asOptions(detailOptions.size) },
       { key: "budget", label: "Budget", kind: "select", editable: true, options: asOptions(detailOptions.budget) },
       // Scores and answers are derived from one another; editing one would leave the rest lying.
-      { key: "band", label: "Persona", kind: "select", editable: false, options: personas.map((p) => ({ value: p.id, label: p.label })), list: true },
+      { key: "band", label: "Persona", kind: "select", editable: false, options: personas.map((p) => ({ value: p.id, label: p.label })), list: true, chip: true },
       { key: "score_overall", label: "Overall", kind: "score", editable: false, list: true },
       { key: "score_data", label: "Data", kind: "score", editable: false },
       { key: "score_technology", label: "Technology", kind: "score", editable: false },

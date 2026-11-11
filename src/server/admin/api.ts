@@ -144,7 +144,7 @@ export const updateRecord = createServerFn({ method: "POST" })
   .validator((input: { collection: CollectionId; id: number | string; values: Record<string, unknown> }) => ({
     collection: parseCollection(input.collection),
     id: parseId(input.id),
-    values: typeof input.values === "object" && input.values !== null ? input.values : {},
+    values: input.values,
   }))
   .handler(async ({ data }): Promise<UpdateResult> => {
     await requireAdmin()
