@@ -10,7 +10,12 @@ const config = defineConfig({
   plugins: [
     // The Cloudflare plugin builds the SSR environment for the Workers
     // runtime, so it has to come before tanstackStart.
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    cloudflare({
+      viteEnvironment: { name: "ssr" },
+      // `pnpm deploy:production` builds against wrangler.production.jsonc
+      // (goalkeep.org); everything else targets the goalkeep-v5 preview.
+      configPath: process.env.WRANGLER_CONFIG ?? "wrangler.jsonc",
+    }),
     devtools(),
     tailwindcss(),
     tanstackStart(),

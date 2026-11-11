@@ -18,6 +18,7 @@
     "og": "node scripts/build-og.mjs",
     "deploy": "pnpm build && node scripts/deploy-guard.mjs && wrangler deploy",
     "deploy:dry": "pnpm build && node scripts/deploy-guard.mjs && wrangler deploy --dry-run",
+    "deploy:production": "bash scripts/deploy-production.sh",
     "deploy:legacy": "bash scripts/deploy-legacy.sh",
     "deploy:legacy:dry": "bash scripts/deploy-legacy.sh --dry-run",
     "cf:tail": "wrangler tail"
