@@ -21,15 +21,8 @@ export const quizPage = {
   },
   hint: 'Answer for your organisation as it is today.',
   thanks: {
-    title: 'Thank you for your submission!',
-    body: 'Please check your email, we have e-mailed your results to you.',
-    saved: 'Your answers are saved. We could not send the results email just now, so we will send it to you shortly.',
-    sending: 'Sending your results…',
-    talk: 'Talk to us about your results',
-    share: 'Get your team to take the quiz',
-    copied: 'Quiz link copied. Share it with your team.',
-    shareText: 'How does our team make program decisions? Take this 3-minute quiz:',
-    shareTitle: 'Goalkeep data culture quiz',
+    title: 'Thank you for your submission.',
+    body: 'We shall email you the results of the quiz shortly!',
   },
   steps: { about: 'About you', results: 'Your results' },
 } as const

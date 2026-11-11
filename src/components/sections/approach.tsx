@@ -56,91 +56,65 @@ export function Approach({ ground = 'ground-cream' }: { ground?: string }) {
   const [open, setOpen] = useState(0)
 
   /*
-   * The open row's sequence only starts once the section is actually on
-   * screen. Without this the first row plays its whole animation during page
-   * load, several screens above where the visitor is, and has resolved to
-   * photographs by the time anyone scrolls down to it — so the one row that is
-   * open by default is the one row whose animation nobody ever sees.
+   * 21 Oct: "I nearly missed it" about the design sticky notes, so the open
+   * row's sequence waits until the section's top has come well up the screen.
+   * A position, not a visibility ratio: on a phone the section is several
+   * screens tall and never gets to half visible.
    *
-   * 21 Oct: "I nearly missed it" about the design sticky notes - so it
-   * waits until the section's top has come well up the screen and the
-   * visitor has stopped scrolling, and the panel returns to its sketch after
-   * the photographs (see phase-animation.tsx). A position, not a visibility
-   * ratio: on a phone the section is several screens tall and never gets to
-   * half visible.
+   * 23 Oct: a phone has no hover, so without a hover-capable pointer
+   * whichever row sits across the middle of the screen opens instead.
+   *
+   * 11 Nov: "some button clicks are being stopped by design/build/adopt
+   * animations stopping the scroll". The sequences animate the notes' size
+   * and position, a layout on every frame, and they were starting mid-scroll
+   * as rows crossed the middle and then running for good, offscreen too,
+   * under every tap further down the page. So nothing here changes while the
+   * page moves: a row opens, and its sequence starts, only once scrolling has
+   * settled, and the sequence stops when the section leaves the screen.
    */
   const ref = useRef<HTMLElement>(null)
-  const [seen, setSeen] = useState(false)
+  const rows = useRef<Array<HTMLLIElement | null>>([])
+  const [live, setLive] = useState(false)
 
   useEffect(() => {
-    const node = ref.current
-    if (!node) return
-    /* Starts once the section is in place *and* scrolling has stopped. The
-       sticky notes animate their size and position, and starting that in the
-       middle of a smooth scroll (a "Our approach" link) cut the scroll short.
-       It also means the sketch plays from the top while someone is actually
-       looking at it. */
-    let settle: number | undefined
+    const section = ref.current
+    if (!section) return
+    const noHover = window.matchMedia('(hover: none), (max-width: 767px)')
     let inView = false
+    let crossed: number | undefined
+    let settle: number | undefined
     const arm = () => {
       window.clearTimeout(settle)
       settle = window.setTimeout(() => {
-        if (!inView) return
-        setSeen(true)
-        observer.disconnect()
-        window.removeEventListener('scroll', arm)
+        if (inView && noHover.matches && crossed !== undefined) setOpen(crossed)
+        crossed = undefined
+        setLive(inView)
       }, 180)
     }
-    const observer = new IntersectionObserver(
+    const sectionObserver = new IntersectionObserver(
       ([entry]) => {
         inView = entry.isIntersecting
-        if (inView) arm()
+        if (!inView) setLive(false)
+        arm()
       },
       { rootMargin: '0px 0px -45% 0px' },
     )
-    observer.observe(node)
+    const rowObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) crossed = rows.current.indexOf(entry.target as HTMLLIElement)
+        }
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    )
+    sectionObserver.observe(section)
+    rows.current.forEach((row) => row && rowObserver.observe(row))
     window.addEventListener('scroll', arm, { passive: true })
     return () => {
-      observer.disconnect()
+      sectionObserver.disconnect()
+      rowObserver.disconnect()
       window.removeEventListener('scroll', arm)
       window.clearTimeout(settle)
-    }
-  }, [])
-
-  /*
-   * 23 Oct: a phone has no hover, so Build and Adopt never opened unless
-   * someone thought to tap their titles - and their sequences went unseen.
-   * Without a hover-capable pointer, whichever row crosses the middle of the
-   * screen opens instead, so each stage plays as it is scrolled to. Open and
-   * closed rows are the same height below md, so this never resizes the
-   * section under the scroll.
-   */
-  const rows = useRef<Array<HTMLLIElement | null>>([])
-
-  useEffect(() => {
-    const query = window.matchMedia('(hover: none), (max-width: 767px)')
-    let observer: IntersectionObserver | undefined
-    const sync = () => {
-      observer?.disconnect()
-      observer = undefined
-      if (!query.matches) return
-      observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue
-            const index = rows.current.indexOf(entry.target as HTMLLIElement)
-            if (index >= 0) setOpen(index)
-          }
-        },
-        { rootMargin: '-45% 0px -45% 0px' },
-      )
-      rows.current.forEach((row) => row && observer?.observe(row))
-    }
-    sync()
-    query.addEventListener('change', sync)
-    return () => {
-      observer?.disconnect()
-      query.removeEventListener('change', sync)
     }
   }, [])
 
@@ -171,7 +145,7 @@ export function Approach({ ground = 'ground-cream' }: { ground?: string }) {
               }}
               pillar={pillar}
               active={open === index}
-              playing={open === index && seen}
+              playing={open === index && live}
               first={index === 0}
               flip={index % 2 === 1}
               onOpen={() => setOpen(index)}
@@ -196,7 +170,7 @@ function PhaseRow({
   rowRef: (node: HTMLLIElement | null) => void
   pillar: Pillar
   active: boolean
-  /** Open *and* on screen — see the observer in WhatWeDo. */
+  /** Open, on screen, and the page at rest. See the effect in Approach. */
   playing: boolean
   first: boolean
   /** Media on the left. Every other row, so the stages alternate. */
@@ -278,16 +252,16 @@ function PhaseRow({
             text, half picture. */}
         <div
           className={cn(
-            'pointer-events-none relative order-first mx-5 mt-5 aspect-[4/3] overflow-hidden rounded-[var(--r-md)] transition-colors duration-[var(--dur-slow)] sm:aspect-[16/10] md:order-none md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
+            'pointer-events-none relative order-first mx-5 mt-5 aspect-[4/3] overflow-hidden [contain:strict] rounded-[var(--r-md)] transition-colors duration-[var(--dur-slow)] sm:aspect-[16/10] md:order-none md:col-span-6 md:m-0 md:aspect-auto md:rounded-none',
           )}
-          style={{ background: active ? 'var(--gk-navy)' : 'var(--gk-cream-deep)' }}
-          data-ground={active ? 'navy' : undefined}
+          style={{ background: playing ? 'var(--gk-navy)' : 'var(--gk-cream-deep)' }}
+          data-ground={playing ? 'navy' : undefined}
         >
-          {active ? (
+          {playing ? (
             <PhaseAnimation
               kind={hue.kind}
               images={pillar.images}
-              active={playing}
+              active
               ink="var(--fg-inverse)"
               accent={hue.onNavy}
               className="absolute inset-0 h-full w-full rounded-none"

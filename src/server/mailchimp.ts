@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto"
 
 /**
- * Every form on the site adds its submitter to Goalkeep's Mailchimp audience
- * (Nov 10 review: "everyone who submits they should get added to the
- * Mailchimp database").
+ * The contact form and the quiz add their submitter to Goalkeep's Mailchimp
+ * audience (Nov 10 review: "everyone who submits they should get added to the
+ * Mailchimp database"). Newsletter sign-ups stopped on Nov 11 and stay in D1.
  *
  * With MAILCHIMP_API_KEY and MAILCHIMP_LIST_ID set, this uses the Marketing
  * API, which can tag the member. Without them it falls back to the audience's

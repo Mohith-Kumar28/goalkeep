@@ -1,7 +1,7 @@
 import { Building2, HandCoins, Network, Sprout } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { audienceSection, audiences } from '@/content/homepage'
 import type { Audience, AudienceId } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
@@ -29,9 +29,10 @@ import { cn } from '@/lib/utils'
  *   · The gallery is a full-width strip that moves on its own.
  *
  * 11 Nov, phones: the pinned list that scrolling stepped through "is not
- * working well", so below md the four options are one swipeable row of
- * chips (icon and label) and a tap swaps everything under it, testimonial
- * included. The page scrolls normally throughout.
+ * working well", so below md the four options are chips (icon and label)
+ * and a tap swaps everything under it, testimonial included. Later the same
+ * day: "all four options should appear clickable on mobile without scrolling
+ * left/right", so the chips sit two by two instead of in a sideways row.
  */
 type Theme = {
   /** The band's ground. */
@@ -89,16 +90,6 @@ export function Audiences() {
   const [active, setActive] = useState(0)
   const audience = audiences[active]
   const theme = THEMES[audience.id]
-  const chips = useRef<HTMLDivElement>(null)
-
-  /* On phones the chip row scrolls sideways; keep the selected chip in it. */
-  useEffect(() => {
-    const row = chips.current
-    const chip = row?.children[active] as HTMLElement | undefined
-    if (!row || !chip || row.scrollWidth <= row.clientWidth) return
-    const left = chip.offsetLeft - row.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2
-    row.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' })
-  }, [active, reduced])
 
   // Deep links survive the category rename: /#early-stage still resolves.
   useEffect(() => {
@@ -146,9 +137,8 @@ export function Audiences() {
           <div
             role="tablist"
             aria-label="Kinds of organisation we work with"
-            ref={chips}
             /* The longer labels need a wider row. */
-            className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:max-w-[36rem] md:flex-wrap md:overflow-visible md:px-0"
+            className="grid grid-cols-2 gap-2 md:flex md:max-w-[36rem] md:flex-wrap"
           >
             {audiences.map((item, index) => {
               const selected = index === active
@@ -169,7 +159,7 @@ export function Audiences() {
                     if (event.key === 'ArrowLeft') setActive((active - 1 + audiences.length) % audiences.length)
                   }}
                   className={cn(
-                    'flex shrink-0 items-center gap-2 rounded-[var(--r-btn)] border px-3 py-2 text-left text-[length:var(--fs-sm)] font-bold whitespace-nowrap md:gap-3 md:px-5 md:py-2.5 md:whitespace-normal',
+                    'flex min-w-0 flex-col items-start gap-1 rounded-[var(--r-md)] border px-2.5 py-2 text-left text-[length:var(--fs-sm)] font-bold max-md:text-[0.8125rem] max-md:leading-tight md:flex-row md:items-center md:shrink-0 md:gap-3 md:rounded-[var(--r-btn)] md:px-5 md:py-2.5',
                     'transition-colors duration-[var(--dur-base)] ease-[var(--ease-out)]',
                     !selected &&
                       'border-[var(--hairline-strong)] bg-[var(--gk-white)] text-[var(--gk-ink)] hover:border-[var(--gk-ink)]',

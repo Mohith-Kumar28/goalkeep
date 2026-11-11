@@ -1,7 +1,7 @@
 /**
  * The slice of the Workers runtime the site uses. @cloudflare/workers-types
  * isn't installed and its globals clash with the DOM lib, so this declares
- * only the D1 binding from wrangler.jsonc and the email and Mailchimp variables.
+ * only the D1 binding from wrangler.jsonc and the email, Mailchimp and export variables.
  */
 declare module "cloudflare:workers" {
   interface D1Result {
@@ -12,6 +12,7 @@ declare module "cloudflare:workers" {
   interface D1PreparedStatement {
     bind: (...values: Array<string | number | null>) => D1PreparedStatement
     run: () => Promise<D1Result>
+    all: () => Promise<{ results: Array<Record<string, unknown>> }>
   }
 
   interface D1Database {
@@ -30,5 +31,7 @@ declare module "cloudflare:workers" {
     MAILCHIMP_API_KEY?: string
     /** Secret: the audience (list) id the forms add members to. */
     MAILCHIMP_LIST_ID?: string
+    /** Secret: unlocks /api/export/newsletter.csv and /api/export/quiz.csv as `?token=`. */
+    EXPORT_TOKEN?: string
   }
 }

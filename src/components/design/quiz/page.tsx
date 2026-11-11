@@ -17,7 +17,6 @@ const emptyDetails: QuizDetails = {
   name: '',
   email: '',
   organization: '',
-  region: '',
   sector: '',
   sectorOther: '',
   role: '',

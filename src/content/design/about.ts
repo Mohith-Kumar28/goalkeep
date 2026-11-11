@@ -25,7 +25,7 @@ export const about = {
       position: "50% 30%",
     },
     paragraphs: [
-      "I began working in the social sector as a volunteer with Akanksha Foundation while I was in college. In the twenty years since, I have spent over a decade helping organisations strengthen their measurement, their data systems and their ability to make evidence-informed decisions.",
+      "I began working in the social sector as a volunteer with Akanksha Foundation while I was in college. In the twenty years since, I have spent my time helping organisations strengthen their measurement, their data systems and their ability to make evidence-informed decisions.",
       "I founded Goalkeep in 2020 after repeatedly seeing organisations collect significant amounts of data without the systems, capabilities or confidence needed to turn it into better decisions.",
       "Data, when used well, can do far more than help us make decisions. It can offer new ways of understanding problems, exploring solutions and fuelling our quest for meaning. That is the philosophy with which we approach our work at Goalkeep: not to always offer definitive answers, but to equip individuals and organisations to undertake these data-driven journeys themselves.",
     ],
@@ -64,8 +64,8 @@ export const about = {
         role: "Founder & Director",
         bio: "What drives me is when individuals fundamentally change their relationship with data, and use it to explore, understand and do better. I love it when our work gives people a way to measure the impact of their work, but also deepen it. Outside work, I like coffee, cooking and connecting with my friends.",
         photo: {
-          src: "/design/16cb390c7b561f2cfb456b0f57fd9d5e.webp",
-          position: "50% 55%",
+          src: "/design/team-manije.webp",
+          position: "50% 40%",
         },
         tone: "gold",
       },
@@ -205,101 +205,6 @@ export const about = {
     eyebrow: "partners who trust us",
     heading:
       "Nonprofits, funders and intermediaries <em>we’ve worked with.</em>",
-    logos: [
-      {
-        name: "Dost Education",
-        src: "/design/2b2f3dec17193c04a794fa58490c147b.webp",
-      },
-      {
-        name: "Acumen Academy",
-        src: "/design/b9638e720b901847322efaf637268875.webp",
-      },
-      {
-        name: "Alohomora Education Foundation",
-        src: "/design/ed5abc13748ead5d0df0d2b6f3de02d2.webp",
-      },
-      {
-        name: "Dovetail Impact Foundation",
-        src: "/design/f6be2f30d688e62c3cc6332f0ba16ee8.webp",
-      },
-      {
-        name: "Jai Vakeel Foundation",
-        src: "/design/ab0432ae337d3a98549504a153f4f1e7.webp",
-      },
-      {
-        name: "Point of View",
-        src: "/design/c8c2e5a0cd3b24cd9a0d61336aed434b.webp",
-      },
-      {
-        name: "Udayan Care",
-        src: "/design/cfdf406825b1da2a40638ac02baac63a.webp",
-      },
-      {
-        name: "Welthungerhilfe",
-        src: "/design/5c070b051c7c1a97e1056ba0a9eed48c.webp",
-      },
-      { name: "Baithak", src: "/design/c1050ab18fcce0e6619937c5e761873f.webp" },
-      {
-        name: "Antarang Foundation",
-        src: "/design/22f214d82648ef47c83802bcce7f36e9.webp",
-      },
-      {
-        name: "Educate Girls",
-        src: "/design/6deb31d5bf8ce273f5ac36d6a96f8c91.webp",
-      },
-      { name: "SNEHA", src: "/design/3846743fa694c15ad20133cc9b206eb0.webp" },
-      {
-        name: "Madhi Foundation",
-        src: "/design/c4a56c9b302663d2f8c86baadd515544.webp",
-      },
-      {
-        name: "Quest Alliance",
-        src: "/design/d65cde43a4f53edddb16e8649c332f16.webp",
-      },
-      {
-        name: "Aangan Trust",
-        src: "/design/136a61d09ea597ee2fcfda1693346e4c.webp",
-      },
-      {
-        name: "SVP India",
-        src: "/design/2aff8edb695039df74da71a3e4bc7aff.webp",
-      },
-      {
-        name: "Catalysts for Social Action",
-        src: "/design/e07e9c5f8fbf74cac5e8698460284290.webp",
-      },
-      {
-        name: "Foster and Forge Foundation",
-        src: "/design/d8fe4dae5d807671cfc69052d5574fd9.webp",
-      },
-      { name: "Medha", src: "/design/99a33e617b6c0a61b16425633a037dd4.webp" },
-      {
-        name: "Kshamata",
-        src: "/design/f1973d1b8c770202c757abfa01ce4b94.webp",
-      },
-      { name: "Toybank", src: "/design/0ce4104b5bf60cb379172bc79d3b4874.webp" },
-      {
-        name: "ATE Chandra Foundation",
-        src: "/design/84b3bccf479a82eff48ab86b5617aefe.webp",
-      },
-      { name: "Vanavil", src: "/design/7438a0255ce1ba4dcf659ec6b3c0ee12.webp" },
-      {
-        name: "Children's Investment Fund Foundation",
-        src: "/design/2ca3757a57874d388a81712fee998f4e.webp",
-      },
-      {
-        name: "Ghaswala Vision Foundation",
-        src: "/design/a36a7863e499eb05e83c161049442faa.webp",
-      },
-      {
-        name: "Migrants Resilience Collaborative",
-        src: "/design/6a177295ba600b93a0caedaa1e25fa78.webp",
-      },
-      {
-        name: "Key Education Foundation",
-        src: "/design/0f25b563aed7491d5e01513dea4c2a79.webp",
-      },
-    ],
   },
   ways: {
     eyebrow: "ways to partner",

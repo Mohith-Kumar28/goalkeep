@@ -1,8 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { caseStudies, caseStudySection } from '@/content/homepage'
-import { caseStudies as studyPages, caseStudyHref } from '@/content/design/case-studies'
-import type { CaseStudy } from '@/content/types'
+import { caseStudies as studyPages, caseStudyHref, sectors } from '@/content/design/case-studies'
+import type { CaseStudy as Study, Photo } from '@/content/design/case-studies'
+import { tones } from '@/components/design/tones'
 import { GkButton } from '@/components/primitives/gk-button'
 import { Reveal } from '@/components/primitives/reveal'
 
@@ -38,6 +39,9 @@ import { Reveal } from '@/components/primitives/reveal'
  *
  * 10 Nov: the pages exist now. A card whose organisation has one opens it,
  * and the section links to the full list.
+ *
+ * 11 Nov: only the four studies with a page are shown, and each card takes
+ * its photograph and sector tags from that study.
  */
 export function CaseStudies() {
   /*
@@ -45,7 +49,7 @@ export function CaseStudies() {
    * Four cards is exactly the count this splits cleanly into, which is why
    * there is no third row any more.
    */
-  const [lead, ...rest] = caseStudies
+  const [lead, ...rest] = caseStudies.map(toCard)
 
   return (
     <section
@@ -73,16 +77,16 @@ export function CaseStudies() {
             was a desktop one, and from md up this is the grid again. */}
         <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           <Reveal as="li" className="w-[85%] shrink-0 snap-center md:col-span-3 md:w-auto">
-            <LeadCard study={lead} />
+            <LeadCard card={lead} />
           </Reveal>
-          {rest.map((study, index) => (
+          {rest.map((card, index) => (
             <Reveal
               as="li"
-              key={study.slug}
+              key={card.study.slug}
               delay={index * 0.07}
               className="w-[85%] shrink-0 snap-center md:w-auto"
             >
-              <Card study={study} />
+              <StudyCard card={card} />
             </Reveal>
           ))}
         </ul>
@@ -91,31 +95,30 @@ export function CaseStudies() {
   )
 }
 
-/*
- * The intervention tag takes a light brand tint, keyed to the kind of work so
- * the same intervention is always the same colour across the page.
- */
-const INTERVENTION_TINTS: Record<string, string> = {
-  'Data collection & visualisation': 'var(--gk-teal-tint)',
-  'Theory of Change in practice': 'var(--gk-blue-tint)',
-  'Grant management systems': 'var(--gk-blue-tint)',
-  'Capacity building': 'var(--gk-coral-tint)',
+type Card = { study: Study; body: string; image: Photo }
+
+function toCard({ slug, body }: (typeof caseStudies)[number]): Card {
+  const study = studyPages.find((candidate) => candidate.slug === slug)
+  if (!study) throw new Error(`No case study page for ${slug}`)
+  const { cover } = study.card
+  if (cover.kind !== 'photo') throw new Error(`The ${slug} case study has no card photo for the homepage`)
+  return { study, body: body ?? study.card.summary, image: cover }
 }
 
-/** Two tags, then the organisation. */
-function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }) {
+/** The study's sector tags, then the organisation. */
+function Byline({ study, size = 'sm' }: { study: Study; size?: 'sm' | 'lg' }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
-        <span className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]" style={{ background: 'var(--gk-beige-deep)' }}>
-          {study.sector}
-        </span>
-        <span
-          className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
-          style={{ background: INTERVENTION_TINTS[study.intervention] ?? 'var(--gk-teal-tint)' }}
-        >
-          {study.intervention}
-        </span>
+        {study.sectorTags.map((id) => (
+          <span
+            key={id}
+            className="chip text-[length:var(--fs-xs)] text-[var(--gk-ink)]"
+            style={{ background: tones[sectors[id].tone].bg }}
+          >
+            {sectors[id].label}
+          </span>
+        ))}
       </div>
       <h3
         className={
@@ -130,19 +133,10 @@ function Byline({ study, size = 'sm' }: { study: CaseStudy; size?: 'sm' | 'lg' }
   )
 }
 
-const pageFor = (study: CaseStudy) => studyPages.find((candidate) => candidate.org === study.org)
-
-/**
- * The card opens the organisation's case-study page, when it has one. A
- * linked card cannot hold a Read more button, so its text is cut at four
- * lines on phones instead; the page has the rest.
- */
-function StudyLink({ study, children }: { study: CaseStudy; children: ReactNode }) {
-  const page = pageFor(study)
-  if (!page) return children
+function StudyLink({ study, children }: { study: Study; children: ReactNode }) {
   return (
     <Link
-      to={caseStudyHref(page.slug)}
+      to={caseStudyHref(study.slug)}
       aria-label={`${study.org} case study`}
       className="card-lift block h-full rounded-[var(--r-lg)]"
     >
@@ -151,28 +145,35 @@ function StudyLink({ study, children }: { study: CaseStudy; children: ReactNode 
   )
 }
 
-/** The lead case study: photograph left, the story right. */
-function LeadCard({ study }: { study: CaseStudy }) {
+function CardImage({ image, className }: { image: Photo; className: string }) {
   return (
-    <StudyLink study={study}>
+    <img
+      src={image.src}
+      alt={image.alt}
+      loading="lazy"
+      decoding="async"
+      className={className}
+      style={{ objectPosition: image.position }}
+    />
+  )
+}
+
+/** The lead case study: photograph left, the story right. */
+function LeadCard({ card }: { card: Card }) {
+  return (
+    <StudyLink study={card.study}>
       <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] md:grid md:grid-cols-2">
         {/* The photo fills the row the text sets rather than sizing it. Sized by
             its own aspect ratio, it grew the card ~100px when the lazy image
             arrived - in the middle of a scroll to the contact form, which then
             stopped short (23 Oct). */}
         <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[16rem]">
-          <img
-            src={study.image}
-            alt={study.imageAlt}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <CardImage image={card.image} className="absolute inset-0 h-full w-full object-cover" />
         </div>
         <div className="flex flex-col gap-3 p-5 md:justify-center md:gap-4 md:p-12">
-          <Byline study={study} size="lg" />
+          <Byline study={card.study} size="lg" />
           <p className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
-            {study.body}
+            {card.body}
           </p>
         </div>
       </article>
@@ -180,22 +181,16 @@ function LeadCard({ study }: { study: CaseStudy }) {
   )
 }
 
-function Card({ study }: { study: CaseStudy }) {
+function StudyCard({ card }: { card: Card }) {
   return (
-    <StudyLink study={study}>
+    <StudyLink study={card.study}>
       <article className="flex h-full flex-col overflow-hidden rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--gk-white)] text-[var(--gk-ink)]">
-        <img
-          src={study.image}
-          alt={study.imageAlt}
-          loading="lazy"
-          decoding="async"
-          className="aspect-[16/10] w-full object-cover"
-        />
+        <CardImage image={card.image} className="aspect-[16/10] w-full object-cover" />
 
         <div className="flex flex-1 flex-col gap-3 p-5 md:p-7">
-          <Byline study={study} />
+          <Byline study={card.study} />
 
-          <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">{study.body}</p>
+          <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">{card.body}</p>
         </div>
       </article>
     </StudyLink>

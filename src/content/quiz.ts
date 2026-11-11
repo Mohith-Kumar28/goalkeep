@@ -76,15 +76,6 @@ export const statementCount = domains.reduce((n, d) => n + d.statements.length, 
 /* The doc gives the detail fields but not their options. These are a first
    pass for Goalkeep to correct; the sectors follow the case-study tags. */
 export const detailOptions = {
-  region: [
-    'North India',
-    'South India',
-    'East India',
-    'West India',
-    'Central India',
-    'North-East India',
-    'Outside India',
-  ],
   sector: [
     'Education',
     'Health',
@@ -109,32 +100,19 @@ export const detailOptions = {
     'Other',
   ],
   size: ['1–10', '11–50', '51–200', '201–500', 'More than 500'],
+  budget: ['Under 2 Cr', '2 - 5 Cr', '5.1 - 10 Cr', '10.1 - 50 Cr', 'Above 50 Cr'],
 }
 
 export type QuizDetails = {
   name: string
   email: string
   organization: string
-  region: string
   sector: string
   sectorOther: string
   role: string
   roleOther: string
   size: string
   budget: string
-}
-
-export const detailLabels: Record<keyof QuizDetails, string> = {
-  name: 'Full name',
-  email: 'Email (we’ll email your results to you)',
-  organization: 'Organisation name',
-  region: 'Region',
-  sector: 'Sector',
-  sectorOther: 'If “Other” sector, please tell us here',
-  role: 'Your role in the organisation',
-  roleOther: 'If “Other” role, please tell us here',
-  size: 'Organisation size (number of employees)',
-  budget: 'Organisation budget (e.g. INR 1 crore)',
 }
 
 export type BandId = 'starting' | 'emerging' | 'developing' | 'established'

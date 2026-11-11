@@ -79,21 +79,23 @@ export function CaseStudySection({
           </figcaption>
         </figure>
       )}
-      <p
-        style={
-          card.kind === 'live'
-            ? { margin: 'auto 0 0', paddingTop: gap.link }
-            : { margin: 'auto 0 0', paddingTop: gap.link, fontSize: 15, fontWeight: 700, color: tones[card.tone].ink }
-        }
-      >
-        {card.kind === 'live' ? (
-          <SiteLink href={card.href} className="dc-tlink">
-            {card.cta ?? 'Read the case study'} <ArrowIcon />
-          </SiteLink>
-        ) : (
-          (card.note ?? 'Full case study coming soon')
-        )}
-      </p>
+      {(card.kind === 'soon' || card.cta !== '') && (
+        <p
+          style={
+            card.kind === 'live'
+              ? { margin: 'auto 0 0', paddingTop: gap.link }
+              : { margin: 'auto 0 0', paddingTop: gap.link, fontSize: 15, fontWeight: 700, color: tones[card.tone].ink }
+          }
+        >
+          {card.kind === 'live' ? (
+            <SiteLink href={card.href} className="dc-tlink">
+              {card.cta ?? 'Read the case study'} <ArrowIcon />
+            </SiteLink>
+          ) : (
+            (card.note ?? 'Full case study coming soon')
+          )}
+        </p>
+      )}
     </div>
   )
 

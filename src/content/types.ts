@@ -73,21 +73,6 @@ export type Audience = {
   ctas: Array<Cta>
 }
 
-export type CaseStudy = {
-  slug: string
-  /** The organisation the card is about — it is the card's headline now. */
-  org: string
-  /** Neutral tag: the partner's sector. */
-  sector: string
-  /** Coloured tag: the work Goalkeep did for them. */
-  intervention: string
-  /** What changed, and what it took. Carries the card on its own; the
-   *  before/after stat figures were dropped in the copy replacement. */
-  body: string
-  image: string
-  imageAlt: string
-}
-
 export type FieldNote = {
   slug: string
   date: string

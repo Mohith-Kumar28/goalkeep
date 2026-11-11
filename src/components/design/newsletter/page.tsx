@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Rich } from '@/components/design/kickstarter/rich'
-import { audiences, newsletter } from '@/content/design/newsletter'
+import { newsletter, readers } from '@/content/design/newsletter'
 import type { Edition } from '@/content/design/newsletter'
 import '@/styles/design-newsletter.css'
 import { useSubscribe } from './use-subscribe'
 import type { FormId, Signup, SubscribeState } from './use-subscribe'
+import { MarkAssembly } from '@/components/primitives/logo-shapes'
 
 type FormProps = {
   state: SubscribeState
   form: FormId
-  /** The past edition whose "Subscribe to keep reading" button brought them here. */
+  /** The past edition whose "Subscribe to the next issue" button brought them here. */
   edition: Edition | null
   onSubmit: (form: FormId, signup: Signup) => void
 }
@@ -44,6 +45,36 @@ function FormError({ state, form }: { state: SubscribeState; form: FormId }) {
   )
 }
 
+function SignupFields({ id, sending }: { id: string; sending: boolean }) {
+  return (
+    <>
+      <div className="dc-nl-pair">
+        <div className="dc-nl-field">
+          <label htmlFor={`${id}-name`}>Name</label>
+          <input id={`${id}-name`} name="FNAME" type="text" autoComplete="name" disabled={sending} />
+        </div>
+        <div className="dc-nl-field">
+          <label htmlFor={`${id}-email`}>Email</label>
+          <input id={`${id}-email`} name="EMAIL" type="email" required autoComplete="email" disabled={sending} />
+        </div>
+      </div>
+      <div className="dc-nl-field">
+        <label htmlFor={`${id}-org`}>Organization</label>
+        <input id={`${id}-org`} name="ORG" type="text" autoComplete="organization" disabled={sending} />
+      </div>
+      <fieldset className="dc-nl-audience" disabled={sending}>
+        <legend>{newsletter.card.audience}</legend>
+        {readers.map((reader) => (
+          <label key={reader.id}>
+            <input type="radio" name="AUDIENCE" value={reader.id} required />
+            {reader.label}
+          </label>
+        ))}
+      </fieldset>
+    </>
+  )
+}
+
 function SubscribeCard({ onReset, ...props }: FormProps & { onReset: () => void }) {
   const { state, edition } = props
   const { card } = newsletter
@@ -66,29 +97,7 @@ function SubscribeCard({ onReset, ...props }: FormProps & { onReset: () => void 
             <Rich html={card.heading} />
           </h2>
           {edition && <p className="dc-nl-edition-note">{forMonth(card.edition, edition)}</p>}
-          <div className="dc-nl-pair">
-            <div className="dc-nl-field">
-              <label htmlFor="ku-name">Name</label>
-              <input id="ku-name" name="FNAME" type="text" autoComplete="name" disabled={sending} />
-            </div>
-            <div className="dc-nl-field">
-              <label htmlFor="ku-email">Email</label>
-              <input id="ku-email" name="EMAIL" type="email" required autoComplete="email" disabled={sending} />
-            </div>
-          </div>
-          <div className="dc-nl-field">
-            <label htmlFor="ku-org">Organization</label>
-            <input id="ku-org" name="ORG" type="text" autoComplete="organization" disabled={sending} />
-          </div>
-          <fieldset className="dc-nl-audience" disabled={sending}>
-            <legend>{card.audience}</legend>
-            {audiences.map((audience) => (
-              <label key={audience.id}>
-                <input type="radio" name="AUDIENCE" value={audience.id} required />
-                {audience.label}
-              </label>
-            ))}
-          </fieldset>
+          <SignupFields id="ku" sending={sending} />
           <Honeypot />
           <FormError state={state} form={props.form} />
           <button type="submit" className="dc-nl-btn dc-nl-btn-navy" disabled={sending}>
@@ -127,7 +136,7 @@ function EditionRow({ edition, onSubscribe }: { edition: Edition; onSubscribe: (
             style={{ background: button.bg, borderColor: button.bg, color: button.fg }}
             onClick={() => onSubscribe(edition)}
           >
-            Subscribe to keep reading <span aria-hidden="true">→</span>
+            {newsletter.editionCta} <span aria-hidden="true">→</span>
           </a>
         </div>
         {edition.imageSide === 'right' && cover}
@@ -139,14 +148,7 @@ function EditionRow({ edition, onSubscribe }: { edition: Edition; onSubscribe: (
 function ClosingMark() {
   return (
     <div className="dc-nl-mark" aria-hidden="true">
-      <svg viewBox="0 0 282 428" width="100%" height="100%" style={{ overflow: 'visible' }} fill="none" strokeWidth="39" strokeLinecap="round">
-        <circle cx="141" cy="141" r="121.5" stroke="#E8E724" strokeDasharray="123.224 763.407" transform="rotate(241.1956 141 141)" />
-        <circle cx="141" cy="141" r="121.5" stroke="#3F3D3E" strokeDasharray="115.802 763.407" transform="rotate(-47.3044 141 141)" />
-        <circle cx="141" cy="141" r="121.5" stroke="#526EB5" strokeDasharray="122.164 763.407" transform="rotate(20.6956 141 141)" />
-        <circle cx="141" cy="141" r="121.5" stroke="#79C2B4" strokeDasharray="135.947 763.407" transform="rotate(91.6956 141 141)" />
-        <circle cx="141" cy="141" r="121.5" stroke="#EE9D90" strokeDasharray="124.284 763.407" transform="rotate(169.1956 141 141)" />
-        <circle cx="142" cy="283.8" r="124.2" stroke="#3F3D3E" strokeDasharray="221.991 780.372" transform="rotate(38.7957 142 283.8)" />
-      </svg>
+      <MarkAssembly size={158} />
     </div>
   )
 }
@@ -167,16 +169,13 @@ function ClosingBand(props: FormProps) {
             {closing.thanks}
           </p>
         ) : (
-          <form className="dc-nl-inline" onSubmit={(event) => readSubmit(event, props)} aria-busy={sending}>
-            <label htmlFor="ku-email-2" className="dc-nl-sr">
-              Your email address
-            </label>
-            <input id="ku-email-2" name="EMAIL" type="email" required autoComplete="email" placeholder="Your email address" disabled={sending} />
+          <form className="dc-nl-closing-form" onSubmit={(event) => readSubmit(event, props)} aria-busy={sending}>
+            <SignupFields id="ku-closing" sending={sending} />
             <Honeypot />
+            <FormError state={state} form={form} />
             <button type="submit" className="dc-nl-btn dc-nl-btn-navy" disabled={sending}>
               {sending ? 'Subscribing…' : 'Subscribe'} <span aria-hidden="true">→</span>
             </button>
-            <FormError state={state} form={form} />
           </form>
         )}
       </div>

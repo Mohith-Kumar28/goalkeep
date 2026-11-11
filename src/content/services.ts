@@ -1,4 +1,3 @@
-import { caseStudies } from './homepage'
 import { serviceTitle, toContact } from './pages'
 import type { Block, Page, Story } from './pages'
 import { vanavilStory } from './programs'
@@ -9,10 +8,22 @@ import { vanavilStory } from './programs'
  * nothing is added that the doc does not have.
  */
 
-const story = (slug: string): Story => {
-  const study = caseStudies.find((s) => s.slug === slug)
-  if (!study) throw new Error(`No homepage case study "${slug}"`)
-  return study
+const peepulStory: Story = {
+  org: 'Peepul',
+  sector: 'Education',
+  intervention: 'Designing Organizational Impact Framework',
+  body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
+  image: '/photos/case-peepul.webp',
+  imageAlt: 'Peepul and Goalkeep team members working through a dashboard around a table',
+}
+
+const apniShalaStory: Story = {
+  org: 'Apni Shala Foundation',
+  sector: 'Education',
+  intervention: 'Identifying key metrics',
+  body: 'A handful of metrics on the weekly dashboard helped Apni Shala identify student learning gaps that used to surface only at year-end.',
+  image: '/photos/case-apni-shala.webp',
+  imageAlt: 'The Apni Shala Foundation team standing together in their office',
 }
 
 const workWithUs = { label: 'Work with us', to: toContact }
@@ -81,7 +92,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         weeks: [6, 8],
         visual: 'design',
       },
-      { kind: 'stories', stories: [story('peepul-leadership-dashboard')] },
+      { kind: 'stories', stories: [peepulStory] },
       {
         kind: 'closing',
         headline: { lead: 'Are you ready to build a measurement framework', em: 'your team can use?' },
@@ -146,7 +157,7 @@ export const servicePages: Array<Page & { slug: string }> = [
         visual: 'build',
       },
       /* "[Apni Shala Case Study Card + testimonial of Sangeeta Zombade]" */
-      { kind: 'stories', stories: [story('apni-shala-indicators')], testimonial: 'early-stage' },
+      { kind: 'stories', stories: [apniShalaStory], testimonial: 'early-stage' },
       {
         kind: 'duration',
         text: 'Typically 6–12 weeks for discovery, design and an initial build, followed by an agreed maintenance and adoption period. The duration varies with data complexity, migration requirements, integrations and the number of user workflows.',

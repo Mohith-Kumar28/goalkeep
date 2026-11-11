@@ -117,7 +117,7 @@ function Listing() {
   const [audience, setAudience] = useState<'all' | Audience>('all')
   const [sector, setSector] = useState<'all' | Sector>('all')
   const shown = caseStudies.filter(
-    (study) => (audience === 'all' || study.audience === audience) && (sector === 'all' || study.sector === sector),
+    (study) => (audience === 'all' || study.audience === audience) && (sector === 'all' || study.sectorTags.includes(sector)),
   )
   const count = shown.length
 

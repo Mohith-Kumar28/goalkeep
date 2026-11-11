@@ -1,6 +1,6 @@
+import type { CaseStudySlug } from './design/case-studies'
 import type {
   Audience,
-  CaseStudy,
   Faq,
   FieldNote,
   Pillar,
@@ -326,7 +326,7 @@ export const audiences: Array<Audience> = [
       credentials: 'Apni Shala Foundation',
       photo: '/photos/aud-early-testimonial.webp',
     },
-    ctas: [{ label: 'Kickstarter', to: '/programs/kickstarter' }, { label: 'Talk to us', to: '#contact' }],
+    ctas: [{ label: 'Explore Kickstarter program', to: '/programs/kickstarter' }, { label: 'Talk to us', to: '#contact' }],
   },
   {
     id: 'data-mature',
@@ -355,7 +355,7 @@ export const audiences: Array<Audience> = [
       credentials: 'Sanjhi Sikhiya',
       photo: '/photos/aud-mature-testimonial.webp',
     },
-    ctas: [{ label: 'Data Literacy Program', to: '/programs/data-literacy' }, { label: 'Talk to us', to: '#contact' }],
+    ctas: [{ label: 'Explore Data Literacy program', to: '/programs/data-literacy' }, { label: 'Talk to us', to: '#contact' }],
   },
   {
     id: 'intermediary',
@@ -447,56 +447,22 @@ export const caseStudySection = {
 }
 
 /*
- * Four cards, all named organisations, each led by what actually changed
- * rather than a before/after figure. The Veruschka card and the post-mortem
- * card ("Delete the post-mortem card") were both cut in the copy replacement.
+ * 11 Nov: "only the 4 readable case study cards will exist". Each card is its
+ * study's own - photograph, sector tags and link come from the study page's
+ * data. Peepul and Baithak keep the homepage's own paragraph; the other two
+ * use their study's card summary.
  */
-/* 23 Sep: programme names ("Kickstarter", "Custom project") meant nothing to
-   a visitor, so each card carries two tags instead - the sector, and the work
-   done. Tag vocabulary from the call: sectors Education, Livelihoods,
-   Disability, Health, Arts; interventions Data collection & visualisation,
-   Theory of Change in practice (for "operationalising", which isn't widely
-   understood), Grant management systems, Capacity building. Which card gets
-   which is a first pass for Goalkeep to correct. */
-export const caseStudies: Array<CaseStudy> = [
+export const caseStudies: Array<{ slug: CaseStudySlug; body?: string }> = [
   {
-    slug: 'baithak-reporting',
-    org: 'Baithak Foundation',
-    sector: 'Arts',
-    intervention: 'Data collection & visualisation',
-    body: 'A real-time data system that we built for Baithak Foundation played a pivotal role in closing a ₹25 lakh grant. What convinced the funder wasn’t just the dashboard metrics, but that every person on the team also used that data regularly.',
-    image: '/photos/case-baithak.webp',
-    imageAlt: 'Two Baithak Foundation team members smiling during a session',
-  },
-  /* 21 Oct: "vanavil replaced with Dasra and SVP India", same copy as the
-     hero card. The sector tag is our guess - the doc doesn't give one. */
-  {
-    slug: 'dasra-svp-cohort',
-    org: 'Dasra and SVP India',
-    sector: 'Cross-sector',
-    intervention: 'Operationalizing Theory of Change',
-    body: 'Conducted capacity building workshops to help 16 organizations in their cohort map their ToC to measurable indicators.',
-    image: '/photos/aud-eco-5.webp',
-    imageAlt: 'Cohort members working together around a table',
-  },
-  {
-    slug: 'peepul-leadership-dashboard',
-    org: 'Peepul',
-    sector: 'Education',
-    intervention: 'Designing Organizational Impact Framework',
+    slug: 'peepul',
     body: 'Nineteen organisation-level indicators and a leadership dashboard helped Peepul more effectively monitor their programs as they scaled to having 8 programs across 2 states.',
-    image: '/photos/case-peepul.webp',
-    imageAlt: 'Peepul and Goalkeep team members working through a dashboard around a table',
   },
   {
-    slug: 'apni-shala-indicators',
-    org: 'Apni Shala Foundation',
-    sector: 'Education',
-    intervention: 'Identifying key metrics',
-    body: 'A handful of metrics on the weekly dashboard helped Apni Shala identify student learning gaps that used to surface only at year-end.',
-    image: '/photos/case-apni-shala.webp',
-    imageAlt: 'The Apni Shala Foundation team standing together in their office',
+    slug: 'baithak',
+    body: 'A real-time data system that we built for Baithak Foundation played a pivotal role in closing a ₹25 lakh grant. What convinced the funder wasn’t just the dashboard metrics, but that every person on the team also used that data regularly.',
   },
+  { slug: 'british-asian-trust' },
+  { slug: 'vanavil' },
 ]
 
 /* ============================================================

@@ -62,7 +62,6 @@ export function CaseStudyPage({ study }: { study: CaseStudy }) {
 }
 
 function StudyHeader({ study }: { study: CaseStudy }) {
-  const sector = tones[sectors[study.sector].tone]
   const { hero } = study
   return (
     <header style={{ background: '#FBF8F1', paddingTop: 24, paddingBottom: 32, borderBottom: '1px solid #ECE7DC' }}>
@@ -90,9 +89,11 @@ function StudyHeader({ study }: { study: CaseStudy }) {
         >
           <div>
             <p style={{ margin: '0 0 14px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              <span className="dc-cs-tag" style={{ background: sector.bg, color: sector.ink }}>
-                {sectors[study.sector].label}
-              </span>
+              {study.sectorTags.map((id) => (
+                <span key={id} className="dc-cs-tag" style={{ background: tones[sectors[id].tone].bg, color: tones[sectors[id].tone].ink }}>
+                  {sectors[id].label}
+                </span>
+              ))}
               <span className="dc-cs-tag" style={{ background: '#F1F4FA', color: '#2F4D9F' }}>
                 {audiences[study.audience].tag}
               </span>

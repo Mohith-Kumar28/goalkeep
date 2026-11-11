@@ -141,8 +141,7 @@ export function themeForPath(pathname: string): PageTheme {
 
 export const contactHref = '/#contact'
 
-/** [VERIFY] Placeholder: no contact address or company page exists in the codebase. Confirm both with Goalkeep. */
-export const contactEmail = 'hello@goalkeep.net'
+export const contactEmail = 'aditya@goalkeep.org'
 export const linkedinUrl = 'https://www.linkedin.com/company/goalkeep'
 
 /**
@@ -155,14 +154,15 @@ export const banner = {
   link: { label: 'Apply now', to: '/programs/kickstarter' },
 }
 
+const footerFrom = (label: string) => (nav.find((item) => item.label === label)?.children ?? []).map((child) => ({ label: child.label, to: child.to }))
+
 export const footerGroups = [
+  { heading: 'Services', links: footerFrom('What we do') },
   {
-    heading: 'What we do',
+    heading: 'Programs',
     links: [
-      { label: 'Design, build, adopt', to: '/#what-we-do' },
-      { label: 'Case studies', to: '/case-studies' },
       { label: 'Kickstarter program', to: '/programs/kickstarter' },
-      { label: 'Data literacy program', to: '/programs/data-literacy' },
+      { label: 'Data Literacy program', to: '/programs/data-literacy' },
     ],
   },
   {
@@ -176,9 +176,9 @@ export const footerGroups = [
   {
     heading: 'Goalkeep',
     links: [
-      { label: 'About us', to: '/about' },
-      { label: 'Partner with us', to: '/partner-with-us' },
-      { label: 'Contact', to: contactHref },
+      { label: 'About', to: '/about' },
+      { label: 'Meet our team', to: '/about#team' },
+      { label: 'Contact us', to: contactHref },
     ],
   },
 ]

@@ -71,7 +71,7 @@ export function DetailsStep({
     )
   }
 
-  const select = (key: 'role' | 'region' | 'size' | 'sector', label: string) => {
+  const select = (key: 'role' | 'size' | 'sector' | 'budget', label: string) => {
     const other = key === 'role' ? 'roleOther' : key === 'sector' ? 'sectorOther' : null
     return (
       <div className={bad.has(key) ? 'dc-q-field is-err' : 'dc-q-field'}>
@@ -115,10 +115,9 @@ export function DetailsStep({
           {text('organization', 'Organisation name *', 'text', '', 'organization')}
           {select('role', 'Your role *')}
           <hr className="dc-q-rule" />
-          {text('budget', 'Organisation budget', 'text', 'e.g. INR 1 crore')}
-          {select('region', 'Region')}
+          {select('budget', 'Organisation budget')}
           {select('size', 'Organisation size')}
-          {select('sector', 'Sector')}
+          {select('sector', 'Primary sector')}
         </div>
         <div className="dc-q-actions">
           <button className="dc-q-btn dc-q-btn-navy" type="submit">

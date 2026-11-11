@@ -9,23 +9,16 @@ export type LogoGroup = { label: string; logos: Array<PartnerLogo> }
  * focus-within so a keyboard user is not chasing a moving target. Under
  * reduced motion each group is a static wrapped grid instead.
  */
-type RailSpeed = { phone: number; wide: number }
-
-/* Pixels per second, per row. 11 Nov: the phone spacing tightened but the
-   speeds were to stay as they were. */
-const RAIL_SPEEDS: Array<RailSpeed> = [
-  { phone: 65.5, wide: 90.2 },
-  { phone: 15.5, wide: 21.4 },
-]
+/* Pixels per second, the same for every row. 11 Nov: every rail moves at the
+   pace the Funders & intermediaries row had. */
+const RAIL_SPEED = { phone: 15.5, wide: 21.4 }
 
 function Rail({
   logos,
   direction,
-  speed,
 }: {
   logos: Array<PartnerLogo>
   direction: 'left' | 'right'
-  speed: RailSpeed
 }) {
   // Duplicated once so the translation wraps seamlessly at -50%.
   const track = [...logos, ...logos]
@@ -35,16 +28,17 @@ function Rail({
       <ul
         className={cn(
           /* --pitch is a tile's width plus the gap, so the duration below
-             holds the speed whatever the spacing. */
-          'flex w-max items-center gap-3 [--pitch:108] [--speed:var(--speed-phone)] md:gap-16 md:[--pitch:292] md:[--speed:var(--speed-wide)]',
+             holds the speed whatever the spacing. The trailing padding is
+             the last tile's gap, so -50% is exactly one set of logos. */
+          'flex w-max items-center gap-3 pr-3 [--pitch:108] [--speed:var(--speed-phone)] md:gap-16 md:pr-16 md:[--pitch:292] md:[--speed:var(--speed-wide)]',
           'motion-safe:animate-[gk-marquee_linear_infinite]',
           'group-focus-within/rail:[animation-play-state:paused]',
         )}
         style={
           {
             '--logos': logos.length,
-            '--speed-phone': speed.phone,
-            '--speed-wide': speed.wide,
+            '--speed-phone': RAIL_SPEED.phone,
+            '--speed-wide': RAIL_SPEED.wide,
             animationDuration: 'calc(var(--logos) * var(--pitch) / var(--speed) * 1s)',
             animationDirection: direction === 'right' ? 'reverse' : 'normal',
           } as CSSProperties
@@ -104,7 +98,6 @@ export function LogoTicker({ groups }: { groups: Array<LogoGroup> }) {
             <Rail
               logos={group.logos}
               direction={index % 2 === 0 ? 'left' : 'right'}
-              speed={RAIL_SPEEDS[index % RAIL_SPEEDS.length]}
             />
           </div>
         </section>

@@ -1,5 +1,6 @@
-import { Reveal } from "@/components/primitives/reveal"
+import { LogoTicker } from "@/components/primitives/logo-ticker"
 import { Rich } from "@/components/design/kickstarter/rich"
+import { partnerGroups } from "@/content/partners"
 import type { about } from "@/content/design/about"
 
 export function PartnersBand({
@@ -17,24 +18,9 @@ export function PartnersBand({
         <h2 className="dc-h2" style={{ maxWidth: "26ch" }}>
           <Rich html={partners.heading} />
         </h2>
-        <Reveal>
-        <div
-          className="dc-about-logos"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "14px 28px",
-            marginTop: 32,
-          }}
-        >
-          {partners.logos.map((logo) => (
-            <div key={logo.name} className="dc-logo-tile" title={logo.name}>
-              <img src={logo.src} alt={logo.name} />
-            </div>
-          ))}
-        </div>
-        </Reveal>
+      </div>
+      <div style={{ marginTop: 36 }}>
+        <LogoTicker groups={partnerGroups} />
       </div>
     </section>
   )

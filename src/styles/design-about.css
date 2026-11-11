@@ -93,7 +93,17 @@
 }
 
 .dc .dc-about-founder {
-  max-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: 56px;
+  align-items: start;
+}
+.dc .dc-founder-sticky {
+  position: sticky;
+  top: 28px;
+}
+.dc .dc-founder-sticky .dc-founder-img {
+  height: 380px;
 }
 .dc .dc-founder-signoff {
   display: flex;
@@ -103,14 +113,12 @@
   margin-top: 30px;
 }
 .dc .dc-founder-fig {
+  display: none;
   flex: none;
   width: 190px;
   margin: 0;
   padding: 10px 10px 12px;
   transform: rotate(2.5deg);
-}
-.dc .dc-founder-img {
-  height: 190px;
 }
 .dc .dc-li-link {
   display: inline-flex;
@@ -235,26 +243,6 @@
   display: block;
 }
 
-.dc .dc-logo-tile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 154px;
-  height: 84px;
-  padding: 6px;
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dc .dc-logo-tile img {
-  max-width: 100%;
-  max-height: 62px;
-  width: auto;
-  height: auto;
-  display: block;
-}
-.dc .dc-logo-tile:hover {
-  transform: translateY(-3px);
-}
-
 .dc .dc-way-note {
   display: flex;
   flex-direction: column;
@@ -323,6 +311,7 @@
   }
 }
 @media (max-width: 1100px) {
+  .dc .dc-about-founder,
   .dc .dc-about-team,
   .dc .dc-about-ways,
   .dc .dc-about-mission {
@@ -331,6 +320,7 @@
   .dc .dc-about-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+  .dc .dc-founder-sticky,
   .dc .dc-spotlight-sticky {
     position: static !important;
   }
@@ -403,6 +393,15 @@
     line-height: 1.55;
   }
 }
+@media (min-width: 761px) and (max-width: 1100px) {
+  .dc .dc-about-founder {
+    grid-template-columns: minmax(0, 220px) minmax(0, 1fr) !important;
+    gap: 40px !important;
+  }
+  .dc .dc-founder-sticky .dc-founder-img {
+    height: 250px !important;
+  }
+}
 @media (max-width: 760px) {
   .dc .dc-about-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -447,22 +446,25 @@
   .dc .dc-about-ways {
     gap: 24px !important;
   }
-  .dc .dc-about-logos {
-    gap: 26px 14px !important;
-    margin-top: 28px !important;
-  }
   .dc .dc-about-founder-band {
     padding-top: 28px !important;
     padding-bottom: 36px !important;
+  }
+  .dc .dc-about-founder {
+    display: block;
+  }
+  .dc .dc-founder-sticky {
+    display: none;
   }
   .dc .dc-founder-signoff {
     gap: 14px;
   }
   .dc .dc-founder-fig {
+    display: block;
     width: 128px;
     padding: 7px 7px 9px;
   }
-  .dc .dc-founder-img {
+  .dc .dc-founder-fig .dc-founder-img {
     height: 128px;
   }
   .dc .dc-about-minis {
@@ -482,14 +484,6 @@
   }
   .dc .dc-mini-r {
     font-size: 12px;
-  }
-  .dc .dc-logo-tile {
-    width: calc((100% - 28px) / 3);
-    height: 60px;
-    padding: 4px 8px;
-  }
-  .dc .dc-logo-tile img {
-    max-height: 48px;
   }
   .dc .dc-about-mission .dc-polaroid img,
   .dc .dc-about-ways .dc-polaroid img {

@@ -30,20 +30,16 @@ export const content: ServicePageContent = {
     secondary: { label: "Apni Shala case study", href: "#case" },
     photos: [
       {
-        src: "/design/277f6c1beb347d5810cdc7e70a59ad56.webp",
-        alt: "A dashboard open on a laptop during a working session",
+        src: "/design/svc-data-systems-banner-1.webp", alt: "Goalkeep and partner team members working together around a table with laptops", position: "50% 35%",
       },
       {
-        src: "/design/bd7d6d0349cff3dd797ec319912bbbf5.webp",
-        alt: "A Goalkeep team member talking through a framework in a working session",
+        src: "/design/svc-data-systems-banner-2.webp", alt: "A partner team member walking a colleague through a dashboard on a screen", position: "45% 40%",
       },
       {
-        src: "/design/d9f25a2c090890697a8d9bf1806f663d.webp",
-        alt: "A Goalkeep working session on the floor of a partner office",
+        src: "/design/svc-data-systems-banner-3.webp", alt: "Partner team members working on laptops at a round table", position: "50% 50%",
       },
       {
-        src: "/design/02adf370ce68ad12d02aaf2eb57276c3.webp",
-        alt: "Goalkeep with a partner team after a workshop",
+        src: "/design/svc-data-systems-banner-4.webp", alt: "A laptop showing a results slide in a workshop room", position: "60% 50%",
       },
     ],
   },
@@ -99,8 +95,7 @@ export const content: ServicePageContent = {
         heading: "We start by mapping how your data <em>actually moves.</em>",
         body: "Before designing anything, we trace how information travels through your organisation today: who collects it, where it is stored, how it is cleaned and combined, and where it gets stuck. The result is a clear picture of your current data flows, bottlenecks and risks, so that we know the exact leakages in your system that need to be plugged.",
         photo: {
-          src: "/design/26485cf520f6e178ab4bc2838551ca79.webp",
-          alt: "A Goalkeep working session on the floor of a partner office",
+          src: "/design/svc-data-systems-approach-1.webp", alt: "A Goalkeep working session around a table in a partner office", position: "50% 50%",
         },
       },
       {
@@ -108,8 +103,7 @@ export const content: ServicePageContent = {
           "Then we design and build <em>one connected, AI-integrated data system.</em>",
         body: "We design the architecture and data model around your programmes, terminology, and workflows, then build it to make sure data entry, storage, analysis and insight are all in one place. We favour an open-source stack, such as PostgreSQL or Supabase with GitHub and Vercel, but can work with whatever platform your organization is currently supported by.",
         photo: {
-          src: "/design/46fd758db6cd80183d9d4f676d744baa.webp",
-          alt: "Two partner team members working through data on a laptop",
+          src: "/design/svc-data-systems-approach-2.webp", alt: "A close view of a team member working on a laptop", position: "50% 50%",
         },
         actions: [
           {
@@ -123,8 +117,7 @@ export const content: ServicePageContent = {
         heading: "We stay until your team <em>owns the system.</em>",
         body: "A system creates value only when people use it. We test it with your users, migrate the historical data you need, train your team across levels, and set up data processes that are easy for you to adopt. We support you through documentation, maintenance support and a structured handover until your team is comfortable using the system.",
         photo: {
-          src: "/design/28cd94a8513259340d1af6f7fc304ad1.webp",
-          alt: "A Goalkeep training session with a partner team",
+          src: "/design/svc-data-systems-approach-3.webp", alt: "Partner team members working on laptops around a round table", position: "70% 50%",
         },
       },
     ],
@@ -189,7 +182,7 @@ export const content: ServicePageContent = {
       { label: "Education", tone: "blue" },
       { label: "Identifying key metrics", tone: "blue" },
     ],
-    cta: "See our case studies",
+    cta: "",
   },
   caseQuote: {
     text: "We end up capturing a lot of data, but it’s the first time we’ve stepped back to think of what are the key findings we really want our data to shed light on as an organisation. We are now at a place to be making less emotional, and more data-driven decisions.”",

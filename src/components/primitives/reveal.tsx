@@ -27,14 +27,14 @@ export function Reveal({
   return (
     <Component
       className={cn(className)}
-      initial={reduced ? false : { opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       /* A tall group (a list, a grid) starts as soon as its top is in view;
          a share of its height would leave a phone screen blank. */
       viewport={{ once: true, amount: 0, margin: '0px 0px -10% 0px' }}
       transition={{
-        duration: 0.4,
-        delay,
+        duration: reduced ? 0 : 0.4,
+        delay: reduced ? 0 : delay,
         ease: [0.22, 1, 0.36, 1],
       }}
     >

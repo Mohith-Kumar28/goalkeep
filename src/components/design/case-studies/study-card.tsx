@@ -6,7 +6,6 @@ import type { CaseStudy } from '@/content/design/case-studies'
 
 export function StudyCard({ study, wide = false }: { study: CaseStudy; wide?: boolean }) {
   const { card } = study
-  const sector = tones[sectors[study.sector].tone]
   return (
     <SiteLink href={caseStudyHref(study.slug)} className={`dc-cs-card dc-lift${wide ? ' dc-cs-wide' : ''}`}>
       <div className="dc-cs-cover">
@@ -20,9 +19,11 @@ export function StudyCard({ study, wide = false }: { study: CaseStudy; wide?: bo
       </div>
       <div className="dc-cs-card-body">
         <span style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <span className="dc-cs-tag" style={{ background: sector.bg, color: sector.ink }}>
-            {sectors[study.sector].label}
-          </span>
+          {study.sectorTags.map((id) => (
+            <span key={id} className="dc-cs-tag" style={{ background: tones[sectors[id].tone].bg, color: tones[sectors[id].tone].ink }}>
+              {sectors[id].label}
+            </span>
+          ))}
           <span className="dc-cs-tag" style={{ background: '#F1F4FA', color: '#2F4D9F' }}>
             {audiences[study.audience].tag}
           </span>

@@ -27,10 +27,10 @@ export const content: ServicePageContent = {
     primary: 'Work with us',
     secondary: { label: 'Peepul case study', href: '/case-studies/peepul' },
     photos: [
-      { src: "/design/d9f25a2c090890697a8d9bf1806f663d.webp", alt: "A Goalkeep working session on the floor of a partner office", position: "45% 50%" },
-      { src: "/design/d7e0a2f562f148853d7f839e7a34590d.webp", alt: "Goalkeep with a partner team after a workshop", position: "50% 40%" },
-      { src: "/design/bd7d6d0349cff3dd797ec319912bbbf5.webp", alt: "A Goalkeep team member talking through a framework in a working session", position: "50% 40%" },
-      { src: "/design/46fd758db6cd80183d9d4f676d744baa.webp", alt: "Two partner team members working through data on a laptop", position: "50% 40%" },
+      { src: "/design/svc-impact-banner-1.webp", alt: "Goalkeep team members talking with a partner on a lane during a field visit", position: "50% 40%" },
+      { src: "/design/svc-impact-banner-2.webp", alt: "A Goalkeep facilitator helping a partner team at a laptop during a working session", position: "50% 35%" },
+      { src: "/design/svc-impact-banner-3.webp", alt: "A partner team member in an orange kurta leaning over a table in a workshop", position: "45% 40%" },
+      { src: "/design/svc-impact-banner-4.webp", alt: "A Goalkeep facilitator presenting to a partner team seated around laptops", position: "72% 35%" },
     ],
   },
   signs: {
@@ -54,9 +54,9 @@ export const content: ServicePageContent = {
   approach: {
     eyebrow: 'our approach',
     rows: [
-      { heading: "Your Theory of Change is our starting point, <em>always.</em>", body: "Before we talk about indicators, tools or dashboards, we sit with your Theory of Change and ask whether it still describes the work your teams do today. Programmes tend to evolve quickly at times, and indicators and measurement frameworks are often left behind in the priority list of things to do. We come in to make sure your systems accurately still reflect your Theory of Change.", photo: { src: "/design/a0ab5315386fbadd8443b0eaa8ffab2d.webp", alt: "Affinity mapping on coloured boards during a Goalkeep design workshop" } },
-      { heading: "Then we learn how your teams <em>actually work with data.</em>", body: "We spend time with the people closest to the work, from leadership to programme and field teams, to understand how each one collects data, defines success and reports outcomes. We visit field offices where we can, because for our work, we need to understand how and why data travels through each level in the organization. This shows us where definitions overlap, where they have drifted apart, and what has stood in the way of alignment before.", photo: { src: "/design/b486c3eb3f423bef62339909ee5771af.webp", alt: "Goalkeep in conversation with a partner's programme and leadership team" } },
-      { heading: "We pin down the key questions, <em>then map what to measure.</em>", body: "With leadership and programme teams, we identify the key questions your data needs to answer, from day-to-day programme decisions to conversations with funders. We then map each question to a focused set of indicators, with clear definitions, data sources and collection methods, so you measure what you need and nothing more.", photo: { src: "/design/8628737d5b65d03af1f3ceab6f28466f.webp", alt: "A Goalkeep facilitator leading a session on which questions are high priority" } },
+      { heading: "Your Theory of Change is our starting point, <em>always.</em>", body: "Before we talk about indicators, tools or dashboards, we sit with your Theory of Change and ask whether it still describes the work your teams do today. Programmes tend to evolve quickly at times, and indicators and measurement frameworks are often left behind in the priority list of things to do. We come in to make sure your systems accurately still reflect your Theory of Change.", photo: { src: "/design/svc-impact-approach-1.webp", alt: "Hands writing on paper around a table during a working session", position: "50% 50%" } },
+      { heading: "Then we learn how your teams <em>actually work with data.</em>", body: "We spend time with the people closest to the work, from leadership to programme and field teams, to understand how each one collects data, defines success and reports outcomes. We visit field offices where we can, because for our work, we need to understand how and why data travels through each level in the organization. This shows us where definitions overlap, where they have drifted apart, and what has stood in the way of alignment before.", photo: { src: "/design/svc-impact-approach-2.webp", alt: "A partner team member pointing at sticky notes on a wall during a workshop", position: "50% 40%" } },
+      { heading: "We pin down the key questions, <em>then map what to measure.</em>", body: "With leadership and programme teams, we identify the key questions your data needs to answer, from day-to-day programme decisions to conversations with funders. We then map each question to a focused set of indicators, with clear definitions, data sources and collection methods, so you measure what you need and nothing more.", photo: { src: "/design/svc-impact-approach-3.webp", alt: "A Goalkeep facilitator presenting on a screen to a partner team", position: "60% 40%" } },
     ],
   },
   deliverables: {

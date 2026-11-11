@@ -145,9 +145,9 @@ export const literacyContent = {
         },
         {
           photo: {
-            src: '/design/ed52f378e4af65827a829b08d65042e4.webp',
-            alt: 'A senior MEL leader speaking during the cohort',
-            position: '50% 25%',
+            src: '/design/literacy-who-mel-member.webp',
+            alt: 'A MEL team member in a pink kurta studying a worksheet with colleagues',
+            position: '40% 30%',
           },
           tag: 'MEL team member',
           tagBg: '#EAEFF9',
@@ -245,8 +245,8 @@ export const literacyContent = {
         stepLabel: 'Data<br> communication',
         body: 'Translate evidence into clear messages and narratives for colleagues, partners and funders.',
         photo: {
-          src: '/design/ed52f378e4af65827a829b08d65042e4.webp',
-          alt: 'A participant presenting her group’s findings to the cohort',
+          src: '/design/literacy-skill-5-communication.webp',
+          alt: 'Participants preparing how to communicate their findings',
           position: '50% 30%',
         },
         ink: '#2F4A92',
@@ -357,7 +357,7 @@ export const literacyContent = {
     },
     mosaic: [
       {
-        src: '/design/b0618daa104dba4ac52c90594aaeafa9.webp',
+        src: '/design/literacy-evidence-collage-1.webp',
         alt: 'The full cohort sitting and standing together for a group photo',
         position: '50% 50%',
       },

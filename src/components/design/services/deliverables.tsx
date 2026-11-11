@@ -23,7 +23,7 @@ export function DeliverablesSection({
         )}
         <Rich
           as="h2"
-          className="dc-h2"
+          className="dc-h2 dc-deliv-h2"
           html={heading}
           style={{ margin: "0 auto", textAlign: "center", maxWidth: "28ch" }}
         />

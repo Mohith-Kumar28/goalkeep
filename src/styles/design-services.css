@@ -147,6 +147,9 @@
 }
 
 
+.dc-h2.dc-deliv-h2 {
+  font-size: 36px;
+}
 .dc-deliv-grid {
   column-gap: 32px;
   row-gap: 24px;
@@ -189,6 +192,9 @@
   }
   .dc-deliv-grid.dc-grid3 > :last-child:nth-child(odd) {
     grid-column: auto;
+  }
+  .dc-h2.dc-deliv-h2 {
+    font-size: 22px;
   }
   .dc-deliv-item {
     gap: 8px;

@@ -29,24 +29,16 @@ export const content: ServicePageContent = {
     secondary: { label: "Dasra case study", href: "#case" },
     photos: [
       {
-        src: "/design/6616bb19d578b4407abaff9cbb89cc4b.webp",
-        alt: "A participant presenting during a data literacy session",
-        position: "50% 45%",
+        src: "/design/svc-data-adoption-banner-1.webp", alt: "Participants working on laptops in a data literacy session", position: "50% 50%",
       },
       {
-        src: "/design/c7fa18945afc05080e35a4e989719575.webp",
-        alt: "A programme session running in a village classroom",
-        position: "50% 45%",
+        src: "/design/svc-data-adoption-banner-2.webp", alt: "A trainer presenting to a workshop room", position: "50% 40%",
       },
       {
-        src: "/design/02adf370ce68ad12d02aaf2eb57276c3.webp",
-        alt: "Goalkeep with a partner team after a workshop",
-        position: "50% 45%",
+        src: "/design/svc-data-adoption-banner-3.webp", alt: "A participant talking with a colleague during a training", position: "40% 30%",
       },
       {
-        src: "/design/d9f25a2c090890697a8d9bf1806f663d.webp",
-        alt: "A Goalkeep working session on the floor of a partner office",
-        position: "50% 45%",
+        src: "/design/svc-data-adoption-banner-4.webp", alt: "Participants working in groups at a training workshop", position: "85% 40%",
       },
     ],
   },
@@ -102,8 +94,7 @@ export const content: ServicePageContent = {
         heading: "Direct workshops <em>with your organisation.</em>",
         body: "Most teams that already have a system in place struggle primarily with getting their teams to engage with data. We conduct customised workshops on a range of skills including data interpretation, data analysis (quantitative and qualitative), data visualization, and data communication.",
         photo: {
-          src: "/design/28cd94a8513259340d1af6f7fc304ad1.webp",
-          alt: "A Goalkeep training session with a partner team",
+          src: "/design/svc-data-adoption-approach-1.webp", alt: "A facilitator speaking at the closing reflections of a workshop", position: "30% 55%",
         },
         actions: [
           { kind: "form", label: "Partner with us" },
@@ -114,8 +105,7 @@ export const content: ServicePageContent = {
         heading: "MEL knowledge partner <em>for ecosystem programmes.</em>",
         body: "We act as the MEL knowledge partner for programmes run by funders, intermediaries and ecosystem organisations. We co-design the curriculum and cohort experience, facilitate workshops, and provide training resources as well as mentorship support.",
         photo: {
-          src: "/design/eebb759ffd603765b4f2ba7241923c37.webp",
-          alt: "Participants working through an exercise together during a cohort workshop",
+          src: "/design/svc-data-adoption-approach-2.webp", alt: "Participants working together around a table at a training", position: "50% 40%",
         },
         link: {
           label: "Read the Dasra and SVP India case study",
@@ -127,8 +117,7 @@ export const content: ServicePageContent = {
         heading: "Goalkeep’s <em>Data Literacy Program.</em>",
         body: "A cohort-based, train-the-trainer journey that helps nonprofit professionals build data confidence and strengthen capability across their teams. Organizations nominate two people from their teams to attend this program and become master trainers, so that they can enable data adoption among others in their organisations once the program ends.",
         photo: {
-          src: "/design/d7e0a2f562f148853d7f839e7a34590d.webp",
-          alt: "Goalkeep with a partner team after a workshop",
+          src: "/design/svc-data-adoption-approach-3.webp", alt: "A Goalkeep team member talking with a community group outdoors", position: "50% 45%",
         },
         actions: [
           { kind: "form", label: "Explore the Data Literacy Program" },
@@ -200,7 +189,7 @@ export const content: ServicePageContent = {
     ],
     title: "Dasra and SVP India",
     body: "Conducted capacity building workshops to help 16 organizations in their cohort map their ToC to measurable indicators.",
-    cta: "See our case studies",
+    cta: "",
   },
   caseQuote: {
     text: "It’s always inspiring to see how Goalkeep conducts their sessions. Their attention to detail is very high and the approach involved forming strong relationships with the participating NGOs, which is why we like having them as an MEL partner.”",

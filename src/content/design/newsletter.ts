@@ -5,13 +5,18 @@ import type { Verify } from '../types'
    the same (Nov 10 review). */
 export type Audience = 'nonprofit' | 'funder'
 
-export const audiences: Array<{ id: Audience; label: string }> = [
-  { id: 'nonprofit', label: 'Nonprofit' },
-  { id: 'funder', label: 'Funder' },
+/* Who the reader is (Nov 11). Intermediaries read the nonprofit version until
+   Goalkeep sends one of their own. */
+export type Reader = 'funder' | 'nonprofit' | 'intermediary'
+
+export const readers: Array<{ id: Reader; label: string; version: Audience }> = [
+  { id: 'funder', label: 'Funder', version: 'funder' },
+  { id: 'nonprofit', label: 'Nonprofit', version: 'nonprofit' },
+  { id: 'intermediary', label: 'Intermediary', version: 'nonprofit' },
 ]
 
 export type Edition = {
-  /** Sent with a "Subscribe to keep reading" sign-up, so the server emails this edition. */
+  /** Sent with a "Subscribe to the next issue" sign-up, so the server emails this edition. */
   id: string
   month: string
   headline: Html
@@ -40,12 +45,12 @@ export const newsletter = {
     heading: 'Get the next issue of <em>The Keep-Up</em>',
     note: 'One email at the end of each month. Unsubscribe in one click, any time.',
     thanksHeading: "You're on <em>the list.</em>",
-    thanks: 'Please check your inbox to confirm your email. The next issue of The Keep-Up arrives at the end of the month.',
+    thanks: 'The next issue of The Keep-Up arrives at the end of the month.',
     another: 'Subscribe another email',
-    audience: 'I’m from a',
-    /** Shown on the card after a "Subscribe to keep reading" click. `{month}` is the edition's month. */
+    audience: 'I am a',
+    /** Shown on the card after a "Subscribe to the next issue" click. `{month}` is the edition's month. */
     edition: 'We’ll email you the full {month} edition straight away.',
-    editionThanks: 'The full {month} edition is on its way to your inbox. Please also confirm your email, so the next issue reaches you at the end of the month.',
+    editionThanks: 'The full {month} edition is on its way to your inbox, and the next issue reaches you at the end of the month.',
   },
   editions: [
     {
@@ -118,8 +123,9 @@ export const newsletter = {
       },
     },
   ] satisfies Array<Edition>,
+  editionCta: 'Subscribe to the next issue',
   closing: {
     heading: 'Keep up with the latest <em>data opinions, trends, and tips.</em>',
-    thanks: "You're on the list. Please check your inbox to confirm.",
+    thanks: "You're on the list. The next issue arrives at the end of the month.",
   },
 }

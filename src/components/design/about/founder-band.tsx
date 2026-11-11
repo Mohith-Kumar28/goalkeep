@@ -8,6 +8,31 @@ export function FounderBand({ founder }: { founder: typeof about.founder }) {
     >
       <h1 className="sr-only">About Goalkeep</h1>
       <div className="dc-shell dc-about-founder">
+        <div className="dc-founder-sticky">
+          <figure
+            className="dc-polaroid"
+            style={{ margin: 0, transform: "rotate(-2.5deg)" }}
+          >
+            <span
+              className="dc-tape"
+              data-tone="coral"
+              aria-hidden="true"
+              style={{
+                top: -14,
+                left: "50%",
+                marginLeft: -58,
+                transform: "rotate(-3deg)",
+              }}
+            />
+            <img
+              className="dc-founder-img"
+              src={founder.photo.src}
+              alt={founder.photo.alt}
+              loading="lazy"
+              style={{ objectPosition: founder.photo.position }}
+            />
+          </figure>
+        </div>
         <div>
           <p className="dc-eyebrow">{founder.eyebrow}</p>
           {founder.paragraphs.map((text, i) => (
@@ -58,7 +83,7 @@ export function FounderBand({ founder }: { founder: typeof about.founder }) {
                 {founder.title}
               </p>
             </div>
-            <figure className="dc-polaroid dc-founder-fig">
+            <figure className="dc-polaroid dc-founder-fig" aria-hidden="true">
               <span
                 className="dc-tape"
                 data-tone="coral"
@@ -73,7 +98,8 @@ export function FounderBand({ founder }: { founder: typeof about.founder }) {
               <img
                 className="dc-founder-img"
                 src={founder.photo.src}
-                alt={founder.photo.alt}
+                alt=""
+                loading="lazy"
                 style={{ objectPosition: founder.photo.position }}
               />
             </figure>

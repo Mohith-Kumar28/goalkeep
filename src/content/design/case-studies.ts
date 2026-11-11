@@ -2,7 +2,7 @@ import type { Tone } from '@/components/design/tones'
 
 export type CaseStudySlug = 'peepul' | 'british-asian-trust' | 'vanavil' | 'baithak'
 
-export type Sector = 'edu' | 'health' | 'cp' | 'liv'
+export type Sector = 'edu' | 'health' | 'cp' | 'liv' | 'arts'
 export type Audience = 'np' | 'fund' | 'eco'
 
 /** Filter chips and tags share these tables, so a label cannot drift between the two. */
@@ -11,6 +11,7 @@ export const sectors: Record<Sector, { label: string; tone: Tone }> = {
   health: { label: 'Health', tone: 'teal' },
   cp: { label: 'Child protection', tone: 'coral' },
   liv: { label: 'Livelihoods', tone: 'blue' },
+  arts: { label: 'Arts', tone: 'teal' },
 }
 
 export const audiences: Record<Audience, { chip: string; tag: string }> = {
@@ -59,7 +60,7 @@ export type Testimonial = {
 export type CaseStudy = {
   slug: CaseStudySlug
   org: string
-  sector: Sector
+  sectorTags: Array<Sector>
   audience: Audience
   service: string
   /** The listing card, and the "More case studies" cards on each study. */
@@ -93,7 +94,7 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'peepul',
     org: 'Peepul',
-    sector: 'edu',
+    sectorTags: ['edu'],
     audience: 'np',
     service: 'Impact and measurement strategy',
     card: {
@@ -106,8 +107,8 @@ export const caseStudies: Array<CaseStudy> = [
       },
       cover: {
         kind: 'photo',
-        src: '/design/adf7e6efd567e8191c6319f6ce9ebe1f.webp',
-        alt: 'Peepul and Goalkeep at work',
+        src: '/design/peepul-cover.webp',
+        alt: 'Peepul and Goalkeep team members working through a dashboard around a table',
         position: '50% 50%',
       },
     },
@@ -120,16 +121,16 @@ export const caseStudies: Array<CaseStudy> = [
       'As Peepul expanded across eight programmes in two states, every programme could explain its own work, but bringing those stories together into one organisation-level picture of impact had become difficult. Goalkeep worked with the leadership team to turn their Theory of Change into a shared measurement framework and a leadership dashboard.',
     hero: {
       kind: 'photo',
-      src: '/design/adf7e6efd567e8191c6319f6ce9ebe1f.webp',
+      src: '/design/peepul-cover.webp',
       alt: 'Peepul and Goalkeep team members working through a dashboard around a table',
       position: '50% 50%',
     },
     background: {
       aside: {
         kind: 'photo',
-        src: '/design/f3d5986f66c8b910244783be9e5111ed.webp',
-        alt: "A Goalkeep team member walking Peepul's team through the leadership dashboard",
-        position: '50% 100%',
+        src: '/design/peepul-background.webp',
+        alt: 'A Goalkeep team member talking a Peepul colleague through a dashboard',
+        position: '50% 35%',
         quote:
           'The challenge wasn’t a lack of data. It was creating a shared organisational language without losing what each programme had built.',
       },
@@ -155,9 +156,9 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'We visited all eight programmes and spoke with nearly twenty stakeholders across leadership and programme teams. Previous attempts at alignment had stalled because programme teams questioned the value of standardising an impact framework, so we needed to see first-hand how different teams were collecting data and reporting their outcomes.',
         image: {
           kind: 'photo',
-          src: '/design/86b7ab13331201e70321fefb25364ecb.webp',
-          alt: 'Goalkeep in conversation with Peepul team members during a field visit',
-          position: '50% 40%',
+          src: '/design/peepul-approach-1.webp',
+          alt: 'A Peepul team member at a whiteboard with colleagues during a programme discussion',
+          position: '50% 50%',
         },
       },
       {
@@ -165,9 +166,9 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'That context became the foundation for the shared framework we set out to develop. Across four leadership workshops, we mapped Peepul’s Theory of Change to a shared set of organisation-level indicators. This meant helping leadership make some hard calls: which indicators should be common across every programme, which should stay at programme level without rolling up, and how to settle cases where two programmes defined the same concept differently. The aim was to find the foundational thread that already ran through every programme, and give it common definitions the whole organisation could stand behind.',
         image: {
           kind: 'photo',
-          src: '/design/5fbbb99e8ba9fef7a76a4be484da22a4.webp',
-          alt: 'A Goalkeep facilitator leading a leadership workshop on which questions are high priority',
-          position: '50% 40%',
+          src: '/design/peepul-approach-2.webp',
+          alt: 'Peepul and Goalkeep team members gathered around a laptop and a dashboard on screen',
+          position: '50% 50%',
         },
       },
       {
@@ -175,9 +176,9 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'Before any development began, we put dashboard mockups in front of the leadership team, including a view mapping Peepul’s Theory of Change to organisation-level scorecards. For the first time, everyone was reacting to the same picture of Peepul. Definitions, indicators and dashboard views were then refined over several rounds to arrive at the final system, which gives leadership an organisation-wide view of impact.',
         image: {
           kind: 'photo',
-          src: '/design/e0e102201e0cf4737845dfafb7a7a3a8.webp',
-          alt: "Peepul's leadership team reviewing dashboard views with Goalkeep",
-          position: '50% 45%',
+          src: '/design/peepul-approach-3.webp',
+          alt: 'A Peepul team member explaining the leadership dashboard shown on a wall screen',
+          position: '50% 50%',
         },
       },
     ],
@@ -232,7 +233,7 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'british-asian-trust',
     org: 'British Asian Trust',
-    sector: 'cp',
+    sectorTags: ['cp'],
     audience: 'fund',
     service: 'Data adoption and capacity-building',
     card: {
@@ -244,7 +245,10 @@ export const caseStudies: Array<CaseStudy> = [
         label: 'of participants said they learnt something new',
       },
       cover: {
-        kind: 'stat',
+        kind: 'photo',
+        src: '/design/bat-cover.webp',
+        alt: 'KAWACH partner organisations and Goalkeep gathered in a workshop discussion',
+        position: '50% 50%',
       },
     },
     readTime: 4,
@@ -255,11 +259,17 @@ export const caseStudies: Array<CaseStudy> = [
     intro:
       'KAWACH, a British Asian Trust programme, works through 16 partner organisations across 12 districts in four states to strengthen child protection systems in India. Its partners held rich evidence, but bringing it together into one clear, representative narrative was a recurring challenge at annual reporting time. Goalkeep designed a three-day workshop for nearly 70 participants that turned local evidence into prioritised insights for district, state and annual programme reports.',
     hero: {
-      kind: 'stat',
+      kind: 'photo',
+      src: '/design/bat-cover.webp',
+      alt: 'KAWACH partner organisations and Goalkeep gathered in a workshop discussion',
+      position: '50% 50%',
     },
     background: {
       aside: {
-        kind: 'panel',
+        kind: 'photo',
+        src: '/design/bat-background.webp',
+        alt: 'A Goalkeep facilitator speaking with KAWACH workshop participants around a table',
+        position: '50% 40%',
         quote:
           'The visible reporting difficulties were symptoms of deeper issues in how data was gathered, interpreted and discussed across the programme.',
       },
@@ -287,24 +297,30 @@ export const caseStudies: Array<CaseStudy> = [
         title: '1. Introducing the MAP Framework',
         body: 'Nearly 70 participants from partner organisations and KAWACH’s programme and leadership teams came together in Bengaluru. We introduced the MAP framework: craft a Message for your audience, Amplify the priorities that matter most and Prove each claim with clear evidence. Everyday exercises and a custom quiz in the style of Kaun Banega Crorepati made the ideas stick, with programme staff and partners taking part on equal terms.',
         image: {
-          kind: 'placeholder',
-          label: 'Workshop photo to come',
+          kind: 'photo',
+          src: '/design/bat-approach-1.webp',
+          alt: 'Workshop participants standing and discussing around a table with sticky notes on the wall',
+          position: '50% 50%',
         },
       },
       {
         title: '2. Applying MAP to KAWACH’s Evidence',
         body: 'Participants then worked in district groups on priority programme indicators, combining individual reflection with structured discussion of achievements, challenges, lessons and next steps. A KAWACH team member facilitated each table and documented the evidence in a shared digital template, making sure every participant had space to contribute.',
         image: {
-          kind: 'placeholder',
-          label: 'Workshop photo to come',
+          kind: 'photo',
+          src: '/design/bat-approach-2.webp',
+          alt: 'Workshop participants seated in groups working through evidence on paper',
+          position: '50% 50%',
         },
       },
       {
         title: '3. Refining and Streamlining the Findings',
         body: 'Groups reviewed their inputs to find the most important messages and test whether each claim was backed by quantitative or qualitative evidence. By the middle of the second day, participants were pushing one another for clearer evidence, while facilitators balanced progress with making sure every perspective was heard.',
         image: {
-          kind: 'placeholder',
-          label: 'Workshop photo to come',
+          kind: 'photo',
+          src: '/design/bat-approach-3.webp',
+          alt: 'Workshop participants gathered around a table reviewing their findings',
+          position: '50% 50%',
         },
       },
     ],
@@ -345,7 +361,7 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'vanavil',
     org: 'Vanavil Trust',
-    sector: 'edu',
+    sectorTags: ['liv', 'edu'],
     audience: 'np',
     service: 'Kickstarter Program',
     card: {
@@ -358,9 +374,9 @@ export const caseStudies: Array<CaseStudy> = [
       },
       cover: {
         kind: 'photo',
-        src: '/design/1410813022db18712b058a2e66fc31f2.webp',
-        alt: 'Vanavil Trust and Goalkeep at work',
-        position: '50% 45%',
+        src: '/design/vanavil-cover.webp',
+        alt: 'A Vanavil team member leading a session with teachers in the courtyard',
+        position: '50% 50%',
       },
     },
     readTime: 3,
@@ -372,16 +388,16 @@ export const caseStudies: Array<CaseStudy> = [
       'Vanavil Trust had already used attendance data from an earlier Goalkeep engagement to bring children who had dropped out back to school. The next question was whether its assessment data could become just as actionable. Goalkeep worked with Vanavil’s teachers to agree on common competencies, streamline how they assess and build a dashboard that compares learning across grades, subjects and terms.',
     hero: {
       kind: 'photo',
-      src: '/design/ba9d055c02a7ead7918589b2e178ddb9.webp',
-      alt: 'Vanavil teachers working through assessment data on a tablet during training',
-      position: '50% 45%',
+      src: '/design/vanavil-cover.webp',
+      alt: 'A Vanavil team member leading a session with teachers in the courtyard',
+      position: '50% 50%',
     },
     background: {
       aside: {
         kind: 'photo',
-        src: '/design/d463b6ca03ff831e046408ed72fcb2b7.webp',
-        alt: 'Vanavil teachers gathered for a data session at the centre',
-        position: '50% 60%',
+        src: '/design/vanavil-background.webp',
+        alt: 'Vanavil teachers looking at a tablet together',
+        position: '50% 30%',
         quote: 'If we collect this information, what action will it help us take?',
         darker: true,
       },
@@ -407,9 +423,9 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'Through focus group discussions and interviews with teachers and programme leaders, we drafted the high-priority questions the data needed to answer. Every data point was held to one test that we kept returning to: if we collect this information, what action will it help us take?',
         image: {
           kind: 'photo',
-          src: '/design/593b056f1fde4192aae30df0d6ae1b5f.webp',
-          alt: 'A Vanavil team member leading a discussion with teachers',
-          position: '50% 30%',
+          src: '/design/vanavil-approach-1.webp',
+          alt: 'Vanavil teachers and staff gathered in the courtyard for a discussion',
+          position: '50% 50%',
         },
       },
       {
@@ -417,8 +433,8 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'Teachers revised their assessment sheets together, removed repetitive activities and aligned around a common set of competencies. We then streamlined attendance and assessments into two data-entry sheets per teacher, while keeping the flexibility to change activities from one term to the next.',
         image: {
           kind: 'photo',
-          src: '/design/52f5634b14729c75d93b1c29acda0e6a.webp',
-          alt: 'Vanavil teachers filling in the new assessment sheets',
+          src: '/design/vanavil-approach-2.webp',
+          alt: 'Vanavil teachers filling in assessment sheets',
           position: '50% 50%',
         },
       },
@@ -427,8 +443,8 @@ export const caseStudies: Array<CaseStudy> = [
         body: 'The dashboard that emerged compares learning across grades, subjects and terms, alongside nutrition indicators such as children at risk of malnutrition. During orientation and data-entry training, teachers who had first felt overwhelmed grew comfortable navigating it, because it reflected work they already understood.',
         image: {
           kind: 'photo',
-          src: '/design/f156cf8d3f1fd3973e37e3fed4e6121b.webp',
-          alt: 'A Vanavil teacher walking colleagues through the learning dashboard',
+          src: '/design/vanavil-approach-3.webp',
+          alt: 'A Vanavil teacher pointing out results on a wall screen',
           position: '50% 50%',
         },
       },
@@ -482,7 +498,7 @@ export const caseStudies: Array<CaseStudy> = [
   {
     slug: 'baithak',
     org: 'Baithak Foundation',
-    sector: 'edu',
+    sectorTags: ['arts', 'edu'],
     audience: 'np',
     service: 'Data systems and workflows',
     card: {
@@ -630,7 +646,7 @@ export const caseStudyHref = (slug: CaseStudySlug) => `/case-studies/${slug}`
 
 export type Filter<TId extends string> = { id: 'all' | TId; label: string; tone: Tone }
 
-/** The filter chips, in the export's order. Health and Livelihoods have no study yet, so they show the empty state. */
+/** The filter chips, in the export's order. Health has no study yet, so it shows the empty state. */
 export const audienceFilters: Array<Filter<Audience>> = [
   { id: 'all', label: 'All', tone: 'blue' },
   { id: 'np', label: audiences.np.chip, tone: 'gold' },
@@ -643,6 +659,7 @@ export const sectorFilters: Array<Filter<Sector>> = [
   { id: 'health', label: sectors.health.label, tone: 'teal' },
   { id: 'cp', label: sectors.cp.label, tone: 'coral' },
   { id: 'liv', label: sectors.liv.label, tone: 'blue' },
+  { id: 'arts', label: sectors.arts.label, tone: 'teal' },
 ]
 
 export const quizHref = '/resources/data-quiz'

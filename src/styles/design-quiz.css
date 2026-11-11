@@ -587,10 +587,3 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-.dc-q-copied {
-  font-size: 14px;
-  color: #176059;
-  font-weight: 600;
-  margin-top: 14px;
-  min-height: 21px;
-}

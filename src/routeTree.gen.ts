@@ -24,6 +24,8 @@ import { Route as ProgramsKickstarterRouteImport } from './routes/programs/kicks
 import { Route as ResourcesDataQuizRouteImport } from './routes/resources/data-quiz'
 import { Route as ResourcesNewsletterRouteImport } from './routes/resources/newsletter'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as ApiExportNewsletterDotcsvRouteImport } from './routes/api/export/newsletter[.]csv'
+import { Route as ApiExportQuizDotcsvRouteImport } from './routes/api/export/quiz[.]csv'
 import { Route as ResourcesBlogIndexRouteImport } from './routes/resources/blog/index'
 import { Route as ResourcesBlogSlugRouteImport } from './routes/resources/blog/$slug'
 
@@ -102,6 +104,17 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiExportNewsletterDotcsvRoute =
+  ApiExportNewsletterDotcsvRouteImport.update({
+    id: '/api/export/newsletter.csv',
+    path: '/api/export/newsletter.csv',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiExportQuizDotcsvRoute = ApiExportQuizDotcsvRouteImport.update({
+  id: '/api/export/quiz.csv',
+  path: '/api/export/quiz.csv',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourcesBlogIndexRoute = ResourcesBlogIndexRouteImport.update({
   id: '/resources/blog/',
   path: '/resources/blog/',
@@ -129,6 +142,8 @@ export interface FileRoutesByFullPath {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
+  '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
@@ -148,6 +163,8 @@ export interface FileRoutesByTo {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
+  '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog': typeof ResourcesBlogIndexRoute
 }
@@ -168,6 +185,8 @@ export interface FileRoutesById {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
+  '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
 }
@@ -189,6 +208,8 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/api/export/newsletter.csv'
+    | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog/'
   fileRoutesByTo: FileRoutesByTo
@@ -208,6 +229,8 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies'
     | '/programs'
+    | '/api/export/newsletter.csv'
+    | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog'
   id:
@@ -227,6 +250,8 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/api/export/newsletter.csv'
+    | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog/'
   fileRoutesById: FileRoutesById
@@ -247,6 +272,8 @@ export interface RootRouteChildren {
   ServicesSlugRoute: typeof ServicesSlugRoute
   CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ApiExportNewsletterDotcsvRoute: typeof ApiExportNewsletterDotcsvRoute
+  ApiExportQuizDotcsvRoute: typeof ApiExportQuizDotcsvRoute
   ResourcesBlogSlugRoute: typeof ResourcesBlogSlugRoute
   ResourcesBlogIndexRoute: typeof ResourcesBlogIndexRoute
 }
@@ -358,6 +385,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/export/newsletter.csv': {
+      id: '/api/export/newsletter.csv'
+      path: '/api/export/newsletter.csv'
+      fullPath: '/api/export/newsletter.csv'
+      preLoaderRoute: typeof ApiExportNewsletterDotcsvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/export/quiz.csv': {
+      id: '/api/export/quiz.csv'
+      path: '/api/export/quiz.csv'
+      fullPath: '/api/export/quiz.csv'
+      preLoaderRoute: typeof ApiExportQuizDotcsvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resources/blog/': {
       id: '/resources/blog/'
       path: '/resources/blog'
@@ -391,6 +432,8 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesSlugRoute: ServicesSlugRoute,
   CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  ApiExportNewsletterDotcsvRoute: ApiExportNewsletterDotcsvRoute,
+  ApiExportQuizDotcsvRoute: ApiExportQuizDotcsvRoute,
   ResourcesBlogSlugRoute: ResourcesBlogSlugRoute,
   ResourcesBlogIndexRoute: ResourcesBlogIndexRoute,
 }

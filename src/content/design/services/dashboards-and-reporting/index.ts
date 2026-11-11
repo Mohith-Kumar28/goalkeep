@@ -43,20 +43,16 @@ export const content: ServicePageContent = {
     tightActions: true,
     photos: [
       {
-        src: "/design/6616bb19d578b4407abaff9cbb89cc4b.webp",
-        alt: "A participant presenting during a data literacy session",
+        src: "/design/svc-dashboards-banner-1.webp", alt: "Two partner team members looking at a dashboard on a laptop", position: "40% 40%",
       },
       {
-        src: "/design/d7e0a2f562f148853d7f839e7a34590d.webp",
-        alt: "Goalkeep with a partner team after a workshop",
+        src: "/design/svc-dashboards-banner-2.webp", alt: "A Goalkeep team member leaning in to help partners at a workshop table", position: "45% 35%",
       },
       {
-        src: "/design/a0ab5315386fbadd8443b0eaa8ffab2d.webp",
-        alt: "Affinity mapping on coloured boards during a Goalkeep design workshop",
+        src: "/design/svc-dashboards-banner-3.webp", alt: "A participant holding up a laptop with a dashboard during a workshop", position: "50% 35%",
       },
       {
-        src: "/design/46fd758db6cd80183d9d4f676d744baa.webp",
-        alt: "Two partner team members working through data on a laptop",
+        src: "/design/svc-dashboards-banner-4.webp", alt: "Two colleagues looking closely at a screen together", position: "50% 40%",
       },
     ],
   },
@@ -133,13 +129,17 @@ export const content: ServicePageContent = {
         },
       ],
       caseStudy: {
-        kind: "soon",
-        tone: "coral",
-        title: "BAT",
-        body: "Portfolio reporting case study to be added.",
+        kind: "live",
+        href: "/case-studies/british-asian-trust",
+        photo: {
+          src: "/design/svc-bat-cover.webp",
+          alt: "British Asian Trust and Goalkeep at a KAWACH partner workshop",
+        },
+        title: "British Asian Trust",
+        body: "Nearly 70 people from KAWACH partner organisations and the BAT team turned local evidence into prioritised insights for the annual report.",
         tags: [
           { label: "Funder", tone: "blue" },
-          { label: "Case study in progress", tone: "coral" },
+          { label: "Child protection", tone: "teal" },
         ],
       },
       caseQuote: {
@@ -210,24 +210,21 @@ export const content: ServicePageContent = {
         heading: "We start with the questions, <em>not the charts.</em>",
         body: "Many dashboards fail because they begin with whatever data happens to be available. We begin with what leadership, programme teams, MEL staff or funders need to understand, decide and do, and design every view around those questions.",
         photo: {
-          src: "/design/bd7d6d0349cff3dd797ec319912bbbf5.webp",
-          alt: "A Goalkeep team member talking through a framework in a working session",
+          src: "/design/svc-dashboards-approach-1.webp", alt: "Partner team members working at a table in a workshop room", position: "30% 40%",
         },
       },
       {
         heading: "We fix the foundations <em>underneath the dashboard.</em>",
         body: "A dashboard is only as trustworthy as the definitions, data sources and pipelines behind it. If the measurement framework or underlying data system is not reliable, we address those foundations as part of the engagement.",
         photo: {
-          src: "/design/277f6c1beb347d5810cdc7e70a59ad56.webp",
-          alt: "A dashboard open on a laptop during a working session",
+          src: "/design/svc-dashboards-approach-2.webp", alt: "A woman at a laptop showing a bar chart dashboard", position: "65% 45%",
         },
       },
       {
         heading: "We build for each role, <em>then help people use it.</em>",
         body: "Every role gets the dashboard view they need, with useful filters and drill-downs, and recurring reports are automated or simplified. We teach you how to onboard the people who will use the dashboard in the future and set up data-review routines that connect insight to action.",
         photo: {
-          src: "/design/aba7e84d5587ede519db33fd05ffa819.webp",
-          alt: "A facilitator presenting a dashboard on screen to a partner team",
+          src: "/design/svc-dashboards-approach-3.webp", alt: "A facilitator presenting a dashboard on a projector screen to a partner team", position: "70% 50%",
         },
       },
     ],
@@ -270,13 +267,17 @@ export const content: ServicePageContent = {
     spans: [{ from: 2, to: 4, caption: "most engagements land here" }],
   },
   caseStudy: {
-    kind: "soon",
-    tone: "coral",
+    kind: "live",
+    href: "/case-studies/vanavil",
+    photo: {
+      src: "/design/vanavil-cover.webp",
+      alt: "Vanavil Trust and Goalkeep at work",
+    },
     title: "Vanavil Trust",
     body: "Using timely information to identify and re-engage children who had dropped out.",
     tags: [
+      { label: "Livelihoods", tone: "coral" },
       { label: "Education", tone: "blue" },
-      { label: "Case study in progress", tone: "coral" },
     ],
   },
   contact: {

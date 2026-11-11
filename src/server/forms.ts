@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { contact } from "@/content/homepage"
-import { audiences, newsletter } from "@/content/design/newsletter"
+import { newsletter, readers } from "@/content/design/newsletter"
 import { detailOptions, likert, scoreQuiz, statementCount } from "@/content/quiz"
 import type { Answer, QuizDetails } from "@/content/quiz"
 import { contactEmail } from "./contact-email"
@@ -163,12 +163,12 @@ export type NewsletterInput = {
   name?: string
   organization?: string
   audience?: string
-  /** The edition whose "Subscribe to keep reading" button was used. */
+  /** The edition whose "Subscribe to the next issue" button was used. */
   edition?: string
   website: string
 }
 
-const audienceNamed = (id: string) => audiences.find((a) => a.id === id) ?? null
+const readerNamed = (id: string) => readers.find((r) => r.id === id) ?? null
 
 export const subscribeNewsletter = createServerFn({ method: "POST" })
   .validator((input: NewsletterInput) => {
@@ -177,7 +177,7 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
       email: text(input.email, 200).toLowerCase(),
       name: text(input.name, 120) || null,
       organization: text(input.organization, 200) || null,
-      audience: audienceNamed(text(input.audience, 20)),
+      audience: readerNamed(text(input.audience, 20)),
       edition: newsletter.editions.find((e) => e.id === editionId) ?? null,
       website: text(input.website, 200),
     }
@@ -201,24 +201,18 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
       .bind(data.email, data.name, data.organization, data.audience?.id ?? null, data.edition?.id ?? null)
       .run()
 
-    // Best effort: the address is already stored, so neither call can fail
-    // the sign-up. Most of each edition is shared, so a reader who didn't
-    // pick an audience gets the nonprofit version.
-    const { edition } = data
-    await Promise.all([
-      addToMailchimp(env, {
-        email: data.email,
-        name: data.name,
-        source: "newsletter",
-        tags: data.audience ? [data.audience.label] : [],
-      }),
-      edition &&
-        sendMail(env, "newsletter edition", {
-          to: [data.email],
-          reply_to: teamAddresses(env)[0],
-          ...editionEmail(edition, data.audience?.id ?? "nonprofit"),
-        }),
-    ])
+    // Sign-ups live only in D1 for now (Nov 11: "forget mailchimp
+    // integration"); export them from /api/export/newsletter.csv. Best
+    // effort: the address is already stored, so the email cannot fail the
+    // sign-up. Most of each edition is shared, so a reader who didn't pick
+    // an audience gets the nonprofit version.
+    if (data.edition) {
+      await sendMail(env, "newsletter edition", {
+        to: [data.email],
+        reply_to: teamAddresses(env)[0],
+        ...editionEmail(data.edition, data.audience?.version ?? "nonprofit"),
+      })
+    }
 
     return { ok: true }
   })
@@ -246,13 +240,12 @@ export const submitQuiz = createServerFn({ method: "POST" })
     name: text(input.name, 120),
     email: text(input.email, 200).toLowerCase(),
     organization: text(input.organization, 200),
-    region: text(input.region, 80),
     sector: text(input.sector, 80),
     sectorOther: text(input.sectorOther, 120),
     role: text(input.role, 80),
     roleOther: text(input.roleOther, 120),
     size: text(input.size, 40),
-    budget: text(input.budget, 120),
+    budget: text(input.budget, 40),
     answers: Array.isArray(input.answers) ? input.answers.slice(0, statementCount) : [],
     website: text(input.website, 200),
   }))
@@ -263,18 +256,18 @@ export const submitQuiz = createServerFn({ method: "POST" })
       return { ok: false, error: "Please enter a valid email address." }
     if (!data.organization)
       return { ok: false, error: "Please tell us your organisation’s name." }
-    if (data.region && !detailOptions.region.includes(data.region))
-      return { ok: false, error: "Please choose your region." }
     if (data.sector && !detailOptions.sector.includes(data.sector))
-      return { ok: false, error: "Please choose your sector." }
+      return { ok: false, error: "Please choose your primary sector." }
     if (data.sector === "Other" && !data.sectorOther)
-      return { ok: false, error: "Please tell us your sector." }
+      return { ok: false, error: "Please tell us your primary sector." }
     if (!detailOptions.role.includes(data.role))
       return { ok: false, error: "Please choose your role." }
     if (data.role === "Other" && !data.roleOther)
       return { ok: false, error: "Please tell us your role." }
     if (data.size && !detailOptions.size.includes(data.size))
       return { ok: false, error: "Please choose your organisation’s size." }
+    if (data.budget && !detailOptions.budget.includes(data.budget))
+      return { ok: false, error: "Please choose your organisation’s budget." }
     const answers = data.answers.filter(isAnswer)
     if (answers.length !== statementCount)
       return { ok: false, error: "Please answer every statement." }
@@ -297,7 +290,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
         data.name,
         data.email,
         data.organization,
-        data.region,
+        null,
         sector,
         role,
         data.size,

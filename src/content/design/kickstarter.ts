@@ -46,10 +46,10 @@ export const kickstarter = {
     primary: 'Apply for Kickstarter 3.0',
     secondary: 'Partner with us to support a cohort',
     photos: [
-      { src: '/design/d9f25a2c090890697a8d9bf1806f663d.webp', alt: 'A Goalkeep working session on the floor of a partner office' },
-      { src: '/design/3c1c275e978a7bbdbc2b4a398c8494ac.webp', alt: 'A partner team around a meeting-room table during a working session' },
-      { src: '/design/46fd758db6cd80183d9d4f676d744baa.webp', alt: 'Two partner team members working through data on a laptop' },
-      { src: '/design/d7e0a2f562f148853d7f839e7a34590d.webp', alt: 'Goalkeep with a partner team after a workshop' },
+      { src: '/design/kickstarter-banner-1.webp', alt: 'Goalkeep and a partner team working together at a table' },
+      { src: '/design/kickstarter-banner-2.webp', alt: 'A partner team in a Goalkeep working session' },
+      { src: '/design/kickstarter-banner-3.webp', alt: 'Partner team members working through data together' },
+      { src: '/design/kickstarter-banner-4.webp', alt: 'Goalkeep with a partner team after a workshop' },
     ] satisfies Array<HeroPhoto>,
   },
   glance: [
@@ -66,8 +66,8 @@ export const kickstarter = {
       'Kickstarter helps you build a foundation for data-driven decision making early, before fragmented processes become expensive, complicated systems.',
     ],
     large: {
-      src: '/design/c7fa18945afc05080e35a4e989719575.webp',
-      alt: 'A programme session running in a village classroom',
+      src: '/design/kickstarter-why-vanavil.webp',
+      alt: 'Vanavil Trust programme participants',
       caption: 'Vanavil Trust',
     },
     small: {
@@ -154,10 +154,11 @@ export const kickstarter = {
       {
         kind: 'live',
         href: '/case-studies/baithak',
-        photo: { src: '/design/8625ca604ea24fa43d1fd299a4c5afea.webp', alt: 'Two Baithak Foundation team members smiling during a session' },
+        photo: { src: '/design/61c8bcfa7308cd56e5a1e5f6e2e2d521.webp', alt: 'Two Baithak Foundation team members smiling during a session' },
         tags: [
           { label: 'Arts', tone: 'coral' },
-          { label: 'Kickstarter cohort 1', tone: 'teal' },
+          { label: 'Education', tone: 'blue' },
+          { label: 'Data collection and visualisation', tone: 'teal' },
         ],
         title: 'Baithak Foundation',
         body: 'Using a more accessible data system in programme and funder conversations.',
@@ -165,10 +166,10 @@ export const kickstarter = {
       {
         kind: 'live',
         href: '/case-studies/vanavil',
-        photo: { src: '/design/1410813022db18712b058a2e66fc31f2.webp', alt: 'Vanavil Trust and Goalkeep at work' },
+        photo: { src: '/design/vanavil-cover.webp', alt: 'Vanavil Trust and Goalkeep at work' },
         tags: [
+          { label: 'Livelihoods', tone: 'gold' },
           { label: 'Education', tone: 'blue' },
-          { label: 'Kickstarter cohort 1', tone: 'teal' },
         ],
         title: 'Vanavil Trust',
         body: 'Using timely information to identify and re-engage children who had dropped out.',
