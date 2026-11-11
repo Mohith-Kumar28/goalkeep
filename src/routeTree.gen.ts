@@ -24,10 +24,12 @@ import { Route as ProgramsKickstarterRouteImport } from './routes/programs/kicks
 import { Route as ResourcesDataQuizRouteImport } from './routes/resources/data-quiz'
 import { Route as ResourcesNewsletterRouteImport } from './routes/resources/newsletter'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as ApiExportContactDotcsvRouteImport } from './routes/api/export/contact[.]csv'
 import { Route as ApiExportNewsletterDotcsvRouteImport } from './routes/api/export/newsletter[.]csv'
 import { Route as ApiExportQuizDotcsvRouteImport } from './routes/api/export/quiz[.]csv'
 import { Route as ResourcesBlogIndexRouteImport } from './routes/resources/blog/index'
 import { Route as ResourcesBlogSlugRouteImport } from './routes/resources/blog/$slug'
+import { Route as ApiAdminExportCollectionRouteImport } from './routes/api/admin/export/$collection'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -104,6 +106,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiExportContactDotcsvRoute = ApiExportContactDotcsvRouteImport.update({
+  id: '/api/export/contact.csv',
+  path: '/api/export/contact.csv',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiExportNewsletterDotcsvRoute =
   ApiExportNewsletterDotcsvRouteImport.update({
     id: '/api/export/newsletter.csv',
@@ -125,6 +132,12 @@ const ResourcesBlogSlugRoute = ResourcesBlogSlugRouteImport.update({
   path: '/resources/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminExportCollectionRoute =
+  ApiAdminExportCollectionRouteImport.update({
+    id: '/api/admin/export/$collection',
+    path: '/api/admin/export/$collection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -142,10 +155,12 @@ export interface FileRoutesByFullPath {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
+  '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -163,10 +178,12 @@ export interface FileRoutesByTo {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog': typeof ResourcesBlogIndexRoute
+  '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -185,10 +202,12 @@ export interface FileRoutesById {
   '/services/$slug': typeof ServicesSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/api/export/contact.csv': typeof ApiExportContactDotcsvRoute
   '/api/export/newsletter.csv': typeof ApiExportNewsletterDotcsvRoute
   '/api/export/quiz.csv': typeof ApiExportQuizDotcsvRoute
   '/resources/blog/$slug': typeof ResourcesBlogSlugRoute
   '/resources/blog/': typeof ResourcesBlogIndexRoute
+  '/api/admin/export/$collection': typeof ApiAdminExportCollectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -208,10 +227,12 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog/'
+    | '/api/admin/export/$collection'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -229,10 +250,12 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies'
     | '/programs'
+    | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog'
+    | '/api/admin/export/$collection'
   id:
     | '__root__'
     | '/'
@@ -250,10 +273,12 @@ export interface FileRouteTypes {
     | '/services/$slug'
     | '/case-studies/'
     | '/programs/'
+    | '/api/export/contact.csv'
     | '/api/export/newsletter.csv'
     | '/api/export/quiz.csv'
     | '/resources/blog/$slug'
     | '/resources/blog/'
+    | '/api/admin/export/$collection'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -272,10 +297,12 @@ export interface RootRouteChildren {
   ServicesSlugRoute: typeof ServicesSlugRoute
   CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ApiExportContactDotcsvRoute: typeof ApiExportContactDotcsvRoute
   ApiExportNewsletterDotcsvRoute: typeof ApiExportNewsletterDotcsvRoute
   ApiExportQuizDotcsvRoute: typeof ApiExportQuizDotcsvRoute
   ResourcesBlogSlugRoute: typeof ResourcesBlogSlugRoute
   ResourcesBlogIndexRoute: typeof ResourcesBlogIndexRoute
+  ApiAdminExportCollectionRoute: typeof ApiAdminExportCollectionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -385,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/export/contact.csv': {
+      id: '/api/export/contact.csv'
+      path: '/api/export/contact.csv'
+      fullPath: '/api/export/contact.csv'
+      preLoaderRoute: typeof ApiExportContactDotcsvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/export/newsletter.csv': {
       id: '/api/export/newsletter.csv'
       path: '/api/export/newsletter.csv'
@@ -413,6 +447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesBlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/export/$collection': {
+      id: '/api/admin/export/$collection'
+      path: '/api/admin/export/$collection'
+      fullPath: '/api/admin/export/$collection'
+      preLoaderRoute: typeof ApiAdminExportCollectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -432,10 +473,12 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesSlugRoute: ServicesSlugRoute,
   CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  ApiExportContactDotcsvRoute: ApiExportContactDotcsvRoute,
   ApiExportNewsletterDotcsvRoute: ApiExportNewsletterDotcsvRoute,
   ApiExportQuizDotcsvRoute: ApiExportQuizDotcsvRoute,
   ResourcesBlogSlugRoute: ResourcesBlogSlugRoute,
   ResourcesBlogIndexRoute: ResourcesBlogIndexRoute,
+  ApiAdminExportCollectionRoute: ApiAdminExportCollectionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
