@@ -93,6 +93,13 @@ export const submitContact = createServerFn({ method: "POST" })
     return { ok: true }
   })
 
+/** The site's own origin, so emails link and load images from wherever it is served. */
+function siteOrigin(header: (name: "host") => string | undefined) {
+  const host = header("host")
+  if (!host) return "https://goalkeep.net"
+  return `${host.startsWith("localhost") ? "http" : "https"}://${host}`
+}
+
 type MailEnv = MailchimpEnv & {
   RESEND_API_KEY?: string
   CONTACT_EMAIL_FROM?: string
@@ -316,7 +323,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
         from: env.QUIZ_EMAIL_FROM,
         to: [data.email],
         reply_to: env.QUIZ_REPLY_TO ?? teamAddresses(env)[0],
-        ...quizEmail(data.name, data.organization, score),
+        ...quizEmail(data.name, data.organization, score, siteOrigin(getRequestHeader)),
       }),
       addToMailchimp(env, {
         email: data.email,
