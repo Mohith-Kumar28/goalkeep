@@ -35,8 +35,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
-  /* The last bubble lights at 62% of the viewport. The bottom padding keeps the intro pinned until then and a beat after, so the second paragraph and CTA appear while it is still held. */
-  padding: 8px 0 max(24px, calc(720px - 62vh));
+  padding: 8px 0 24px;
 }
 .dc .ps-bubble {
   position: relative;
@@ -59,10 +58,35 @@
 .dc .ps-bubble-left {
   align-self: flex-start;
 }
+/* Desktop: two even columns of three, the right column dropped half a bubble
+   so the pair reads as a conversation rather than a table. Bubbles light in
+   reading order: left, right, left… */
 @media (min-width: 1101px) {
-  .dc .ps-bubble-left + .ps-bubble-right,
-  .dc .ps-bubble-right + .ps-bubble-left {
-    margin-top: -46px;
+  .dc .ps-fit-cloud {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 22px;
+    row-gap: 22px;
+    align-items: start;
+    padding-bottom: 56px;
+  }
+  .dc .ps-fit-cloud .ps-bubble {
+    max-width: none !important;
+    justify-self: stretch;
+  }
+  .dc .ps-fit-cloud .ps-bubble:nth-child(even) {
+    transform: translateY(48px) rotate(var(--rot));
+  }
+  .dc .ps-fit-cloud .ps-bubble:nth-child(even)[data-lit="true"] {
+    transform: translateY(48px) rotate(var(--rot)) scale(1.03);
+  }
+  .dc .ps-fit-cloud .ps-bubble:nth-child(odd)::after {
+    left: 24px;
+    right: auto;
+  }
+  .dc .ps-fit-cloud .ps-bubble:nth-child(even)::after {
+    right: 24px;
+    left: auto;
   }
 }
 .dc .ps-bubble-right {
