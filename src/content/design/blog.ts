@@ -56,7 +56,7 @@ const whichWayDoesYourDataTravel: Article = {
   author: {
     name: 'Manije Kelkar',
     role: 'Founder & Director',
-    photo: '/design/6d381336750276a362aa07133f2c7f9c.webp',
+    photo: '/design/founder-manije.webp',
     bio: 'Manije founded Goalkeep in 2020, after more than a decade of helping social-sector organisations strengthen their measurement and data systems.',
   },
   status: 'Draft for review',
