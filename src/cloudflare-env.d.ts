@@ -25,6 +25,8 @@ declare module "cloudflare:workers" {
     RESEND_API_KEY?: string
     /** Sender on a Resend-verified domain, e.g. "Goalkeep <website@goalkeep.net>". */
     CONTACT_EMAIL_FROM?: string
+    QUIZ_EMAIL_FROM?: string
+    QUIZ_REPLY_TO?: string
     /** Comma-separated addresses that receive each contact enquiry. */
     CONTACT_EMAIL_TO?: string
     /** Secret: a Mailchimp Marketing API key, ending in its server, e.g. "…-us8". */

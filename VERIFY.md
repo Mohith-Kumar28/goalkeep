@@ -4,7 +4,7 @@ Generated from `src/content` by `pnpm verify:report`. Do not edit by hand:
 clear the `verify` field on a content entry once it is confirmed, and this
 list shrinks on its own.
 
-**10 items outstanding.**
+**6 items outstanding.**
 
 Nothing here is invented as fact. Every line is drafted in Goalkeep's
 published voice with plausible, non-inflated stand-ins, and every one needs
@@ -15,13 +15,9 @@ a real number, a real name, or a permission before launch.
 | 1 | `homepage.faqs.2` | Will you help us figure out what metrics will truly communicate our impact? — Yes. We don’t begin with a generic list of | Question wording: the doc has "What metrics should we communicate?", but the answer starts "Yes." - kept the earlier yes/no wording. Confirm with Rumit. |
 | 2 | `homepage.honestStat` | 73% of dashboards we audit aren’t opened twice. — Goalkeep audit sample, 2024–2026 | Source and sample size for the 73% figure. |
 | 3 | `homepage.whyWeExist.sources` | ₹27 lakh crore annual spend, 10% growth to 2030, 5% of decisions data-driven, $250 billion | Source footnotes 1–4 from the funder deck. Removed from the page in the 28 Sep review; still unsourced. |
-| 4 | `quiz.bands.0` | starting — Getting started — Data is mostly collected for reports. Few decisions lean on it yet. — Most organisations we | Placeholder threshold and copy. Rumit to confirm the four categories, their score cut-offs and what each email says (Nov 10 review, 00:26:53). Currently an average from 1.0 to below 2.0. |
-| 5 | `quiz.bands.1` | emerging — Emerging — Data is collected more than it is used. A few foundations would change how decisions get made. — Y | Placeholder threshold and copy. Rumit to confirm the four categories, their score cut-offs and what each email says (Nov 10 review, 00:26:53). Currently an average from 2.0 to below 3.0. |
-| 6 | `quiz.bands.2` | developing — Developing — The pieces are there but unevenly spread. Some teams use data well; others work around it. — S | Placeholder threshold and copy. Rumit to confirm the four categories, their score cut-offs and what each email says (Nov 10 review, 00:26:53). Currently an average from 3.0 to below 4.0. |
-| 7 | `quiz.bands.3` | established — Established — Data is part of how most people here work. — Data is already part of how your organisation w | Placeholder threshold and copy. Rumit to confirm the four categories, their score cut-offs and what each email says (Nov 10 review, 00:26:53). Currently an average of 4.0 or more. |
-| 8 | `newsletter.newsletter.editions.0.archive` | https://mailchi.mp/goalkeep/the-keep-up-october-newsletter-17310147 — https://mailchi.mp/goalkeep/the-keep-up-october-ne | Matched from Mailchimp's public campaign archive: the 5 Nov 06:01 send (Kickstarter block) read as the nonprofit version, the 06:00 send (sponsor-a-seat DLP block) as the funder version. Rumit to confirm. |
-| 9 | `newsletter.newsletter.editions.1.archive` | https://mailchi.mp/goalkeep/the-keep-up-september-newsletter — https://mailchi.mp/goalkeep/the-keep-up-september-newslet | Mailchimp's public archive has one version of this edition (sent 1 Oct, resent 5 Oct), so both audiences get it. Rumit to confirm. |
-| 10 | `newsletter.newsletter.editions.2.archive` | https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsletter — https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsl | Mailchimp's public archive has one version of this edition (sent 27 Aug), so both audiences get it. Rumit to confirm. |
+| 4 | `newsletter.newsletter.editions.0.archive` | https://mailchi.mp/goalkeep/the-keep-up-october-newsletter-17310147 — https://mailchi.mp/goalkeep/the-keep-up-october-ne | Matched from Mailchimp's public campaign archive: the 5 Nov 06:01 send (Kickstarter block) read as the nonprofit version, the 06:00 send (sponsor-a-seat DLP block) as the funder version. Rumit to confirm. |
+| 5 | `newsletter.newsletter.editions.1.archive` | https://mailchi.mp/goalkeep/the-keep-up-september-newsletter — https://mailchi.mp/goalkeep/the-keep-up-september-newslet | Mailchimp's public archive has one version of this edition (sent 1 Oct, resent 5 Oct), so both audiences get it. Rumit to confirm. |
+| 6 | `newsletter.newsletter.editions.2.archive` | https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsletter — https://mailchi.mp/abc4373ad54d/the-keep-up-august-newsl | Mailchimp's public archive has one version of this edition (sent 27 Aug), so both audiences get it. Rumit to confirm. |
 
 ## Blocking before launch
 

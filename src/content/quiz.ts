@@ -1,4 +1,3 @@
-import type { Verify } from './types'
 
 /**
  * The data culture quiz. Twelve statements in four domains, each answered on
@@ -115,99 +114,51 @@ export type QuizDetails = {
   budget: string
 }
 
-export type BandId = 'starting' | 'emerging' | 'developing' | 'established'
+export type PersonaId = 'explorer' | 'consumer' | 'striver' | 'trailblazer'
 
-export type Band = {
-  id: BandId
-  label: string
-  /** The lowest 1–5 average in this band. A band runs up to the next band's `min`. */
-  min: number
-  /** One line under the score in the results email. */
-  reading: string
-  /** The results email's paragraph for this band. */
-  email: string
-}
+/** What the results email calls the respondent: "You are a Data ___". `min` is
+ *  the lowest total (out of 60) for the tier; a tier runs up to the next one's. */
+export type Persona = { id: PersonaId; label: string; min: number }
 
-const PENDING = 'Placeholder threshold and copy. Rumit to confirm the four categories, their score cut-offs and what each email says (Nov 10 review, 00:26:53).'
-
-/* The four performance categories the results email is customised by,
-   lowest first. Thresholds split the 1–5 average into equal steps until
-   Goalkeep sends theirs. */
-export const bands: Array<Verify<Band>> = [
-  {
-    verify: `${PENDING} Currently an average from 1.0 to below 2.0.`,
-    value: {
-      id: 'starting',
-      label: 'Getting started',
-      min: 1,
-      reading: 'Data is mostly collected for reports. Few decisions lean on it yet.',
-      email: 'Most organisations we work with started here. The quickest progress usually comes from one small, visible win: pick a single question your team keeps asking, and answer it with data you already collect.',
-    },
-  },
-  {
-    verify: `${PENDING} Currently an average from 2.0 to below 3.0.`,
-    value: {
-      id: 'emerging',
-      label: 'Emerging',
-      min: 2,
-      reading: 'Data is collected more than it is used. A few foundations would change how decisions get made.',
-      email: 'You have the raw material. What tends to be missing at this stage is a shared place for the data and a routine for looking at it together, so it reaches the people making decisions.',
-    },
-  },
-  {
-    verify: `${PENDING} Currently an average from 3.0 to below 4.0.`,
-    value: {
-      id: 'developing',
-      label: 'Developing',
-      min: 3,
-      reading: 'The pieces are there but unevenly spread. Some teams use data well; others work around it.',
-      email: 'Some of your teams already use data well. The next step is usually spreading what works: common definitions, dashboards people open, and training for the teams that still work around the data.',
-    },
-  },
-  {
-    verify: `${PENDING} Currently an average of 4.0 or more.`,
-    value: {
-      id: 'established',
-      label: 'Established',
-      min: 4,
-      reading: 'Data is part of how most people here work.',
-      email: 'Data is already part of how your organisation works. The opportunity now is depth: sharper questions, faster loops from insight to action, and evidence your funders and partners can use too.',
-    },
-  },
+/* Goalkeep's tiers, Nov 11: 0–14, 15–29, 30–44, 45–60. */
+export const personas: Array<Persona> = [
+  { id: 'explorer', label: 'Explorer', min: 0 },
+  { id: 'consumer', label: 'Consumer', min: 15 },
+  { id: 'striver', label: 'Striver', min: 30 },
+  { id: 'trailblazer', label: 'Trailblazer', min: 45 },
 ]
 
-export const bandFor = (average: number): Band => {
-  const band = [...bands].reverse().find((b) => average >= b.value.min) ?? bands[0]
-  return band.value
-}
+export const personaFor = (total: number): Persona =>
+  [...personas].reverse().find((p) => total >= p.min) ?? personas[0]
 
-export type DomainScore = { id: DomainId; title: string; average: number; band: Band }
+const MAX_ANSWER = Math.max(...likert.map((option) => option.value))
+
+export type DomainScore = { id: DomainId; title: string; average: number; total: number; max: number }
 
 export type QuizScore = {
   domains: Array<DomainScore>
   average: number
-  band: Band
-  weakest: Domain
+  total: number
+  max: number
+  persona: Persona
 }
 
-/** `answers` is one value per statement, in the order the domains list them. */
+const sum = (values: Array<number>) => values.reduce((total, v) => total + v, 0)
+
 export function scoreQuiz(answers: Array<Answer>): QuizScore {
   let offset = 0
   const scored = domains.map((domain) => {
     const slice = answers.slice(offset, offset + domain.statements.length)
     offset += domain.statements.length
-    const average = slice.reduce<number>((sum, a) => sum + a, 0) / slice.length
-    return { id: domain.id, title: domain.title, average, band: bandFor(average) }
+    const total = sum(slice)
+    return { id: domain.id, title: domain.title, average: total / slice.length, total, max: slice.length * MAX_ANSWER }
   })
-  const average = answers.reduce<number>((sum, a) => sum + a, 0) / answers.length
-  const weakestId = scored.reduce((low, d) => (d.average < low.average ? d : low)).id
+  const total = sum(answers)
   return {
     domains: scored,
-    average,
-    band: bandFor(average),
-    weakest: domains.find((d) => d.id === weakestId) ?? domains[0],
+    average: total / answers.length,
+    total,
+    max: answers.length * MAX_ANSWER,
+    persona: personaFor(total),
   }
 }
-
-/** One decimal, the way the scores are shown everywhere. */
-export const formatScore = (average: number) => average.toFixed(1)

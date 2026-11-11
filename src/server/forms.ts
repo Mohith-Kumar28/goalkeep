@@ -97,6 +97,8 @@ type MailEnv = MailchimpEnv & {
   RESEND_API_KEY?: string
   CONTACT_EMAIL_FROM?: string
   CONTACT_EMAIL_TO?: string
+  QUIZ_EMAIL_FROM?: string
+  QUIZ_REPLY_TO?: string
 }
 
 /** Everyone in CONTACT_EMAIL_TO (comma-separated). */
@@ -108,6 +110,8 @@ function teamAddresses(env: MailEnv) {
 }
 
 type Mail = {
+  /** Overrides CONTACT_EMAIL_FROM for this one email. */
+  from?: string
   to: Array<string>
   reply_to?: string
   subject: string
@@ -120,7 +124,8 @@ type Mail = {
  * already stored, so a mail failure is logged and never fails the form.
  */
 async function sendMail(env: MailEnv, label: string, mail: Mail): Promise<boolean> {
-  if (!env.RESEND_API_KEY || !env.CONTACT_EMAIL_FROM || mail.to.length === 0) {
+  const from = mail.from ?? env.CONTACT_EMAIL_FROM
+  if (!env.RESEND_API_KEY || !from || mail.to.length === 0) {
     console.error(
       `${label} email skipped: RESEND_API_KEY, CONTACT_EMAIL_FROM or a recipient is not set`
     )
@@ -134,7 +139,7 @@ async function sendMail(env: MailEnv, label: string, mail: Mail): Promise<boolea
         Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: env.CONTACT_EMAIL_FROM, ...mail }),
+      body: JSON.stringify({ ...mail, from }),
       signal: AbortSignal.timeout(5000),
     })
     if (!response.ok) {
@@ -301,22 +306,23 @@ export const submitQuiz = createServerFn({ method: "POST" })
         byDomain.process,
         byDomain.strategy,
         score.average,
-        score.band.id,
+        score.persona.id,
         userAgent
       )
       .run()
 
     const [emailed] = await Promise.all([
       sendMail(env, "quiz", {
+        from: env.QUIZ_EMAIL_FROM,
         to: [data.email],
-        reply_to: teamAddresses(env)[0],
+        reply_to: env.QUIZ_REPLY_TO ?? teamAddresses(env)[0],
         ...quizEmail(data.name, data.organization, score),
       }),
       addToMailchimp(env, {
         email: data.email,
         name: data.name,
         source: "quiz",
-        tags: [`Quiz: ${score.band.label}`],
+        tags: [`Quiz: Data ${score.persona.label}`],
       }),
     ])
 

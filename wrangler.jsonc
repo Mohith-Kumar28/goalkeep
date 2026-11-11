@@ -25,9 +25,15 @@
   // `wrangler secret put MAILCHIMP_LIST_ID` (the audience id) it uses the API
   // and tags each member by form; without them it posts to the audience's
   // public sign-up form, untagged. Local dev never calls Mailchimp.
+  // The quiz results email goes out as Aditya, and replies reach his real
+  // inbox through QUIZ_REPLY_TO. Resend only sends from domains verified in
+  // its dashboard: mail.goalkeep.org is, goalkeep.org is not yet. Once
+  // goalkeep.org is verified, change QUIZ_EMAIL_FROM to aditya@goalkeep.org.
   "vars": {
     "CONTACT_EMAIL_FROM": "Goalkeep website <website@mail.goalkeep.org>",
-    "CONTACT_EMAIL_TO": "aditya@goalkeep.net,mohithkumar808@gmail.com"
+    "CONTACT_EMAIL_TO": "aditya@goalkeep.net,mohithkumar808@gmail.com",
+    "QUIZ_EMAIL_FROM": "Aditya at Goalkeep <aditya@mail.goalkeep.org>",
+    "QUIZ_REPLY_TO": "aditya@goalkeep.org"
   },
   "d1_databases": [
     {
