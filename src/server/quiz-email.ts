@@ -1,6 +1,6 @@
 import { marks } from "@/content/design/quiz"
 import type { DomainId, QuizScore } from "@/content/quiz"
-import { BLUE, BLUE_TINT, FONT, INK, LINE, MUTED, accent, button, emailDocument, escape, paragraph, section } from "./email-layout"
+import { BLUE, FONT, INK, LINE, MUTED, accent, button, emailDocument, escape, paragraph, section } from "./email-layout"
 
 /**
  * The results email a quiz-taker receives, in the order Goalkeep sent on
@@ -10,7 +10,6 @@ import { BLUE, BLUE_TINT, FONT, INK, LINE, MUTED, accent, button, emailDocument,
  * <style> block only tightens paddings on phones.
  */
 
-const REPORT_URL = "https://lookerstudio.google.com/reporting/345e34c9-1bd0-4d44-9e9b-486b3ac6b9b1"
 const CONTACT = "aditya@goalkeep.org"
 
 /** Each domain in the colours the quiz page gives it: the logo segment for the bar, its ink for the score. */
@@ -44,14 +43,6 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
       </table>
     </td></tr>`,
     section(
-      `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BLUE_TINT};border-radius:12px;"><tr><td style="padding:22px 24px;">
-        <div style="font:800 17px/24px ${FONT};color:${INK};">How do you compare?</div>
-        <div style="margin:6px 0 16px;font:400 15px/23px ${FONT};color:${INK};">Curious about how your results compare against your peers, sector or region? Explore this report for yourself.</div>
-        ${button(REPORT_URL, "Explore the report &rarr;")}
-      </td></tr></table>`,
-      "28px 40px 0",
-    ),
-    section(
       `<div style="font:800 19px/26px ${FONT};color:${INK};margin-bottom:14px;">Build a data culture that lasts</div>
       ${paragraph(`Would you like to learn how to cultivate a sustainable data culture in your organization? Goalkeep offers the &ldquo;Data-Culture Rubric&rdquo; to all its clients. The rubric is a comprehensive assessment that evaluates various aspects of your organization's data-culture ecosystem.`)}
       ${paragraph(`Through a series of thought-provoking questions, our rubric delves into the depth of your organization's data culture, providing you with a clear understanding of its strengths and areas that require improvement.`)}
@@ -84,8 +75,6 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
     `Your total score: ${score.total}/${score.max}`,
     "",
     ...score.domains.map((dm) => `${dm.total}/${dm.max} in the domain of ${dm.title}`),
-    "",
-    `Curious about how your results compare against your peers, sector or region? Explore this report: ${REPORT_URL}`,
     "",
     `Would you like to learn how to cultivate a sustainable data culture in your organization? Goalkeep offers the "Data-Culture Rubric" to all its clients. The rubric is a comprehensive assessment that evaluates various aspects of your organization's data-culture ecosystem.`,
     "",

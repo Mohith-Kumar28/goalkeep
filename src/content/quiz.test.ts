@@ -38,7 +38,7 @@ describe('quizEmail', () => {
     expect(html).toContain('You are a Data Trailblazer')
     expect(text).toContain('Your total score: 52/60')
     expect(text).toContain('15/15 in the domain of Data')
-    expect(html).toContain('https://lookerstudio.google.com/reporting/345e34c9-1bd0-4d44-9e9b-486b3ac6b9b1')
+    expect(html).not.toContain('How do you compare?')
     expect(html).toContain('mailto:aditya@goalkeep.org')
     expect(html).not.toContain('team@goalkeep')
     expect(html).toContain('Data culture in your organisation is institutional and universal.')
