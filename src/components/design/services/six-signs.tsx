@@ -4,7 +4,6 @@ import { tones } from '../tones'
 import type { Tone } from '../tones'
 import { Cta } from '../cta'
 import { Reveal } from '../../primitives/reveal'
-import { AudienceTag } from './audience-tag'
 import { Rich } from './rich'
 import { signTones, toneAccents } from './service-tones'
 
@@ -16,7 +15,6 @@ type Props = {
   checked: ReadonlyArray<number>
   onToggle: (index: number) => void
   onSelect: (index: number) => void
-  audienceTag?: string
 }
 
 const PHONE = '(max-width: 760px)'
@@ -62,7 +60,7 @@ function useScrollSelect(items: ReadonlyArray<Sign>, onSelect: (index: number) =
   return listRef
 }
 
-export function SixSignsSection({ signs, heading, items, tone, checked, onToggle, onSelect, audienceTag }: Props) {
+export function SixSignsSection({ signs, heading, items, tone, checked, onToggle, onSelect }: Props) {
   const listRef = useScrollSelect(items, onSelect)
   const count = checked.length
   const verdict = count >= 3 ? signs.verdicts.many : count >= 1 ? signs.verdicts.few : signs.verdicts.none
@@ -95,11 +93,6 @@ export function SixSignsSection({ signs, heading, items, tone, checked, onToggle
         }}
       >
         <div className="dc-signs-intro">
-          {audienceTag && (
-            <p style={{ margin: '0 0 14px' }}>
-              <AudienceTag tone={tone}>{audienceTag}</AudienceTag>
-            </p>
-          )}
           <Rich as="h2" className="dc-h2" html={heading} />
           <p className="dc-signs-prompt" style={{ margin: '16px 0 0', maxWidth: '40ch' }}>{signs.prompt}</p>
           <div

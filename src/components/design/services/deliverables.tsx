@@ -1,26 +1,17 @@
 import type { Deliverables } from "@/content/design/service-page"
-import type { Tone } from "../tones"
 import { Reveal } from "../../primitives/reveal"
-import { AudienceTag } from "./audience-tag"
 import { Rich } from "./rich"
 
 export function DeliverablesSection({
   heading,
   items,
-  tone,
-  audienceTag,
-}: Deliverables & { tone: Tone; audienceTag?: string }) {
+}: Deliverables) {
   return (
     <section
       className="dc-band dc-svc-band"
       style={{ background: "#FFFFFF" }}
     >
       <Reveal className="dc-shell">
-        {audienceTag && (
-          <p style={{ margin: "0 0 14px", textAlign: "center" }}>
-            <AudienceTag tone={tone}>{audienceTag}</AudienceTag>
-          </p>
-        )}
         <Rich
           as="h2"
           className="dc-h2 dc-deliv-h2"

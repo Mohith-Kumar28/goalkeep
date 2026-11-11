@@ -5,20 +5,17 @@ import type { Tone } from '../tones'
 import { ArrowIcon } from '../icons'
 import { Reveal } from '../../primitives/reveal'
 import { SiteLink } from '../site-link'
-import { AudienceTag } from './audience-tag'
 import { toneAccents } from './service-tones'
 
 export function CaseStudySection({
   card,
   quote,
   tone,
-  audienceTag,
   roomy = false,
 }: {
   card: CaseCard
   quote?: CaseQuote
   tone: Tone
-  audienceTag?: string
   roomy?: boolean
 }) {
   const gap = roomy ? { padding: 36, title: 20, body: 14, link: 28 } : { padding: 32, title: 18, body: 12, link: 24 }
@@ -102,11 +99,6 @@ export function CaseStudySection({
   return (
     <section id="case" className="dc-band dc-svc-band" style={{ background: '#FFFFFF' }}>
       <Reveal className="dc-shell">
-        {audienceTag && (
-          <p style={{ margin: '0 0 18px' }}>
-            <AudienceTag tone={tone}>{audienceTag}</AudienceTag>
-          </p>
-        )}
         <article
           className="dc-surface dc-lift dc-case-split"
           style={{ overflow: 'hidden', display: 'grid', gridTemplateColumns: 'minmax(0,7fr) minmax(0,5fr)' }}

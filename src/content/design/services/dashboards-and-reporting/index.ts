@@ -136,20 +136,11 @@ export const content: ServicePageContent = {
           alt: "British Asian Trust and Goalkeep at a KAWACH partner workshop",
         },
         title: "British Asian Trust",
-        body: "Nearly 70 people from KAWACH partner organisations and the BAT team turned local evidence into prioritised insights for the annual report.",
+        body: "KAWACH, a British Asian Trust programme, works through 16 partner organisations across 12 districts in four states to strengthen child protection systems in India. Its partners held rich evidence, but bringing it together into one clear, representative narrative was a recurring challenge at annual reporting time. Goalkeep designed a three-day workshop for nearly 70 participants that turned local evidence into prioritised insights for district, state and annual programme reports.",
         tags: [
           { label: "Funder", tone: "blue" },
           { label: "Child protection", tone: "teal" },
         ],
-      },
-      caseQuote: {
-        text: "Most organizations need to shift their focus to learning rather than just monitoring. That’s the biggest change for us, and we hope to see that shift in the rest of the social sector as well.”",
-        name: "Rutuja Chaphekar",
-        org: "Forbes Marshall",
-        avatar: {
-          src: "/design/7d0c74b9e4b95e5d1d0d2b09698df14e.webp",
-          alt: "Rutuja Chaphekar",
-        },
       },
       contact: {
         heading:

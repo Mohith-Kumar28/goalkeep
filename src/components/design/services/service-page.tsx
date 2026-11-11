@@ -7,7 +7,6 @@ import { DesignHero } from '../hero'
 import { DesignPage } from '../design-page'
 import { ApproachSection } from './approach'
 import { AudienceSwitch } from './audience-switch'
-import { AudienceTag } from './audience-tag'
 import { CaseStudySection } from './case-study'
 import { DeliverablesSection } from './deliverables'
 import { DurationSection } from './duration'
@@ -22,7 +21,6 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
   const { tone, hero, audiences } = content
   /* The page-level fields are the nonprofit view; the funder view overrides them. */
   const view = audiences && state.audience === 'funder' ? audiences.funder : undefined
-  const tag = audiences?.[state.audience].tag
   const signs = view?.signs ?? { heading: content.signs.heading, items: content.signs.signs }
   const contact = view?.contact ?? content.contact
   const shown = useRef(state.audience)
@@ -68,7 +66,6 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
           checked={state.checked}
           onToggle={(index) => dispatch({ type: 'toggle', index })}
           onSelect={(index) => dispatch({ type: 'select', index })}
-          audienceTag={tag}
         />
 
       </div>      <ApproachSection eyebrow={content.approach.eyebrow} rows={content.approach.rows} tone={tone} />
@@ -76,8 +73,6 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
         <DeliverablesSection
           heading={content.deliverables.heading}
           items={view?.deliverables ?? content.deliverables.items}
-          tone={tone}
-          audienceTag={tag}
         />
 
       </div>      <DurationSection duration={content.duration} tone={tone} />
@@ -87,20 +82,10 @@ export function ServicePage({ content }: { content: ServicePageContent }) {
           quote={view ? view.caseQuote : content.caseQuote}
           roomy={content.caseRoomy}
           tone={tone}
-          audienceTag={tag}
         />
 
       </div>      <div data-aud-swap>
         <ContactBand
-          eyebrow={
-            tag && (
-              <p style={{ margin: '0 0 16px' }}>
-                <AudienceTag tone={tone} onNavy>
-                  {tag}
-                </AudienceTag>
-              </p>
-            )
-          }
           heading={<Rich html={contact.heading} />}
           body={contact.body}
           ctas={content.contact.ctas.map((label) => ({ label }))}
