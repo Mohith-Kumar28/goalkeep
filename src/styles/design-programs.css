@@ -34,7 +34,7 @@
 .dc .ps-fit-cloud {
   display: flex;
   flex-direction: column;
-  gap: 72px;
+  gap: 22px;
   /* The last bubble lights at 62% of the viewport. The bottom padding keeps the intro pinned until then and a beat after, so the second paragraph and CTA appear while it is still held. */
   padding: 8px 0 max(24px, calc(720px - 62vh));
 }
@@ -58,6 +58,12 @@
 }
 .dc .ps-bubble-left {
   align-self: flex-start;
+}
+@media (min-width: 1101px) {
+  .dc .ps-bubble-left + .ps-bubble-right,
+  .dc .ps-bubble-right + .ps-bubble-left {
+    margin-top: -46px;
+  }
 }
 .dc .ps-bubble-right {
   align-self: flex-end;
