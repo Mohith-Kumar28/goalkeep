@@ -1156,7 +1156,8 @@ button.dc-btn {
 
 @media (min-width: 761px) {
   .dc-footer-nav {
-    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
     grid-template-areas:
       "services programs goalkeep"
       "services programs resources";
@@ -1176,4 +1177,14 @@ button.dc-btn {
   .dc-footer-grid {
     grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   }
+}
+
+.dc-field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 42px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2314131a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }

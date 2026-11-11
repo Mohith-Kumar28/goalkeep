@@ -96,7 +96,7 @@ export const submitContact = createServerFn({ method: "POST" })
 /** The site's own origin, so emails link and load images from wherever it is served. */
 function siteOrigin(header: (name: "host") => string | undefined) {
   const host = header("host")
-  if (!host) return "https://goalkeep.net"
+  if (!host) return "https://goalkeep.org"
   return `${host.startsWith("localhost") ? "http" : "https"}://${host}`
 }
 

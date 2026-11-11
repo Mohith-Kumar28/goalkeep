@@ -16,7 +16,7 @@ export const site = {
   metaTitle: 'Goalkeep enables social sector organisations to use data to scale impact.',
   description:
     'We work with nonprofits, funders, and ecosystem partners to turn data into decisions.',
-  url: 'https://goalkeep.net',
+  url: 'https://goalkeep.org',
 }
 
 /** Page colours of the services and programs pages. The values live in design.css, keyed by `data-theme`. */

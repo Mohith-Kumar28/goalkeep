@@ -622,7 +622,8 @@ export const contact = {
   },
   /* 23 Oct: the dropdown lists the four services from "what we do" and
      nothing else, as Rumit asked in the 21 Oct call. */
-  serviceOptions: services.map((service) => service.title),
+  /** The four services, then the two ways to back a program. */
+  serviceOptions: [...services.map((service) => service.title), 'Sponsor a Kickstarter program', 'Fund a Data Literacy cohort'],
   /** What forms outside a service page send: the server accepts it beside the four titles. */
   generalEnquiry: 'General enquiry',
   submit: 'Send',

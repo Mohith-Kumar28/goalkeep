@@ -6,6 +6,7 @@ import { Rich } from "@/components/design/kickstarter/rich"
 import type { Audience, about } from "@/content/design/about"
 import { contact } from "@/content/homepage"
 import { submitContact } from "@/server/forms"
+import { serviceChoices } from "../contact-form"
 
 type Status = "idle" | "sending" | "sent" | { error: string }
 
@@ -38,7 +39,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
           email: field("email"),
           organization: field("organization"),
           website: field("website"),
-          service: contact.generalEnquiry,
+          service: field("service") || contact.generalEnquiry,
           message: `${writingAs}${field("message")} (from ${window.location.pathname})`,
         },
       })
@@ -250,7 +251,21 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                     />
                   </label>
                   <label className="dc-form-label">
-                    How can we help?
+                    How can we assist you?
+                    <select
+                      name="service"
+                      className="dc-field dc-field-select"
+                      defaultValue={contact.generalEnquiry}
+                    >
+                      {serviceChoices.map((choice) => (
+                        <option key={choice} value={choice}>
+                          {choice}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="dc-form-label">
+                    Do you have a message for us?
                     <textarea
                       name="message"
                       rows={3}

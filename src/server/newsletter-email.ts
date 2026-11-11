@@ -68,7 +68,7 @@ export function editionEmail(edition: Edition, audience: Audience) {
             </td>
           </tr>
         </table>
-        <div style="max-width:600px;margin-top:16px;font:400 12px/18px ${FONT};color:${MUTED};">You received this because you subscribed to The Keep-Up on goalkeep.net.</div>
+        <div style="max-width:600px;margin-top:16px;font:400 12px/18px ${FONT};color:${MUTED};">You received this because you subscribed to The Keep-Up on goalkeep.org.</div>
       </td>
     </tr>
   </table>

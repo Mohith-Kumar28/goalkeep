@@ -20,12 +20,12 @@ describe("pageHead", () => {
 
   it("points the canonical and og:url at the production page", () => {
     const head = pageHead({ title: "T", description: "d", path: "/about" })
-    expect(head.links[0].href).toBe("https://goalkeep.net/about")
-    expect(metaContent(head, "og:url")).toBe("https://goalkeep.net/about")
+    expect(head.links[0].href).toBe("https://goalkeep.org/about")
+    expect(metaContent(head, "og:url")).toBe("https://goalkeep.org/about")
   })
 
   it("canonicalises the homepage without a trailing slash path", () => {
     const head = pageHead({ title: "T", description: "d", path: "/" })
-    expect(head.links[0].href).toBe("https://goalkeep.net")
+    expect(head.links[0].href).toBe("https://goalkeep.org")
   })
 })

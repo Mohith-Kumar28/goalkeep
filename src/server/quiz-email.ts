@@ -49,7 +49,7 @@ function tile(id: DomainId, title: string, total: number, max: number) {
 const p = (html: string, last = false) =>
   `<p style="margin:0 0 ${last ? 0 : 16}px;font:400 15px/25px ${FONT};color:${INK};">${html}</p>`
 
-export function quizEmail(name: string, organization: string, score: QuizScore, site = "https://goalkeep.net") {
+export function quizEmail(name: string, organization: string, score: QuizScore, site = "https://goalkeep.org") {
   const persona = `Data ${score.persona.label}`
   const subject = `You are a ${persona}: your data culture quiz results`
   const first = escape(name.split(/\s+/)[0] ?? name)
@@ -134,7 +134,7 @@ export function quizEmail(name: string, organization: string, score: QuizScore, 
 
           <tr>
             <td class="px" style="padding:20px 40px 24px;border-top:1px solid ${LINE};">
-              <div style="font:400 12px/19px ${FONT};color:${MUTED};">Goalkeep enables social sector organisations to use data to scale impact.<br>You received this because you took the data culture quiz on <a href="${site}" style="color:${MUTED};">goalkeep.net</a>.</div>
+              <div style="font:400 12px/19px ${FONT};color:${MUTED};">Goalkeep enables social sector organisations to use data to scale impact.<br>You received this because you took the data culture quiz on <a href="https://goalkeep.org" style="color:${MUTED};">goalkeep.org</a>.</div>
             </td>
           </tr>
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { MarkAssembly } from '@/components/primitives/logo-shapes'
-import { useContactForm } from './contact-form'
+import { serviceChoices, useContactForm } from './contact-form'
 import { ctaClass } from './cta'
 import type { CtaVariant } from './cta'
 import { ArrowIcon, CloseIcon } from './icons'
@@ -186,6 +186,21 @@ function SlideInForm() {
           <label className="dc-form-label">
             Organisation name
             <input type="text" name="organization" autoComplete="organization" required className="dc-field" />
+          </label>
+          <label className="dc-form-label">
+            How can we assist you?
+            <select
+              name="service"
+              className="dc-field dc-field-select"
+              value={form.service}
+              onChange={(event) => form.setService(event.target.value)}
+            >
+              {serviceChoices.map((choice) => (
+                <option key={choice} value={choice}>
+                  {choice}
+                </option>
+              ))}
+            </select>
           </label>
           <div className="dc-hp" aria-hidden="true">
             <label>
