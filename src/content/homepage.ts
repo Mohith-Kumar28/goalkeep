@@ -230,7 +230,7 @@ export const services: Array<Service> = [
 export const approach = {
   eyebrow: 'our approach',
   headline: 'Every data system we design centres around two questions:',
-  headlineTail: 'who will use it, and to what decisions should it help them make?',
+  headlineTail: 'who will use it, and what decisions should it help them make?',
 }
 
 /*
