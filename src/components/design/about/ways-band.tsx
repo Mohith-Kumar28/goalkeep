@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { FormEvent } from "react"
 import { ArrowIcon, CloseIcon } from "@/components/design/icons"
 import { Reveal } from "@/components/primitives/reveal"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { Rich } from "@/components/design/kickstarter/rich"
 import type { Audience, about } from "@/content/design/about"
 import { contact } from "@/content/homepage"
@@ -14,12 +15,29 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
   const [audience, setAudience] = useState<Audience | null>(null)
   const [open, setOpen] = useState(false)
   const [status, setStatus] = useState<Status>("idle")
+  const [scrollRequest, setScrollRequest] = useState(0)
+  const formRef = useRef<HTMLDivElement>(null)
+  const reduced = useReducedMotion()
 
   const pick = (next: Audience) => {
     setAudience(next)
     setOpen(true)
     setStatus((current) => (current === "sent" ? "idle" : current))
   }
+
+  // A note opens the form, which on phones lands below all three notes, out
+  // of sight. Bring it up whenever its top isn't comfortably on screen; beside
+  // the notes on desktop it already is, so nothing moves there.
+  useEffect(() => {
+    const form = formRef.current
+    if (!scrollRequest || !form) return
+    const { top } = form.getBoundingClientRect()
+    if (top >= 0 && top <= window.innerHeight * 0.6) return
+    form.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    })
+  }, [scrollRequest, reduced])
   const close = () => {
     setOpen(false)
     setAudience(null)
@@ -96,7 +114,10 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                 className="dc-way-note"
                 data-tone={item.tone}
                 aria-pressed={audience?.id === item.id}
-                onClick={() => pick(item)}
+                onClick={() => {
+                  pick(item)
+                  setScrollRequest((count) => count + 1)
+                }}
               >
                 <span
                   className="dc-way-t"
@@ -127,6 +148,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
         <div>
           {open ? (
             <div
+              ref={formRef}
               className="dc-slide-in"
               onKeyDown={(event) => event.key === "Escape" && close()}
               style={{
@@ -137,6 +159,7 @@ export function WaysBand({ ways }: { ways: typeof about.ways }) {
                 borderRadius: 12,
                 boxShadow: "0 24px 56px rgba(20,19,26,0.14)",
                 position: "relative",
+                scrollMarginTop: 16,
               }}
             >
               <button

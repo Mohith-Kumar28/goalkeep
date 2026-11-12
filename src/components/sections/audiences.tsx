@@ -2,6 +2,7 @@ import { Building2, HandCoins, Network, Sprout } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { audienceSection, audiences } from '@/content/homepage'
 import type { Audience, AudienceId } from '@/content/types'
 import { GkButton } from '@/components/primitives/gk-button'
@@ -198,7 +199,7 @@ export function Audiences() {
           </div>
         </div>
         <div className="min-w-0">
-          <Testimonial key={audience.id} audience={audience} reduced={reduced} />
+          <Testimonial key={audience.id} audience={audience} theme={theme} reduced={reduced} />
         </div>
       </div>
 
@@ -261,7 +262,7 @@ function Pitch({ audience, theme, reduced }: { audience: Audience; theme: Theme;
  * The testimonial, image-first: a photograph with the quote set over its
  * lower edge. "It'll give a little bit of a text break to this entire thing."
  */
-function Testimonial({ audience, reduced }: { audience: Audience; reduced: boolean }) {
+function Testimonial({ audience, theme, reduced }: { audience: Audience; theme: Theme; reduced: boolean }) {
   const { testimonial } = audience
 
   return (
@@ -269,8 +270,10 @@ function Testimonial({ audience, reduced }: { audience: Audience; reduced: boole
       {...step(reduced, 3)}
       className="relative overflow-hidden rounded-[var(--r-lg)] shadow-[var(--shadow-md)]"
     >
-      {/* Phones: a short photo with the quote under it on navy, rather than a
-          portrait-shaped photo tall enough to carry the quote over it. */}
+      {/* Phones: a short photo with the quote under it on the segment's own
+          colour, rather than a portrait-shaped photo tall enough to carry the
+          quote over it. From sm up the quote sits on a dark scrim over the
+          photo, so it goes back to white. */}
       <img
         src={testimonial.photo}
         alt=""
@@ -280,13 +283,14 @@ function Testimonial({ audience, reduced }: { audience: Audience; reduced: boole
       />
       <div
         data-ground="scrim"
-        className="bg-[var(--gk-navy)] p-5 text-white sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-transparent sm:bg-gradient-to-t sm:from-[rgb(12_20_44_/_0.92)] sm:via-[rgb(12_20_44_/_0.7)] sm:to-transparent sm:p-6 sm:pt-20">
+        style={{ '--quote-bg': theme.tab, '--quote-ink': theme.tabInk } as CSSProperties}
+        className="bg-[var(--quote-bg)] p-5 text-[var(--quote-ink)] sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-transparent sm:bg-gradient-to-t sm:from-[rgb(12_20_44_/_0.92)] sm:via-[rgb(12_20_44_/_0.7)] sm:to-transparent sm:p-6 sm:pt-20 sm:text-white">
         <blockquote className="text-[length:clamp(1rem,1.4vw,1.25rem)] leading-[1.45] font-semibold">
           &ldquo;{testimonial.quote.value.text}&rdquo;
         </blockquote>
         <figcaption className="mt-3 text-[length:var(--fs-sm)] sm:mt-4">
           <span className="font-bold">{testimonial.name}</span>
-          <span className="text-white/75"> · {testimonial.credentials}</span>
+          <span className="opacity-75"> · {testimonial.credentials}</span>
         </figcaption>
       </div>
     </motion.figure>

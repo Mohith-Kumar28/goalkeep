@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { caseStudies, caseStudySection } from '@/content/homepage'
 import { caseStudies as studyPages, caseStudyHref, sectors } from '@/content/design/case-studies'
 import type { CaseStudy as Study, Photo } from '@/content/design/case-studies'
 import { tones } from '@/components/design/tones'
+import { cn } from '@/lib/utils'
 import { GkButton } from '@/components/primitives/gk-button'
 import { Reveal } from '@/components/primitives/reveal'
 
@@ -42,6 +44,9 @@ import { Reveal } from '@/components/primitives/reveal'
  *
  * 11 Nov: only the four studies with a page are shown, and each card takes
  * its photograph and sector tags from that study.
+ *
+ * 12 Nov: each card says where it goes - a "Read case study" link under the
+ * prose. The whole card stays the link; the label is what tells people so.
  */
 export function CaseStudies() {
   /*
@@ -138,10 +143,20 @@ function StudyLink({ study, children }: { study: Study; children: ReactNode }) {
     <Link
       to={caseStudyHref(study.slug)}
       aria-label={`${study.org} case study`}
-      className="card-lift block h-full rounded-[var(--r-lg)]"
+      className="card-lift group block h-full rounded-[var(--r-lg)]"
     >
       {children}
     </Link>
+  )
+}
+
+/** Inside the card's link, so a span styled as one rather than a nested anchor. */
+function ReadMore({ className }: { className?: string }) {
+  return (
+    <span className={cn('link-cta mt-auto self-start text-[length:var(--fs-sm)] group-hover:gap-3 group-hover:text-[var(--link-color-hover)]', className)}>
+      Read case study
+      <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2.25} />
+    </span>
   )
 }
 
@@ -175,6 +190,7 @@ function LeadCard({ card }: { card: Card }) {
           <p className="max-w-[46ch] text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)] md:text-[length:var(--fs-base)]">
             {card.body}
           </p>
+          <ReadMore className="md:mt-0" />
         </div>
       </article>
     </StudyLink>
@@ -191,6 +207,7 @@ function StudyCard({ card }: { card: Card }) {
           <Byline study={card.study} />
 
           <p className="text-[length:var(--fs-sm)] leading-relaxed text-[var(--fg-1)]">{card.body}</p>
+          <ReadMore />
         </div>
       </article>
     </StudyLink>
